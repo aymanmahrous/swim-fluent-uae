@@ -1,72 +1,30 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
+import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-
+import { Settings, Waves } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LangProvider, useLang } from "../lib/i18n";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+      <div className="text-center">
+        <h1 className="text-7xl font-bold">404</h1>
+        <Link to="/" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Home</Link>
       </div>
     </div>
   );
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
+  useEffect(() => { reportLovableError(error, { boundary: "root" }); }, [error]);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="text-center">
+        <h1 className="text-xl font-semibold">Something went wrong</h1>
+        <button onClick={() => { router.invalidate(); reset(); }} className="mt-4 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">Try again</button>
       </div>
     </div>
   );
@@ -77,21 +35,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Relax Fix UAE — Swimming & Aquatic Therapy Academy | Coach Ayman" },
+      { name: "description", content: "Premium swimming & aquatic therapy academy in Abu Dhabi led by Coach Ayman. Private, semi-private and group lessons for all ages including people of determination." },
+      { property: "og:title", content: "Relax Fix UAE — Coach Ayman" },
+      { property: "og:description", content: "Book your swimming or aquatic therapy session in Abu Dhabi. Opening offer: 150 AED / 45 min." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:wght@700;900&display=swap" },
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
   shellComponent: RootShell,
@@ -102,25 +58,68 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
+    <html lang="ar" dir="rtl">
+      <head><HeadContent /></head>
+      <body>{children}<Scripts /></body>
     </html>
+  );
+}
+
+function Nav() {
+  const { lang, setLang, tr } = useLang();
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-9 h-9 rounded-xl gradient-aqua grid place-items-center shadow-glow group-hover:scale-105 transition">
+            <Waves className="w-5 h-5 text-white" />
+          </div>
+          <div className="leading-tight">
+            <div className="font-bold text-sm sm:text-base">{tr("brand")}</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Coach Ayman</div>
+          </div>
+        </Link>
+        <nav className="flex items-center gap-1 sm:gap-3">
+          <Link to="/" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">{tr("home")}</Link>
+          <Link to="/admin" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">{tr("admin")}</Link>
+          <button
+            onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition"
+            aria-label="Language"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="text-xs font-semibold">{lang === "ar" ? "EN" : "ع"}</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  const { tr } = useLang();
+  return (
+    <footer className="mt-24 border-t border-border/50 bg-muted/30">
+      <div className="max-w-7xl mx-auto px-6 py-8 text-center text-sm text-muted-foreground">
+        <p className="mb-2 font-medium text-foreground">{tr("slogan")}</p>
+        <p>{tr("footer")}</p>
+        <a href="https://wa.me/971551378660" target="_blank" rel="noreferrer" className="inline-block mt-3 text-primary hover:underline">+971 55 137 8660</a>
+      </div>
+    </footer>
   );
 }
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <LangProvider>
+        <div className="min-h-screen flex flex-col">
+          <Nav />
+          <main className="flex-1"><Outlet /></main>
+          <Footer />
+        </div>
+      </LangProvider>
     </QueryClientProvider>
   );
 }
