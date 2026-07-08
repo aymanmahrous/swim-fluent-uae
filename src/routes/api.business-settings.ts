@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-const projectUrl = "https://nmzxrjdxvmmzzmajrskm.supabase.co";
-const projectPublishableKey = "sb_publishable_qXOPVaD5_f60qf1UbYrm2A_sH9c0lW5";
+import {
+  supabaseProjectUrl,
+  supabasePublicHeaders,
+} from "../platform/supabase-project.server";
 
 export const Route = createFileRoute("/api/business-settings")({
   server: {
@@ -9,13 +10,8 @@ export const Route = createFileRoute("/api/business-settings")({
       GET: async () => {
         try {
           const response = await fetch(
-            `${projectUrl}/rest/v1/business_settings?select=*&id=eq.primary&limit=1`,
-            {
-              headers: {
-                apikey: projectPublishableKey,
-                Accept: "application/json",
-              },
-            },
+            `${supabaseProjectUrl}/rest/v1/business_settings?select=*&id=eq.primary&limit=1`,
+            { headers: supabasePublicHeaders() },
           );
 
           const body = await response.text();
