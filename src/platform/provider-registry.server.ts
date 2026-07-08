@@ -1,4 +1,10 @@
 import {
+  alibabaQwenProvider,
+  alibabaWanImageProvider,
+  alibabaWanVideoProvider,
+  isAlibabaModelStudioConfigured,
+} from "./alibaba-model-studio.server";
+import {
   supabaseProjectUrl,
   supabasePublishableKey,
 } from "./supabase-project.server";
@@ -45,6 +51,8 @@ export interface VideoGenerationProvider {
   createVideoJob(input: {
     prompt: string;
     sourceAssetUrl?: string;
+    aspectRatio?: string;
+    durationSeconds?: number;
   }): Promise<{ jobId: string }>;
   getVideoJob(jobId: string): Promise<{
     status: "queued" | "running" | "succeeded" | "failed";
@@ -71,9 +79,15 @@ export interface PublishingProvider {
   }): Promise<{ providerExternalId: string; publishedAt: string }>;
 }
 
-const textAdapters = new Map<string, TextGenerationProvider>();
-const imageAdapters = new Map<string, ImageGenerationProvider>();
-const videoAdapters = new Map<string, VideoGenerationProvider>();
+const textAdapters = new Map<string, TextGenerationProvider>([
+  [alibabaQwenProvider.id, alibabaQwenProvider],
+]);
+const imageAdapters = new Map<string, ImageGenerationProvider>([
+  [alibabaWanImageProvider.id, alibabaWanImageProvider],
+]);
+const videoAdapters = new Map<string, VideoGenerationProvider>([
+  [alibabaWanVideoProvider.id, alibabaWanVideoProvider],
+]);
 const publishingAdapters = new Map<PublishingPlatform, PublishingProvider>();
 
 export function registerTextProvider(provider: TextGenerationProvider): void {
@@ -92,25 +106,6 @@ export function registerPublishingProvider(provider: PublishingProvider): void {
   for (const platform of provider.platforms) publishingAdapters.set(platform, provider);
 }
 
-export function getTextProvider(): TextGenerationProvider | null {
-  const id = value("AI_TEXT_PROVIDER");
-  return id ? textAdapters.get(id) ?? null : null;
-}
-
-export function getImageProvider(): ImageGenerationProvider | null {
-  const id = value("AI_IMAGE_PROVIDER");
-  return id ? imageAdapters.get(id) ?? null : null;
-}
-
-export function getVideoProvider(): VideoGenerationProvider | null {
-  const id = value("AI_VIDEO_PROVIDER");
-  return id ? videoAdapters.get(id) ?? null : null;
-}
-
-export function getPublishingProvider(platform: PublishingPlatform): PublishingProvider | null {
-  return publishingAdapters.get(platform) ?? null;
-}
-
 function value(name: string): string | null {
   const candidate = process.env[name]?.trim();
   return candidate ? candidate : null;
@@ -120,13 +115,58 @@ function all(...names: string[]): boolean {
   return names.every((name) => Boolean(value(name)));
 }
 
+function textProviderId(): string | null {
+  return value("AI_TEXT_PROVIDER") ?? (isAlibabaModelStudioConfigured() ? "alibaba-qwen" : null);
+}
+
+function imageProviderId(): string | null {
+  return value("AI_IMAGE_PROVIDER") ??
+    (isAlibabaModelStudioConfigured() ? "alibaba-wan-image" : null);
+}
+
+function videoProviderId(): string | null {
+  return value("AI_VIDEO_PROVIDER") ??
+    (isAlibabaModelStudioConfigured() ? "alibaba-wan-video" : null);
+}
+
+function providerCredentialsConfigured(
+  category: "text" | "image" | "video",
+  providerId: string | null,
+): boolean {
+  if (!providerId) return false;
+  if (providerId.startsWith("alibaba-")) return isAlibabaModelStudioConfigured();
+  return Boolean(value(`AI_${category.toUpperCase()}_API_KEY`));
+}
+
+export function getTextProvider(): TextGenerationProvider | null {
+  const id = textProviderId();
+  if (!providerCredentialsConfigured("text", id)) return null;
+  return id ? textAdapters.get(id) ?? null : null;
+}
+
+export function getImageProvider(): ImageGenerationProvider | null {
+  const id = imageProviderId();
+  if (!providerCredentialsConfigured("image", id)) return null;
+  return id ? imageAdapters.get(id) ?? null : null;
+}
+
+export function getVideoProvider(): VideoGenerationProvider | null {
+  const id = videoProviderId();
+  if (!providerCredentialsConfigured("video", id)) return null;
+  return id ? videoAdapters.get(id) ?? null : null;
+}
+
+export function getPublishingProvider(platform: PublishingPlatform): PublishingProvider | null {
+  return publishingAdapters.get(platform) ?? null;
+}
+
 export function getProviderStatuses(): ProviderStatus[] {
-  const textProvider = value("AI_TEXT_PROVIDER");
-  const imageProvider = value("AI_IMAGE_PROVIDER");
-  const videoProvider = value("AI_VIDEO_PROVIDER");
-  const textConfigured = Boolean(textProvider && value("AI_TEXT_API_KEY"));
-  const imageConfigured = Boolean(imageProvider && value("AI_IMAGE_API_KEY"));
-  const videoConfigured = Boolean(videoProvider && value("AI_VIDEO_API_KEY"));
+  const textProvider = textProviderId();
+  const imageProvider = imageProviderId();
+  const videoProvider = videoProviderId();
+  const textConfigured = providerCredentialsConfigured("text", textProvider);
+  const imageConfigured = providerCredentialsConfigured("image", imageProvider);
+  const videoConfigured = providerCredentialsConfigured("video", videoProvider);
   const supabaseConfigured = Boolean(supabaseProjectUrl && supabasePublishableKey);
   const metaConfigured = all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN");
   const whatsappConfigured = all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN");
@@ -200,8 +240,8 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: textConfigured && Boolean(getTextProvider()),
       provider: textProvider,
       detail: textConfigured
-        ? "Server configuration detected. Execution requires a registered adapter with the same provider id."
-        : "Server-side text provider configuration is incomplete.",
+        ? "Alibaba Model Studio Qwen is configured server-side and the executable adapter is registered."
+        : "Alibaba Model Studio requires MAAS_ENDPOINT and ALIBABA_MODEL_STUDIO_API_KEY, or another configured text adapter.",
     },
     {
       id: "image-ai",
@@ -211,8 +251,8 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: imageConfigured && Boolean(getImageProvider()),
       provider: imageProvider,
       detail: imageConfigured
-        ? "Server configuration detected. Execution requires a registered image adapter."
-        : "Server-side image provider configuration is incomplete.",
+        ? "Alibaba Wan image generation is configured server-side and temporary provider output is persisted to Supabase Storage before cataloging."
+        : "Alibaba Model Studio requires MAAS_ENDPOINT and ALIBABA_MODEL_STUDIO_API_KEY, or another configured image adapter.",
     },
     {
       id: "video-ai",
@@ -222,8 +262,8 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: videoConfigured && Boolean(getVideoProvider()),
       provider: videoProvider,
       detail: videoConfigured
-        ? "Server configuration detected. Execution requires a registered async video adapter."
-        : "Server-side video provider configuration is incomplete.",
+        ? "Alibaba Wan async video generation is configured. Jobs are polled and successful temporary output is copied to permanent Supabase Storage."
+        : "Alibaba Model Studio requires MAAS_ENDPOINT and ALIBABA_MODEL_STUDIO_API_KEY, or another configured video adapter.",
     },
   ];
 }
