@@ -1,3 +1,8 @@
+import {
+  supabaseProjectUrl,
+  supabasePublishableKey,
+} from "./supabase-project.server";
+
 export type ProviderCapability =
   | "database"
   | "messaging"
@@ -52,6 +57,7 @@ export interface PublishingProvider {
   readonly id: string;
   readonly platforms: readonly PublishingPlatform[];
   publish(input: {
+    idempotencyKey: string;
     contentItemId: string;
     platform: PublishingPlatform;
     contentType: string;
@@ -121,10 +127,11 @@ export function getProviderStatuses(): ProviderStatus[] {
   const textConfigured = Boolean(textProvider && value("AI_TEXT_API_KEY"));
   const imageConfigured = Boolean(imageProvider && value("AI_IMAGE_API_KEY"));
   const videoConfigured = Boolean(videoProvider && value("AI_VIDEO_API_KEY"));
-  const supabaseConfigured = all("SUPABASE_URL", "SUPABASE_ANON_KEY") || all("VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY");
+  const supabaseConfigured = Boolean(supabaseProjectUrl && supabasePublishableKey);
   const metaConfigured = all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN");
   const whatsappConfigured = all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN");
   const tiktokConfigured = all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET");
+  const workerConfigured = all("SUPABASE_SERVICE_ROLE_KEY", "INTERNAL_WORKER_TOKEN");
   const metaPublishingExecutable = Boolean(getPublishingProvider("instagram") || getPublishingProvider("facebook"));
   const tiktokPublishingExecutable = Boolean(getPublishingProvider("tiktok"));
 
@@ -136,7 +143,18 @@ export function getProviderStatuses(): ProviderStatus[] {
       configured: supabaseConfigured,
       executable: supabaseConfigured,
       provider: "supabase",
-      detail: "Public project configuration is present only when the required server/client-safe project settings are available; privileged operations remain server-side.",
+      detail: "The project URL and publishable key are available to the server. Privileged operations use separate server-only authorization.",
+    },
+    {
+      id: "publish-worker",
+      label: "Publish Worker Runtime",
+      category: "publishing",
+      configured: workerConfigured,
+      executable: workerConfigured,
+      provider: "internal-worker",
+      detail: workerConfigured
+        ? "Service-role and internal worker authorization are configured. Queue execution still depends on a platform publishing adapter."
+        : "SUPABASE_SERVICE_ROLE_KEY and INTERNAL_WORKER_TOKEN are both required before the internal publish worker can execute jobs.",
     },
     {
       id: "meta",
@@ -146,7 +164,7 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: metaConfigured && metaPublishingExecutable,
       provider: "meta",
       detail: metaConfigured
-        ? "Meta configuration detected. Publishing still requires a registered Instagram/Facebook adapter."
+        ? "Meta configuration detected. Publishing still requires a registered Instagram/Facebook adapter that honors the worker idempotency key."
         : "Meta server configuration is incomplete; publishing and live ingestion remain disabled.",
     },
     {
@@ -168,7 +186,7 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: tiktokConfigured && tiktokPublishingExecutable,
       provider: "tiktok",
       detail: tiktokConfigured
-        ? "TikTok configuration detected. Publishing still requires a registered TikTok adapter and valid authorization."
+        ? "TikTok configuration detected. Publishing still requires a registered adapter that honors the worker idempotency key and valid authorization."
         : "TikTok server configuration is incomplete; publishing remains disabled.",
     },
     {
