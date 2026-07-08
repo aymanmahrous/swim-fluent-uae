@@ -236,6 +236,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
 
           if (!providerState.assetUrl) throw new Error("VIDEO_PROVIDER_ASSET_URL_MISSING");
           const persisted = await persistRemoteProviderAsset({
+            providerId: provider.id,
             providerUrl: providerState.assetUrl,
             accessToken: session.accessToken,
             staffId: session.profile.id,
