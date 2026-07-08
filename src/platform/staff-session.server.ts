@@ -1,7 +1,6 @@
 import { z } from "zod";
 import {
   supabaseProjectUrl,
-  supabasePublishableKey,
   supabasePublicHeaders,
 } from "./supabase-project.server";
 
@@ -51,14 +50,25 @@ function cookie(name: string, value: string, maxAge: number): string {
 }
 
 export function sessionCookieHeaders(auth: StaffAuth): Headers {
-  const headers = new Headers({ "Content-Type": "application/json", "Cache-Control": "no-store" });
-  headers.append("Set-Cookie", cookie(accessCookie, auth.accessToken, Math.max(60, auth.expiresIn - 30)));
-  headers.append("Set-Cookie", cookie(refreshCookie, auth.refreshToken, 60 * 60 * 24 * 30));
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store",
+  });
+  headers.append(
+    "Set-Cookie",
+    cookie(accessCookie, auth.accessToken, Math.max(60, auth.expiresIn - 30)),
+  );
+  if (auth.refreshToken) {
+    headers.append("Set-Cookie", cookie(refreshCookie, auth.refreshToken, 60 * 60 * 24 * 30));
+  }
   return headers;
 }
 
 export function clearSessionCookieHeaders(): Headers {
-  const headers = new Headers({ "Content-Type": "application/json", "Cache-Control": "no-store" });
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store",
+  });
   headers.append("Set-Cookie", cookie(accessCookie, "", 0));
   headers.append("Set-Cookie", cookie(refreshCookie, "", 0));
   return headers;
@@ -79,13 +89,15 @@ async function getStaffProfile(accessToken: string, userId: string): Promise<Sta
   return parsed.success && parsed.data.length === 1 ? parsed.data[0] : null;
 }
 
-async function exchangeToken(payload: Record<string, string>, grant: "password" | "refresh_token"): Promise<StaffAuth | null> {
+async function exchangeToken(
+  payload: Record<string, string>,
+  grant: "password" | "refresh_token",
+): Promise<StaffAuth | null> {
   const response = await fetch(`${supabaseProjectUrl}/auth/v1/token?grant_type=${grant}`, {
     method: "POST",
     headers: {
       ...supabasePublicHeaders(),
       "Content-Type": "application/json",
-      Authorization: `Bearer ${supabasePublishableKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -123,7 +135,12 @@ export async function resolveStaffSession(request: Request): Promise<StaffAuth |
       if (user.success) {
         const profile = await getStaffProfile(accessToken, user.data.id);
         if (profile) {
-          return { accessToken, refreshToken: refreshToken ?? "", expiresIn: 300, profile };
+          return {
+            accessToken,
+            refreshToken: refreshToken ?? "",
+            expiresIn: 300,
+            profile,
+          };
         }
       }
     }
@@ -131,6 +148,20 @@ export async function resolveStaffSession(request: Request): Promise<StaffAuth |
 
   if (!refreshToken) return null;
   return exchangeToken({ refresh_token: refreshToken }, "refresh_token");
+}
+
+export async function revokeStaffSession(request: Request): Promise<void> {
+  const cookies = parseCookies(request);
+  const accessToken = cookies[accessCookie];
+  if (!accessToken) return;
+
+  await fetch(`${supabaseProjectUrl}/auth/v1/logout`, {
+    method: "POST",
+    headers: {
+      ...supabasePublicHeaders(),
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }).catch(() => undefined);
 }
 
 export async function staffRpc(
