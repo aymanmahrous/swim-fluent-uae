@@ -4,11 +4,17 @@ export type Lang = "ar" | "en";
 
 type Dict = Record<string, { ar: string; en: string }>;
 
-export const t: Dict = {
+export const t = {
   brand: { ar: "ريلاكس فيكس الإمارات", en: "Relax Fix UAE" },
-  tagline: { ar: "أكاديمية السباحة والعلاج المائي - أبوظبي", en: "Swimming & Aquatic Therapy Academy - Abu Dhabi" },
+  tagline: {
+    ar: "أكاديمية السباحة والعلاج المائي - أبوظبي",
+    en: "Swimming & Aquatic Therapy Academy - Abu Dhabi",
+  },
   slogan: { ar: "كوتش أيمن معكم.. فلا خوف عليكم!", en: "Coach Ayman is with you.. No fear ahead!" },
-  offer: { ar: "عرض الافتتاح: 150 درهم لكل حصة 45 دقيقة بدلاً من 200 درهم! جلسة التقييم الأولى مجانية 100%", en: "Opening Offer: 150 AED per 45-minute session instead of 200 AED! 100% Free First Assessment Session" },
+  offer: {
+    ar: "عرض الافتتاح: 150 درهم لكل حصة 45 دقيقة بدلاً من 200 درهم! جلسة التقييم الأولى مجانية 100%",
+    en: "Opening Offer: 150 AED per 45-minute session instead of 200 AED! 100% Free First Assessment Session",
+  },
   book: { ar: "احجز الآن", en: "Book Now" },
   home: { ar: "الرئيسية", en: "Home" },
   admin: { ar: "لوحة التحكم", en: "Admin" },
@@ -42,16 +48,31 @@ export const t: Dict = {
   },
   agree: { ar: "أوافق على جميع البنود", en: "I agree to all terms" },
   submit: { ar: "تأكيد الحجز", en: "Confirm Booking" },
-  success: { ar: "تم استلام حجزك! سيتم التواصل معك قريباً عبر واتساب.", en: "Booking received! You'll be contacted via WhatsApp shortly." },
+  success: {
+    ar: "تم استلام حجزك! سيتم التواصل معك قريباً عبر واتساب.",
+    en: "Booking received! You'll be contacted via WhatsApp shortly.",
+  },
   why: { ar: "لماذا نحن", en: "Why Choose Us" },
   feat1: { ar: "مدرب معتمد", en: "Certified Coach" },
-  feat1d: { ar: "خبرة أكثر من 15 عاماً في تدريب السباحة والعلاج المائي", en: "15+ years experience in swimming & aquatic therapy" },
+  feat1d: {
+    ar: "خبرة أكثر من 15 عاماً في تدريب السباحة والعلاج المائي",
+    en: "15+ years experience in swimming & aquatic therapy",
+  },
   feat2: { ar: "بيئة آمنة", en: "Safe Environment" },
-  feat2d: { ar: "بروتوكولات سلامة صارمة لجميع الفئات العمرية", en: "Strict safety protocols for all age groups" },
+  feat2d: {
+    ar: "بروتوكولات سلامة صارمة لجميع الفئات العمرية",
+    en: "Strict safety protocols for all age groups",
+  },
   feat3: { ar: "جميع المستويات", en: "All Levels" },
-  feat3d: { ar: "من المبتدئين إلى المحترفين وأصحاب الهمم", en: "Beginners to advanced & people of determination" },
+  feat3d: {
+    ar: "من المبتدئين إلى المحترفين وأصحاب الهمم",
+    en: "Beginners to advanced & people of determination",
+  },
   contactWA: { ar: "تواصل عبر واتساب", en: "Contact via WhatsApp" },
-  footer: { ar: "© 2026 ريلاكس فيكس الإمارات. جميع الحقوق محفوظة.", en: "© 2026 Relax Fix UAE. All rights reserved." },
+  footer: {
+    ar: "© 2026 ريلاكس فيكس الإمارات. جميع الحقوق محفوظة.",
+    en: "© 2026 Relax Fix UAE. All rights reserved.",
+  },
   adminLogin: { ar: "دخول المسؤول", en: "Admin Login" },
   password: { ar: "كلمة المرور", en: "Password" },
   login: { ar: "دخول", en: "Login" },
@@ -71,12 +92,14 @@ export const t: Dict = {
   pending: { ar: "قيد الانتظار", en: "Pending" },
   confirmed: { ar: "مؤكد", en: "Confirmed" },
   completed: { ar: "مكتمل", en: "Completed" },
-};
+} satisfies Dict;
+
+export type TranslationKey = keyof typeof t;
 
 interface Ctx {
   lang: Lang;
   setLang: (l: Lang) => void;
-  tr: (key: keyof typeof t) => string;
+  tr: (key: TranslationKey) => string;
   dir: "rtl" | "ltr";
 }
 
@@ -101,7 +124,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") localStorage.setItem("lang", l);
   };
 
-  const tr = (key: keyof typeof t) => t[key]?.[lang] ?? String(key);
+  const tr = (key: TranslationKey) => t[key]?.[lang] ?? String(key);
   return (
     <LangCtx.Provider value={{ lang, setLang, tr, dir: lang === "ar" ? "rtl" : "ltr" }}>
       {children}

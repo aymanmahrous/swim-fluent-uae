@@ -9,9 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OsRouteImport } from './routes/os'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OsIndexRouteImport } from './routes/os.index'
+import { Route as OsPlannerRouteImport } from './routes/os.planner'
+import { Route as OsMediaRouteImport } from './routes/os.media'
+import { Route as OsIntegrationsRouteImport } from './routes/os.integrations'
+import { Route as OsInboxRouteImport } from './routes/os.inbox'
+import { Route as OsCrmRouteImport } from './routes/os.crm'
+import { Route as OsContentRouteImport } from './routes/os.content'
+import { Route as OsAutomationsRouteImport } from './routes/os.automations'
+import { Route as OsAnalyticsRouteImport } from './routes/os.analytics'
 
+const OsRoute = OsRouteImport.update({
+  id: '/os',
+  path: '/os',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -22,35 +37,153 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OsIndexRoute = OsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsPlannerRoute = OsPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsMediaRoute = OsMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsIntegrationsRoute = OsIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsInboxRoute = OsInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsCrmRoute = OsCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsContentRoute = OsContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsAutomationsRoute = OsAutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsAnalyticsRoute = OsAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => OsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/os': typeof OsRouteWithChildren
+  '/os/analytics': typeof OsAnalyticsRoute
+  '/os/automations': typeof OsAutomationsRoute
+  '/os/content': typeof OsContentRoute
+  '/os/crm': typeof OsCrmRoute
+  '/os/inbox': typeof OsInboxRoute
+  '/os/integrations': typeof OsIntegrationsRoute
+  '/os/media': typeof OsMediaRoute
+  '/os/planner': typeof OsPlannerRoute
+  '/os/': typeof OsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/os/analytics': typeof OsAnalyticsRoute
+  '/os/automations': typeof OsAutomationsRoute
+  '/os/content': typeof OsContentRoute
+  '/os/crm': typeof OsCrmRoute
+  '/os/inbox': typeof OsInboxRoute
+  '/os/integrations': typeof OsIntegrationsRoute
+  '/os/media': typeof OsMediaRoute
+  '/os/planner': typeof OsPlannerRoute
+  '/os': typeof OsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/os': typeof OsRouteWithChildren
+  '/os/analytics': typeof OsAnalyticsRoute
+  '/os/automations': typeof OsAutomationsRoute
+  '/os/content': typeof OsContentRoute
+  '/os/crm': typeof OsCrmRoute
+  '/os/inbox': typeof OsInboxRoute
+  '/os/integrations': typeof OsIntegrationsRoute
+  '/os/media': typeof OsMediaRoute
+  '/os/planner': typeof OsPlannerRoute
+  '/os/': typeof OsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/os'
+    | '/os/analytics'
+    | '/os/automations'
+    | '/os/content'
+    | '/os/crm'
+    | '/os/inbox'
+    | '/os/integrations'
+    | '/os/media'
+    | '/os/planner'
+    | '/os/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin'
-  id: '__root__' | '/' | '/admin'
+  to:
+    | '/'
+    | '/admin'
+    | '/os/analytics'
+    | '/os/automations'
+    | '/os/content'
+    | '/os/crm'
+    | '/os/inbox'
+    | '/os/integrations'
+    | '/os/media'
+    | '/os/planner'
+    | '/os'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/os'
+    | '/os/analytics'
+    | '/os/automations'
+    | '/os/content'
+    | '/os/crm'
+    | '/os/inbox'
+    | '/os/integrations'
+    | '/os/media'
+    | '/os/planner'
+    | '/os/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  OsRoute: typeof OsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/os': {
+      id: '/os'
+      path: '/os'
+      fullPath: '/os'
+      preLoaderRoute: typeof OsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -65,13 +198,113 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/os/': {
+      id: '/os/'
+      path: '/'
+      fullPath: '/os/'
+      preLoaderRoute: typeof OsIndexRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/planner': {
+      id: '/os/planner'
+      path: '/planner'
+      fullPath: '/os/planner'
+      preLoaderRoute: typeof OsPlannerRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/media': {
+      id: '/os/media'
+      path: '/media'
+      fullPath: '/os/media'
+      preLoaderRoute: typeof OsMediaRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/integrations': {
+      id: '/os/integrations'
+      path: '/integrations'
+      fullPath: '/os/integrations'
+      preLoaderRoute: typeof OsIntegrationsRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/inbox': {
+      id: '/os/inbox'
+      path: '/inbox'
+      fullPath: '/os/inbox'
+      preLoaderRoute: typeof OsInboxRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/crm': {
+      id: '/os/crm'
+      path: '/crm'
+      fullPath: '/os/crm'
+      preLoaderRoute: typeof OsCrmRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/content': {
+      id: '/os/content'
+      path: '/content'
+      fullPath: '/os/content'
+      preLoaderRoute: typeof OsContentRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/automations': {
+      id: '/os/automations'
+      path: '/automations'
+      fullPath: '/os/automations'
+      preLoaderRoute: typeof OsAutomationsRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/analytics': {
+      id: '/os/analytics'
+      path: '/analytics'
+      fullPath: '/os/analytics'
+      preLoaderRoute: typeof OsAnalyticsRouteImport
+      parentRoute: typeof OsRoute
+    }
   }
 }
+
+interface OsRouteChildren {
+  OsAnalyticsRoute: typeof OsAnalyticsRoute
+  OsAutomationsRoute: typeof OsAutomationsRoute
+  OsContentRoute: typeof OsContentRoute
+  OsCrmRoute: typeof OsCrmRoute
+  OsInboxRoute: typeof OsInboxRoute
+  OsIntegrationsRoute: typeof OsIntegrationsRoute
+  OsMediaRoute: typeof OsMediaRoute
+  OsPlannerRoute: typeof OsPlannerRoute
+  OsIndexRoute: typeof OsIndexRoute
+}
+
+const OsRouteChildren: OsRouteChildren = {
+  OsAnalyticsRoute: OsAnalyticsRoute,
+  OsAutomationsRoute: OsAutomationsRoute,
+  OsContentRoute: OsContentRoute,
+  OsCrmRoute: OsCrmRoute,
+  OsInboxRoute: OsInboxRoute,
+  OsIntegrationsRoute: OsIntegrationsRoute,
+  OsMediaRoute: OsMediaRoute,
+  OsPlannerRoute: OsPlannerRoute,
+  OsIndexRoute: OsIndexRoute,
+}
+
+const OsRouteWithChildren = OsRoute._addFileChildren(OsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  OsRoute: OsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
