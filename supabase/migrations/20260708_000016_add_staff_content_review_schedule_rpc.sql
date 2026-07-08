@@ -23,6 +23,14 @@ begin
     raise exception 'STAFF_ACCESS_DENIED' using errcode = '42501';
   end if;
 
+  perform 1
+  from public.background_jobs
+  where job_type = 'publish_content'
+    and payload->>'contentItemId' = p_content_item_id::text
+    and status in ('queued','processing','retrying')
+  order by id
+  for update;
+
   select *
   into v_item
   from public.content_items
@@ -43,9 +51,7 @@ begin
       end if;
 
       update public.background_jobs
-      set status = 'dead',
-          last_error = 'CONTENT_NOT_SCHEDULED',
-          updated_at = now()
+      set status = 'dead', last_error = 'CONTENT_NOT_SCHEDULED', updated_at = now()
       where job_type = 'publish_content'
         and payload->>'contentItemId' = v_item.id::text
         and status in ('queued','processing','retrying');
@@ -61,9 +67,7 @@ begin
       end if;
 
       update public.background_jobs
-      set status = 'dead',
-          last_error = 'CONTENT_RETURNED_TO_REVIEW',
-          updated_at = now()
+      set status = 'dead', last_error = 'CONTENT_RETURNED_TO_REVIEW', updated_at = now()
       where job_type = 'publish_content'
         and payload->>'contentItemId' = v_item.id::text
         and status in ('queued','processing','retrying');
@@ -87,9 +91,7 @@ begin
       end if;
 
       update public.background_jobs
-      set status = 'dead',
-          last_error = 'CONTENT_RESCHEDULED',
-          updated_at = now()
+      set status = 'dead', last_error = 'CONTENT_RESCHEDULED', updated_at = now()
       where job_type = 'publish_content'
         and payload->>'contentItemId' = v_item.id::text
         and status in ('queued','processing','retrying');
@@ -100,10 +102,7 @@ begin
       returning * into v_item;
 
       insert into public.background_jobs (
-        job_type,
-        status,
-        payload,
-        next_retry_at
+        job_type, status, payload, next_retry_at
       ) values (
         'publish_content',
         'queued',
@@ -117,9 +116,7 @@ begin
       end if;
 
       update public.background_jobs
-      set status = 'dead',
-          last_error = 'CONTENT_UNSCHEDULED',
-          updated_at = now()
+      set status = 'dead', last_error = 'CONTENT_UNSCHEDULED', updated_at = now()
       where job_type = 'publish_content'
         and payload->>'contentItemId' = v_item.id::text
         and status in ('queued','processing','retrying');
