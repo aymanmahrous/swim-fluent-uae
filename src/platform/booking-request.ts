@@ -8,7 +8,15 @@ export const BookingRequestResultSchema = z.discriminatedUnion("success", [
   }),
   z.object({
     success: z.literal(false),
-    code: z.enum(["INVALID_INPUT", "INVALID_PHONE", "DUPLICATE_REQUEST", "SERVER_ERROR"]),
+    code: z.enum([
+      "INVALID_INPUT",
+      "INVALID_PHONE",
+      "DUPLICATE_REQUEST",
+      "RATE_LIMITED",
+      "BOT_REJECTED",
+      "INGRESS_UNAVAILABLE",
+      "SERVER_ERROR",
+    ]),
     message: z.string(),
   }),
 ]);
@@ -29,6 +37,42 @@ export interface SubmitBookingRequestInput {
   requestedTime: string;
   termsAccepted: boolean;
   idempotencyKey: string;
+}
+
+const bookingClientStartedAt = Date.now();
+let bookingBotTrapValue = "";
+let trapInstalled = false;
+
+function installBookingBotTrap(): void {
+  if (trapInstalled || typeof document === "undefined") return;
+  trapInstalled = true;
+
+  const trap = document.createElement("input");
+  trap.type = "text";
+  trap.name = "company_website";
+  trap.autocomplete = "off";
+  trap.tabIndex = -1;
+  trap.setAttribute("aria-hidden", "true");
+  trap.setAttribute("data-booking-trap", "true");
+  trap.style.position = "fixed";
+  trap.style.insetInlineStart = "-10000px";
+  trap.style.top = "-10000px";
+  trap.style.width = "1px";
+  trap.style.height = "1px";
+  trap.style.opacity = "0";
+  trap.style.pointerEvents = "none";
+  trap.addEventListener("input", () => {
+    bookingBotTrapValue = trap.value.slice(0, 500);
+  });
+  document.body.appendChild(trap);
+}
+
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", installBookingBotTrap, { once: true });
+  } else {
+    installBookingBotTrap();
+  }
 }
 
 export function formatDubaiCalendarDate(date: Date): string {
@@ -65,6 +109,8 @@ export async function submitBookingRequest(
       p_requested_time: input.requestedTime,
       p_terms_accepted: input.termsAccepted,
       p_idempotency_key: input.idempotencyKey,
+      _honeypot: bookingBotTrapValue,
+      _form_elapsed_ms: Math.max(0, Date.now() - bookingClientStartedAt),
     }),
   });
 
