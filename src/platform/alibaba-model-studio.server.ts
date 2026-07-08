@@ -192,6 +192,13 @@ export const alibabaWanVideoProvider: VideoGenerationProvider = {
     const model = usesSourceImage
       ? value("AI_VIDEO_IMAGE_MODEL") ?? DEFAULT_I2V_MODEL
       : value("AI_VIDEO_TEXT_MODEL") ?? DEFAULT_T2V_MODEL;
+    const parameters = {
+      resolution: "720P",
+      ...(usesSourceImage ? {} : { ratio: videoRatio(input.aspectRatio) }),
+      prompt_extend: true,
+      watermark: false,
+      duration: Math.min(15, Math.max(2, input.durationSeconds ?? 5)),
+    };
 
     const parsed = WanVideoCreateSchema.safeParse(
       await jsonRequest(`${endpoint}/api/v1/services/aigc/video-generation/video-synthesis`, {
@@ -210,13 +217,7 @@ export const alibabaWanVideoProvider: VideoGenerationProvider = {
               ? { media: [{ type: "first_frame", url: input.sourceAssetUrl }] }
               : {}),
           },
-          parameters: {
-            resolution: "720P",
-            ratio: videoRatio(input.aspectRatio),
-            prompt_extend: true,
-            watermark: false,
-            duration: Math.min(15, Math.max(2, input.durationSeconds ?? 5)),
-          },
+          parameters,
         }),
       }),
     );
@@ -250,7 +251,7 @@ export const alibabaWanVideoProvider: VideoGenerationProvider = {
           parsed.data.output.message ?? parsed.data.output.code ?? `ALIBABA_VIDEO_${status}`,
       };
     }
-    if (["RUNNING"].includes(status)) return { status: "running" as const };
+    if (status === "RUNNING") return { status: "running" as const };
     return { status: "queued" as const };
   },
 };
