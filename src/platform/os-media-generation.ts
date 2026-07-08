@@ -9,16 +9,35 @@ const ImageResultSchema = z.object({
   uploadMode: z.enum(["standard", "tus"]),
 });
 
+const VideoStatusSchema = z.enum(["queued", "running", "succeeded", "failed"]);
+
 const VideoJobSchema = z.object({
   success: z.literal(true),
   jobId: z.string().uuid(),
-  status: z.enum(["queued", "running", "succeeded", "failed"]),
+  status: VideoStatusSchema,
   provider: z.string().optional(),
   pollAfterSeconds: z.number().int().positive().optional(),
   storagePath: z.string().optional(),
   publicUrl: z.string().url().optional(),
   error: z.string().nullable().optional(),
   uploadMode: z.enum(["standard", "tus"]).optional(),
+});
+
+export const StoredVideoJobSchema = z.object({
+  jobId: z.string().uuid(),
+  contentItemId: z.string().uuid().nullable(),
+  provider: z.string().min(1),
+  providerJobId: z.string().min(1),
+  status: VideoStatusSchema,
+  prompt: z.string(),
+  sourceAssetUrl: z.string().url().nullable(),
+  aspectRatio: z.string().nullable(),
+  durationSeconds: z.number().int().nullable(),
+  storagePath: z.string().nullable(),
+  error: z.string().nullable(),
+  metadata: z.record(z.unknown()),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 const MatchingCopySchema = z.object({
@@ -90,6 +109,18 @@ export async function fetchAiVideoJob(jobId: string) {
     ),
   );
   if (!parsed.success) throw new Error("INVALID_VIDEO_JOB_RESPONSE");
+  return parsed.data;
+}
+
+export async function fetchAiVideoJobs() {
+  const parsed = z.array(StoredVideoJobSchema).safeParse(
+    await bodyOrError(
+      await fetch("/api/os-media-video-jobs", {
+        headers: { Accept: "application/json" },
+      }),
+    ),
+  );
+  if (!parsed.success) throw new Error("INVALID_VIDEO_JOBS_RESPONSE");
   return parsed.data;
 }
 
