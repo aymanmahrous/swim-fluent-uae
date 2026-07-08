@@ -1,0 +1,16 @@
+.premium-hero-overlay {
+  background: radial-gradient(circle at 75% 25%, rgb(37 211 255 / 0.2), transparent 32%), linear-gradient(90deg, rgb(3 17 43 / 0.97) 0%, rgb(5 29 63 / 0.88) 45%, rgb(7 40 74 / 0.35) 100%);
+}
+
+[dir="rtl"] .premium-hero-overlay {
+  background: radial-gradient(circle at 25% 25%, rgb(37 211 255 / 0.2), transparent 32%), linear-gradient(270deg, rgb(3 17 43 / 0.97) 0%, rgb(5 29 63 / 0.88) 45%, rgb(7 40 74 / 0.35) 100%);
+}
+
+.premium-card-glow {
+  background: linear-gradient(135deg, rgb(37 211 255 / 0.28), transparent 45%, rgb(236 190 75 / 0.2));
+  filter: blur(18px);
+}
+
+html { scroll-behavior: smooth; }
+body { min-width: 320px; text-rendering: optimizeLegibility; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
