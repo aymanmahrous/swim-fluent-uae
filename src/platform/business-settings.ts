@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { supabaseRequest } from "./supabase-rest";
 
 const BusinessSettingsRowSchema = z.object({
   id: z.literal("primary"),
@@ -46,36 +45,33 @@ export interface BusinessSettings {
 export const fallbackBusinessSettings: BusinessSettings = {
   businessName: "Relax Fix UAE",
   coachName: "Coach Ayman",
-  whatsappNumber: "971551378660",
-  publicPhone: "+971 55 137 8660",
-  publicEmail: "swimmingayman@gmail.com",
-  bookingPrice: 150,
+  whatsappNumber: "",
+  publicPhone: "",
+  publicEmail: "",
+  bookingPrice: 0,
   currency: "AED",
   sessionDurationMinutes: 45,
   timezone: "Asia/Dubai",
-  locations: [
-    "Al Muroor",
-    "Al Ma'amoor",
-    "Al Khalidiya",
-    "Al Falah",
-    "Electra",
-    "Al Reem Island",
-    "Yas Island",
-  ],
-  bookingEnabled: true,
-  openingOfferTextAr: "عرض الافتتاح: 150 درهم / 45 دقيقة مع تقييم أولي مجاني",
-  openingOfferTextEn: "Opening offer: 150 AED / 45 minutes with a free first assessment",
+  locations: [],
+  bookingEnabled: false,
+  openingOfferTextAr: null,
+  openingOfferTextEn: null,
   instagramUrl: null,
   facebookUrl: null,
   tiktokUrl: null,
-  websiteUrl: "https://www.relaxfixuae.com",
+  websiteUrl: null,
 };
 
 export async function fetchBusinessSettings(): Promise<BusinessSettings> {
-  const rows = await supabaseRequest<unknown>(
-    "/rest/v1/business_settings?select=*&id=eq.primary&limit=1",
-  );
+  const response = await fetch("/api/business-settings", {
+    headers: { Accept: "application/json" },
+  });
 
+  if (!response.ok) {
+    throw new Error(`Business settings request failed (${response.status}).`);
+  }
+
+  const rows: unknown = await response.json();
   const parsed = z.array(BusinessSettingsRowSchema).safeParse(rows);
   if (!parsed.success || parsed.data.length !== 1) {
     throw new Error("Invalid business settings response.");
@@ -113,6 +109,7 @@ export function useBusinessSettings() {
 }
 
 export function businessWhatsAppUrl(settings: BusinessSettings, encodedMessage?: string): string {
+  if (!settings.whatsappNumber) return "#";
   const base = `https://wa.me/${settings.whatsappNumber}`;
   return encodedMessage ? `${base}?text=${encodedMessage}` : base;
 }
