@@ -69,10 +69,17 @@ begin
   end if;
 
   select
-    coalesce(sum(views), 0),
-    coalesce(sum(dm_count), 0)
+    coalesce(sum(latest.views), 0),
+    coalesce(sum(latest.dm_count), 0)
   into v_views, v_dms
-  from public.content_metrics;
+  from (
+    select distinct on (content_item_id)
+      content_item_id,
+      views,
+      dm_count
+    from public.content_metrics
+    order by content_item_id, recorded_at desc, id desc
+  ) latest;
 
   select count(*) into v_qualified
   from public.leads
@@ -96,7 +103,7 @@ begin
     'publishedItems', v_published,
     'contentItems', v_content_items,
     'attributionReady', false,
-    'note', 'Content metrics, CRM stages, and booking requests are real totals. Cross-entity attribution is not claimed until provider and campaign attribution links are populated.'
+    'note', 'Views and DMs use the latest recorded metric snapshot per content item. CRM stages and booking requests are real totals. Cross-entity attribution is not claimed until provider and campaign attribution links are populated.'
   );
 end;
 $$;
