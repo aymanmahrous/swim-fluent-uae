@@ -35,6 +35,12 @@ begin
   end if;
 
   perform 1
+  from public.conversations
+  where lead_id = p_lead_id
+  order by id
+  for update;
+
+  perform 1
   from public.follow_up_jobs
   where lead_id = p_lead_id
     and status in ('queued','processing','retrying')
@@ -133,6 +139,23 @@ begin
       updated_at = now()
   where id = p_lead_id
   returning * into v_lead;
+
+  if v_lead.do_not_contact then
+    update public.conversations
+    set mode = 'paused', updated_at = now()
+    where lead_id = v_lead.id
+      and mode in ('ai_active','human_required');
+  elsif v_lead.human_required then
+    update public.conversations
+    set mode = 'human_required', updated_at = now()
+    where lead_id = v_lead.id
+      and mode = 'ai_active';
+  else
+    update public.conversations
+    set mode = 'ai_active', updated_at = now()
+    where lead_id = v_lead.id
+      and mode = 'human_required';
+  end if;
 
   insert into public.audit_logs (
     actor_id, actor_type, action, entity_type, entity_id, detail
