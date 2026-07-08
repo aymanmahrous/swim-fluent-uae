@@ -37,6 +37,7 @@ export const MediaAssetSchema = z.object({
   assetType: z.enum(["image", "video", "logo", "other"]),
   source: z.enum(["upload", "ai_generated", "external"]),
   storagePath: z.string().nullable(),
+  publicUrl: z.string().url().nullable(),
   provider: z.string().nullable(),
   providerJobId: z.string().nullable(),
   prompt: z.string().nullable(),
