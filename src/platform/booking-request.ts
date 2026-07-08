@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { isSupabaseConfigured, supabaseRequest } from "./supabase-rest";
 
 export const BookingRequestResultSchema = z.discriminatedUnion("success", [
   z.object({
@@ -46,16 +45,12 @@ export function formatDubaiCalendarDate(date: Date): string {
 export async function submitBookingRequest(
   input: SubmitBookingRequestInput,
 ): Promise<BookingRequestResult> {
-  if (!isSupabaseConfigured()) {
-    return {
-      success: false,
-      code: "SERVER_ERROR",
-      message: "Online booking storage is not configured yet.",
-    };
-  }
-
-  const data = await supabaseRequest<unknown>("/rest/v1/rpc/submit_booking_request", {
+  const response = await fetch("/api/booking-request", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
     body: JSON.stringify({
       p_full_name: input.name,
       p_phone: input.phone,
@@ -73,9 +68,11 @@ export async function submitBookingRequest(
     }),
   });
 
+  const data: unknown = await response.json();
   const parsed = BookingRequestResultSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error("Invalid booking RPC response.");
+    throw new Error(`Invalid booking service response (${response.status}).`);
   }
+
   return parsed.data;
 }
