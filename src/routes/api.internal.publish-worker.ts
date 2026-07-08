@@ -6,9 +6,9 @@ import {
   type PublishingPlatform,
 } from "../platform/provider-registry.server";
 import {
-  isServiceRoleConfigured,
-  serviceRoleRpc,
-} from "../platform/service-role.server";
+  isSupabaseSecretConfigured,
+  supabaseSecretRpc,
+} from "../platform/supabase-secret.server";
 
 const ClaimSchema = z.discriminatedUnion("claimed", [
   z.object({
@@ -44,7 +44,7 @@ const ProviderResultSchema = z.object({
 });
 
 async function rpcJson(functionName: string, body: Record<string, unknown> = {}): Promise<unknown> {
-  const response = await serviceRoleRpc(functionName, body);
+  const response = await supabaseSecretRpc(functionName, body);
   const payload: unknown = await response.json().catch(() => null);
   if (!response.ok) throw new Error(`${functionName.toUpperCase()}_HTTP_${response.status}`);
   return payload;
@@ -63,9 +63,9 @@ export const Route = createFileRoute("/api/internal/publish-worker")({
           return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
         }
 
-        if (!isServiceRoleConfigured()) {
+        if (!isSupabaseSecretConfigured()) {
           return Response.json(
-            { success: false, code: "SERVICE_ROLE_NOT_CONFIGURED" },
+            { success: false, code: "SUPABASE_SECRET_NOT_CONFIGURED" },
             { status: 503 },
           );
         }
