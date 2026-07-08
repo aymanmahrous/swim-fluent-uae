@@ -1,30 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarDays, CheckCircle2, RotateCcw, ShieldAlert, WandSparkles } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  Pencil,
+  RotateCcw,
+  Save,
+  ShieldAlert,
+  WandSparkles,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
+import {
+  contentWorkflowErrorMessage,
+  transitionContent,
+  updateContent,
+  type ContentUpdateInput,
+} from "../platform/os-content-workflow";
 import { fetchOsContentItems } from "../platform/os-read-models";
 
 export const Route = createFileRoute("/os/planner")({ component: PlannerPage });
 
-const TransitionResultSchema = z.object({
-  success: z.literal(true),
-  contentItemId: z.string().uuid(),
-  status: z.enum(["idea", "draft", "generated", "needs_review", "approved", "scheduled", "published", "failed"]),
-  scheduledFor: z.string().nullable(),
-  updatedAt: z.string(),
-});
-
-const TransitionErrorSchema = z.object({
-  success: z.literal(false).optional(),
-  code: z.string(),
-  status: z.string().optional(),
-});
-
-type TransitionInput =
-  | { contentItemId: string; action: "approve" | "return_to_review" | "unschedule" }
-  | { contentItemId: string; action: "schedule"; scheduledFor: string };
+type EditDraft = Omit<ContentUpdateInput, "hashtags"> & { hashtagsText: string };
 
 function displayDate(value: string | null, fallback: string): string {
   const source = value ?? fallback;
@@ -60,56 +58,52 @@ function asDubaiOffset(localValue: string): string | null {
   return Number.isNaN(parsed.getTime()) || parsed.getTime() <= Date.now() ? null : candidate;
 }
 
-async function transitionContent(input: TransitionInput) {
-  const response = await fetch("/api/os-content-transition", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify(input),
-  });
-  const body: unknown = await response.json().catch(() => null);
-  if (!response.ok) {
-    const error = TransitionErrorSchema.safeParse(body);
-    throw new Error(error.success ? error.data.code : `CONTENT_TRANSITION_HTTP_${response.status}`);
-  }
-  const result = TransitionResultSchema.safeParse(body);
-  if (!result.success) {
-    const businessError = TransitionErrorSchema.safeParse(body);
-    throw new Error(businessError.success ? businessError.data.code : "INVALID_CONTENT_TRANSITION_RESPONSE");
-  }
-  return result.data;
+function parseHashtags(value: string): string[] {
+  return [...new Set(value.split(/[,\n]+/).map((item) => item.trim()).filter(Boolean))];
 }
 
 function PlannerPage() {
   const queryClient = useQueryClient();
   const [scheduleValues, setScheduleValues] = useState<Record<string, string>>({});
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState<EditDraft | null>(null);
   const contentQuery = useQuery({
     queryKey: ["os", "content-items"],
     queryFn: fetchOsContentItems,
     retry: false,
   });
 
+  async function invalidateWorkflowQueries() {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["os", "content-items"] }),
+      queryClient.invalidateQueries({ queryKey: ["os", "command-center"] }),
+      queryClient.invalidateQueries({ queryKey: ["os", "operations"] }),
+    ]);
+  }
+
   const transitionMutation = useMutation({
     mutationFn: transitionContent,
     onSuccess: async (result) => {
       toast.success(`Content item moved to ${result.status}.`);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["os", "content-items"] }),
-        queryClient.invalidateQueries({ queryKey: ["os", "command-center"] }),
-      ]);
+      await invalidateWorkflowQueries();
     },
     onError: (error) => {
       const code = error instanceof Error ? error.message : "CONTENT_TRANSITION_FAILED";
-      const message =
-        code === "APPROVAL_REQUIRED"
-          ? "Approve this content item before scheduling it."
-          : code === "INVALID_SCHEDULE_TIME"
-            ? "Choose a future Dubai date and time."
-            : code === "SCHEDULE_TOO_FAR"
-              ? "The schedule time must be within 366 days."
-              : code === "INVALID_TRANSITION"
-                ? "This content status cannot perform the requested transition."
-                : `Content workflow failed: ${code}`;
-      toast.error(message);
+      toast.error(contentWorkflowErrorMessage(code));
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateContent,
+    onSuccess: async () => {
+      toast.success("Content changes saved and returned to needs_review.");
+      setEditingId(null);
+      setEditDraft(null);
+      await invalidateWorkflowQueries();
+    },
+    onError: (error) => {
+      const code = error instanceof Error ? error.message : "CONTENT_UPDATE_FAILED";
+      toast.error(contentWorkflowErrorMessage(code));
     },
   });
 
@@ -123,13 +117,41 @@ function PlannerPage() {
     transitionMutation.mutate({ contentItemId, action: "schedule", scheduledFor });
   }
 
+  function beginEdit(item: NonNullable<typeof contentQuery.data>[number]) {
+    setEditingId(item.id);
+    setEditDraft({
+      contentItemId: item.id,
+      topic: item.topic,
+      hook: item.hook,
+      caption: item.caption,
+      cta: item.cta,
+      hashtagsText: item.hashtags.join(", "),
+      visualPrompt: item.visualPrompt,
+    });
+  }
+
+  function saveEdit() {
+    if (!editDraft || updateMutation.isPending) return;
+    updateMutation.mutate({
+      contentItemId: editDraft.contentItemId,
+      topic: editDraft.topic,
+      hook: editDraft.hook,
+      caption: editDraft.caption,
+      cta: editDraft.cta,
+      hashtags: parseHashtags(editDraft.hashtagsText),
+      visualPrompt: editDraft.visualPrompt,
+    });
+  }
+
+  const busy = transitionMutation.isPending || updateMutation.isPending;
+
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black">Content Planner</h1>
           <p className="mt-2 text-muted-foreground">
-            Review, approve, and schedule real Supabase content. Scheduling is interpreted explicitly in Asia/Dubai (+04:00).
+            Edit, review, approve, and schedule real Supabase content. Any edit forces a fresh review and clears an active publish schedule.
           </p>
         </div>
         <Link to="/os/content" className="rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground">
@@ -151,7 +173,8 @@ function PlannerPage() {
           const canApprove = ["draft", "generated", "needs_review", "approved"].includes(item.status);
           const canReview = ["draft", "generated", "needs_review", "approved", "scheduled", "failed"].includes(item.status);
           const canSchedule = item.status === "approved" || item.status === "scheduled";
-          const busy = transitionMutation.isPending;
+          const editing = editingId === item.id && editDraft?.contentItemId === item.id;
+
           return (
             <article key={item.id} className="rounded-2xl border border-border bg-card p-5">
               <div className="flex items-center justify-between gap-3">
@@ -163,62 +186,161 @@ function PlannerPage() {
                 </div>
                 <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-black uppercase">{item.status}</span>
               </div>
-              <div className="mt-4 text-xs font-bold uppercase tracking-wider text-primary">
-                {item.platform} · {item.contentType}
-              </div>
-              <h2 className="mt-2 text-lg font-black">{item.topic || "Untitled content item"}</h2>
-              <p className="mt-2 text-sm leading-6">{item.hook || item.caption}</p>
-              <div className="mt-4 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
-                CTA: {item.cta || "Not set"}
-              </div>
 
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                <button
-                  type="button"
-                  disabled={!canApprove || item.status === "approved" || busy}
-                  onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "approve" })}
-                  className="rounded-xl bg-primary px-3 py-2.5 text-sm font-black text-primary-foreground disabled:opacity-40"
-                >
-                  <CheckCircle2 className="me-1 inline h-4 w-4" /> Approve
-                </button>
-                <button
-                  type="button"
-                  disabled={!canReview || item.status === "needs_review" || busy}
-                  onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "return_to_review" })}
-                  className="rounded-xl border border-border px-3 py-2.5 text-sm font-black disabled:opacity-40"
-                >
-                  <RotateCcw className="me-1 inline h-4 w-4" /> Return to review
-                </button>
-              </div>
-
-              {canSchedule && (
-                <div className="mt-4 rounded-xl border border-border p-3">
-                  <label className="text-xs font-black">Dubai schedule time</label>
-                  <input
-                    type="datetime-local"
-                    value={scheduleValues[item.id] ?? dubaiInputValue(item.scheduledFor)}
-                    onChange={(event) => setScheduleValues((current) => ({ ...current, [item.id]: event.target.value }))}
-                    className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-                  />
-                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              {editing && editDraft ? (
+                <div className="mt-4 space-y-3">
+                  <label className="block text-xs font-black">
+                    Topic
+                    <input
+                      value={editDraft.topic}
+                      maxLength={300}
+                      onChange={(event) => setEditDraft({ ...editDraft, topic: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="block text-xs font-black">
+                    Hook
+                    <textarea
+                      value={editDraft.hook}
+                      maxLength={500}
+                      rows={2}
+                      onChange={(event) => setEditDraft({ ...editDraft, hook: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="block text-xs font-black">
+                    Caption
+                    <textarea
+                      value={editDraft.caption}
+                      minLength={2}
+                      maxLength={5000}
+                      rows={7}
+                      required
+                      onChange={(event) => setEditDraft({ ...editDraft, caption: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="block text-xs font-black">
+                    CTA
+                    <textarea
+                      value={editDraft.cta}
+                      maxLength={500}
+                      rows={2}
+                      onChange={(event) => setEditDraft({ ...editDraft, cta: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="block text-xs font-black">
+                    Hashtags · comma or new line separated
+                    <textarea
+                      value={editDraft.hashtagsText}
+                      rows={3}
+                      onChange={(event) => setEditDraft({ ...editDraft, hashtagsText: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="block text-xs font-black">
+                    Visual prompt
+                    <textarea
+                      value={editDraft.visualPrompt}
+                      maxLength={2000}
+                      rows={3}
+                      onChange={(event) => setEditDraft({ ...editDraft, visualPrompt: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal outline-none focus:border-primary"
+                    />
+                  </label>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      disabled={busy || editDraft.caption.trim().length < 2}
+                      onClick={saveEdit}
+                      className="rounded-xl bg-primary px-3 py-2.5 text-sm font-black text-primary-foreground disabled:opacity-40"
+                    >
+                      <Save className="me-1 inline h-4 w-4" /> Save & review again
+                    </button>
                     <button
                       type="button"
                       disabled={busy}
-                      onClick={() => scheduleItem(item.id, item.scheduledFor)}
-                      className="rounded-lg bg-deep px-3 py-2 text-xs font-black text-white disabled:opacity-40"
+                      onClick={() => {
+                        setEditingId(null);
+                        setEditDraft(null);
+                      }}
+                      className="rounded-xl border border-border px-3 py-2.5 text-sm font-black disabled:opacity-40"
                     >
-                      {item.status === "scheduled" ? "Update schedule" : "Schedule"}
-                    </button>
-                    <button
-                      type="button"
-                      disabled={item.status !== "scheduled" || busy}
-                      onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "unschedule" })}
-                      className="rounded-lg border border-border px-3 py-2 text-xs font-black disabled:opacity-40"
-                    >
-                      Unschedule
+                      <X className="me-1 inline h-4 w-4" /> Cancel edit
                     </button>
                   </div>
                 </div>
+              ) : (
+                <>
+                  <div className="mt-4 flex items-start justify-between gap-3">
+                    <div className="text-xs font-bold uppercase tracking-wider text-primary">
+                      {item.platform} · {item.contentType}
+                    </div>
+                    <button
+                      type="button"
+                      disabled={item.status === "published" || busy}
+                      onClick={() => beginEdit(item)}
+                      className="rounded-lg border border-border px-2.5 py-1.5 text-xs font-black disabled:opacity-40"
+                    >
+                      <Pencil className="me-1 inline h-3.5 w-3.5" /> Edit
+                    </button>
+                  </div>
+                  <h2 className="mt-2 text-lg font-black">{item.topic || "Untitled content item"}</h2>
+                  <p className="mt-2 text-sm leading-6">{item.hook || item.caption}</p>
+                  <div className="mt-4 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
+                    CTA: {item.cta || "Not set"}
+                  </div>
+
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      disabled={!canApprove || item.status === "approved" || busy}
+                      onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "approve" })}
+                      className="rounded-xl bg-primary px-3 py-2.5 text-sm font-black text-primary-foreground disabled:opacity-40"
+                    >
+                      <CheckCircle2 className="me-1 inline h-4 w-4" /> Approve
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!canReview || item.status === "needs_review" || busy}
+                      onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "return_to_review" })}
+                      className="rounded-xl border border-border px-3 py-2.5 text-sm font-black disabled:opacity-40"
+                    >
+                      <RotateCcw className="me-1 inline h-4 w-4" /> Return to review
+                    </button>
+                  </div>
+
+                  {canSchedule && (
+                    <div className="mt-4 rounded-xl border border-border p-3">
+                      <label className="text-xs font-black">Dubai schedule time</label>
+                      <input
+                        type="datetime-local"
+                        value={scheduleValues[item.id] ?? dubaiInputValue(item.scheduledFor)}
+                        onChange={(event) => setScheduleValues((current) => ({ ...current, [item.id]: event.target.value }))}
+                        className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                      />
+                      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => scheduleItem(item.id, item.scheduledFor)}
+                          className="rounded-lg bg-deep px-3 py-2 text-xs font-black text-white disabled:opacity-40"
+                        >
+                          {item.status === "scheduled" ? "Update schedule" : "Schedule"}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={item.status !== "scheduled" || busy}
+                          onClick={() => transitionMutation.mutate({ contentItemId: item.id, action: "unschedule" })}
+                          className="rounded-lg border border-border px-3 py-2 text-xs font-black disabled:opacity-40"
+                        >
+                          Unschedule
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </article>
           );
