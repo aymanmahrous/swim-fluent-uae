@@ -1,4 +1,4 @@
-import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
+import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import {
   BarChart3,
   Bot,
@@ -13,7 +13,16 @@ import {
 } from "lucide-react";
 import { useLang } from "../lib/i18n";
 
-export const Route = createFileRoute("/os")({ component: OperatingSystemLayout });
+const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
+
+export const Route = createFileRoute("/os")({
+  beforeLoad: () => {
+    if (!aiOsEnabled) {
+      throw redirect({ to: "/", replace: true });
+    }
+  },
+  component: OperatingSystemLayout,
+});
 
 const items = [
   ["/os", "Command Center", LayoutDashboard],
