@@ -53,9 +53,11 @@ export const Route = createFileRoute("/api/os-content-generate")({
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-        if (!(["super_admin", "admin", "content_manager"] as const).includes(
-          session.profile.role as "super_admin" | "admin" | "content_manager",
-        )) {
+        if (
+          session.profile.role !== "super_admin" &&
+          session.profile.role !== "admin" &&
+          session.profile.role !== "content_manager"
+        ) {
           return Response.json({ error: "FORBIDDEN" }, { status: 403 });
         }
 
