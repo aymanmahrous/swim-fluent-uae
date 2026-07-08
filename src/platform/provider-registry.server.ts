@@ -11,6 +11,7 @@ export type ProviderStatus = {
   label: string;
   category: ProviderCapability;
   configured: boolean;
+  executable: boolean;
   provider: string | null;
   detail: string;
 };
@@ -45,6 +46,37 @@ export interface VideoGenerationProvider {
   }>;
 }
 
+const textAdapters = new Map<string, TextGenerationProvider>();
+const imageAdapters = new Map<string, ImageGenerationProvider>();
+const videoAdapters = new Map<string, VideoGenerationProvider>();
+
+export function registerTextProvider(provider: TextGenerationProvider): void {
+  textAdapters.set(provider.id, provider);
+}
+
+export function registerImageProvider(provider: ImageGenerationProvider): void {
+  imageAdapters.set(provider.id, provider);
+}
+
+export function registerVideoProvider(provider: VideoGenerationProvider): void {
+  videoAdapters.set(provider.id, provider);
+}
+
+export function getTextProvider(): TextGenerationProvider | null {
+  const id = value("AI_TEXT_PROVIDER");
+  return id ? textAdapters.get(id) ?? null : null;
+}
+
+export function getImageProvider(): ImageGenerationProvider | null {
+  const id = value("AI_IMAGE_PROVIDER");
+  return id ? imageAdapters.get(id) ?? null : null;
+}
+
+export function getVideoProvider(): VideoGenerationProvider | null {
+  const id = value("AI_VIDEO_PROVIDER");
+  return id ? videoAdapters.get(id) ?? null : null;
+}
+
 function value(name: string): string | null {
   const candidate = process.env[name]?.trim();
   return candidate ? candidate : null;
@@ -58,6 +90,9 @@ export function getProviderStatuses(): ProviderStatus[] {
   const textProvider = value("AI_TEXT_PROVIDER");
   const imageProvider = value("AI_IMAGE_PROVIDER");
   const videoProvider = value("AI_VIDEO_PROVIDER");
+  const textConfigured = Boolean(textProvider && value("AI_TEXT_API_KEY"));
+  const imageConfigured = Boolean(imageProvider && value("AI_IMAGE_API_KEY"));
+  const videoConfigured = Boolean(videoProvider && value("AI_VIDEO_API_KEY"));
 
   return [
     {
@@ -65,6 +100,7 @@ export function getProviderStatuses(): ProviderStatus[] {
       label: "Supabase",
       category: "database",
       configured: all("SUPABASE_URL", "SUPABASE_ANON_KEY") || all("VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY"),
+      executable: true,
       provider: "supabase",
       detail: "Public project configuration is present; privileged staff data remains protected by Supabase Auth and RPC role checks.",
     },
@@ -73,54 +109,60 @@ export function getProviderStatuses(): ProviderStatus[] {
       label: "Meta / Instagram",
       category: "messaging",
       configured: all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN"),
+      executable: false,
       provider: "meta",
-      detail: "Requires app credentials, webhook verification and approved permissions before live message ingestion.",
+      detail: "Credential readiness only. Live ingestion still requires a registered webhook/channel adapter and approved permissions.",
     },
     {
       id: "whatsapp",
       label: "WhatsApp Business",
       category: "messaging",
       configured: all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN"),
+      executable: false,
       provider: "meta-whatsapp-cloud",
-      detail: "Requires a WhatsApp Business phone number ID and server-side access token.",
+      detail: "Credential readiness only. Sending and webhook ingestion remain disabled until the channel adapter is registered.",
     },
     {
       id: "tiktok",
       label: "TikTok Publishing",
       category: "publishing",
       configured: all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET"),
+      executable: false,
       provider: "tiktok",
-      detail: "Requires an approved TikTok developer application and publishing authorization.",
+      detail: "Credential readiness only. Publishing remains disabled until authorization and a publishing adapter are implemented.",
     },
     {
       id: "text-ai",
       label: "AI Text Provider",
       category: "ai_text",
-      configured: Boolean(textProvider && value("AI_TEXT_API_KEY")),
+      configured: textConfigured,
+      executable: textConfigured && Boolean(getTextProvider()),
       provider: textProvider,
-      detail: textProvider
-        ? "Provider name detected; generation is enabled only when its server-side API key is also present and an adapter is implemented."
-        : "Set AI_TEXT_PROVIDER and AI_TEXT_API_KEY on the server, then register a provider adapter.",
+      detail: textConfigured
+        ? "Server configuration detected. Execution requires a registered adapter with the same provider id."
+        : "Server-side text provider configuration is incomplete.",
     },
     {
       id: "image-ai",
       label: "AI Image Provider",
       category: "ai_image",
-      configured: Boolean(imageProvider && value("AI_IMAGE_API_KEY")),
+      configured: imageConfigured,
+      executable: imageConfigured && Boolean(getImageProvider()),
       provider: imageProvider,
-      detail: imageProvider
-        ? "Provider name detected; image generation still requires a registered adapter."
-        : "Set AI_IMAGE_PROVIDER and AI_IMAGE_API_KEY on the server, then register an image adapter.",
+      detail: imageConfigured
+        ? "Server configuration detected. Execution requires a registered image adapter."
+        : "Server-side image provider configuration is incomplete.",
     },
     {
       id: "video-ai",
       label: "AI Video Provider",
       category: "ai_video",
-      configured: Boolean(videoProvider && value("AI_VIDEO_API_KEY")),
+      configured: videoConfigured,
+      executable: videoConfigured && Boolean(getVideoProvider()),
       provider: videoProvider,
-      detail: videoProvider
-        ? "Provider name detected; async video generation still requires a registered adapter."
-        : "Set AI_VIDEO_PROVIDER and AI_VIDEO_API_KEY on the server, then register an async video adapter.",
+      detail: videoConfigured
+        ? "Server configuration detected. Execution requires a registered async video adapter."
+        : "Server-side video provider configuration is incomplete.",
     },
   ];
 }
