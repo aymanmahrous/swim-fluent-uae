@@ -1,18 +1,23 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  Outlet,
+  HeadContent,
   Link,
+  Outlet,
+  Scripts,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
+import { Settings, Sparkles, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
-import { Settings, Waves, Sparkles } from "lucide-react";
-import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { LangProvider, useLang } from "../lib/i18n";
 import { Toaster } from "../components/ui/sonner";
+import { LangProvider, useLang } from "../lib/i18n";
+import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  businessWhatsAppUrl,
+  fallbackBusinessSettings,
+  useBusinessSettings,
+} from "../platform/business-settings";
+import appCss from "../styles.css?url";
 
 const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
@@ -22,10 +27,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="text-center">
         <h1 className="text-7xl font-bold">404</h1>
-        <Link
-          to="/"
-          className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-        >
+        <Link to="/" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
           Home
         </Link>
       </div>
@@ -35,9 +37,8 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "root" });
-  }, [error]);
+  useEffect(() => reportLovableError(error, { boundary: "root" }), [error]);
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="text-center">
@@ -64,36 +65,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Relax Fix UAE — Coach Ayman | Swimming Academy Abu Dhabi" },
       {
         name: "description",
-        content:
-          "Book swimming lessons in Abu Dhabi with Coach Ayman. Opening offer 150 AED / 45 min. Free first assessment.",
+        content: "Swimming lessons and aquatic coaching in Abu Dhabi with Coach Ayman.",
       },
-      { property: "og:title", content: "Relax Fix UAE — Coach Ayman | Swimming Academy Abu Dhabi" },
+      { property: "og:title", content: "Relax Fix UAE — Coach Ayman" },
       {
         property: "og:description",
-        content:
-          "Book swimming lessons in Abu Dhabi with Coach Ayman. Opening offer 150 AED / 45 min. Free first assessment.",
+        content: "Swimming lessons and aquatic coaching in Abu Dhabi with Coach Ayman.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "twitter:title",
-        content: "Relax Fix UAE — Coach Ayman | Swimming Academy Abu Dhabi",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Book swimming lessons in Abu Dhabi with Coach Ayman. Opening offer 150 AED / 45 min. Free first assessment.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e7fbc74-37d2-4b77-8c6c-f04867510e5b",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e7fbc74-37d2-4b77-8c6c-f04867510e5b",
-      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -128,39 +108,41 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function Nav() {
   const { lang, setLang, tr } = useLang();
+  const settingsQuery = useBusinessSettings();
+  const settings = settingsQuery.data ?? fallbackBusinessSettings;
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl gradient-aqua grid place-items-center shadow-glow group-hover:scale-105 transition">
-            <Waves className="w-5 h-5 text-white" />
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        <Link to="/" className="group flex items-center gap-2">
+          <div className="grid h-9 w-9 place-items-center rounded-xl gradient-aqua shadow-glow transition group-hover:scale-105">
+            <Waves className="h-5 w-5 text-white" />
           </div>
           <div className="leading-tight">
-            <div className="font-bold text-sm sm:text-base">{tr("brand")}</div>
-            <div className="text-[10px] sm:text-xs text-muted-foreground">Coach Ayman</div>
+            <div className="text-sm font-bold sm:text-base">{settings.businessName}</div>
+            <div className="text-[10px] text-muted-foreground sm:text-xs">{settings.coachName}</div>
           </div>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-3">
-          <Link to="/" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
+          <Link to="/" className="rounded-lg px-3 py-2 text-sm transition hover:bg-muted">
             {tr("home")}
           </Link>
           {aiOsEnabled && (
-            <Link to="/os" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
-              <Sparkles className="me-1 inline h-4 w-4" />
-              AI OS
+            <Link to="/os" className="rounded-lg px-3 py-2 text-sm transition hover:bg-muted">
+              <Sparkles className="me-1 inline h-4 w-4" /> AI OS
             </Link>
           )}
           {legacyAdminEnabled && (
-            <Link to="/admin" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
+            <Link to="/admin" className="rounded-lg px-3 py-2 text-sm transition hover:bg-muted">
               {tr("admin")}
             </Link>
           )}
           <button
             onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition"
+            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 transition hover:border-primary hover:bg-primary/5"
             aria-label="Language"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="h-4 w-4" />
             <span className="text-xs font-semibold">{lang === "ar" ? "EN" : "ع"}</span>
           </button>
         </nav>
@@ -171,18 +153,21 @@ function Nav() {
 
 function Footer() {
   const { tr } = useLang();
+  const settingsQuery = useBusinessSettings();
+  const settings = settingsQuery.data ?? fallbackBusinessSettings;
+
   return (
     <footer className="mt-24 border-t border-border/50 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-6 py-8 text-center text-sm text-muted-foreground">
+      <div className="mx-auto max-w-7xl px-6 py-8 text-center text-sm text-muted-foreground">
         <p className="mb-2 font-medium text-foreground">{tr("slogan")}</p>
         <p>{tr("footer")}</p>
         <a
-          href="https://wa.me/971551378660"
+          href={businessWhatsAppUrl(settings)}
           target="_blank"
           rel="noreferrer"
-          className="inline-block mt-3 text-primary hover:underline"
+          className="mt-3 inline-block text-primary hover:underline"
         >
-          +971 55 137 8660
+          {settings.publicPhone}
         </a>
       </div>
     </footer>
@@ -194,7 +179,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LangProvider>
-        <div className="min-h-screen flex flex-col">
+        <div className="flex min-h-screen flex-col">
           <Nav />
           <main className="flex-1">
             <Outlet />
