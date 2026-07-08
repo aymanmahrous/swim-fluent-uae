@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   refresh:
+    # One-shot branch maintenance workflow. Deleted after the lockfile commit lands.
     if: contains(github.event.head_commit.message, '[refresh-lock]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
