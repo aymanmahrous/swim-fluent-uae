@@ -8,6 +8,7 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,3 +17,5 @@ jobs:
       - run: npm install --ignore-scripts --no-audit --no-fund
       - run: npm run lint
       - run: npm run build
+      - name: Verify Supabase settings and booking RPC
+        run: node scripts/verify-supabase-booking.mjs
