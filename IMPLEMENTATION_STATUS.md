@@ -1,9 +1,16 @@
 # Relax Fix AI OS — Implementation Status
 
-## Verified locally
+## Verified in CI and live Supabase smoke tests
 
-- `npm run lint`: 0 errors, 8 existing Fast Refresh warnings in shared UI/i18n modules.
-- `npm run build`: production client, SSR, and Nitro/Cloudflare build completed successfully.
+- `npm run lint`: passed in GitHub Actions.
+- `npm run build`: production build passed in GitHub Actions.
+- Live `business_settings` read through the Supabase Data API: passed.
+- Invalid UAE phone rejection before insert: passed.
+- Unsupported booking option rejection before insert: passed.
+- Out-of-schedule booking time rejection before insert: passed.
+- Valid booking insertion into `public.booking_requests`: passed.
+- Idempotency replay returns the original booking request ID with `duplicate=true`: passed.
+- Vercel Preview `/api/business-settings` returned HTTP 200 with real Supabase business settings.
 
 ## Implemented in this foundation
 
@@ -12,19 +19,20 @@
 - AI Inbox foundation with explicit AI / human handoff modes.
 - CRM lead journey and lead scoring view.
 - Automation flow foundation inspired by conversational automation products.
-- AI Content Studio provider-aware states (text/image/video are disabled until server-side credentials exist).
-- 30-day content strategy planner and local approval-state foundation.
+- AI Content Studio provider-aware states; text/image/video remain disabled until server-side provider credentials exist.
+- 30-day content strategy planner and approval-state foundation.
 - Media Library foundation.
 - Content-to-booking analytics and attribution direction.
 - Integration readiness screen.
 - Safe `.env.example` separating client-safe and server-only credentials.
-- Supabase REST client without a new runtime dependency.
-- Public booking request RPC client with Zod runtime validation.
-- UAE/Dubai calendar-date handling.
+- Centralized `public.business_settings` for public business/contact/booking configuration.
+- Same-origin server routes for public settings and booking requests.
+- Hardened public booking RPC with runtime and database validation.
+- UAE/Dubai calendar-date and schedule validation.
 - Sonner notifications wired into the root layout.
-- GitHub Actions CI for lint + production build.
+- GitHub Actions CI for lint, production build, and live Supabase booking smoke verification.
 
-## Supabase migrations included
+## Supabase migrations included and applied
 
 1. `20260708_000001_relax_fix_ai_os_foundation.sql`
    - leads
@@ -51,9 +59,33 @@
    - `SECURITY DEFINER` RPC with fixed search path
    - no direct anon table access
 
+3. `20260708_000003_business_settings.sql`
+   - single source of truth for public business name, coach name, contact details, WhatsApp, pricing, duration, timezone, locations, offers, social URLs, and booking enabled state
+   - anon/authenticated read access only
+   - no public writes
+
+4. Follow-up hardening migrations
+   - booking option allowlists and business-settings-backed location validation
+   - booking enabled guard
+   - server-side schedule and slot validation
+   - public grant lockdown for legacy leads
+   - revoke public execution of `rls_auto_enable()`
+   - foreign-key indexes flagged by the Supabase performance advisor
+
+## Security state
+
+- The previously exposed Supabase service-role credential is no longer used by the application or repository.
+- `SUPABASE_SERVICE_ROLE_KEY` was removed from the Vercel project environment.
+- Vercel now uses the modern Supabase publishable key for the public application path.
+- Legacy JWT-based `anon` and `service_role` API keys were disabled in the Supabase dashboard on 2026-07-08.
+- `business_settings` is public-read only through RLS/grants and has no public writes.
+- The legacy `leads` table no longer grants anon/authenticated access.
+- `submit_booking_request` remains intentionally callable for guest booking and writes only to `booking_requests` after server-side validation; anonymous `SECURITY DEFINER` execution remains an accepted temporary public-ingress risk until additional abuse controls are added.
+- Supabase Auth leaked-password protection must be enabled when production Staff Auth is implemented.
+
 ## Not falsely marked complete
 
-The following require external platform credentials, OAuth approvals, webhooks, or provider choices and are therefore shown as **NOT CONFIGURED** rather than fake-success states:
+The following still require provider credentials, OAuth approvals, webhooks, provider choices, or staff-auth work and remain **NOT CONFIGURED** rather than fake-success states:
 
 - Meta / Instagram messaging and publishing
 - WhatsApp Business Platform automation
@@ -63,21 +95,16 @@ The following require external platform credentials, OAuth approvals, webhooks, 
 - AI video generation provider
 - Production staff authentication / RBAC provisioning
 
-## Security blocker
+## Next production phases
 
-The previously shared Supabase service-role credential must be rotated/revoked before production use. It is not stored in this codebase.
+1. Merge this verified booking/settings foundation to `main`.
+2. Verify the production deployment and public booking path after merge.
+3. Build the Premium public-site redesign on top of the verified booking/settings foundation.
+4. Implement production Staff Auth/RBAC before enabling `/os` or replacing the retired legacy `/admin` route.
+5. Configure one messaging provider and one AI text provider first.
+6. Add image/video providers as server-side adapters.
+7. Configure publishing OAuth/webhooks and enable scheduling only after provider verification.
 
-## Required activation order
+## GitHub status
 
-1. Rotate the exposed Supabase service-role secret.
-2. Apply the two SQL migrations in order.
-3. Configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the deployment environment.
-4. Verify a real booking request is inserted through the public form.
-5. Provision production staff auth/RBAC before replacing the legacy `/admin` page.
-6. Configure one messaging provider and one AI text provider first.
-7. Configure image/video providers as server-side adapters.
-8. Configure publishing OAuth/webhooks and enable scheduling only after provider verification.
-
-## GitHub write status
-
-GitHub write access was enabled after the repository installation settings were saved. The foundation is being published to `agent/relax-fix-ai-os-foundation` for pull-request validation before merge.
+The verified foundation is maintained on `agent/relax-fix-ai-os-foundation` under PR #1 and is ready for final CI confirmation after the legacy-key shutdown status update.
