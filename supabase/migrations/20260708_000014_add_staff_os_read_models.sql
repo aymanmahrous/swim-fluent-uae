@@ -110,7 +110,7 @@ language plpgsql
 stable
 security definer
 set search_path = public, pg_temp
-as $$;
+as $$
 declare
   v_new_leads bigint;
   v_hot_leads bigint;
