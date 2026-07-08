@@ -10,12 +10,12 @@ export interface Booking {
   otherLocation?: string;
   swamBefore: boolean;
   trainingType: string;
+  requestedDate: string;
   slot: string;
   status: "pending" | "confirmed" | "completed";
 }
 
-export function generateSlots(date: Date, duration = 45): string[] {
-  const day = date.getDay();
+function slotsForDay(day: number, duration: number): string[] {
   const ranges: [number, number][] = [];
 
   if (day === 1) ranges.push([16, 21]);
@@ -39,13 +39,24 @@ export function generateSlots(date: Date, duration = 45): string[] {
   return slots;
 }
 
+export function generateSlots(date: Date, duration = 45): string[] {
+  return slotsForDay(date.getDay(), duration);
+}
+
+export function generateSlotsForDubaiDate(dateString: string, duration = 45): string[] {
+  const [year, month, day] = dateString.split("-").map(Number);
+  if (!year || !month || !day) return [];
+  const weekday = new Date(Date.UTC(year, month - 1, day, 12)).getUTCDay();
+  return slotsForDay(weekday, duration);
+}
+
 export function buildWhatsAppMessage(booking: Booking): string {
-  const fear = booking.fearOfWater ? "⚠️ *FEAR OF WATER*" : "No fear";
+  const fear = booking.fearOfWater ? "FEAR OF WATER" : "No fear";
   const location =
     booking.location === "Other" ? `Other: ${booking.otherLocation}` : booking.location;
 
   return encodeURIComponent(
-    `🏊 *New Booking - Relax Fix UAE*\n\n` +
+    `New Booking - Relax Fix UAE\n\n` +
       `Status: ${fear}\n` +
       `Name: ${booking.name}\n` +
       `Phone: ${booking.phone}\n` +
@@ -54,6 +65,7 @@ export function buildWhatsAppMessage(booking: Booking): string {
       `Location: ${location}\n` +
       `Swam before: ${booking.swamBefore ? "Yes" : "No"}\n` +
       `Training: ${booking.trainingType}\n` +
+      `Date: ${booking.requestedDate}\n` +
       `Slot: ${booking.slot}\n`,
   );
 }
