@@ -34,7 +34,7 @@ function requireConfig(): { url: string; publicKey: string } {
     if (parsed.protocol !== "https:") {
       throw new Error("Supabase URL must use HTTPS.");
     }
-  } catch (error) {
+  } catch {
     throw new PlatformConfigurationError("VITE_SUPABASE_URL is not a valid HTTPS URL.");
   }
 
