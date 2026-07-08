@@ -193,6 +193,17 @@ requireText(mediaMigration, "from public, anon", "AI media migration");
 requireText(mediaMigration, "for update", "AI media migration");
 requireText(mediaMigration, "storage_object_not_found", "AI media migration");
 
+const mediaPolicyFixPath = "supabase/migrations/20260708_000021_fix_ai_media_storage_policy.sql";
+const mediaPolicyFix = (await text(mediaPolicyFixPath)).toLowerCase();
+requireText(mediaPolicyFix, "can_manage_relax_fix_media", "AI media policy fix");
+requireText(mediaPolicyFix, "security definer", "AI media policy fix");
+requireText(mediaPolicyFix, "set search_path = public, pg_temp", "AI media policy fix");
+requireText(mediaPolicyFix, "from public, anon", "AI media policy fix");
+requireText(mediaPolicyFix, "to authenticated, service_role", "AI media policy fix");
+requireText(mediaPolicyFix, "storage.foldername(name)", "AI media policy fix");
+requireText(mediaPolicyFix, "auth.uid()::text", "AI media policy fix");
+requireText(mediaPolicyFix, "public.can_manage_relax_fix_media()", "AI media policy fix");
+
 const providerRegistry = await text("src/platform/provider-registry.server.ts");
 requireText(providerRegistry, "configured", "provider registry");
 requireText(providerRegistry, "executable", "provider registry");
@@ -202,6 +213,7 @@ requireText(providerRegistry, 'all("SUPABASE_SECRET_KEY", "INTERNAL_WORKER_TOKEN
 requireText(providerRegistry, "alibabaQwenProvider", "provider registry");
 requireText(providerRegistry, "alibabaWanImageProvider", "provider registry");
 requireText(providerRegistry, "alibabaWanVideoProvider", "provider registry");
+requireText(providerRegistry, "getVideoProviderById", "provider registry");
 forbidText(providerRegistry, "SUPABASE_SERVICE_ROLE_KEY", "provider registry");
 
 const alibabaAdapter = await text("src/platform/alibaba-model-studio.server.ts");
@@ -219,13 +231,27 @@ requireText(alibabaAdapter, "/api/v1/tasks/", "Alibaba adapter");
 
 const mediaStorage = await text("src/platform/media-storage.server.ts");
 requireText(mediaStorage, 'MEDIA_BUCKET = "relax-fix-media"', "media storage");
+requireText(mediaStorage, "providerHostSuffixes", "media storage");
+requireText(mediaStorage, '"aliyuncs.com"', "media storage");
+requireText(mediaStorage, '"alicdn.com"', "media storage");
+requireText(mediaStorage, 'url.protocol !== "https:"', "media storage");
+requireText(mediaStorage, "isIP(url.hostname) !== 0", "media storage");
+requireText(mediaStorage, 'url.hostname === "localhost"', "media storage");
+requireText(mediaStorage, 'redirect: "manual"', "media storage");
+requireText(mediaStorage, "MAX_PROVIDER_REDIRECTS", "media storage");
+requireText(mediaStorage, "PROVIDER_ASSET_HOST_NOT_ALLOWLISTED", "media storage");
 requireText(mediaStorage, "tus.Upload", "media storage");
 requireText(mediaStorage, "chunkSize: STANDARD_UPLOAD_LIMIT", "media storage");
 requireText(mediaStorage, "6 * 1024 * 1024", "media storage");
 requireText(mediaStorage, ".storage.supabase.co/storage/v1/upload/resumable", "media storage");
 requireText(mediaStorage, "Authorization: `Bearer ${accessToken}`", "media storage");
+requireText(mediaStorage, "publicObjectExists(path)", "media storage");
 forbidText(mediaStorage, "SUPABASE_SECRET_KEY", "media storage");
 forbidText(mediaStorage, "SUPABASE_SERVICE_ROLE_KEY", "media storage");
+
+const videoRoute = await text("src/routes/api.os-media-generate-video.ts");
+requireText(videoRoute, "getVideoProviderById(job.data.provider)", "video generation route");
+requireText(videoRoute, '"STORED_PROVIDER_NOT_READY"', "video generation route");
 
 const contentStudio = await text("src/routes/os.content.tsx");
 requireText(contentStudio, "generateAiImage", "Content Studio");
