@@ -16,6 +16,8 @@ export type ProviderStatus = {
   detail: string;
 };
 
+export type PublishingPlatform = "instagram" | "facebook" | "tiktok";
+
 export interface TextGenerationProvider {
   readonly id: string;
   generateText(input: {
@@ -46,9 +48,27 @@ export interface VideoGenerationProvider {
   }>;
 }
 
+export interface PublishingProvider {
+  readonly id: string;
+  readonly platforms: readonly PublishingPlatform[];
+  publish(input: {
+    contentItemId: string;
+    platform: PublishingPlatform;
+    contentType: string;
+    caption: string;
+    hashtags: string[];
+    media: Array<{
+      assetType: "image" | "video" | "logo" | "other";
+      storagePath: string | null;
+      provider: string | null;
+    }>;
+  }): Promise<{ providerExternalId: string; publishedAt: string }>;
+}
+
 const textAdapters = new Map<string, TextGenerationProvider>();
 const imageAdapters = new Map<string, ImageGenerationProvider>();
 const videoAdapters = new Map<string, VideoGenerationProvider>();
+const publishingAdapters = new Map<PublishingPlatform, PublishingProvider>();
 
 export function registerTextProvider(provider: TextGenerationProvider): void {
   textAdapters.set(provider.id, provider);
@@ -60,6 +80,10 @@ export function registerImageProvider(provider: ImageGenerationProvider): void {
 
 export function registerVideoProvider(provider: VideoGenerationProvider): void {
   videoAdapters.set(provider.id, provider);
+}
+
+export function registerPublishingProvider(provider: PublishingProvider): void {
+  for (const platform of provider.platforms) publishingAdapters.set(platform, provider);
 }
 
 export function getTextProvider(): TextGenerationProvider | null {
@@ -75,6 +99,10 @@ export function getImageProvider(): ImageGenerationProvider | null {
 export function getVideoProvider(): VideoGenerationProvider | null {
   const id = value("AI_VIDEO_PROVIDER");
   return id ? videoAdapters.get(id) ?? null : null;
+}
+
+export function getPublishingProvider(platform: PublishingPlatform): PublishingProvider | null {
+  return publishingAdapters.get(platform) ?? null;
 }
 
 function value(name: string): string | null {
@@ -93,43 +121,55 @@ export function getProviderStatuses(): ProviderStatus[] {
   const textConfigured = Boolean(textProvider && value("AI_TEXT_API_KEY"));
   const imageConfigured = Boolean(imageProvider && value("AI_IMAGE_API_KEY"));
   const videoConfigured = Boolean(videoProvider && value("AI_VIDEO_API_KEY"));
+  const supabaseConfigured = all("SUPABASE_URL", "SUPABASE_ANON_KEY") || all("VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY");
+  const metaConfigured = all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN");
+  const whatsappConfigured = all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN");
+  const tiktokConfigured = all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET");
+  const metaPublishingExecutable = Boolean(getPublishingProvider("instagram") || getPublishingProvider("facebook"));
+  const tiktokPublishingExecutable = Boolean(getPublishingProvider("tiktok"));
 
   return [
     {
       id: "supabase",
       label: "Supabase",
       category: "database",
-      configured: all("SUPABASE_URL", "SUPABASE_ANON_KEY") || all("VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY"),
-      executable: true,
+      configured: supabaseConfigured,
+      executable: supabaseConfigured,
       provider: "supabase",
-      detail: "Public project configuration is present; privileged staff data remains protected by Supabase Auth and RPC role checks.",
+      detail: "Public project configuration is present only when the required server/client-safe project settings are available; privileged operations remain server-side.",
     },
     {
       id: "meta",
       label: "Meta / Instagram",
-      category: "messaging",
-      configured: all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN"),
-      executable: false,
+      category: "publishing",
+      configured: metaConfigured,
+      executable: metaConfigured && metaPublishingExecutable,
       provider: "meta",
-      detail: "Credential readiness only. Live ingestion still requires a registered webhook/channel adapter and approved permissions.",
+      detail: metaConfigured
+        ? "Meta configuration detected. Publishing still requires a registered Instagram/Facebook adapter."
+        : "Meta server configuration is incomplete; publishing and live ingestion remain disabled.",
     },
     {
       id: "whatsapp",
       label: "WhatsApp Business",
       category: "messaging",
-      configured: all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN"),
+      configured: whatsappConfigured,
       executable: false,
       provider: "meta-whatsapp-cloud",
-      detail: "Credential readiness only. Sending and webhook ingestion remain disabled until the channel adapter is registered.",
+      detail: whatsappConfigured
+        ? "WhatsApp credentials are detected, but no messaging adapter is registered yet."
+        : "WhatsApp server configuration is incomplete; sending and webhook ingestion remain disabled.",
     },
     {
       id: "tiktok",
       label: "TikTok Publishing",
       category: "publishing",
-      configured: all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET"),
-      executable: false,
+      configured: tiktokConfigured,
+      executable: tiktokConfigured && tiktokPublishingExecutable,
       provider: "tiktok",
-      detail: "Credential readiness only. Publishing remains disabled until authorization and a publishing adapter are implemented.",
+      detail: tiktokConfigured
+        ? "TikTok configuration detected. Publishing still requires a registered TikTok adapter and valid authorization."
+        : "TikTok server configuration is incomplete; publishing remains disabled.",
     },
     {
       id: "text-ai",
