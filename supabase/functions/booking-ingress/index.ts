@@ -83,12 +83,12 @@ function defaultSecretKey(): string | null {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method !== "POST") {
-    return json({ success: false, code: "METHOD_NOT_ALLOWED" }, 405);
-  }
-
   if (!(await verifyVercelOidc(req))) {
     return json({ success: false, code: "UNAUTHORIZED" }, 401);
+  }
+
+  if (req.method !== "POST") {
+    return json({ success: false, code: "METHOD_NOT_ALLOWED" }, 405);
   }
 
   const contentLength = Number(req.headers.get("content-length") ?? "0");
