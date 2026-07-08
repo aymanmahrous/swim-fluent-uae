@@ -131,8 +131,10 @@ export function getProviderStatuses(): ProviderStatus[] {
   const metaConfigured = all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN");
   const whatsappConfigured = all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN");
   const tiktokConfigured = all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET");
-  const workerConfigured = all("SUPABASE_SERVICE_ROLE_KEY", "INTERNAL_WORKER_TOKEN");
-  const metaPublishingExecutable = Boolean(getPublishingProvider("instagram") || getPublishingProvider("facebook"));
+  const workerConfigured = all("SUPABASE_SECRET_KEY", "INTERNAL_WORKER_TOKEN");
+  const metaPublishingExecutable = Boolean(
+    getPublishingProvider("instagram") || getPublishingProvider("facebook"),
+  );
   const tiktokPublishingExecutable = Boolean(getPublishingProvider("tiktok"));
 
   return [
@@ -143,7 +145,8 @@ export function getProviderStatuses(): ProviderStatus[] {
       configured: supabaseConfigured,
       executable: supabaseConfigured,
       provider: "supabase",
-      detail: "The project URL and publishable key are available to the server. Privileged operations use separate server-only authorization.",
+      detail:
+        "The project URL and publishable key are available to the server. Privileged worker operations require a separate server-only modern Supabase secret key.",
     },
     {
       id: "publish-worker",
@@ -153,8 +156,8 @@ export function getProviderStatuses(): ProviderStatus[] {
       executable: workerConfigured,
       provider: "internal-worker",
       detail: workerConfigured
-        ? "Service-role and internal worker authorization are configured. Queue execution still depends on a platform publishing adapter."
-        : "SUPABASE_SERVICE_ROLE_KEY and INTERNAL_WORKER_TOKEN are both required before the internal publish worker can execute jobs.",
+        ? "A modern Supabase secret key and internal worker authorization are configured. Queue execution still depends on a platform publishing adapter."
+        : "SUPABASE_SECRET_KEY and INTERNAL_WORKER_TOKEN are both required before the internal publish worker can execute jobs.",
     },
     {
       id: "meta",
