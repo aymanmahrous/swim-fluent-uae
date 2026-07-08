@@ -92,6 +92,20 @@ function objectPath(input: {
   return `${input.staffId}/${input.assetType}/${group}/${id}.${extension}`;
 }
 
+export function mediaPublicUrl(storagePath: string): string {
+  return encodeURI(
+    `${supabaseProjectUrl}/storage/v1/object/public/${MEDIA_BUCKET}/${encodedObjectPath(storagePath)}`,
+  );
+}
+
+async function publicObjectExists(path: string): Promise<boolean> {
+  const response = await fetch(mediaPublicUrl(path), {
+    method: "HEAD",
+    cache: "no-store",
+  }).catch(() => null);
+  return Boolean(response?.ok);
+}
+
 async function standardUpload(
   path: string,
   bytes: Uint8Array,
@@ -116,6 +130,7 @@ async function standardUpload(
   if (response.ok) return;
   const detail = await response.text();
   if (response.status === 400 && /already exists|duplicate/i.test(detail)) return;
+  if (await publicObjectExists(path)) return;
   throw new Error(`SUPABASE_STORAGE_UPLOAD_${response.status}:${detail}`.slice(0, 1000));
 }
 
@@ -146,7 +161,17 @@ async function resumableUpload(
       },
       chunkSize: STANDARD_UPLOAD_LIMIT,
       onError(error) {
-        reject(new Error(`SUPABASE_TUS_UPLOAD_FAILED:${error.message}`.slice(0, 1000)));
+        void publicObjectExists(path)
+          .then((exists) => {
+            if (exists) {
+              resolve();
+              return;
+            }
+            reject(new Error(`SUPABASE_TUS_UPLOAD_FAILED:${error.message}`.slice(0, 1000)));
+          })
+          .catch(() => {
+            reject(new Error(`SUPABASE_TUS_UPLOAD_FAILED:${error.message}`.slice(0, 1000)));
+          });
       },
       onSuccess() {
         resolve();
@@ -155,12 +180,6 @@ async function resumableUpload(
 
     upload.start();
   });
-}
-
-export function mediaPublicUrl(storagePath: string): string {
-  return encodeURI(
-    `${supabaseProjectUrl}/storage/v1/object/public/${MEDIA_BUCKET}/${encodedObjectPath(storagePath)}`,
-  );
 }
 
 export async function persistRemoteProviderAsset(input: {
