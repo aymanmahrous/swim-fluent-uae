@@ -150,10 +150,14 @@ export function getImageProvider(): ImageGenerationProvider | null {
   return id ? imageAdapters.get(id) ?? null : null;
 }
 
+export function getVideoProviderById(providerId: string): VideoGenerationProvider | null {
+  if (!providerCredentialsConfigured("video", providerId)) return null;
+  return videoAdapters.get(providerId) ?? null;
+}
+
 export function getVideoProvider(): VideoGenerationProvider | null {
   const id = videoProviderId();
-  if (!providerCredentialsConfigured("video", id)) return null;
-  return id ? videoAdapters.get(id) ?? null : null;
+  return id ? getVideoProviderById(id) : null;
 }
 
 export function getPublishingProvider(platform: PublishingPlatform): PublishingProvider | null {
