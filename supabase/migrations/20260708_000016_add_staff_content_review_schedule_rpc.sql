@@ -1,5 +1,9 @@
 begin;
 
+create index if not exists idx_background_jobs_publish_content_item
+on public.background_jobs ((payload->>'contentItemId'))
+where job_type = 'publish_content';
+
 create or replace function public.transition_staff_content_item(
   p_content_item_id uuid,
   p_action text,
@@ -35,43 +39,43 @@ begin
   case p_action
     when 'approve' then
       if v_item.status not in ('draft','generated','needs_review','approved') then
-        return jsonb_build_object(
-          'success', false,
-          'code', 'INVALID_TRANSITION',
-          'status', v_item.status::text
-        );
+        return jsonb_build_object('success', false, 'code', 'INVALID_TRANSITION', 'status', v_item.status::text);
       end if;
 
-      update public.content_items
-      set status = 'approved',
-          scheduled_for = null,
+      update public.background_jobs
+      set status = 'dead',
+          last_error = 'CONTENT_NOT_SCHEDULED',
           updated_at = now()
+      where job_type = 'publish_content'
+        and payload->>'contentItemId' = v_item.id::text
+        and status in ('queued','processing','retrying');
+
+      update public.content_items
+      set status = 'approved', scheduled_for = null, updated_at = now()
       where id = v_item.id
       returning * into v_item;
 
     when 'return_to_review' then
       if v_item.status not in ('draft','generated','needs_review','approved','scheduled','failed') then
-        return jsonb_build_object(
-          'success', false,
-          'code', 'INVALID_TRANSITION',
-          'status', v_item.status::text
-        );
+        return jsonb_build_object('success', false, 'code', 'INVALID_TRANSITION', 'status', v_item.status::text);
       end if;
 
-      update public.content_items
-      set status = 'needs_review',
-          scheduled_for = null,
+      update public.background_jobs
+      set status = 'dead',
+          last_error = 'CONTENT_RETURNED_TO_REVIEW',
           updated_at = now()
+      where job_type = 'publish_content'
+        and payload->>'contentItemId' = v_item.id::text
+        and status in ('queued','processing','retrying');
+
+      update public.content_items
+      set status = 'needs_review', scheduled_for = null, updated_at = now()
       where id = v_item.id
       returning * into v_item;
 
     when 'schedule' then
       if v_item.status not in ('approved','scheduled') then
-        return jsonb_build_object(
-          'success', false,
-          'code', 'APPROVAL_REQUIRED',
-          'status', v_item.status::text
-        );
+        return jsonb_build_object('success', false, 'code', 'APPROVAL_REQUIRED', 'status', v_item.status::text);
       end if;
 
       if p_scheduled_for is null or p_scheduled_for <= now() then
@@ -82,26 +86,46 @@ begin
         return jsonb_build_object('success', false, 'code', 'SCHEDULE_TOO_FAR');
       end if;
 
-      update public.content_items
-      set status = 'scheduled',
-          scheduled_for = p_scheduled_for,
+      update public.background_jobs
+      set status = 'dead',
+          last_error = 'CONTENT_RESCHEDULED',
           updated_at = now()
+      where job_type = 'publish_content'
+        and payload->>'contentItemId' = v_item.id::text
+        and status in ('queued','processing','retrying');
+
+      update public.content_items
+      set status = 'scheduled', scheduled_for = p_scheduled_for, updated_at = now()
       where id = v_item.id
       returning * into v_item;
 
+      insert into public.background_jobs (
+        job_type,
+        status,
+        payload,
+        next_retry_at
+      ) values (
+        'publish_content',
+        'queued',
+        jsonb_build_object('contentItemId', v_item.id),
+        p_scheduled_for
+      );
+
     when 'unschedule' then
       if v_item.status <> 'scheduled' then
-        return jsonb_build_object(
-          'success', false,
-          'code', 'INVALID_TRANSITION',
-          'status', v_item.status::text
-        );
+        return jsonb_build_object('success', false, 'code', 'INVALID_TRANSITION', 'status', v_item.status::text);
       end if;
 
-      update public.content_items
-      set status = 'approved',
-          scheduled_for = null,
+      update public.background_jobs
+      set status = 'dead',
+          last_error = 'CONTENT_UNSCHEDULED',
           updated_at = now()
+      where job_type = 'publish_content'
+        and payload->>'contentItemId' = v_item.id::text
+        and status in ('queued','processing','retrying');
+
+      update public.content_items
+      set status = 'approved', scheduled_for = null, updated_at = now()
       where id = v_item.id
       returning * into v_item;
 
@@ -110,12 +134,7 @@ begin
   end case;
 
   insert into public.audit_logs (
-    actor_id,
-    actor_type,
-    action,
-    entity_type,
-    entity_id,
-    detail
+    actor_id, actor_type, action, entity_type, entity_id, detail
   ) values (
     auth.uid(),
     'user',
