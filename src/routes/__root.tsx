@@ -14,6 +14,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LangProvider, useLang } from "../lib/i18n";
 import { Toaster } from "../components/ui/sonner";
 
+const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
+const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -141,13 +144,17 @@ function Nav() {
           <Link to="/" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
             {tr("home")}
           </Link>
-          <Link to="/os" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
-            <Sparkles className="me-1 inline h-4 w-4" />
-            AI OS
-          </Link>
-          <Link to="/admin" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
-            {tr("admin")}
-          </Link>
+          {aiOsEnabled && (
+            <Link to="/os" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
+              <Sparkles className="me-1 inline h-4 w-4" />
+              AI OS
+            </Link>
+          )}
+          {legacyAdminEnabled && (
+            <Link to="/admin" className="text-sm px-3 py-2 rounded-lg hover:bg-muted transition">
+              {tr("admin")}
+            </Link>
+          )}
           <button
             onClick={() => setLang(lang === "ar" ? "en" : "ar")}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition"
