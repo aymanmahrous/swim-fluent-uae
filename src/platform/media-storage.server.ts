@@ -1,9 +1,16 @@
+import { isIP } from "node:net";
 import * as tus from "tus-js-client";
 import { supabaseProjectUrl, supabasePublishableKey } from "./supabase-project.server";
 
 export const MEDIA_BUCKET = "relax-fix-media";
 const STANDARD_UPLOAD_LIMIT = 6 * 1024 * 1024;
 const MAX_PROVIDER_ASSET_BYTES = 100 * 1024 * 1024;
+const MAX_PROVIDER_REDIRECTS = 3;
+
+const providerHostSuffixes: Readonly<Record<string, readonly string[]>> = {
+  "alibaba-wan-image": ["aliyuncs.com", "alicdn.com"],
+  "alibaba-wan-video": ["aliyuncs.com", "alicdn.com"],
+};
 
 function encodedObjectPath(path: string): string {
   return path
@@ -23,6 +30,53 @@ function extensionFor(contentType: string, assetType: "image" | "video"): string
 function allowedContentType(contentType: string, assetType: "image" | "video"): boolean {
   if (assetType === "video") return contentType === "video/mp4";
   return ["image/png", "image/jpeg", "image/webp"].includes(contentType);
+}
+
+function allowedProviderUrl(providerId: string, candidate: string): URL {
+  let url: URL;
+  try {
+    url = new URL(candidate);
+  } catch {
+    throw new Error("PROVIDER_ASSET_URL_INVALID");
+  }
+
+  if (url.protocol !== "https:" || url.username || url.password || url.port) {
+    throw new Error("PROVIDER_ASSET_URL_REJECTED");
+  }
+  if (isIP(url.hostname) !== 0 || url.hostname === "localhost" || url.hostname.endsWith(".localhost")) {
+    throw new Error("PROVIDER_ASSET_HOST_REJECTED");
+  }
+
+  const suffixes = providerHostSuffixes[providerId];
+  if (!suffixes?.some((suffix) => url.hostname === suffix || url.hostname.endsWith(`.${suffix}`))) {
+    throw new Error("PROVIDER_ASSET_HOST_NOT_ALLOWLISTED");
+  }
+  return url;
+}
+
+async function fetchProviderAsset(
+  providerId: string,
+  providerUrl: string,
+  assetType: "image" | "video",
+): Promise<Response> {
+  let current = allowedProviderUrl(providerId, providerUrl);
+
+  for (let redirects = 0; redirects <= MAX_PROVIDER_REDIRECTS; redirects += 1) {
+    const response = await fetch(current, {
+      method: "GET",
+      redirect: "manual",
+      headers: { Accept: assetType === "video" ? "video/mp4" : "image/*" },
+    });
+    if (![301, 302, 303, 307, 308].includes(response.status)) return response;
+
+    const location = response.headers.get("location");
+    if (!location || redirects === MAX_PROVIDER_REDIRECTS) {
+      throw new Error("PROVIDER_ASSET_REDIRECT_REJECTED");
+    }
+    current = allowedProviderUrl(providerId, new URL(location, current).toString());
+  }
+
+  throw new Error("PROVIDER_ASSET_REDIRECT_REJECTED");
 }
 
 function objectPath(input: {
@@ -110,6 +164,7 @@ export function mediaPublicUrl(storagePath: string): string {
 }
 
 export async function persistRemoteProviderAsset(input: {
+  providerId: string;
   providerUrl: string;
   accessToken: string;
   staffId: string;
@@ -123,10 +178,7 @@ export async function persistRemoteProviderAsset(input: {
   sizeBytes: number;
   uploadMode: "standard" | "tus";
 }> {
-  const response = await fetch(input.providerUrl, {
-    method: "GET",
-    headers: { Accept: input.assetType === "video" ? "video/mp4" : "image/*" },
-  });
+  const response = await fetchProviderAsset(input.providerId, input.providerUrl, input.assetType);
   if (!response.ok) throw new Error(`PROVIDER_ASSET_DOWNLOAD_${response.status}`);
 
   const contentType = (response.headers.get("content-type") ?? "")
