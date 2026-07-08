@@ -60,6 +60,7 @@ export const Route = createFileRoute("/api/os-media-generate-image")({
             aspectRatio: parsed.data.aspectRatio,
           });
           const persisted = await persistRemoteProviderAsset({
+            providerId: provider.id,
             providerUrl: generation.assetUrl,
             accessToken: session.accessToken,
             staffId: session.profile.id,
