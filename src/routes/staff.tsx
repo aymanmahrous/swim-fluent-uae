@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, LogOut, ShieldCheck, Waves } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CheckCircle2, LogOut, ShieldCheck, Sparkles, Waves } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -47,7 +47,9 @@ async function fetchSession() {
 }
 
 async function fetchBookings() {
-  const response = await fetch("/api/staff-bookings", { headers: { Accept: "application/json" } });
+  const response = await fetch("/api/staff-bookings", {
+    headers: { Accept: "application/json" },
+  });
   if (!response.ok) throw new Error("Unable to load booking requests.");
   const parsed = z.array(BookingSchema).safeParse(await response.json());
   if (!parsed.success) throw new Error("Invalid booking data response.");
@@ -59,7 +61,11 @@ function StaffPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const sessionQuery = useQuery({ queryKey: ["staff-session"], queryFn: fetchSession, retry: false });
+  const sessionQuery = useQuery({
+    queryKey: ["staff-session"],
+    queryFn: fetchSession,
+    retry: false,
+  });
   const session = sessionQuery.data;
   const bookingsQuery = useQuery({
     queryKey: ["staff-bookings"],
@@ -112,7 +118,9 @@ function StaffPage() {
   }
 
   if (sessionQuery.isLoading) {
-    return <div className="mx-auto max-w-6xl px-6 py-24 text-center">جارٍ التحقق من الجلسة...</div>;
+    return (
+      <div className="mx-auto max-w-6xl px-6 py-24 text-center">جارٍ التحقق من الجلسة...</div>
+    );
   }
 
   if (!session) {
@@ -168,52 +176,87 @@ function StaffPage() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-4 rounded-[2rem] bg-deep p-6 text-white sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl gradient-aqua"><Waves className="h-6 w-6" /></div>
+            <div className="grid h-12 w-12 place-items-center rounded-2xl gradient-aqua">
+              <Waves className="h-6 w-6" />
+            </div>
             <div>
               <div className="text-xs uppercase tracking-[0.2em] text-aqua">Staff Operations</div>
               <h1 className="mt-1 text-2xl font-black">{session.profile.display_name}</h1>
               <div className="mt-1 text-xs text-white/60">{session.profile.role}</div>
             </div>
           </div>
-          <button onClick={logout} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black">
-            <LogOut className="h-4 w-4" /> خروج
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/os"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-aqua px-4 py-3 text-sm font-black text-deep"
+            >
+              <Sparkles className="h-4 w-4" /> AI OS
+            </Link>
+            <button
+              onClick={logout}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black"
+            >
+              <LogOut className="h-4 w-4" /> خروج
+            </button>
+          </div>
         </div>
 
         <div className="mt-8 rounded-[2rem] border border-border bg-card shadow-elegant">
           <div className="flex items-center justify-between border-b border-border p-6">
             <div>
               <h2 className="text-2xl font-black">طلبات الحجز</h2>
-              <p className="mt-1 text-sm text-muted-foreground">بيانات حقيقية من booking_requests عبر RPC محمية بالدور.</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                بيانات حقيقية من booking_requests عبر RPC محمية بالدور.
+              </p>
             </div>
-            <div className="rounded-xl bg-primary/10 px-4 py-2 font-black text-primary">{bookingsQuery.data?.length ?? 0}</div>
+            <div className="rounded-xl bg-primary/10 px-4 py-2 font-black text-primary">
+              {bookingsQuery.data?.length ?? 0}
+            </div>
           </div>
 
           {bookingsQuery.isLoading ? (
             <div className="p-10 text-center text-muted-foreground">جارٍ تحميل الحجوزات...</div>
           ) : bookingsQuery.isError ? (
-            <div className="p-10 text-center text-destructive">تعذر تحميل الحجوزات أو لا توجد صلاحية.</div>
+            <div className="p-10 text-center text-destructive">
+              تعذر تحميل الحجوزات أو لا توجد صلاحية.
+            </div>
           ) : (
             <div className="divide-y divide-border">
               {bookingsQuery.data?.map((booking) => (
-                <article key={booking.id} className="grid gap-5 p-6 lg:grid-cols-[1.3fr_1fr_auto] lg:items-center">
+                <article
+                  key={booking.id}
+                  className="grid gap-5 p-6 lg:grid-cols-[1.3fr_1fr_auto] lg:items-center"
+                >
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-lg font-black">{booking.full_name}</h3>
-                      {booking.fear_of_water && <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-black text-foreground">خوف من الماء</span>}
+                      {booking.fear_of_water && (
+                        <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-black text-foreground">
+                          خوف من الماء
+                        </span>
+                      )}
                     </div>
-                    <div className="mt-2 text-sm text-muted-foreground">{booking.phone} • {booking.category} • {booking.training_type}</div>
+                    <div className="mt-2 text-sm text-muted-foreground">
+                      {booking.phone} • {booking.category} • {booking.training_type}
+                    </div>
                   </div>
                   <div className="text-sm">
-                    <div className="font-black">{booking.requested_date} — {booking.requested_time.slice(0, 5)}</div>
-                    <div className="mt-1 text-muted-foreground">{booking.location === "Other" ? booking.other_location : booking.location}</div>
+                    <div className="font-black">
+                      {booking.requested_date} — {booking.requested_time.slice(0, 5)}
+                    </div>
+                    <div className="mt-1 text-muted-foreground">
+                      {booking.location === "Other" ? booking.other_location : booking.location}
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                     <select
                       value={booking.status}
                       onChange={(event) => updateStatus(booking.id, event.target.value)}
-                      disabled={session.profile.role === "coach" || session.profile.role === "content_manager"}
+                      disabled={
+                        session.profile.role === "coach" ||
+                        session.profile.role === "content_manager"
+                      }
                       className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-bold disabled:opacity-50"
                     >
                       <option value="pending">قيد الانتظار</option>
