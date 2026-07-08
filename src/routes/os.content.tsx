@@ -12,9 +12,9 @@ function ContentStudio() {
     retry: false,
   });
   const providers = providersQuery.data?.filter((item) => item.category.startsWith("ai_")) ?? [];
-  const textReady = providers.some((provider) => provider.category === "ai_text" && provider.configured);
-  const imageReady = providers.some((provider) => provider.category === "ai_image" && provider.configured);
-  const videoReady = providers.some((provider) => provider.category === "ai_video" && provider.configured);
+  const textReady = providers.some((provider) => provider.category === "ai_text" && provider.executable);
+  const imageReady = providers.some((provider) => provider.category === "ai_image" && provider.executable);
+  const videoReady = providers.some((provider) => provider.category === "ai_video" && provider.executable);
 
   const actions = [
     {
@@ -41,7 +41,7 @@ function ContentStudio() {
     <div>
       <h1 className="text-3xl font-black">AI Content Studio</h1>
       <p className="mt-2 text-muted-foreground">
-        Provider-aware content creation. Generation remains disabled until a server-side provider and adapter are ready.
+        Provider-aware content creation. Generation remains disabled until server configuration and a registered adapter are both ready.
       </p>
 
       {providersQuery.isError && (
@@ -62,7 +62,7 @@ function ContentStudio() {
             <div className="mt-4 text-xl font-black">{title}</div>
             <div className="mt-2 text-sm text-muted-foreground">{detail}</div>
             <div className={`mt-4 text-xs font-black ${enabled ? "text-primary" : "text-amber-700"}`}>
-              {enabled ? "PROVIDER CONFIG PRESENT — ADAPTER EXECUTION NEXT" : "DISABLED — PROVIDER NOT READY"}
+              {enabled ? "EXECUTABLE PROVIDER READY" : "DISABLED — CONFIG OR ADAPTER NOT READY"}
             </div>
           </button>
         ))}
@@ -77,8 +77,12 @@ function ContentStudio() {
                 <Sparkles className="h-4 w-4 text-primary" /> {provider.label}
               </div>
               <div className="mt-1 text-xs text-muted-foreground">{provider.detail}</div>
-              <div className={`mt-3 text-xs font-black ${provider.configured ? "text-primary" : "text-amber-700"}`}>
-                {provider.configured ? "SERVER CONFIG PRESENT" : "NOT CONFIGURED — generation is disabled"}
+              <div className={`mt-3 text-xs font-black ${provider.executable ? "text-primary" : "text-amber-700"}`}>
+                {provider.executable
+                  ? "READY TO EXECUTE"
+                  : provider.configured
+                    ? "CONFIG PRESENT — ADAPTER NOT REGISTERED"
+                    : "NOT CONFIGURED — GENERATION DISABLED"}
               </div>
             </div>
           ))}
