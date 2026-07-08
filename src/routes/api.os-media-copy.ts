@@ -25,6 +25,15 @@ function allowedRole(role: string): boolean {
   return ["super_admin", "admin", "content_manager"].includes(role);
 }
 
+function parseProviderJson(text: string): unknown {
+  const normalized = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+  return JSON.parse(normalized) as unknown;
+}
+
 export const Route = createFileRoute("/api/os-media-copy")({
   server: {
     handlers: {
@@ -65,7 +74,7 @@ export const Route = createFileRoute("/api/os-media-copy")({
             }),
           });
 
-          const copy = CopySchema.safeParse(JSON.parse(generated.text) as unknown);
+          const copy = CopySchema.safeParse(parseProviderJson(generated.text));
           if (!copy.success) {
             return Response.json(
               { success: false, code: "INVALID_PROVIDER_OUTPUT" },
