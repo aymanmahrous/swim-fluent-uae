@@ -28,6 +28,7 @@ const staffApiRoutes = [
   "src/routes/api.os-content-generate.ts",
   "src/routes/api.os-content-items.ts",
   "src/routes/api.os-content-transition.ts",
+  "src/routes/api.os-content-update.ts",
   "src/routes/api.os-crm.ts",
   "src/routes/api.os-inbox.ts",
   "src/routes/api.os-integrations.ts",
@@ -76,6 +77,7 @@ const migrations = new Map([
   ["supabase/migrations/20260708_000015_add_staff_operations_media_read_models.sql", ["get_staff_operations_queue", "get_staff_media_assets"]],
   ["supabase/migrations/20260708_000016_add_staff_content_review_schedule_rpc.sql", ["transition_staff_content_item"]],
   ["supabase/migrations/20260708_000017_add_publish_worker_rpcs.sql", ["claim_next_publish_job", "defer_publish_job", "fail_publish_job", "complete_publish_job"]],
+  ["supabase/migrations/20260708_000018_add_staff_content_edit_rpc.sql", ["update_staff_content_item"]],
 ]);
 
 for (const [path, functions] of migrations) {
@@ -98,6 +100,12 @@ requireText(workerMigration, "for update skip locked", "publish worker migration
 requireText(workerMigration, "to service_role", "publish worker migration");
 requireText(workerMigration, "attempt_count", "publish worker migration");
 requireText(workerMigration, "already_published", "publish worker migration");
+
+const editMigration = (await text("supabase/migrations/20260708_000018_add_staff_content_edit_rpc.sql")).toLowerCase();
+requireText(editMigration, "published_content_immutable", "content edit migration");
+requireText(editMigration, "content_edited_review_required", "content edit migration");
+requireText(editMigration, "status = 'needs_review'", "content edit migration");
+requireText(editMigration, "scheduled_for = null", "content edit migration");
 
 const providerRegistry = await text("src/platform/provider-registry.server.ts");
 requireText(providerRegistry, "configured", "provider registry");
