@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const JobStatusSchema = z.enum(["queued", "running", "succeeded", "failed", "cancelled"]);
+const JobStatusSchema = z.enum(["queued", "processing", "completed", "failed", "retrying", "dead"]);
 
 const FollowUpSchema = z.object({
   id: z.string().uuid(),
