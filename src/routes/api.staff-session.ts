@@ -3,13 +3,14 @@ import { z } from "zod";
 import {
   clearSessionCookieHeaders,
   resolveStaffSession,
+  revokeStaffSession,
   sessionCookieHeaders,
   signInStaff,
 } from "../platform/staff-session.server";
 
 const LoginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8).max(200),
+  password: z.string().min(1).max(200),
 });
 
 export const Route = createFileRoute("/api/staff-session")({
@@ -45,11 +46,13 @@ export const Route = createFileRoute("/api/staff-session")({
           { status: 200, headers: sessionCookieHeaders(session) },
         );
       },
-      DELETE: async () =>
-        new Response(JSON.stringify({ success: true }), {
+      DELETE: async ({ request }) => {
+        await revokeStaffSession(request);
+        return new Response(JSON.stringify({ success: true }), {
           status: 200,
           headers: clearSessionCookieHeaders(),
-        }),
+        });
+      },
     },
   },
 });
