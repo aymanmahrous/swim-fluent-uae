@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import {
   BarChart3,
   Bot,
@@ -15,8 +15,6 @@ import {
 } from "lucide-react";
 import { z } from "zod";
 import { useLang } from "../lib/i18n";
-
-const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 
 const StaffSessionSchema = z.object({
   authenticated: z.literal(true),
@@ -37,14 +35,7 @@ async function fetchStaffSession() {
   return parsed.data;
 }
 
-export const Route = createFileRoute("/os")({
-  beforeLoad: () => {
-    if (!aiOsEnabled) {
-      throw redirect({ to: "/", replace: true });
-    }
-  },
-  component: OperatingSystemLayout,
-});
+export const Route = createFileRoute("/os")({ component: OperatingSystemLayout });
 
 const items = [
   ["/os", "Command Center", LayoutDashboard],

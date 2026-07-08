@@ -32,11 +32,12 @@
 - Authenticated RBAC smoke using Coach Ayman's real user ID and JWT claims passed through the actual staff RPC surface.
 - Smoke observed real counts without mutating customer data: 3 booking requests and 7 CRM leads at verification time.
 - Fake entity IDs correctly returned `NOT_FOUND`; an empty generated-content batch returned `INVALID_BATCH_SIZE`.
-- `anon` cannot execute staff Command Center RPCs.
+- `anon` cannot execute staff Command Center or AI media RPCs.
 - `authenticated` cannot execute publish-worker RPCs.
 - Publish-worker RPCs are executable only by the PostgreSQL `service_role`, which modern `sb_secret_...` keys assume on trusted backend calls.
+- The authenticated Staff page links directly to `/os`; AI OS route access is enforced by Staff Auth/RBAC rather than a browser feature flag.
 
-## Premium public experience implemented in the integration branch
+## Premium public experience implemented
 
 - Premium bilingual Arabic/English public experience.
 - Deep navy, aqua, and controlled gold visual direction.
@@ -52,70 +53,107 @@
 - CRM reads real leads and supports atomic stage, human-required, do-not-contact, and future follow-up workflow changes.
 - CRM workflow synchronizes active follow-up jobs and conversation AI/human mode and records audit logs.
 - AI Inbox reads real conversations/messages and supports protected Take over / Return to AI / Pause mode changes.
-- Content Studio uses provider adapters and persists validated generated batches as `needs_review`.
+- Content Studio persists validated generated text batches as `needs_review`.
 - Content editing is protected; published content is immutable and edited scheduled content returns to review with schedule cleared.
 - Planner reads real `content_items` and supports approval, return to review, schedule, and unschedule transitions.
 - Scheduling enqueues one `publish_content` background job per content item.
 - Publish queue uses row locks and `FOR UPDATE SKIP LOCKED`, attempt counting, retries, deferral, dead-letter behavior, and idempotent already-published handling.
-- Media Library reads real `media_assets`.
+- Media Library reads real `media_assets` and renders permanent Supabase Storage image/video URLs.
 - Operations reads real follow-up and background-job queues.
 - Analytics reports real current database totals and explicitly does not claim cross-entity attribution until provider/campaign attribution links exist.
 - Provider status API distinguishes `configured` from `executable`; secrets are never returned to the browser.
 
+## Alibaba Qwen / Wan adapter foundation implemented on PR #7
+
+- Built-in text adapter: `alibaba-qwen`, default model `qwen3.7-max`.
+- Built-in image adapter: `alibaba-wan-image`, default model `wan2.7-image-pro`.
+- Built-in video adapter: `alibaba-wan-video`.
+- Text-to-video default model: `wan2.7-t2v-2026-06-12`.
+- Image-to-video default model: `wan2.7-i2v-2026-04-25`.
+- Qwen uses the workspace MAAS OpenAI-compatible chat endpoint.
+- Wan image generation uses the workspace synchronous multimodal-generation endpoint.
+- Wan video uses async task creation plus task polling.
+- Image-to-video uses `first_frame`; `ratio` is applied only to text-to-video, matching the provider contract.
+- Provider adapters remain non-executable unless both `MAAS_ENDPOINT` and `ALIBABA_MODEL_STUDIO_API_KEY` exist server-side.
+- Provider keys are never referenced by browser routes.
+
+## Permanent AI media storage verified
+
+- Live bucket `relax-fix-media` exists in Supabase Storage.
+- Bucket is public-read for generated social assets but public upload is not allowed.
+- Bucket maximum object size is 100 MB.
+- Allowed MIME types are PNG, JPEG, WebP, and MP4.
+- Upload RLS requires `authenticated` plus a matching first folder equal to `auth.uid()` and an active `super_admin`, `admin`, or `content_manager` staff profile.
+- `public.can_manage_relax_fix_media()` is a fixed-search-path `SECURITY DEFINER` helper dedicated to Storage RLS.
+- `anon` cannot execute the helper; `authenticated` and `service_role` can execute it.
+- Live RLS smoke proved Coach Ayman's own UUID folder can insert and a different UUID folder is denied with `42501`.
+- Direct `storage.objects` table reads are not granted to client roles.
+- Provider asset downloads are HTTPS-only and provider-host allowlisted.
+- Literal IPs, localhost, unapproved provider hosts, credentials in URLs, custom ports, and unvalidated redirect chains are rejected before server download.
+- Alibaba provider asset redirects are manually followed with host revalidation at each hop.
+- Small generated assets use standard Supabase Storage upload with the Staff JWT.
+- Generated videos larger than 6 MB use TUS resumable upload with fixed 6 MB chunks.
+- Concurrent deterministic video uploads treat an already-persisted permanent object as an idempotent success.
+
+## Async AI video jobs verified
+
+- Live `public.ai_media_jobs` stores async video task state without direct anon/authenticated table access.
+- Protected RPCs create, read, update, and finalize video-generation jobs.
+- Duplicate `(provider, provider_job_id)` creation returns the same persisted job ID.
+- Separate-statement live smoke verified `queued → running` transitions and updated metadata.
+- Invalid media path prefixes return `INVALID_STORAGE_PATH`.
+- Correct user prefixes with no Storage object return `STORAGE_OBJECT_NOT_FOUND`.
+- Video finalization locks the job row and returns `ALREADY_SUCCEEDED` after prior success, preventing duplicate media-record finalization.
+- Recent video jobs are exposed only through `get_staff_video_generation_jobs()` to authorized content staff.
+- The read model returns at most the latest 100 jobs; `anon` cannot execute it.
+- Content Studio automatically resumes the newest `queued` or `running` job after a page reload and also shows recent jobs for manual resume.
+- Stored jobs are polled through their original provider adapter ID instead of relying on the current default video-provider setting.
+
 ## Live Supabase migrations
 
-The live production database has the following verified migration layers applied:
+The live production database has verified layers applied through:
 
 1. Centralized business settings and booking hardening.
 2. Legacy public-surface lockdown and foundation foreign-key indexes.
 3. `staff_profiles`, staff booking RPCs, and internal staff helper hardening.
-4. `get_staff_crm_leads`.
-5. `get_staff_inbox` and `get_staff_conversation_messages`.
-6. `set_staff_conversation_mode`.
-7. `create_staff_generated_content_batch`.
-8. Staff content, analytics, and Command Center read models.
-9. Staff operations and media read models.
-10. Atomic content review/scheduling transitions.
-11. Publish-worker claim/defer/fail/complete RPCs.
-12. Protected content editing.
-13. Atomic CRM/follow-up workflow management.
+4. CRM, Inbox, and conversation-mode staff RPCs.
+5. Generated content persistence and OS real-data read models.
+6. Content review/scheduling, publish-worker, content editing, and CRM workflow RPCs.
+7. `add_ai_media_generation_storage`.
+8. `fix_ai_media_storage_policy`.
+9. `add_staff_video_generation_jobs_read_rpc`.
 
-Repository migrations `20260708_000001` through `20260708_000019` document the complete schema and function evolution. The live migration registry includes the production-applied layers from `business_settings` through `add_staff_crm_workflow_rpc`.
+Repository migrations `20260708_000001` through `20260708_000022` document the complete schema and function evolution present on the integration branch. The live migration registry includes the production-applied layers through `add_staff_video_generation_jobs_read_rpc`.
 
 ## External providers — intentionally NOT CONFIGURED
 
-The following are not represented as live until real provider authorization is supplied and an executable adapter is registered:
+The following are not represented as live until real provider authorization or server credentials exist:
 
+- Alibaba Model Studio execution: adapter code exists, but a real server-side `ALIBABA_MODEL_STUDIO_API_KEY` has not been verified in Vercel.
 - Meta / Instagram messaging and publishing.
 - WhatsApp Business Platform automated sending and webhook ingestion.
 - TikTok publishing.
-- AI text generation provider.
-- AI image generation provider.
-- AI video generation provider.
 
 The UI and APIs fail closed with `NOT CONFIGURED` / `PROVIDER_NOT_READY` states. There is no fake AI generation, fake social publishing, or fake automated reply success.
 
 ## External activation requirements
 
+- Alibaba Model Studio API key stored directly in Vercel server environment; do not paste it into source code, public documents, browser variables, or chat.
 - Meta App ID, App Secret, Verify Token, OAuth/page/Instagram authorization, and webhook configuration.
 - WhatsApp Business phone-number ID and access token, plus approved webhook and message-policy setup.
 - TikTok client authorization/OAuth for the target publishing account.
-- A chosen text-generation provider ID and server API key, plus a registered executable adapter.
-- A chosen image-generation provider ID and server API key, plus a registered executable adapter.
-- A chosen asynchronous video-generation provider ID and server API key, plus a registered executable adapter.
-- A dedicated modern Supabase `sb_secret_...` key for the backend publish worker and an independent `INTERNAL_WORKER_TOKEN` when publishing is activated.
+- A dedicated modern Supabase `sb_secret_...` key for the backend publish worker and an independent `INTERNAL_WORKER_TOKEN` when external publishing is activated.
 
-Provider credentials must be stored only in server-side environment/secret storage and must never be pasted into source code, public documents, URLs, or browser variables.
+## Current PR #7 merge gate
 
-## Current merge gate
+PR #7 must pass the final exact-head GitHub CI after all Alibaba/Storage/video-resume changes and dependency metadata are stable. Before merge:
 
-The cumulative integration branch must pass GitHub CI after the modern Supabase secret-key migration. Once the integration tree is on `main`, Production must be verified again for:
+1. lint passes.
+2. production build passes.
+3. AI OS security and data contracts pass, including migrations `000020`, `000021`, and `000022`.
+4. live Supabase booking smoke remains green.
+5. package dependency metadata is reconciled for `tus-js-client`.
+6. unauthenticated image, video, matching-copy, and video-jobs APIs return 401.
+7. provider status remains truthful and fail closed without the real Alibaba key.
 
-1. Public Premium homepage rendering.
-2. `/api/business-settings` HTTP 200.
-3. Public booking smoke and real persistence.
-4. Staff sign-in and protected `/staff` access with Coach Ayman's confirmed Supabase Auth account.
-5. Protected `/os` API authorization and real-data reads.
-6. Provider status truthfulness with all unconfigured providers remaining fail closed.
-
-External provider activation is a separate credential/OAuth step and is not a blocker for merging the truthful fail-closed platform foundation.
+After merge, Production must be reverified for public booking, Staff login shell, `/os` Staff Auth gate, new media APIs, and provider readiness truthfulness.
