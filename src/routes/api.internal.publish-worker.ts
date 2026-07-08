@@ -106,6 +106,7 @@ export const Route = createFileRoute("/api/internal/publish-worker")({
         try {
           const providerResult = ProviderResultSchema.safeParse(
             await provider.publish({
+              idempotencyKey: `publish:${job.content.contentItemId}`,
               contentItemId: job.content.contentItemId,
               platform,
               contentType: job.content.contentType,
