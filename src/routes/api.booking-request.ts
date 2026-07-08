@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-const projectUrl = "https://nmzxrjdxvmmzzmajrskm.supabase.co";
-const projectPublishableKey = "sb_publishable_qXOPVaD5_f60qf1UbYrm2A_sH9c0lW5";
+import {
+  supabaseProjectUrl,
+  supabasePublicHeaders,
+} from "../platform/supabase-project.server";
 
 export const Route = createFileRoute("/api/booking-request")({
   server: {
@@ -9,15 +10,17 @@ export const Route = createFileRoute("/api/booking-request")({
       POST: async ({ request }) => {
         try {
           const payload = await request.text();
-          const response = await fetch(`${projectUrl}/rest/v1/rpc/submit_booking_request`, {
-            method: "POST",
-            headers: {
-              apikey: projectPublishableKey,
-              "Content-Type": "application/json",
-              Accept: "application/json",
+          const response = await fetch(
+            `${supabaseProjectUrl}/rest/v1/rpc/submit_booking_request`,
+            {
+              method: "POST",
+              headers: {
+                ...supabasePublicHeaders(),
+                "Content-Type": "application/json",
+              },
+              body: payload,
             },
-            body: payload,
-          });
+          );
 
           const body = await response.text();
           return new Response(body, {
