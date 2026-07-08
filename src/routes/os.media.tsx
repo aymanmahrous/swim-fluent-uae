@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Film, Image, Library, ShieldAlert } from "lucide-react";
+import { ExternalLink, Film, Image, Library, ShieldAlert } from "lucide-react";
 import { fetchMediaAssets } from "../platform/os-operations-data";
 
 export const Route = createFileRoute("/os/media")({ component: MediaPage });
@@ -22,7 +22,7 @@ function MediaPage() {
     <div>
       <h1 className="text-3xl font-black">Media Library</h1>
       <p className="mt-2 text-muted-foreground">
-        Real `media_assets` catalog. Storage paths and provider job references are shown as recorded; no generated media is invented.
+        Permanent Relax Fix assets stored in Supabase Storage. Alibaba provider result URLs are copied here before the temporary links expire.
       </p>
 
       {mediaQuery.isError && (
@@ -48,35 +48,48 @@ function MediaPage() {
         })}
       </div>
 
-      <section className="mt-8 overflow-hidden rounded-2xl border border-border bg-card">
-        <div className="border-b border-border p-5">
-          <h2 className="text-xl font-black">Asset catalog</h2>
+      <section className="mt-8 rounded-2xl border border-border bg-card p-5">
+        <div className="border-b border-border pb-5">
+          <h2 className="text-xl font-black">Permanent asset catalog</h2>
         </div>
-        <div className="divide-y divide-border">
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {assets.map((asset) => (
-            <article key={asset.id} className="grid gap-3 p-5 md:grid-cols-[auto_1fr_auto] md:items-center">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
-                {asset.assetType === "video" ? <Film className="h-5 w-5" /> : asset.assetType === "image" ? <Image className="h-5 w-5" /> : <Library className="h-5 w-5" />}
+            <article key={asset.id} className="overflow-hidden rounded-2xl border border-border bg-muted/20">
+              <div className="grid aspect-[4/3] place-items-center overflow-hidden bg-deep/5">
+                {asset.publicUrl && asset.assetType === "image" ? (
+                  <img src={asset.publicUrl} alt={asset.prompt ?? "Relax Fix generated media"} className="h-full w-full object-cover" loading="lazy" />
+                ) : asset.publicUrl && asset.assetType === "video" ? (
+                  <video src={asset.publicUrl} controls preload="metadata" className="h-full w-full object-contain" />
+                ) : (
+                  <div className="grid h-14 w-14 place-items-center rounded-xl bg-primary/10 text-primary">
+                    {asset.assetType === "video" ? <Film className="h-6 w-6" /> : asset.assetType === "image" ? <Image className="h-6 w-6" /> : <Library className="h-6 w-6" />}
+                  </div>
+                )}
               </div>
-              <div className="min-w-0">
-                <div className="font-black">{asset.assetType} · {asset.source}</div>
-                <div className="mt-1 break-all text-xs text-muted-foreground">
-                  {asset.storagePath ?? "No storage path recorded"}
+              <div className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-black">{asset.assetType} · {asset.source}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">{asset.provider ?? "No provider"}</div>
+                  </div>
+                  {asset.publicUrl && (
+                    <a href={asset.publicUrl} target="_blank" rel="noreferrer" className="text-primary" aria-label="Open media asset">
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
                 </div>
-                {asset.prompt && <div className="mt-2 line-clamp-2 text-sm text-muted-foreground">{asset.prompt}</div>}
-              </div>
-              <div className="text-xs text-muted-foreground md:text-end">
-                <div>{asset.provider ?? "No provider"}</div>
-                <div className="mt-1">{asset.providerJobId ?? "No provider job"}</div>
+                {asset.prompt && <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">{asset.prompt}</p>}
+                <div className="mt-4 break-all text-[11px] text-muted-foreground">{asset.storagePath ?? "No storage path recorded"}</div>
+                <div className="mt-2 break-all text-[11px] text-muted-foreground">{asset.providerJobId ?? "No provider job"}</div>
               </div>
             </article>
           ))}
           {!mediaQuery.isLoading && !mediaQuery.isError && assets.length === 0 && (
-            <div className="p-10 text-center text-sm text-muted-foreground">
-              No media assets exist in Supabase yet.
+            <div className="col-span-full p-10 text-center text-sm text-muted-foreground">
+              No media assets exist yet. Generate an image or video in AI Content Studio.
             </div>
           )}
-          {mediaQuery.isLoading && <div className="p-10 text-center text-sm text-muted-foreground">Loading media assets...</div>}
+          {mediaQuery.isLoading && <div className="col-span-full p-10 text-center text-sm text-muted-foreground">Loading media assets...</div>}
         </div>
       </section>
     </div>
