@@ -4,7 +4,10 @@ import {
   mediaPublicUrl,
   persistRemoteProviderAsset,
 } from "../platform/media-storage.server";
-import { getVideoProvider } from "../platform/provider-registry.server";
+import {
+  getVideoProvider,
+  getVideoProviderById,
+} from "../platform/provider-registry.server";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -187,10 +190,10 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
             );
           }
 
-          const provider = getVideoProvider();
-          if (!provider || provider.id !== job.data.provider) {
+          const provider = getVideoProviderById(job.data.provider);
+          if (!provider) {
             return Response.json(
-              { success: false, code: "PROVIDER_CONFIGURATION_CHANGED" },
+              { success: false, code: "STORED_PROVIDER_NOT_READY" },
               { status: 503, headers: sessionCookieHeaders(session) },
             );
           }
