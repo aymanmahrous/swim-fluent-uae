@@ -81,12 +81,6 @@ begin
     return jsonb_build_object('success', false, 'code', 'FOLLOW_UP_TOO_FAR');
   end if;
 
-  update public.follow_up_jobs
-  set status = 'dead',
-      stopped_reason = v_stop_reason
-  where lead_id = p_lead_id
-    and status in ('queued','processing','retrying');
-
   if v_effective_follow_up_at is not null then
     if v_active_attempt is not null then
       v_next_attempt := v_active_attempt;
@@ -101,7 +95,15 @@ begin
     if v_next_attempt > 3 then
       return jsonb_build_object('success', false, 'code', 'FOLLOW_UP_LIMIT_REACHED');
     end if;
+  end if;
 
+  update public.follow_up_jobs
+  set status = 'dead',
+      stopped_reason = v_stop_reason
+  where lead_id = p_lead_id
+    and status in ('queued','processing','retrying');
+
+  if v_effective_follow_up_at is not null then
     insert into public.follow_up_jobs (
       lead_id,
       conversation_id,
