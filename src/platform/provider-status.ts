@@ -5,6 +5,7 @@ export const ProviderStatusSchema = z.object({
   label: z.string(),
   category: z.enum(["database", "messaging", "publishing", "ai_text", "ai_image", "ai_video"]),
   configured: z.boolean(),
+  executable: z.boolean(),
   provider: z.string().nullable(),
   detail: z.string(),
 });
