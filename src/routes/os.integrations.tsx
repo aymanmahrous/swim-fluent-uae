@@ -38,15 +38,20 @@ function IntegrationsPage() {
                   {item.provider ?? "provider not selected"}
                 </div>
               </div>
-              {item.configured ? (
+              {item.executable ? (
                 <CheckCircle2 className="h-5 w-5 text-primary" />
               ) : (
                 <CircleAlert className="h-5 w-5 text-amber-600" />
               )}
             </div>
             <div className="mt-3 text-sm leading-6 text-muted-foreground">{item.detail}</div>
-            <div className={`mt-4 text-xs font-black ${item.configured ? "text-primary" : "text-amber-700"}`}>
-              {item.configured ? "SERVER CONFIG PRESENT" : "ACTION REQUIRED"}
+            <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-black">
+              <span className={`rounded-full px-2.5 py-1 ${item.configured ? "bg-primary/10 text-primary" : "bg-amber-500/10 text-amber-700"}`}>
+                {item.configured ? "CONFIG PRESENT" : "CONFIG MISSING"}
+              </span>
+              <span className={`rounded-full px-2.5 py-1 ${item.executable ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                {item.executable ? "EXECUTABLE" : "ADAPTER NOT READY"}
+              </span>
             </div>
           </div>
         ))}
