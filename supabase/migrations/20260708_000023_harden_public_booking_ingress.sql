@@ -200,18 +200,14 @@ begin
 end;
 $$;
 
-revoke all on function public.submit_booking_request(
-  text, text, text, text, text, text, boolean, boolean, text, date, time, boolean, uuid
-) from public, anon, authenticated;
-grant execute on function public.submit_booking_request(
-  text, text, text, text, text, text, boolean, boolean, text, date, time, boolean, uuid
-) to service_role;
-
 revoke all on function public.submit_booking_request_ingress(
   text, text, text, text, text, text, boolean, boolean, text, date, time, boolean, uuid, text, text, integer
 ) from public, anon, authenticated;
 grant execute on function public.submit_booking_request_ingress(
   text, text, text, text, text, text, boolean, boolean, text, date, time, boolean, uuid, text, text, integer
 ) to service_role;
+
+-- Zero-downtime staging: the legacy public RPC remains callable until the OIDC-backed
+-- Production route is deployed and verified. Migration 000024 removes public execution.
 
 commit;
