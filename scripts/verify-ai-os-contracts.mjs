@@ -36,6 +36,7 @@ const staffApiRoutes = [
   "src/routes/api.os-media-copy.ts",
   "src/routes/api.os-media-generate-image.ts",
   "src/routes/api.os-media-generate-video.ts",
+  "src/routes/api.os-media-video-jobs.ts",
   "src/routes/api.os-operations.ts",
 ];
 
@@ -204,6 +205,16 @@ requireText(mediaPolicyFix, "storage.foldername(name)", "AI media policy fix");
 requireText(mediaPolicyFix, "auth.uid()::text", "AI media policy fix");
 requireText(mediaPolicyFix, "public.can_manage_relax_fix_media()", "AI media policy fix");
 
+const videoJobsMigrationPath =
+  "supabase/migrations/20260708_000022_add_staff_video_generation_jobs_read_rpc.sql";
+const videoJobsMigration = (await text(videoJobsMigrationPath)).toLowerCase();
+requireText(videoJobsMigration, "get_staff_video_generation_jobs", "video jobs read migration");
+requireText(videoJobsMigration, "security definer", "video jobs read migration");
+requireText(videoJobsMigration, "set search_path = public, pg_temp", "video jobs read migration");
+requireText(videoJobsMigration, "limit 100", "video jobs read migration");
+requireText(videoJobsMigration, "from public, anon", "video jobs read migration");
+requireText(videoJobsMigration, "to authenticated, service_role", "video jobs read migration");
+
 const providerRegistry = await text("src/platform/provider-registry.server.ts");
 requireText(providerRegistry, "configured", "provider registry");
 requireText(providerRegistry, "executable", "provider registry");
@@ -253,10 +264,17 @@ const videoRoute = await text("src/routes/api.os-media-generate-video.ts");
 requireText(videoRoute, "getVideoProviderById(job.data.provider)", "video generation route");
 requireText(videoRoute, '"STORED_PROVIDER_NOT_READY"', "video generation route");
 
+const mediaCopyRoute = await text("src/routes/api.os-media-copy.ts");
+requireText(mediaCopyRoute, "parseProviderJson", "matching copy route");
+requireText(mediaCopyRoute, "replace(/^```(?:json)?", "matching copy route");
+
 const contentStudio = await text("src/routes/os.content.tsx");
 requireText(contentStudio, "generateAiImage", "Content Studio");
 requireText(contentStudio, "createAiVideo", "Content Studio");
 requireText(contentStudio, "fetchAiVideoJob", "Content Studio");
+requireText(contentStudio, "fetchAiVideoJobs", "Content Studio");
+requireText(contentStudio, "activeVideoJob", "Content Studio");
+requireText(contentStudio, "resumeVideoJob", "Content Studio");
 requireText(contentStudio, "generateMatchingCopy", "Content Studio");
 forbidText(contentStudio, "onClick: () => undefined", "Content Studio");
 
