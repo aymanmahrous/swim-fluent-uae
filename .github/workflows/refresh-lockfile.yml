@@ -11,6 +11,7 @@ permissions:
 jobs:
   refresh:
     # One-shot branch maintenance workflow. Deleted after the lockfile commit lands.
+    # This trigger runs after restoring the mainline React hooks lint dependency.
     if: contains(github.event.head_commit.message, '[refresh-lock]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
