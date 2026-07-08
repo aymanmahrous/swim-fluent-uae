@@ -1,6 +1,7 @@
 import type { ContentItem, IntegrationStatus, Lead, PlatformSnapshot } from "./types";
 
 const SNAPSHOT_KEY = "rfx_os_snapshot_v1";
+const demoDataEnabled = import.meta.env.VITE_AI_OS_DEMO_DATA === "true";
 
 const seedLeads: Lead[] = [
   {
@@ -48,7 +49,7 @@ const integrations: IntegrationStatus[] = [
     configured: Boolean(
       import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY,
     ),
-    detail: "Bookings, CRM, inbox, automation and content data",
+    detail: "Client configuration present; operational data access still requires staff auth/RLS",
   },
   {
     id: "meta",
@@ -177,7 +178,7 @@ export function buildThirtyDayPlan(start = new Date()): ContentItem[] {
   });
 }
 
-function seedSnapshot(): PlatformSnapshot {
+function demoSnapshot(): PlatformSnapshot {
   return {
     leads: seedLeads,
     conversations: seedLeads.map((lead, index) => ({
@@ -199,20 +200,31 @@ function seedSnapshot(): PlatformSnapshot {
   };
 }
 
+function productionSnapshot(): PlatformSnapshot {
+  return {
+    leads: [],
+    conversations: [],
+    content: buildThirtyDayPlan(),
+    integrations,
+  };
+}
+
 export function loadPlatformSnapshot(): PlatformSnapshot {
-  if (typeof window === "undefined") return seedSnapshot();
+  if (!demoDataEnabled) return productionSnapshot();
+  if (typeof window === "undefined") return demoSnapshot();
+
   try {
     const raw = localStorage.getItem(SNAPSHOT_KEY);
-    if (!raw) return seedSnapshot();
+    if (!raw) return demoSnapshot();
     const parsed = JSON.parse(raw) as PlatformSnapshot;
-    return { ...seedSnapshot(), ...parsed, integrations };
+    return { ...demoSnapshot(), ...parsed, integrations };
   } catch {
-    return seedSnapshot();
+    return demoSnapshot();
   }
 }
 
 export function savePlatformSnapshot(snapshot: PlatformSnapshot): void {
-  if (typeof window === "undefined") return;
+  if (!demoDataEnabled || typeof window === "undefined") return;
   localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
 }
 
