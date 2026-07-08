@@ -33,6 +33,9 @@ const staffApiRoutes = [
   "src/routes/api.os-inbox.ts",
   "src/routes/api.os-integrations.ts",
   "src/routes/api.os-media.ts",
+  "src/routes/api.os-media-copy.ts",
+  "src/routes/api.os-media-generate-image.ts",
+  "src/routes/api.os-media-generate-video.ts",
   "src/routes/api.os-operations.ts",
 ];
 
@@ -42,6 +45,7 @@ for (const path of staffApiRoutes) {
   requireText(source, '"UNAUTHORIZED"', path);
   forbidText(source, "SUPABASE_SERVICE_ROLE_KEY", path);
   forbidText(source, "SUPABASE_SECRET_KEY", path);
+  forbidText(source, "ALIBABA_MODEL_STUDIO_API_KEY", path);
 }
 
 const worker = await text("src/routes/api.internal.publish-worker.ts");
@@ -65,6 +69,12 @@ forbidText(secretClient, "SUPABASE_SERVICE_ROLE_KEY", "Supabase secret client");
 const envExample = await text(".env.example");
 requireText(envExample, "SUPABASE_SECRET_KEY=", "environment template");
 requireText(envExample, "INTERNAL_WORKER_TOKEN=", "environment template");
+requireText(envExample, "MAAS_ENDPOINT=", "environment template");
+requireText(envExample, "ALIBABA_MODEL_STUDIO_API_KEY=", "environment template");
+requireText(envExample, "AI_TEXT_MODEL=qwen3.7-max", "environment template");
+requireText(envExample, "AI_IMAGE_MODEL=wan2.7-image-pro", "environment template");
+requireText(envExample, "AI_VIDEO_TEXT_MODEL=wan2.7-t2v-2026-06-12", "environment template");
+requireText(envExample, "AI_VIDEO_IMAGE_MODEL=wan2.7-i2v-2026-04-25", "environment template");
 forbidText(envExample, "SUPABASE_SERVICE_ROLE_KEY", "environment template");
 
 const internalAuth = await text("src/platform/internal-auth.server.ts");
@@ -162,13 +172,67 @@ requireText(crmWorkflowMigration, "do_not_contact", "CRM workflow migration");
 requireText(crmWorkflowMigration, "follow_up_limit_reached", "CRM workflow migration");
 requireText(crmWorkflowMigration, "audit_logs", "CRM workflow migration");
 
+const mediaMigrationPath = "supabase/migrations/20260708_000020_add_ai_media_generation_storage.sql";
+const mediaMigration = (await text(mediaMigrationPath)).toLowerCase();
+for (const functionName of [
+  "create_staff_media_asset_record",
+  "create_staff_video_generation_job",
+  "get_staff_video_generation_job",
+  "update_staff_video_generation_job",
+]) {
+  requireText(mediaMigration, functionName, mediaMigrationPath);
+}
+requireText(mediaMigration, "relax-fix-media", "AI media migration");
+requireText(mediaMigration, "storage.foldername(name)", "AI media migration");
+requireText(mediaMigration, "auth.uid()::text", "AI media migration");
+requireText(mediaMigration, "staff_profiles", "AI media migration");
+requireText(mediaMigration, "security definer", "AI media migration");
+requireText(mediaMigration, "set search_path = public, storage, pg_temp", "AI media migration");
+requireText(mediaMigration, "revoke all on function", "AI media migration");
+requireText(mediaMigration, "from public, anon", "AI media migration");
+requireText(mediaMigration, "for update", "AI media migration");
+requireText(mediaMigration, "storage_object_not_found", "AI media migration");
+
 const providerRegistry = await text("src/platform/provider-registry.server.ts");
 requireText(providerRegistry, "configured", "provider registry");
 requireText(providerRegistry, "executable", "provider registry");
 requireText(providerRegistry, "idempotencyKey", "provider registry");
 requireText(providerRegistry, "registerPublishingProvider", "provider registry");
 requireText(providerRegistry, 'all("SUPABASE_SECRET_KEY", "INTERNAL_WORKER_TOKEN")', "provider registry");
+requireText(providerRegistry, "alibabaQwenProvider", "provider registry");
+requireText(providerRegistry, "alibabaWanImageProvider", "provider registry");
+requireText(providerRegistry, "alibabaWanVideoProvider", "provider registry");
 forbidText(providerRegistry, "SUPABASE_SERVICE_ROLE_KEY", "provider registry");
+
+const alibabaAdapter = await text("src/platform/alibaba-model-studio.server.ts");
+requireText(alibabaAdapter, '"qwen3.7-max"', "Alibaba adapter");
+requireText(alibabaAdapter, '"wan2.7-image-pro"', "Alibaba adapter");
+requireText(alibabaAdapter, '"wan2.7-t2v-2026-06-12"', "Alibaba adapter");
+requireText(alibabaAdapter, '"wan2.7-i2v-2026-04-25"', "Alibaba adapter");
+requireText(alibabaAdapter, "/compatible-mode/v1/chat/completions", "Alibaba adapter");
+requireText(alibabaAdapter, "/api/v1/services/aigc/multimodal-generation/generation", "Alibaba adapter");
+requireText(alibabaAdapter, "/api/v1/services/aigc/video-generation/video-synthesis", "Alibaba adapter");
+requireText(alibabaAdapter, '"X-DashScope-Async": "enable"', "Alibaba adapter");
+requireText(alibabaAdapter, 'type: "first_frame"', "Alibaba adapter");
+requireText(alibabaAdapter, "usesSourceImage ? {} : { ratio:", "Alibaba adapter");
+requireText(alibabaAdapter, "/api/v1/tasks/", "Alibaba adapter");
+
+const mediaStorage = await text("src/platform/media-storage.server.ts");
+requireText(mediaStorage, 'MEDIA_BUCKET = "relax-fix-media"', "media storage");
+requireText(mediaStorage, "tus.Upload", "media storage");
+requireText(mediaStorage, "chunkSize: STANDARD_UPLOAD_LIMIT", "media storage");
+requireText(mediaStorage, "6 * 1024 * 1024", "media storage");
+requireText(mediaStorage, ".storage.supabase.co/storage/v1/upload/resumable", "media storage");
+requireText(mediaStorage, "Authorization: `Bearer ${accessToken}`", "media storage");
+forbidText(mediaStorage, "SUPABASE_SECRET_KEY", "media storage");
+forbidText(mediaStorage, "SUPABASE_SERVICE_ROLE_KEY", "media storage");
+
+const contentStudio = await text("src/routes/os.content.tsx");
+requireText(contentStudio, "generateAiImage", "Content Studio");
+requireText(contentStudio, "createAiVideo", "Content Studio");
+requireText(contentStudio, "fetchAiVideoJob", "Content Studio");
+requireText(contentStudio, "generateMatchingCopy", "Content Studio");
+forbidText(contentStudio, "onClick: () => undefined", "Content Studio");
 
 console.log(
   `AI OS contract verification passed (${checks} assertions across ${osPages.length} OS pages).`,
