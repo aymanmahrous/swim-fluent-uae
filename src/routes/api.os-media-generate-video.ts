@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import {
-  mediaPublicUrl,
+  mediaSignedUrl,
   persistRemoteProviderAsset,
 } from "../platform/media-storage.server";
 import {
@@ -178,7 +178,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
                 jobId: job.data.jobId,
                 status: "succeeded",
                 storagePath: job.data.storagePath,
-                publicUrl: mediaPublicUrl(job.data.storagePath),
+                publicUrl: await mediaSignedUrl(job.data.storagePath, session.accessToken),
               },
               { headers: sessionCookieHeaders(session) },
             );
@@ -270,7 +270,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
               jobId: job.data.jobId,
               status: "succeeded",
               storagePath,
-              publicUrl: mediaPublicUrl(storagePath),
+              publicUrl: await mediaSignedUrl(storagePath, session.accessToken),
               uploadMode: persisted.uploadMode,
             },
             { headers: sessionCookieHeaders(session) },
