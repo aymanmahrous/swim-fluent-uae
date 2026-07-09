@@ -15,7 +15,7 @@ export async function supabaseSecretRpc(
   body: Record<string, unknown> = {},
 ): Promise<Response> {
   const key = process.env.SUPABASE_SECRET_KEY?.trim();
-  if (!key || !isSupabaseServerKeyConfigured()) {
+  if (!key) {
     return Response.json(
       { success: false, code: "SUPABASE_SECRET_NOT_CONFIGURED" },
       { status: 503 },
