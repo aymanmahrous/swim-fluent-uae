@@ -35,6 +35,8 @@ jobs:
       - run: npm run build
       - name: Verify public SEO, localization, and indexing boundaries
         run: npm run verify:public-seo
+      - name: Verify Content Brain cadence and fatigue boundaries
+        run: npm run verify:content-brain
       - name: Verify Vercel automated preview build policy
         run: node scripts/verify-vercel-build-policy.mjs
       - name: Verify AI OS security and real-data contracts
