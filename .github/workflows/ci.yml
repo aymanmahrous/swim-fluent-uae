@@ -74,7 +74,7 @@ jobs:
           github.event.pull_request.number == 9 &&
           github.head_ref == 'agent/verify-ai-media-e2e' &&
           contains(github.event.pull_request.labels.*.name, 'ai-media-e2e')
-        run: node scripts/ai-media-e2e-admin.mjs provision
+        run: node scripts/ai-media-e2e-admin.mjs provision > e2e-provision.log 2>&1 || { cat e2e-provision.log; exit 1; }
       - name: Run real AI Image and AI Video browser E2E
         if: >-
           github.event_name == 'pull_request' &&
@@ -100,5 +100,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ai-media-e2e-diagnostics
-          path: test-results
+          path: |
+            test-results
+            e2e-provision.log
           if-no-files-found: ignore
