@@ -44,7 +44,15 @@ for (const needle of [
   requireText(migration, needle, "publication receipt database contract");
 }
 
-const secret = await text("src/platform/supabase-secret.server.ts");
+const secretClient = await text("src/platform/supabase-secret.server.ts");
+requireText(
+  secretClient,
+  'export { createPublishingMediaSignedUrl } from "./publishing-media-sign.server"',
+  "publishing signer server re-export",
+);
+forbidText(secretClient, "Authorization", "Supabase secret RPC isolation");
+
+const signer = await text("src/platform/publishing-media-sign.server.ts");
 for (const needle of [
   'const MEDIA_BUCKET = "relax-fix-media"',
   "PUBLISH_SIGNED_URL_TTL_SECONDS = 60 * 60",
@@ -53,9 +61,9 @@ for (const needle of [
   "Authorization: `Bearer ${key}`",
   "createPublishingMediaSignedUrl",
 ]) {
-  requireText(secret, needle, "private publishing media URL contract");
+  requireText(signer, needle, "private publishing media URL contract");
 }
-forbidText(secret, "/object/public/", "private publishing media URL contract");
+forbidText(signer, "/object/public/", "private publishing media URL contract");
 
 const meta = await text("src/platform/meta-publishing.server.ts");
 for (const needle of [
