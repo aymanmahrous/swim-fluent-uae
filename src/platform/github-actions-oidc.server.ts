@@ -4,7 +4,8 @@ const OIDC_ISSUER = "https://token.actions.githubusercontent.com";
 const OIDC_JWKS_URL = `${OIDC_ISSUER}/.well-known/jwks`;
 export const AI_MEDIA_E2E_AUDIENCE = "relax-fix-ai-media-e2e";
 const EXPECTED_REPOSITORY = "aymanmahrous/swim-fluent-uae";
-const EXPECTED_REF = "refs/pull/9/merge";
+const EXPECTED_REF = "refs/heads/main";
+const EXPECTED_SUBJECT = `repo:${EXPECTED_REPOSITORY}:ref:${EXPECTED_REF}`;
 const JWKS_CACHE_MS = 5 * 60 * 1000;
 
 const HeaderSchema = z.object({
@@ -19,9 +20,10 @@ const ClaimsSchema = z.object({
   iat: z.number().int().optional(),
   nbf: z.number().int().optional(),
   repository: z.literal(EXPECTED_REPOSITORY),
-  event_name: z.literal("pull_request"),
+  event_name: z.literal("push"),
   ref: z.literal(EXPECTED_REF),
-  sub: z.string().min(1),
+  sha: z.string().regex(/^[0-9a-f]{40}$/),
+  sub: z.literal(EXPECTED_SUBJECT),
 });
 
 const JwksSchema = z.object({
@@ -37,6 +39,11 @@ const JwksSchema = z.object({
 });
 
 type Jwk = z.infer<typeof JwksSchema>["keys"][number];
+export type GithubActionsOidcContext = {
+  eventName: "push";
+  ref: typeof EXPECTED_REF;
+  sha: string;
+};
 
 let cachedKeys: { fetchedAt: number; keys: Jwk[] } | null = null;
 
@@ -93,38 +100,46 @@ async function verifySignature(
   );
 }
 
-export async function verifyGithubActionsOidc(request: Request): Promise<boolean> {
+export async function verifyGithubActionsOidc(
+  request: Request,
+): Promise<GithubActionsOidcContext | null> {
   try {
     const authorization = request.headers.get("authorization") ?? "";
-    if (!authorization.startsWith("Bearer ")) return false;
+    if (!authorization.startsWith("Bearer ")) return null;
     const token = authorization.slice("Bearer ".length).trim();
     const segments = token.split(".");
-    if (segments.length !== 3 || segments.some((segment) => segment.length < 1)) return false;
+    if (segments.length !== 3 || segments.some((segment) => segment.length < 1)) return null;
 
     const [headerSegment, claimsSegment, signatureSegment] = segments;
     const header = HeaderSchema.safeParse(decodeJson(headerSegment));
     const claims = ClaimsSchema.safeParse(decodeJson(claimsSegment));
-    if (!header.success || !claims.success || !audienceMatches(claims.data.aud)) return false;
+    if (!header.success || !claims.success || !audienceMatches(claims.data.aud)) return null;
 
     const now = Math.floor(Date.now() / 1000);
-    if (claims.data.exp <= now) return false;
-    if (claims.data.iat && claims.data.iat > now + 60) return false;
-    if (claims.data.nbf && claims.data.nbf > now + 60) return false;
-    if (claims.data.sub !== `repo:${EXPECTED_REPOSITORY}:pull_request`) return false;
+    if (claims.data.exp <= now) return null;
+    if (claims.data.iat && claims.data.iat > now + 60) return null;
+    if (claims.data.nbf && claims.data.nbf > now + 60) return null;
 
     const key = (await githubOidcKeys()).find(
       (candidate) =>
         candidate.kid === header.data.kid &&
         (!candidate.alg || candidate.alg === header.data.alg),
     );
-    if (!key) return false;
+    if (!key) return null;
 
-    return verifySignature(
+    const valid = await verifySignature(
       `${headerSegment}.${claimsSegment}`,
       signatureSegment,
       key,
     );
+    if (!valid) return null;
+
+    return {
+      eventName: claims.data.event_name,
+      ref: claims.data.ref,
+      sha: claims.data.sha,
+    };
   } catch {
-    return false;
+    return null;
   }
 }
