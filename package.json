@@ -13,6 +13,7 @@
     "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
+    "verify:content-media-worker": "node scripts/verify-content-media-worker.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

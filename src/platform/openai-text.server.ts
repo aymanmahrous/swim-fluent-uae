@@ -6,7 +6,25 @@ const DEFAULT_TEXT_MODEL = "gpt-5.6-luna";
 
 const OpenAiResponseSchema = z.object({
   id: z.string().optional(),
-  output_text: z.string().min(1),
+  output: z
+    .array(
+      z
+        .object({
+          type: z.string(),
+          content: z
+            .array(
+              z
+                .object({
+                  type: z.string(),
+                  text: z.string().optional(),
+                })
+                .passthrough(),
+            )
+            .optional(),
+        })
+        .passthrough(),
+    )
+    .min(1),
 });
 
 const OpenAiErrorSchema = z.object({
@@ -43,6 +61,21 @@ function config(): { apiKey: string; model: string } {
   };
 }
 
+function responseText(payload: z.infer<typeof OpenAiResponseSchema>): string {
+  const text = payload.output
+    .flatMap((item) => (item.type === "message" ? item.content ?? [] : []))
+    .filter(
+      (content): content is typeof content & { text: string } =>
+        content.type === "output_text" && typeof content.text === "string",
+    )
+    .map((content) => content.text)
+    .join("")
+    .trim();
+
+  if (!text) throw new Error("OPENAI_TEXT_OUTPUT_MISSING");
+  return text;
+}
+
 export function isOpenAiTextConfigured(): boolean {
   return Boolean(value("OPENAI_API_KEY"));
 }
@@ -58,10 +91,9 @@ async function requestOpenAiText(input: OpenAiTextInput) {
     },
     body: JSON.stringify({
       model,
-      input: [
-        ...(input.system ? [{ role: "system", content: input.system }] : []),
-        { role: "user", content: input.prompt },
-      ],
+      instructions: input.system,
+      input: input.prompt,
+      store: false,
       max_output_tokens: input.maxOutputTokens ?? 20_000,
       text: input.jsonSchema
         ? {
@@ -95,7 +127,7 @@ async function requestOpenAiText(input: OpenAiTextInput) {
   const parsed = OpenAiResponseSchema.safeParse(payload);
   if (!parsed.success) throw new Error("OPENAI_TEXT_INVALID_RESPONSE");
   return {
-    text: parsed.data.output_text,
+    text: responseText(parsed.data),
     providerRequestId: parsed.data.id,
   };
 }

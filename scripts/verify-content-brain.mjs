@@ -30,11 +30,18 @@ for (const needle of [
   'type: "json_schema"',
   "strict: true",
   "schema: input.jsonSchema.schema",
-  "output_text: z.string().min(1)",
+  "output: z",
+  'item.type === "message"',
+  'content.type === "output_text"',
+  "responseText(parsed.data)",
+  "instructions: input.system",
+  "input: input.prompt",
+  "store: false",
   'id: "openai-responses-text"',
 ]) {
   requireText(openAiText, needle, "OpenAI Responses text provider");
 }
+forbidText(openAiText, "output_text: z.string().min(1)", "SDK-only Responses convenience property");
 forbidText(openAiText, "json_object", "OpenAI structured output mode");
 
 const registry = await text("src/platform/provider-registry.server.ts");
