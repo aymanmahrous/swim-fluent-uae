@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read
   id-token: write
+  statuses: write
 
 concurrency:
   group: ai-media-e2e-${{ github.ref }}
@@ -25,6 +26,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Publish pending AI Media E2E status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: "pending",
+              context: "AI Media E2E",
+              description: "Real AI media browser E2E is running",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
       - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
       - name: Wait for exact production deployment SHA
         run: node scripts/ai-media-e2e-admin.mjs wait
@@ -45,3 +59,22 @@ jobs:
             test-results
             e2e-provision.log
           if-no-files-found: ignore
+      - name: Publish final AI Media E2E status
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const passed = process.env.JOB_STATUS === "success";
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: passed ? "success" : "failure",
+              context: "AI Media E2E",
+              description: passed
+                ? "Real AI Image, AI Video, persistence and isolation E2E passed"
+                : "Real AI media browser E2E failed",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
