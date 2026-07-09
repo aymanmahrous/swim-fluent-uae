@@ -33,6 +33,7 @@ export const OperationsQueueSchema = z.object({
 
 export const MediaAssetSchema = z.object({
   id: z.string().uuid(),
+  createdBy: z.string().uuid(),
   contentItemId: z.string().uuid().nullable(),
   assetType: z.enum(["image", "video", "logo", "other"]),
   source: z.enum(["upload", "ai_generated", "external"]),
