@@ -14,7 +14,8 @@ export async function supabaseSecretRpc(
   functionName: string,
   body: Record<string, unknown> = {},
 ): Promise<Response> {
-  if (!isSupabaseServerKeyConfigured()) {
+  const key = process.env.SUPABASE_SECRET_KEY?.trim();
+  if (!key || !isSupabaseServerKeyConfigured()) {
     return Response.json(
       { success: false, code: "SUPABASE_SECRET_NOT_CONFIGURED" },
       { status: 503 },
@@ -23,11 +24,13 @@ export async function supabaseSecretRpc(
 
   let headers: Record<string, string>;
   try {
-    headers = supabaseServerKeyHeaders({
+    headers = {
+      ...supabaseServerKeyHeaders(),
+      apikey: key,
       Accept: "application/json",
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
-    });
+    };
   } catch (error) {
     const code = error instanceof Error ? error.message : "SUPABASE_SECRET_KEY_FORMAT_INVALID";
     return Response.json({ success: false, code }, { status: 503 });
