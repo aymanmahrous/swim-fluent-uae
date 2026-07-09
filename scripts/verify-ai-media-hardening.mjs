@@ -29,6 +29,46 @@ requireText(adapter, '"/api/v1"', "Alibaba endpoint normalization");
 requireText(adapter, "pathname.endsWith(suffix)", "Alibaba endpoint normalization");
 requireText(adapter, "url.protocol !== \"https:\"", "Alibaba endpoint normalization");
 
+const openAiImage = await text("src/platform/openai-image.server.ts");
+for (const needle of [
+  'DEFAULT_IMAGE_MODEL = "gpt-image-2"',
+  'OPENAI_IMAGE_ENDPOINT = "https://api.openai.com/v1/images/generations"',
+  'value("OPENAI_API_KEY")',
+  'b64_json: z.string().min(1)',
+  'output_format: "jpeg"',
+  'background: "opaque"',
+  'moderation: "auto"',
+  'id: "openai-gpt-image"',
+]) {
+  requireText(openAiImage, needle, "OpenAI image provider");
+}
+
+const googleVeo = await text("src/platform/google-veo.server.ts");
+for (const needle of [
+  'DEFAULT_VIDEO_MODEL = "veo-3.1-fast-generate-preview"',
+  'value("GEMINI_API_KEY")',
+  ':predictLongRunning',
+  'durationSeconds: durationSeconds(input.durationSeconds)',
+  'resolution: "720p"',
+  'normalized.includes("..")',
+  'downloadHeaders: { "x-goog-api-key": apiKey }',
+  'id: "google-veo"',
+]) {
+  requireText(googleVeo, needle, "Google Veo provider");
+}
+
+const registry = await text("src/platform/provider-registry.server.ts");
+for (const needle of [
+  '[openAiGptImageProvider.id, openAiGptImageProvider]',
+  '[googleVeoProvider.id, googleVeoProvider]',
+  '? "openai-gpt-image"',
+  '? "google-veo"',
+  'providerId === "openai-gpt-image"',
+  'providerId === "google-veo"',
+]) {
+  requireText(registry, needle, "AI provider registry");
+}
+
 const hardeningPath =
   "supabase/migrations/20260709_000024_harden_ai_media_ownership.sql";
 const hardening = (await text(hardeningPath)).toLowerCase();
@@ -58,9 +98,25 @@ requireText(storage, "Authorization: `Bearer ${accessToken}`", "private media st
 requireText(storage, "tus.Upload", "private media storage");
 requireText(storage, "chunkSize: STANDARD_UPLOAD_LIMIT", "private media storage");
 requireText(storage, "6 * 1024 * 1024", "private media storage");
+requireText(storage, '"google-veo": ["googleapis.com", "googleusercontent.com"]', "Veo host allowlist");
+requireText(storage, 'new Set(["x-goog-api-key"])', "Veo download header allowlist");
+requireText(storage, "PROVIDER_ASSET_DOWNLOAD_HEADER_REJECTED", "provider header rejection");
+requireText(storage, "persistProviderAssetBytes", "direct image byte persistence");
 forbidText(storage, "/object/public/", "private media storage");
 forbidText(storage, "SUPABASE_SECRET_KEY", "private media storage");
 forbidText(storage, "SUPABASE_SERVICE_ROLE_KEY", "private media storage");
+
+const imageRoute = await text("src/routes/api.os-media-generate-image.ts");
+for (const needle of [
+  "persistProviderAssetBytes",
+  'Buffer.from(generation.assetBase64, "base64")',
+  "generation.assetUrl",
+  'throw new Error("IMAGE_PROVIDER_ASSET_MISSING")',
+]) {
+  requireText(imageRoute, needle, "image provider persistence route");
+}
+forbidText(imageRoute, "OPENAI_API_KEY", "image route secret isolation");
+forbidText(imageRoute, "GEMINI_API_KEY", "image route secret isolation");
 
 const mediaApi = await text("src/routes/api.os-media.ts");
 requireText(mediaApi, "createdBy", "media API ownership");
@@ -72,6 +128,9 @@ const videoRoute = await text("src/routes/api.os-media-generate-video.ts");
 requireText(videoRoute, "mediaSignedUrl", "video route signed URLs");
 requireText(videoRoute, "getVideoProviderById(job.data.provider)", "video route provider resume");
 requireText(videoRoute, '"STORED_PROVIDER_NOT_READY"', "video route provider resume");
+requireText(videoRoute, "downloadHeaders: providerState.downloadHeaders", "Veo authenticated download");
+forbidText(videoRoute, "OPENAI_API_KEY", "video route secret isolation");
+forbidText(videoRoute, "GEMINI_API_KEY", "video route secret isolation");
 
 const mediaPage = await text("src/routes/os.media.tsx");
 for (const needle of [
@@ -159,8 +218,9 @@ forbidText(e2eClient, "ALIBABA_MODEL_STUDIO_API_KEY", "E2E GitHub client");
 const e2eSpec = await text("tests/e2e/ai-media.spec.ts");
 for (const needle of [
   "/api/os-media-generate-image",
-  'provider: z.literal("alibaba-wan-image")',
-  'provider: z.literal("alibaba-wan-video")',
+  'provider: z.enum(["openai-gpt-image", "alibaba-wan-image"])',
+  'provider: z.enum(["google-veo", "alibaba-wan-video"])',
+  "expect(imageResponse.status()).toBe(201)",
   "assertOwnedImageInLibrary",
   "assertOwnedVideoInLibrary",
   "verifyIsolation",
