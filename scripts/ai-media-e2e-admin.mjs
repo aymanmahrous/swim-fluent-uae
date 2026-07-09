@@ -5,11 +5,16 @@ const AUDIENCE = "relax-fix-ai-media-e2e";
 const DEPLOYMENT_WAIT_ATTEMPTS = 120;
 const DEPLOYMENT_WAIT_MS = 5_000;
 const baseUrl = process.env.E2E_BASE_URL?.replace(/\/$/, "");
+const adminUrl = process.env.E2E_ADMIN_URL?.replace(/\/$/, "");
 const credentialsPath = process.env.E2E_CREDENTIALS_PATH;
+const expectedSha = process.env.GITHUB_SHA;
 const action = process.argv[2];
 
-if (!baseUrl || !credentialsPath) {
-  throw new Error("E2E_BASE_URL_AND_CREDENTIALS_PATH_REQUIRED");
+if (!baseUrl || !adminUrl || !credentialsPath || !expectedSha) {
+  throw new Error("E2E_BASE_URL_ADMIN_URL_CREDENTIALS_PATH_AND_SHA_REQUIRED");
+}
+if (!/^[0-9a-f]{40}$/.test(expectedSha)) {
+  throw new Error("E2E_GITHUB_SHA_INVALID");
 }
 if (!["wait", "provision", "cleanup"].includes(action)) {
   throw new Error("E2E_ADMIN_ACTION_INVALID");
@@ -37,9 +42,9 @@ async function githubOidcToken() {
   return body.value;
 }
 
-async function e2eCall(body) {
+async function oidcCall(url, body) {
   const token = await githubOidcToken();
-  const response = await fetch(`${baseUrl}/api/internal/ai-media-e2e`, {
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -55,7 +60,12 @@ async function e2eCall(body) {
 }
 
 function requireSuccess(result) {
-  if (result.response.ok && result.payload?.success) return result.payload;
+  if (result.response.ok && result.payload?.success) {
+    if (result.payload.sha !== undefined && result.payload.sha !== expectedSha) {
+      throw new Error("AI_MEDIA_E2E_ADMIN_SHA_MISMATCH");
+    }
+    return result.payload;
+  }
   const code =
     typeof result.payload?.code === "string"
       ? result.payload.code
@@ -64,9 +74,13 @@ function requireSuccess(result) {
 }
 
 if (action === "wait") {
+  const statusUrl = `${baseUrl}/api/internal/ai-media-e2e`;
   for (let attempt = 1; attempt <= DEPLOYMENT_WAIT_ATTEMPTS; attempt += 1) {
-    const result = await e2eCall({ action: "status" });
+    const result = await oidcCall(statusUrl, { action: "status" });
     if (result.response.status === 200 && result.payload?.success && result.payload?.ready) {
+      if (result.payload.sha !== expectedSha) {
+        throw new Error("AI_MEDIA_E2E_DEPLOYMENT_SHA_MISMATCH");
+      }
       console.log(`Matching production deployment is ready after ${attempt} probe(s).`);
       process.exit(0);
     }
@@ -87,19 +101,25 @@ if (action === "wait") {
 }
 
 if (action === "provision") {
-  const payload = requireSuccess(await e2eCall({ action: "provision" }));
+  const payload = requireSuccess(await oidcCall(adminUrl, { action: "provision" }));
   if (!Array.isArray(payload.users) || payload.users.length !== 2) {
     throw new Error("AI_MEDIA_E2E_USERS_INVALID");
   }
   for (const user of payload.users) {
-    if (!user || typeof user.password !== "string" || typeof user.userId !== "string") {
+    if (
+      !user ||
+      typeof user.email !== "string" ||
+      typeof user.password !== "string" ||
+      typeof user.userId !== "string"
+    ) {
       throw new Error("AI_MEDIA_E2E_USER_INVALID");
     }
+    console.log(`::add-mask::${user.email}`);
     console.log(`::add-mask::${user.password}`);
   }
   await mkdir(dirname(credentialsPath), { recursive: true });
   await writeFile(credentialsPath, JSON.stringify({ users: payload.users }), { mode: 0o600 });
-  console.log("Temporary AI media E2E staff users provisioned.");
+  console.log("Temporary AI media E2E staff users provisioned through the Supabase Edge admin.");
 } else if (action === "cleanup") {
   let credentials;
   try {
@@ -116,7 +136,7 @@ if (action === "provision") {
     ? credentials.users.map((user) => user?.userId).filter((value) => typeof value === "string")
     : [];
   if (userIds.length > 0) {
-    requireSuccess(await e2eCall({ action: "cleanup", userIds }));
+    requireSuccess(await oidcCall(adminUrl, { action: "cleanup", userIds }));
   }
   await rm(credentialsPath, { force: true });
   console.log(`Temporary AI media E2E resources cleaned (${userIds.length} users).`);
