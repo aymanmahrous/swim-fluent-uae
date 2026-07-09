@@ -5,6 +5,13 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -14,10 +21,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - name: Typecheck
+        run: npm run typecheck > typecheck.log 2>&1 || { cat typecheck.log; exit 1; }
+      - name: Upload TypeScript diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-diagnostics
+          path: typecheck.log
+          if-no-files-found: error
       - run: npm run lint
       - run: npm run build
       - name: Verify AI OS security and real-data contracts
         run: node scripts/verify-ai-os-contracts.mjs
+      - name: Verify AI media ownership and private storage contracts
+        run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify Supabase settings and booking RPC
         run: node scripts/verify-supabase-booking.mjs

@@ -6,6 +6,7 @@ export const MEDIA_BUCKET = "relax-fix-media";
 const STANDARD_UPLOAD_LIMIT = 6 * 1024 * 1024;
 const MAX_PROVIDER_ASSET_BYTES = 100 * 1024 * 1024;
 const MAX_PROVIDER_REDIRECTS = 3;
+const SIGNED_URL_TTL_SECONDS = 60 * 60;
 
 const providerHostSuffixes: Readonly<Record<string, readonly string[]>> = {
   "alibaba-wan-image": ["aliyuncs.com", "alicdn.com"],
@@ -92,18 +93,55 @@ function objectPath(input: {
   return `${input.staffId}/${input.assetType}/${group}/${id}.${extension}`;
 }
 
-export function mediaPublicUrl(storagePath: string): string {
-  return encodeURI(
-    `${supabaseProjectUrl}/storage/v1/object/public/${MEDIA_BUCKET}/${encodedObjectPath(storagePath)}`,
-  );
+function storageObjectUrl(path: string): string {
+  return `${supabaseProjectUrl}/storage/v1/object/${MEDIA_BUCKET}/${encodedObjectPath(path)}`;
 }
 
-async function publicObjectExists(path: string): Promise<boolean> {
-  const response = await fetch(mediaPublicUrl(path), {
+// The legacy publicObjectExists(path) probe is intentionally replaced by an authenticated HEAD.
+async function authenticatedObjectExists(path: string, accessToken: string): Promise<boolean> {
+  const response = await fetch(storageObjectUrl(path), {
     method: "HEAD",
     cache: "no-store",
+    headers: {
+      apikey: supabasePublishableKey,
+      Authorization: `Bearer ${accessToken}`,
+    },
   }).catch(() => null);
   return Boolean(response?.ok);
+}
+
+export async function mediaSignedUrl(storagePath: string, accessToken: string): Promise<string> {
+  const response = await fetch(
+    `${supabaseProjectUrl}/storage/v1/object/sign/${MEDIA_BUCKET}/${encodedObjectPath(storagePath)}`,
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        apikey: supabasePublishableKey,
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ expiresIn: SIGNED_URL_TTL_SECONDS }),
+    },
+  );
+  const payload: unknown = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new Error(`SUPABASE_STORAGE_SIGN_${response.status}`);
+  }
+  const signedURL =
+    payload && typeof payload === "object" && "signedURL" in payload
+      ? (payload as { signedURL?: unknown }).signedURL
+      : null;
+  if (typeof signedURL !== "string" || signedURL.length < 1) {
+    throw new Error("SUPABASE_STORAGE_SIGN_INVALID_RESPONSE");
+  }
+  const storageApiBase = `${supabaseProjectUrl}/storage/v1`;
+  return encodeURI(
+    signedURL.startsWith("https://")
+      ? signedURL
+      : `${storageApiBase}${signedURL.startsWith("/") ? "" : "/"}${signedURL}`,
+  );
 }
 
 async function standardUpload(
@@ -112,25 +150,24 @@ async function standardUpload(
   contentType: string,
   accessToken: string,
 ): Promise<void> {
-  const response = await fetch(
-    `${supabaseProjectUrl}/storage/v1/object/${MEDIA_BUCKET}/${encodedObjectPath(path)}`,
-    {
-      method: "POST",
-      headers: {
-        apikey: supabasePublishableKey,
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": contentType,
-        "Cache-Control": "max-age=31536000",
-        "x-upsert": "false",
-      },
-      body: bytes,
+  const uploadBytes = new Uint8Array(bytes.byteLength);
+  uploadBytes.set(bytes);
+  const response = await fetch(storageObjectUrl(path), {
+    method: "POST",
+    headers: {
+      apikey: supabasePublishableKey,
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": contentType,
+      "Cache-Control": "max-age=3600",
+      "x-upsert": "false",
     },
-  );
+    body: uploadBytes.buffer,
+  });
 
   if (response.ok) return;
   const detail = await response.text();
   if (response.status === 400 && /already exists|duplicate/i.test(detail)) return;
-  if (await publicObjectExists(path)) return;
+  if (await authenticatedObjectExists(path, accessToken)) return;
   throw new Error(`SUPABASE_STORAGE_UPLOAD_${response.status}:${detail}`.slice(0, 1000));
 }
 
@@ -149,6 +186,7 @@ async function resumableUpload(
       retryDelays: [0, 3000, 5000, 10000, 20000],
       headers: {
         authorization: `Bearer ${accessToken}`,
+        apikey: supabasePublishableKey,
         "x-upsert": "false",
       },
       uploadDataDuringCreation: true,
@@ -157,11 +195,11 @@ async function resumableUpload(
         bucketName: MEDIA_BUCKET,
         objectName: path,
         contentType,
-        cacheControl: "31536000",
+        cacheControl: "3600",
       },
       chunkSize: STANDARD_UPLOAD_LIMIT,
       onError(error) {
-        void publicObjectExists(path)
+        void authenticatedObjectExists(path, accessToken)
           .then((exists) => {
             if (exists) {
               resolve();
@@ -234,7 +272,7 @@ export async function persistRemoteProviderAsset(input: {
 
   return {
     storagePath,
-    publicUrl: mediaPublicUrl(storagePath),
+    publicUrl: await mediaSignedUrl(storagePath, input.accessToken),
     contentType,
     sizeBytes: bytes.byteLength,
     uploadMode: useTus ? "tus" : "standard",
