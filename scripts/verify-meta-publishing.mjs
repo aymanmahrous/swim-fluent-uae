@@ -58,11 +58,12 @@ for (const needle of [
   "PUBLISH_SIGNED_URL_TTL_SECONDS = 60 * 60",
   "INVALID_PRIVATE_MEDIA_STORAGE_PATH",
   "/storage/v1/object/sign/",
-  "Authorization: `Bearer ${key}`",
+  "apikey: key",
   "createPublishingMediaSignedUrl",
 ]) {
   requireText(signer, needle, "private publishing media URL contract");
 }
+forbidText(signer, "Authorization", "modern Supabase secret-key signing semantics");
 forbidText(signer, "/object/public/", "private publishing media URL contract");
 
 const meta = await text("src/platform/meta-publishing.server.ts");
