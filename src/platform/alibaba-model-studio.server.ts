@@ -63,11 +63,35 @@ function value(name: string): string | null {
   return candidate || null;
 }
 
+function normalizeEndpoint(candidate: string): string {
+  let url: URL;
+  try {
+    url = new URL(candidate);
+  } catch {
+    throw new Error("ALIBABA_MODEL_STUDIO_ENDPOINT_INVALID");
+  }
+
+  if (url.protocol !== "https:" || url.username || url.password || url.hash || url.search) {
+    throw new Error("ALIBABA_MODEL_STUDIO_ENDPOINT_INVALID");
+  }
+
+  let pathname = url.pathname.replace(/\/+$/, "");
+  for (const suffix of ["/compatible-mode/v1", "/api/v1"] as const) {
+    if (pathname.endsWith(suffix)) {
+      pathname = pathname.slice(0, -suffix.length);
+      break;
+    }
+  }
+
+  url.pathname = pathname || "/";
+  return url.toString().replace(/\/$/, "");
+}
+
 function config(): { endpoint: string; apiKey: string } {
-  const endpoint = value("MAAS_ENDPOINT")?.replace(/\/$/, "");
+  const rawEndpoint = value("MAAS_ENDPOINT");
   const apiKey = value("ALIBABA_MODEL_STUDIO_API_KEY");
-  if (!endpoint || !apiKey) throw new Error("ALIBABA_MODEL_STUDIO_NOT_CONFIGURED");
-  return { endpoint, apiKey };
+  if (!rawEndpoint || !apiKey) throw new Error("ALIBABA_MODEL_STUDIO_NOT_CONFIGURED");
+  return { endpoint: normalizeEndpoint(rawEndpoint), apiKey };
 }
 
 async function jsonRequest(url: string, init: RequestInit): Promise<unknown> {
