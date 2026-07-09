@@ -1,0 +1,79 @@
+name: AI Media Current Production E2E
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+  statuses: write
+
+concurrency:
+  group: ai-media-current-production-e2e
+  cancel-in-progress: true
+
+env:
+  E2E_BASE_URL: https://swim-fluent-uae-w532.vercel.app
+  E2E_ADMIN_URL: https://nmzxrjdxvmmzzmajrskm.supabase.co/functions/v1/ai-media-e2e-admin
+  E2E_CREDENTIALS_PATH: /tmp/relax-fix-ai-media-e2e.json
+
+jobs:
+  ai-media-current-production-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Publish pending current-production E2E status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: "pending",
+              context: "AI Media Current Production E2E",
+              description: "Real AI Image, AI Video and Media Library verification is running",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
+      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npx playwright install --with-deps chromium
+      - name: Provision isolated temporary staff
+        run: node scripts/ai-media-e2e-admin.mjs provision > e2e-provision.log 2>&1 || { cat e2e-provision.log; exit 1; }
+      - name: Run real AI Image and AI Video browser E2E against current production
+        run: npm run test:e2e:ai-media
+      - name: Cleanup isolated E2E users and media
+        if: always()
+        run: node scripts/ai-media-e2e-admin.mjs cleanup
+      - name: Upload browser diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-media-current-production-e2e-diagnostics
+          path: |
+            test-results
+            e2e-provision.log
+          if-no-files-found: ignore
+      - name: Publish final current-production E2E status
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const passed = process.env.JOB_STATUS === "success";
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: passed ? "success" : "failure",
+              context: "AI Media Current Production E2E",
+              description: passed
+                ? "Real AI Image, AI Video and Media Library verification passed"
+                : "Current-production AI media verification failed",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
