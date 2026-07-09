@@ -4,11 +4,6 @@ const OIDC_AUDIENCE = "relax-fix-ai-media-e2e";
 const EXPECTED_REPOSITORY = "aymanmahrous/swim-fluent-uae";
 const EXPECTED_REF = "refs/heads/main";
 const EXPECTED_SUBJECT = `repo:${EXPECTED_REPOSITORY}:ref:${EXPECTED_REF}`;
-const EXPECTED_OWNER_ACTOR = "aymanmahrous";
-const EXPECTED_PR_HEAD = "agent/verify-current-production-ai-media";
-const EXPECTED_PR_WORKFLOW =
-  `${EXPECTED_REPOSITORY}/.github/workflows/ai-media-current-production-e2e.yml`;
-const EXPECTED_PULL_REQUEST_SUBJECT = `repo:${EXPECTED_REPOSITORY}:pull_request`;
 const E2E_PURPOSE = "relax-fix-ai-media-e2e";
 const MEDIA_BUCKET = "relax-fix-media";
 
@@ -24,10 +19,6 @@ type GithubOidcClaims = {
   ref: string;
   sha: string;
   sub: string;
-  actor: string;
-  base_ref?: string;
-  head_ref?: string;
-  workflow_ref: string;
 };
 type GithubJwk = JsonWebKey & { kid: string; alg?: string };
 type TemporaryStaff = { userId: string; email: string; password: string };
@@ -67,27 +58,6 @@ function decodeJsonSegment(segment: string): unknown {
   return JSON.parse(new TextDecoder().decode(base64UrlBytes(segment)));
 }
 
-function expectedWorkflowContext(value: JsonObject): boolean {
-  const mainPush =
-    value.event_name === "push" &&
-    value.ref === EXPECTED_REF &&
-    value.sub === EXPECTED_SUBJECT;
-
-  const pullRequestVerification =
-    value.event_name === "pull_request" &&
-    value.actor === EXPECTED_OWNER_ACTOR &&
-    value.base_ref === "main" &&
-    value.head_ref === EXPECTED_PR_HEAD &&
-    typeof value.ref === "string" &&
-    /^refs\/pull\/\d+\/merge$/.test(value.ref) &&
-    value.sub === EXPECTED_PULL_REQUEST_SUBJECT &&
-    typeof value.workflow_ref === "string" &&
-    value.workflow_ref.startsWith(`${EXPECTED_PR_WORKFLOW}@refs/pull/`) &&
-    value.workflow_ref.endsWith("/merge");
-
-  return mainPush || pullRequestVerification;
-}
-
 function parseClaims(value: unknown): GithubOidcClaims | null {
   if (!isObject(value)) return null;
   const aud = value.aud;
@@ -101,16 +71,11 @@ function parseClaims(value: unknown): GithubOidcClaims | null {
     (value.iat !== undefined && typeof value.iat !== "number") ||
     (value.nbf !== undefined && typeof value.nbf !== "number") ||
     value.repository !== EXPECTED_REPOSITORY ||
-    typeof value.event_name !== "string" ||
-    typeof value.ref !== "string" ||
+    value.event_name !== "push" ||
+    value.ref !== EXPECTED_REF ||
     typeof value.sha !== "string" ||
     !/^[0-9a-f]{40}$/.test(value.sha) ||
-    typeof value.sub !== "string" ||
-    typeof value.actor !== "string" ||
-    (value.base_ref !== undefined && typeof value.base_ref !== "string") ||
-    (value.head_ref !== undefined && typeof value.head_ref !== "string") ||
-    typeof value.workflow_ref !== "string" ||
-    !expectedWorkflowContext(value)
+    value.sub !== EXPECTED_SUBJECT
   ) {
     return null;
   }
