@@ -246,6 +246,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
             assetType: "video",
             contentItemId: job.data.contentItemId,
             deterministicId: job.data.jobId,
+            downloadHeaders: providerState.downloadHeaders,
           });
           const updated = await rpcBody(session.accessToken, "update_staff_video_generation_job", {
             p_job_id: job.data.jobId,
