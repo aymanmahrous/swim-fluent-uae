@@ -1,5 +1,6 @@
 import { isIP } from "node:net";
 import { supabaseProjectUrl } from "./supabase-project.server";
+import { supabaseServerKeyHeaders } from "./supabase-server-key.server";
 
 const MEDIA_BUCKET = "relax-fix-media";
 const MAX_PROVIDER_ASSET_BYTES = 100 * 1024 * 1024;
@@ -17,12 +18,6 @@ type PersistedWorkerAsset = {
   sizeBytes: number;
   uploadMode: "standard";
 };
-
-function secretKey(): string {
-  const value = process.env.SUPABASE_SECRET_KEY?.trim();
-  if (!value) throw new Error("SUPABASE_SECRET_NOT_CONFIGURED");
-  return value;
-}
 
 function safeUuid(value: string, code: string): string {
   const normalized = value.trim().toLowerCase();
@@ -144,7 +139,7 @@ async function authenticatedObjectExists(path: string): Promise<boolean> {
   const response = await fetch(storageObjectUrl(path), {
     method: "HEAD",
     cache: "no-store",
-    headers: { apikey: secretKey() },
+    headers: supabaseServerKeyHeaders(),
   }).catch(() => null);
   return Boolean(response?.ok);
 }
@@ -159,12 +154,11 @@ async function standardUpload(
   const response = await fetch(storageObjectUrl(path), {
     method: "POST",
     cache: "no-store",
-    headers: {
-      apikey: secretKey(),
+    headers: supabaseServerKeyHeaders({
       "Content-Type": contentType,
       "Cache-Control": "max-age=3600",
       "x-upsert": "false",
-    },
+    }),
     body: uploadBytes.buffer,
   });
 
