@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  E2E_BASE_URL: https://swim-fluent-uae.vercel.app
+  E2E_BASE_URL: https://swim-fluent-uae-w532.vercel.app
   E2E_CREDENTIALS_PATH: /tmp/relax-fix-ai-media-e2e.json
 
 jobs:
