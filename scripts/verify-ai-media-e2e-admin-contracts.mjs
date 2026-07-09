@@ -31,6 +31,10 @@ for (const needle of [
   "crypto.subtle.verify",
   'Deno.env.get("SUPABASE_SECRET_KEYS")',
   'Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")',
+  'BCRYPT_PASSWORD_MAX_BYTES = 72',
+  'crypto.randomUUID().slice(0, 24)',
+  'new TextEncoder().encode(password).length > BCRYPT_PASSWORD_MAX_BYTES',
+  'throw new Error("E2E_PASSWORD_TOO_LONG")',
   'purpose: E2E_PURPOSE',
   'created_by=eq.${encoded}',
   'requested_by=eq.${encoded}',
@@ -39,6 +43,7 @@ for (const needle of [
 ]) {
   requireText(edgeAdmin, needle, "Supabase AI media E2E admin");
 }
+forbidText(edgeAdmin, '`${crypto.randomUUID()}Aa1!${crypto.randomUUID()}`', "Supabase AI media E2E admin");
 forbidText(edgeAdmin, "sb_secret_", "Supabase AI media E2E admin");
 forbidText(edgeAdmin, "SUPABASE_SECRET_KEY=", "Supabase AI media E2E admin");
 

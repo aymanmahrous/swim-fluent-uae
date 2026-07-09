@@ -184,8 +184,14 @@ async function requireOk(response: Response, code: string): Promise<void> {
   throw new Error(`${code}_${response.status}`);
 }
 
+const BCRYPT_PASSWORD_MAX_BYTES = 72;
+
 function generatedPassword(): string {
-  return `${crypto.randomUUID()}Aa1!${crypto.randomUUID()}`;
+  const password = `${crypto.randomUUID()}Aa1!${crypto.randomUUID().slice(0, 24)}`;
+  if (new TextEncoder().encode(password).length > BCRYPT_PASSWORD_MAX_BYTES) {
+    throw new Error("E2E_PASSWORD_TOO_LONG");
+  }
+  return password;
 }
 
 function parseAdminUser(value: unknown): AdminUser | null {
