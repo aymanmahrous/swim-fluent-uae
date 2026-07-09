@@ -105,6 +105,8 @@ export const t = {
   back: { ar: "السابق", en: "Back" },
   selectDate: { ar: "اختر اليوم", en: "Choose a Day" },
   selectedSummary: { ar: "ملخص الطلب", en: "Request Summary" },
+  settingsUnavailable: { ar: "الحجز متوقف مؤقتًا حتى يتم تحميل إعدادات النشاط من الخادم.", en: "Booking is temporarily unavailable until business settings load from the server." },
+  requestSaved: { ar: "تم حفظ الطلب في النظام", en: "Request saved in the system" },
   whatsappOptional: { ar: "يمكنك الآن متابعة التواصل عبر واتساب.", en: "You can now continue the conversation on WhatsApp." },
 } satisfies Dict;
 
