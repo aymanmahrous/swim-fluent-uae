@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { mediaPublicUrl } from "../platform/media-storage.server";
+import { mediaSignedUrl } from "../platform/media-storage.server";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -9,6 +9,7 @@ import {
 
 const MediaAssetSchema = z.object({
   id: z.string().uuid(),
+  createdBy: z.string().uuid(),
   contentItemId: z.string().uuid().nullable(),
   assetType: z.enum(["image", "video", "logo", "other"]),
   source: z.enum(["upload", "ai_generated", "external"]),
@@ -36,13 +37,22 @@ export const Route = createFileRoute("/api/os-media")({
           );
         }
 
-        return Response.json(
-          parsed.data.map((asset) => ({
-            ...asset,
-            publicUrl: asset.storagePath ? mediaPublicUrl(asset.storagePath) : null,
-          })),
-          { headers: sessionCookieHeaders(session) },
-        );
+        try {
+          const assets = await Promise.all(
+            parsed.data.map(async (asset) => ({
+              ...asset,
+              publicUrl: asset.storagePath
+                ? await mediaSignedUrl(asset.storagePath, session.accessToken)
+                : null,
+            })),
+          );
+          return Response.json(assets, { headers: sessionCookieHeaders(session) });
+        } catch {
+          return Response.json(
+            { error: "MEDIA_SIGN_FAILED" },
+            { status: 502, headers: sessionCookieHeaders(session) },
+          );
+        }
       },
     },
   },
