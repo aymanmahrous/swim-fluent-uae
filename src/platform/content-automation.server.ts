@@ -26,7 +26,7 @@ const LeaseClaimSchema = z.discriminatedUnion("claimed", [
 const StartRunSchema = z.object({
   success: z.literal(true),
   runId: z.string().uuid(),
-  source: z.enum(["vercel_cron", "internal_manual"]),
+  source: z.enum(["vercel_cron", "supabase_cron", "internal_manual"]),
   status: z.literal("running"),
   startedAt: z.string(),
 });
