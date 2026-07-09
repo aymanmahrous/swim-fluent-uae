@@ -38,7 +38,6 @@ export async function createPublishingMediaSignedUrl(storagePath: string): Promi
       cache: "no-store",
       headers: {
         apikey: key,
-        Authorization: `Bearer ${key}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
