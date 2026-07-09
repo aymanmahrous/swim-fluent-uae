@@ -97,6 +97,7 @@ function storageObjectUrl(path: string): string {
   return `${supabaseProjectUrl}/storage/v1/object/${MEDIA_BUCKET}/${encodedObjectPath(path)}`;
 }
 
+// The legacy publicObjectExists(path) probe is intentionally replaced by an authenticated HEAD.
 async function authenticatedObjectExists(path: string, accessToken: string): Promise<boolean> {
   const response = await fetch(storageObjectUrl(path), {
     method: "HEAD",
@@ -149,6 +150,8 @@ async function standardUpload(
   contentType: string,
   accessToken: string,
 ): Promise<void> {
+  const uploadBytes = new Uint8Array(bytes.byteLength);
+  uploadBytes.set(bytes);
   const response = await fetch(storageObjectUrl(path), {
     method: "POST",
     headers: {
@@ -158,7 +161,7 @@ async function standardUpload(
       "Cache-Control": "max-age=3600",
       "x-upsert": "false",
     },
-    body: bytes,
+    body: uploadBytes.buffer,
   });
 
   if (response.ok) return;
