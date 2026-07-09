@@ -4,6 +4,12 @@ import { supabaseServerKeyHeaders } from "./supabase-server-key.server";
 const MEDIA_BUCKET = "relax-fix-media";
 const PUBLISH_SIGNED_URL_TTL_SECONDS = 60 * 60;
 
+function supabaseSecretKey(): string {
+  const key = process.env.SUPABASE_SECRET_KEY?.trim();
+  if (!key) throw new Error("SUPABASE_SECRET_NOT_CONFIGURED");
+  return key;
+}
+
 function encodedObjectPath(path: string): string {
   const normalized = path.trim();
   if (
@@ -24,15 +30,18 @@ function encodedObjectPath(path: string): string {
 }
 
 export async function createPublishingMediaSignedUrl(storagePath: string): Promise<string> {
+  const key = supabaseSecretKey();
   const response = await fetch(
     `${supabaseProjectUrl}/storage/v1/object/sign/${MEDIA_BUCKET}/${encodedObjectPath(storagePath)}`,
     {
       method: "POST",
       cache: "no-store",
-      headers: supabaseServerKeyHeaders({
+      headers: {
+        ...supabaseServerKeyHeaders(),
+        apikey: key,
         Accept: "application/json",
         "Content-Type": "application/json",
-      }),
+      },
       body: JSON.stringify({ expiresIn: PUBLISH_SIGNED_URL_TTL_SECONDS }),
     },
   );
