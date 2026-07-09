@@ -12,7 +12,7 @@ const ContentStatusSchema = z.enum([
   "failed",
 ]);
 
-export const OsContentItemSchema = z.object({
+const OsContentItemWireSchema = z.object({
   id: z.string().uuid(),
   plannedFor: z.string().nullable(),
   scheduledFor: z.string().nullable(),
@@ -34,6 +34,12 @@ export const OsContentItemSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
 });
+
+export const OsContentItemSchema = OsContentItemWireSchema.transform((item) => ({
+  ...item,
+  scheduledFor:
+    item.scheduledFor ?? (item.status === "approved" ? item.plannedFor : null),
+}));
 
 export const GrowthAnalyticsSchema = z.object({
   views: z.number().int().nonnegative(),
