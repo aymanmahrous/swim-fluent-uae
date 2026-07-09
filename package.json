@@ -12,6 +12,7 @@
     "test:e2e:ai-media": "playwright test tests/e2e/ai-media.spec.ts",
     "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
+    "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
