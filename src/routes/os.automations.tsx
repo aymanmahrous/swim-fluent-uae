@@ -25,6 +25,12 @@ function dubaiTime(value: string): string {
   }).format(date);
 }
 
+function runSourceLabel(source: "vercel_cron" | "supabase_cron" | "internal_manual") {
+  if (source === "vercel_cron") return "Vercel recovery cycle";
+  if (source === "supabase_cron") return "Supabase Cron pulse";
+  return "Internal manual cycle";
+}
+
 function metricLabel(value: number, label: string) {
   return (
     <div className="rounded-xl border border-border bg-background p-4">
@@ -118,9 +124,7 @@ function AutomationPage() {
                 <article key={run.id} className="rounded-xl border border-border p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <div className="font-black">
-                        {run.source === "vercel_cron" ? "Vercel Cron cycle" : "Internal manual cycle"}
-                      </div>
+                      <div className="font-black">{runSourceLabel(run.source)}</div>
                       <div className="mt-1 text-xs text-muted-foreground">
                         {dubaiTime(run.startedAt)} · media {run.mediaProcessed}/{run.mediaAttempts} · publish {run.publishProcessed}/{run.publishAttempts}
                       </div>
