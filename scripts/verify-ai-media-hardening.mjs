@@ -92,8 +92,10 @@ const oidc = await text("src/platform/github-actions-oidc.server.ts");
 for (const needle of [
   'AI_MEDIA_E2E_AUDIENCE = "relax-fix-ai-media-e2e"',
   'EXPECTED_REPOSITORY = "aymanmahrous/swim-fluent-uae"',
-  'EXPECTED_REF = "refs/pull/9/merge"',
-  'event_name: z.literal("pull_request")',
+  'EXPECTED_REF = "refs/heads/main"',
+  "EXPECTED_SUBJECT",
+  'event_name: z.literal("push")',
+  "sha: z.string().regex",
   "RSASSA-PKCS1-v1_5",
   "crypto.subtle.verify",
 ]) {
@@ -103,16 +105,19 @@ forbidText(oidc, "SUPABASE_SECRET_KEY", "GitHub Actions OIDC verifier");
 
 const e2eRoute = await text("src/routes/api.internal.ai-media-e2e.ts");
 for (const needle of [
-  'process.env.VERCEL_ENV === "preview"',
-  'process.env.VERCEL_GIT_COMMIT_REF === EXPECTED_PREVIEW_BRANCH',
+  'process.env.VERCEL_ENV === "production"',
+  'process.env.VERCEL_GIT_COMMIT_REF === "main"',
+  "process.env.VERCEL_GIT_COMMIT_SHA === context.sha",
   "verifyGithubActionsOidc",
+  'action: z.literal("status")',
   'action: z.literal("provision")',
   'action: z.literal("cleanup")',
+  'code: "DEPLOYMENT_NOT_READY"',
 ]) {
-  requireText(e2eRoute, needle, "preview E2E control route");
+  requireText(e2eRoute, needle, "production E2E control route");
 }
-forbidText(e2eRoute, "SUPABASE_SECRET_KEY", "preview E2E control route");
-forbidText(e2eRoute, "ALIBABA_MODEL_STUDIO_API_KEY", "preview E2E control route");
+forbidText(e2eRoute, "SUPABASE_SECRET_KEY", "production E2E control route");
+forbidText(e2eRoute, "ALIBABA_MODEL_STUDIO_API_KEY", "production E2E control route");
 
 const e2eAdmin = await text("src/platform/ai-media-e2e-admin.server.ts");
 requireText(e2eAdmin, "process.env.SUPABASE_SECRET_KEY", "E2E admin helper");
@@ -122,9 +127,18 @@ requireText(e2eAdmin, "user.user_metadata.purpose !== E2E_PURPOSE", "E2E cleanup
 forbidText(e2eAdmin, "SUPABASE_SERVICE_ROLE_KEY", "E2E admin helper");
 
 const e2eClient = await text("scripts/ai-media-e2e-admin.mjs");
-requireText(e2eClient, "ACTIONS_ID_TOKEN_REQUEST_URL", "E2E GitHub client");
-requireText(e2eClient, "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "E2E GitHub client");
-requireText(e2eClient, 'console.log(`::add-mask::${user.password}`)', "E2E credential masking");
+for (const needle of [
+  "ACTIONS_ID_TOKEN_REQUEST_URL",
+  "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+  '"wait", "provision", "cleanup"',
+  "DEPLOYMENT_WAIT_ATTEMPTS",
+  'e2eCall({ action: "status" })',
+  'code !== "DEPLOYMENT_NOT_READY"',
+  "AI_MEDIA_E2E_DEPLOYMENT_TIMEOUT",
+  'console.log(`::add-mask::${user.password}`)',
+]) {
+  requireText(e2eClient, needle, "E2E GitHub client");
+}
 forbidText(e2eClient, "SUPABASE_SECRET_KEY", "E2E GitHub client");
 forbidText(e2eClient, "ALIBABA_MODEL_STUDIO_API_KEY", "E2E GitHub client");
 
