@@ -15,9 +15,12 @@ jobs:
         with:
           node-version: 22
       - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
       - name: Verify AI OS security and real-data contracts
         run: node scripts/verify-ai-os-contracts.mjs
+      - name: Verify AI media ownership and private storage contracts
+        run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify Supabase settings and booking RPC
         run: node scripts/verify-supabase-booking.mjs
