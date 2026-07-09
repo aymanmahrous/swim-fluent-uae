@@ -136,8 +136,11 @@ function StaffPage() {
           </p>
           <form onSubmit={login} className="mt-8 space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-black">البريد الإلكتروني</label>
+              <label htmlFor="staff-email" className="mb-2 block text-sm font-black">
+                البريد الإلكتروني
+              </label>
               <input
+                id="staff-email"
                 type="email"
                 autoComplete="email"
                 required
@@ -147,8 +150,11 @@ function StaffPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-black">كلمة المرور</label>
+              <label htmlFor="staff-password" className="mb-2 block text-sm font-black">
+                كلمة المرور
+              </label>
               <input
+                id="staff-password"
                 type="password"
                 autoComplete="current-password"
                 required
