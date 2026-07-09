@@ -2,19 +2,15 @@ import { z } from "zod";
 import { MEDIA_BUCKET } from "./media-storage.server";
 import { supabaseProjectUrl } from "./supabase-project.server";
 
+const E2E_PURPOSE = "relax-fix-ai-media-e2e";
+
 const AdminUserSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email().nullable().optional(),
+  user_metadata: z.record(z.unknown()).optional().default({}),
 });
 
-const MediaRowsSchema = z.array(
-  z.object({
-    id: z.string().uuid(),
-    storage_path: z.string().nullable(),
-  }),
-);
-
-const VideoRowsSchema = z.array(
+const OwnedRowsSchema = z.array(
   z.object({
     id: z.string().uuid(),
     storage_path: z.string().nullable(),
@@ -59,6 +55,15 @@ function password(): string {
   return `${crypto.randomUUID()}Aa1!${crypto.randomUUID()}`;
 }
 
+async function readAdminUser(userId: string) {
+  const response = await adminFetch(`/auth/v1/admin/users/${encodeURIComponent(userId)}`);
+  if (response.status === 404) return null;
+  await requireOk(response, "E2E_AUTH_USER_READ");
+  const parsed = AdminUserSchema.safeParse(await response.json().catch(() => null));
+  if (!parsed.success) throw new Error("E2E_AUTH_USER_INVALID");
+  return parsed.data;
+}
+
 async function deleteAuthUser(userId: string): Promise<void> {
   const response = await adminFetch(`/auth/v1/admin/users/${encodeURIComponent(userId)}`, {
     method: "DELETE",
@@ -76,7 +81,7 @@ export async function provisionTemporaryStaff(label: string): Promise<TemporaryS
       email,
       password: generatedPassword,
       email_confirm: true,
-      user_metadata: { purpose: "relax-fix-ai-media-e2e", label },
+      user_metadata: { purpose: E2E_PURPOSE, label },
     }),
   });
   const userBody: unknown = await userResponse.json().catch(() => null);
@@ -107,18 +112,14 @@ export async function provisionTemporaryStaff(label: string): Promise<TemporaryS
 async function readOwnedStoragePaths(userId: string): Promise<string[]> {
   const encoded = encodeURIComponent(userId);
   const [mediaResponse, jobsResponse] = await Promise.all([
-    adminFetch(
-      `/rest/v1/media_assets?select=id,storage_path&created_by=eq.${encoded}`,
-    ),
-    adminFetch(
-      `/rest/v1/ai_media_jobs?select=id,storage_path&requested_by=eq.${encoded}`,
-    ),
+    adminFetch(`/rest/v1/media_assets?select=id,storage_path&created_by=eq.${encoded}`),
+    adminFetch(`/rest/v1/ai_media_jobs?select=id,storage_path&requested_by=eq.${encoded}`),
   ]);
   await requireOk(mediaResponse, "E2E_MEDIA_READ");
   await requireOk(jobsResponse, "E2E_VIDEO_JOBS_READ");
 
-  const media = MediaRowsSchema.safeParse(await mediaResponse.json().catch(() => null));
-  const jobs = VideoRowsSchema.safeParse(await jobsResponse.json().catch(() => null));
+  const media = OwnedRowsSchema.safeParse(await mediaResponse.json().catch(() => null));
+  const jobs = OwnedRowsSchema.safeParse(await jobsResponse.json().catch(() => null));
   if (!media.success || !jobs.success) throw new Error("E2E_CLEANUP_ROWS_INVALID");
 
   return Array.from(
@@ -148,6 +149,12 @@ async function deleteRows(table: string, column: string, userId: string): Promis
 }
 
 export async function cleanupTemporaryStaff(userId: string): Promise<void> {
+  const user = await readAdminUser(userId);
+  if (!user) return;
+  if (user.user_metadata.purpose !== E2E_PURPOSE) {
+    throw new Error("E2E_CLEANUP_USER_NOT_TAGGED");
+  }
+
   const paths = await readOwnedStoragePaths(userId);
   await deleteStorageObjects(paths);
   await deleteRows("media_assets", "created_by", userId);
