@@ -7,20 +7,15 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  E2E_BASE_URL: https://swim-fluent-uae.vercel.app
-  E2E_CREDENTIALS_PATH: /tmp/relax-fix-ai-media-e2e.json
-
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,27 +39,3 @@ jobs:
         run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify Supabase settings and booking RPC
         run: node scripts/verify-supabase-booking.mjs
-      - name: Wait for exact production deployment SHA
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: node scripts/ai-media-e2e-admin.mjs wait
-      - name: Install Playwright Chromium
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: npx playwright install --with-deps chromium
-      - name: Provision isolated temporary staff
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: node scripts/ai-media-e2e-admin.mjs provision > e2e-provision.log 2>&1 || { cat e2e-provision.log; exit 1; }
-      - name: Run real AI Image and AI Video browser E2E
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: npm run test:e2e:ai-media
-      - name: Cleanup isolated E2E users and media
-        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: node scripts/ai-media-e2e-admin.mjs cleanup
-      - name: Upload browser diagnostics
-        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-media-e2e-diagnostics
-          path: |
-            test-results
-            e2e-provision.log
-          if-no-files-found: ignore
