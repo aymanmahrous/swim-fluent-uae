@@ -1,5 +1,6 @@
 import { isIP } from "node:net";
 import { supabaseProjectUrl } from "./supabase-project.server";
+import { supabaseServerKeyHeaders } from "./supabase-server-key.server";
 
 const MEDIA_BUCKET = "relax-fix-media";
 const MAX_PROVIDER_ASSET_BYTES = 100 * 1024 * 1024;
@@ -144,7 +145,7 @@ async function authenticatedObjectExists(path: string): Promise<boolean> {
   const response = await fetch(storageObjectUrl(path), {
     method: "HEAD",
     cache: "no-store",
-    headers: { apikey: secretKey() },
+    headers: { apikey: secretKey(), ...supabaseServerKeyHeaders() },
   }).catch(() => null);
   return Boolean(response?.ok);
 }
@@ -161,6 +162,7 @@ async function standardUpload(
     cache: "no-store",
     headers: {
       apikey: secretKey(),
+      ...supabaseServerKeyHeaders(),
       "Content-Type": contentType,
       "Cache-Control": "max-age=3600",
       "x-upsert": "false",

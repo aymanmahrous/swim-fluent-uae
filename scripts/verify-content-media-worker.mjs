@@ -102,7 +102,8 @@ for (const needle of [
   "PROVIDER_ASSET_DOWNLOAD_HEADER_REJECTED",
   "MAX_PROVIDER_REDIRECTS = 3",
   "autonomous-${jobId}",
-  "headers: { apikey: secretKey() }",
+  "supabaseServerKeyHeaders()",
+  "headers: { apikey: secretKey(), ...supabaseServerKeyHeaders() }",
   "apikey: secretKey()",
   '"x-upsert": "false"',
   "authenticatedObjectExists",
@@ -118,7 +119,7 @@ for (const needle of [
   "SUPABASE_SERVICE_ROLE_KEY",
   "tus.Upload",
 ]) {
-  forbidText(storage, needle, "modern secret key and private storage boundary");
+  forbidText(storage, needle, "server key and private storage boundary");
 }
 
 const processor = await text("src/platform/content-media-worker.server.ts");
