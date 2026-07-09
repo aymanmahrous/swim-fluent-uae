@@ -54,7 +54,7 @@ jobs:
       id-token: write
     env:
       E2E_BASE_URL: https://swim-fluent-uae-w532-git-ag-a522bb-swimmingayman-8492s-projects.vercel.app
-      E2E_CREDENTIALS_PATH: ${{ runner.temp }}/relax-fix-ai-media-e2e.json
+      E2E_CREDENTIALS_PATH: /tmp/relax-fix-ai-media-e2e.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
