@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "ignoreCommand": "node -e \"const ref=process.env.VERCEL_GIT_COMMIT_REF||'';const projectId=process.env.VERCEL_PROJECT_ID||'';const canonical='prj_4wRrALwNzlU0msHb9pGOsExmNID0';process.exit(ref.startsWith('agent/')||(projectId&&projectId!==canonical)?0:1)\"",
+  "crons": [
+    {
+      "path": "/api/cron/content-automation",
+      "schedule": "15 0 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",

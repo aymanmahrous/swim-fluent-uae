@@ -121,10 +121,9 @@ for (const needle of [
   forbidText(storage, needle, "modern secret key and private storage boundary");
 }
 
-const worker = await text("src/routes/api.internal.content-media-worker.ts");
+const processor = await text("src/platform/content-media-worker.server.ts");
 for (const needle of [
-  'createFileRoute("/api/internal/content-media-worker")',
-  "verifyInternalWorkerRequest(request)",
+  "processOneContentMediaJob",
   "isSupabaseSecretConfigured()",
   'rpcJson("claim_next_content_media_job")',
   "getImageProvider()",
@@ -137,14 +136,13 @@ for (const needle of [
   "getVideoProviderById(job.provider)",
   'providerState.status === "queued" || providerState.status === "running"',
   '"VIDEO_PROVIDER_PENDING"',
-  'deferJob(\n              job.jobId,\n              `VIDEO_PROVIDER_${providerState.status.toUpperCase()}`,\n              30,',
   "providerState.downloadHeaders",
   'rpcJson("complete_content_media_job"',
   'rpcJson("fail_content_media_job"',
   'rpcJson("fail_content_media_video_provider_job"',
   "failVideoProviderJob(",
 ]) {
-  requireText(worker, needle, "content media worker route contract");
+  requireText(processor, needle, "content media processor contract");
 }
 for (const needle of [
   "claim_next_publish_job",
@@ -152,7 +150,25 @@ for (const needle of [
   "getPublishingProvider",
   "content_publication_receipts",
 ]) {
-  forbidText(worker, needle, "media versus publishing boundary");
+  forbidText(processor, needle, "media versus publishing boundary");
+}
+
+const route = await text("src/routes/api.internal.content-media-worker.ts");
+for (const needle of [
+  'createFileRoute("/api/internal/content-media-worker")',
+  "verifyInternalWorkerRequest(request)",
+  "processOneContentMediaJob()",
+  "Response.json(result.body, { status: result.status })",
+]) {
+  requireText(route, needle, "authenticated media worker wrapper");
+}
+for (const needle of [
+  "claim_next_content_media_job",
+  "getImageProvider",
+  "getVideoProvider",
+  "SUPABASE_SECRET_KEY",
+]) {
+  forbidText(route, needle, "media route processor extraction");
 }
 
 console.log(`Content media worker verification passed (${checks} assertions).`);

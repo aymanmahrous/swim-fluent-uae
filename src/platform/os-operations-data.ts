@@ -31,6 +31,35 @@ export const OperationsQueueSchema = z.object({
   generatedAt: z.string(),
 });
 
+const AutomationRunSchema = z.object({
+  id: z.string().uuid(),
+  source: z.enum(["vercel_cron", "supabase_cron", "internal_manual"]),
+  status: z.enum(["running", "completed", "partial", "failed"]),
+  mediaAttempts: z.number().int().nonnegative(),
+  mediaProcessed: z.number().int().nonnegative(),
+  publishAttempts: z.number().int().nonnegative(),
+  publishProcessed: z.number().int().nonnegative(),
+  summary: z.record(z.unknown()),
+  error: z.string().nullable(),
+  startedAt: z.string(),
+  finishedAt: z.string().nullable(),
+});
+
+export const ContentAutomationStatusSchema = z.object({
+  queue: z.object({
+    mediaQueued: z.number().int().nonnegative(),
+    mediaProcessing: z.number().int().nonnegative(),
+    mediaRetrying: z.number().int().nonnegative(),
+    mediaDead: z.number().int().nonnegative(),
+    publishQueued: z.number().int().nonnegative(),
+    publishProcessing: z.number().int().nonnegative(),
+    publishRetrying: z.number().int().nonnegative(),
+    publishDead: z.number().int().nonnegative(),
+    ambiguousPublications: z.number().int().nonnegative(),
+  }),
+  latestRuns: z.array(AutomationRunSchema),
+});
+
 export const MediaAssetSchema = z.object({
   id: z.string().uuid(),
   createdBy: z.string().uuid(),
@@ -59,6 +88,16 @@ export async function fetchOperationsQueue() {
   );
   const parsed = OperationsQueueSchema.safeParse(body);
   if (!parsed.success) throw new Error("INVALID_OPERATIONS_RESPONSE");
+  return parsed.data;
+}
+
+export async function fetchContentAutomationStatus() {
+  const body = await checkedJson(
+    await fetch("/api/os-automation-status", { headers: { Accept: "application/json" } }),
+    "CONTENT_AUTOMATION_STATUS_UNAVAILABLE",
+  );
+  const parsed = ContentAutomationStatusSchema.safeParse(body);
+  if (!parsed.success) throw new Error("INVALID_CONTENT_AUTOMATION_STATUS_RESPONSE");
   return parsed.data;
 }
 

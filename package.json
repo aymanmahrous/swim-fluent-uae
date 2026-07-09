@@ -14,6 +14,7 @@
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
     "verify:content-media-worker": "node scripts/verify-content-media-worker.mjs",
+    "verify:content-automation-scheduler": "node scripts/verify-content-automation-scheduler.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
