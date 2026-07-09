@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "typecheck": "vite build --mode development >/dev/null && tsc --noEmit",
     "test:e2e:ai-media": "playwright test tests/e2e/ai-media.spec.ts",
+    "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

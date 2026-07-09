@@ -105,8 +105,6 @@ export const t = {
   back: { ar: "السابق", en: "Back" },
   selectDate: { ar: "اختر اليوم", en: "Choose a Day" },
   selectedSummary: { ar: "ملخص الطلب", en: "Request Summary" },
-  settingsUnavailable: { ar: "الحجز متوقف مؤقتًا حتى يتم تحميل إعدادات النشاط من الخادم.", en: "Booking is temporarily unavailable until business settings load from the server." },
-  requestSaved: { ar: "تم حفظ الطلب في النظام", en: "Request saved in the system" },
   whatsappOptional: { ar: "يمكنك الآن متابعة التواصل عبر واتساب.", en: "You can now continue the conversation on WhatsApp." },
 } satisfies Dict;
 
@@ -119,15 +117,29 @@ interface Ctx {
   dir: "rtl" | "ltr";
 }
 
+interface LangProviderProps {
+  children: ReactNode;
+  initialLang?: Lang;
+  persistPreference?: boolean;
+}
+
 const LangCtx = createContext<Ctx | null>(null);
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("ar");
+export function LangProvider({
+  children,
+  initialLang = "ar",
+  persistPreference = true,
+}: LangProviderProps) {
+  const [lang, setLangState] = useState<Lang>(initialLang);
 
   useEffect(() => {
+    if (!persistPreference) {
+      setLangState(initialLang);
+      return;
+    }
     const saved = (typeof window !== "undefined" && localStorage.getItem("lang")) as Lang | null;
-    if (saved) setLangState(saved);
-  }, []);
+    if (saved === "ar" || saved === "en") setLangState(saved);
+  }, [initialLang, persistPreference]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -137,7 +149,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    if (typeof window !== "undefined") localStorage.setItem("lang", l);
+    if (persistPreference && typeof window !== "undefined") localStorage.setItem("lang", l);
   };
 
   const tr = (key: TranslationKey) => t[key]?.[lang] ?? String(key);

@@ -5,11 +5,11 @@ import { publicHomeHead } from "../platform/public-seo";
 
 const PublicHomeComponent = PublicHomeDefinition.options.component as ComponentType;
 
-export const Route = createFileRoute("/")({
-  head: () => publicHomeHead("ar"),
-  component: ArabicPublicHome,
+export const Route = createFileRoute("/en")({
+  head: () => publicHomeHead("en"),
+  component: EnglishPublicHome,
 });
 
-function ArabicPublicHome() {
+function EnglishPublicHome() {
   return <PublicHomeComponent />;
 }

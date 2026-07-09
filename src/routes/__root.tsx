@@ -5,12 +5,13 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useLocation,
   useRouter,
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "../components/ui/sonner";
-import { LangProvider, useLang } from "../lib/i18n";
+import { LangProvider, useLang, type Lang } from "../lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import {
   businessWhatsAppUrl,
@@ -22,6 +23,10 @@ import appCss from "../styles.css?url";
 
 const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
+
+function localizedPublicLanguage(pathname: string): Lang {
+  return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
+}
 
 function NotFoundComponent() {
   const { tr } = useLang();
@@ -100,8 +105,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const pageLang = localizedPublicLanguage(pathname);
+
   return (
-    <html lang="ar" dir="rtl">
+    <html lang={pageLang} dir={pageLang === "ar" ? "rtl" : "ltr"}>
       <head>
         <HeadContent />
       </head>
@@ -115,8 +123,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function Nav() {
   const { lang, setLang, tr } = useLang();
+  const pathname = useLocation({ select: (location) => location.pathname });
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
+  const isPublicHome = pathname === "/" || pathname === "/en";
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
@@ -133,13 +143,13 @@ function Nav() {
 
         <nav className="flex items-center gap-1.5 sm:gap-2">
           <a
-            href="/#programs"
+            href={isPublicHome ? "#programs" : "/#programs"}
             className="hidden rounded-xl px-3 py-2 text-sm font-bold transition hover:bg-muted md:inline-flex"
           >
             {tr("viewPrograms")}
           </a>
           <a
-            href="/#book"
+            href={isPublicHome ? "#book" : "/#book"}
             className="inline-flex items-center gap-2 rounded-xl bg-deep px-3 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 sm:px-4 sm:text-sm"
           >
             <Waves className="h-4 w-4" /> {tr("book")}
@@ -154,14 +164,36 @@ function Nav() {
               {tr("admin")}
             </Link>
           )}
-          <button
-            onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-            className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
-            aria-label="Switch language"
-          >
-            <Languages className="h-4 w-4" />
-            <span className="text-xs font-black">{lang === "ar" ? "EN" : "ع"}</span>
-          </button>
+          {isPublicHome ? (
+            lang === "ar" ? (
+              <Link
+                to="/en"
+                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+                aria-label="View English version"
+              >
+                <Languages className="h-4 w-4" />
+                <span className="text-xs font-black">EN</span>
+              </Link>
+            ) : (
+              <Link
+                to="/"
+                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+                aria-label="عرض النسخة العربية"
+              >
+                <Languages className="h-4 w-4" />
+                <span className="text-xs font-black">ع</span>
+              </Link>
+            )
+          ) : (
+            <button
+              onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+              className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+              aria-label="Switch language"
+            >
+              <Languages className="h-4 w-4" />
+              <span className="text-xs font-black">{lang === "ar" ? "EN" : "ع"}</span>
+            </button>
+          )}
         </nav>
       </div>
     </header>
@@ -208,9 +240,13 @@ function Footer() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const publicLang = localizedPublicLanguage(pathname);
+  const isLocalizedPublicPage = pathname === "/" || pathname === "/en";
+
   return (
     <QueryClientProvider client={queryClient}>
-      <LangProvider>
+      <LangProvider initialLang={publicLang} persistPreference={!isLocalizedPublicPage}>
         <div className="flex min-h-screen flex-col">
           <Nav />
           <main className="flex-1">
