@@ -75,7 +75,6 @@ async function verifySignature(
     "jwk",
     {
       kty: key.kty,
-      kid: key.kid,
       n: key.n,
       e: key.e,
       alg: "RS256",
