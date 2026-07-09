@@ -59,10 +59,15 @@ async function readCredentials(): Promise<Credentials> {
   return parsed.data;
 }
 
+async function staffInput(page: Page, label: string, type: "email" | "password") {
+  const labelled = page.getByLabel(label, { exact: true });
+  return (await labelled.count()) > 0 ? labelled : page.locator(`input[type="${type}"]`).first();
+}
+
 async function login(page: Page, user: StaffUser): Promise<void> {
   await page.goto(`${baseUrl}/staff`, { waitUntil: "domcontentloaded" });
-  await page.getByLabel("البريد الإلكتروني").fill(user.email);
-  await page.getByLabel("كلمة المرور").fill(user.password);
+  await (await staffInput(page, "البريد الإلكتروني", "email")).fill(user.email);
+  await (await staffInput(page, "كلمة المرور", "password")).fill(user.password);
   await page.getByRole("button", { name: "دخول آمن", exact: true }).click();
   await expect(page.getByRole("link", { name: "AI OS", exact: true })).toBeVisible({
     timeout: 30_000,
