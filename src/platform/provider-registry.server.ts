@@ -7,6 +7,10 @@ import {
 import { googleVeoProvider, isGoogleVeoConfigured } from "./google-veo.server";
 import { isOpenAiImageConfigured, openAiGptImageProvider } from "./openai-image.server";
 import {
+  isOpenAiTextConfigured,
+  openAiResponsesTextProvider,
+} from "./openai-text.server";
+import {
   supabaseProjectUrl,
   supabasePublishableKey,
 } from "./supabase-project.server";
@@ -88,6 +92,7 @@ export interface PublishingProvider {
 }
 
 const textAdapters = new Map<string, TextGenerationProvider>([
+  [openAiResponsesTextProvider.id, openAiResponsesTextProvider],
   [alibabaQwenProvider.id, alibabaQwenProvider],
 ]);
 const imageAdapters = new Map<string, ImageGenerationProvider>([
@@ -126,7 +131,14 @@ function all(...names: string[]): boolean {
 }
 
 function textProviderId(): string | null {
-  return value("AI_TEXT_PROVIDER") ?? (isAlibabaModelStudioConfigured() ? "alibaba-qwen" : null);
+  return (
+    value("AI_TEXT_PROVIDER") ??
+    (isOpenAiTextConfigured()
+      ? "openai-responses-text"
+      : isAlibabaModelStudioConfigured()
+        ? "alibaba-qwen"
+        : null)
+  );
 }
 
 function imageProviderId(): string | null {
@@ -157,6 +169,7 @@ function providerCredentialsConfigured(
 ): boolean {
   if (!providerId) return false;
   if (providerId.startsWith("alibaba-")) return isAlibabaModelStudioConfigured();
+  if (providerId === "openai-responses-text") return isOpenAiTextConfigured();
   if (providerId === "openai-gpt-image") return isOpenAiImageConfigured();
   if (providerId === "google-veo") return isGoogleVeoConfigured();
   return Boolean(value(`AI_${category.toUpperCase()}_API_KEY`));
@@ -269,7 +282,7 @@ export function getProviderStatuses(): ProviderStatus[] {
       provider: textProvider,
       detail: textConfigured
         ? `${textProvider} is configured server-side and its executable adapter is registered.`
-        : "Alibaba Model Studio requires MAAS_ENDPOINT and ALIBABA_MODEL_STUDIO_API_KEY, or another configured text adapter.",
+        : "OpenAI Responses requires OPENAI_API_KEY, or Alibaba Model Studio requires MAAS_ENDPOINT and ALIBABA_MODEL_STUDIO_API_KEY.",
     },
     {
       id: "image-ai",
