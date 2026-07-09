@@ -4,7 +4,7 @@
   "crons": [
     {
       "path": "/api/cron/content-automation",
-      "schedule": "*/5 * * * *"
+      "schedule": "15 0 * * *"
     }
   ],
   "headers": [
