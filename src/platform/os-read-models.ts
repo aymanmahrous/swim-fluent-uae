@@ -14,6 +14,7 @@ const ContentStatusSchema = z.enum([
 
 export const OsContentItemSchema = z.object({
   id: z.string().uuid(),
+  plannedFor: z.string().nullable(),
   scheduledFor: z.string().nullable(),
   platform: z.enum(["instagram", "facebook", "tiktok"]),
   contentType: z.string(),
@@ -24,6 +25,10 @@ export const OsContentItemSchema = z.object({
   hashtags: z.array(z.string()),
   visualPrompt: z.string(),
   status: ContentStatusSchema,
+  language: z.enum(["ar", "en"]),
+  contentPillar: z.string().nullable(),
+  contentSlot: z.string().nullable(),
+  contentFingerprint: z.string().nullable(),
   providerExternalId: z.string().nullable(),
   publishedAt: z.string().nullable(),
   createdAt: z.string(),
