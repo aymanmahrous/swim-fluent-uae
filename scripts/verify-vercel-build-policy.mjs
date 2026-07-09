@@ -4,9 +4,30 @@ import { spawnSync } from "node:child_process";
 const config = JSON.parse(await readFile("vercel.json", "utf8"));
 const command = config.ignoreCommand;
 const canonicalProjectId = "prj_4wRrALwNzlU0msHb9pGOsExmNID0";
+const allowedTopLevelKeys = new Set(["$schema", "ignoreCommand", "crons", "headers"]);
+
+for (const key of Object.keys(config)) {
+  if (!allowedTopLevelKeys.has(key)) {
+    throw new Error(`VERCEL_CONFIG_KEY_NOT_ALLOWLISTED:${key}`);
+  }
+}
 
 if (typeof command !== "string" || command.length < 1) {
   throw new Error("VERCEL_IGNORE_COMMAND_MISSING");
+}
+
+if (
+  !Array.isArray(config.crons) ||
+  config.crons.length !== 1 ||
+  config.crons[0]?.path !== "/api/cron/content-automation" ||
+  config.crons[0]?.schedule !== "15 0 * * *"
+) {
+  throw new Error("VERCEL_RECOVERY_CRON_POLICY_INVALID");
+}
+
+const cronText = JSON.stringify(config.crons);
+if (cronText.includes("*/5 * * * *") || cronText.includes("* * * * *")) {
+  throw new Error("VERCEL_HOBBY_HIGH_FREQUENCY_CRON_FORBIDDEN");
 }
 
 function exitStatus(ref, projectId = canonicalProjectId) {
@@ -42,4 +63,4 @@ if (exitStatus("main", "") !== 1) {
   throw new Error("MISSING_PROJECT_ID_MUST_FAIL_OPEN_TO_BUILD");
 }
 
-console.log("Vercel build policy verification passed (6 project/branch cases).");
+console.log("Vercel build policy verification passed (6 project/branch cases + strict recovery cron policy).");
