@@ -33,7 +33,7 @@ export const OperationsQueueSchema = z.object({
 
 const AutomationRunSchema = z.object({
   id: z.string().uuid(),
-  source: z.enum(["vercel_cron", "internal_manual"]),
+  source: z.enum(["vercel_cron", "supabase_cron", "internal_manual"]),
   status: z.enum(["running", "completed", "partial", "failed"]),
   mediaAttempts: z.number().int().nonnegative(),
   mediaProcessed: z.number().int().nonnegative(),
