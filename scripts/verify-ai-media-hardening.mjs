@@ -109,22 +109,34 @@ for (const needle of [
   'process.env.VERCEL_GIT_COMMIT_REF === "main"',
   "process.env.VERCEL_GIT_COMMIT_SHA === context.sha",
   "verifyGithubActionsOidc",
-  'action: z.literal("status")',
-  'action: z.literal("provision")',
-  'action: z.literal("cleanup")',
+  'z.literal("status")',
   'code: "DEPLOYMENT_NOT_READY"',
+  "sha: oidc.sha",
 ]) {
-  requireText(e2eRoute, needle, "production E2E control route");
+  requireText(e2eRoute, needle, "production E2E status route");
 }
-forbidText(e2eRoute, "SUPABASE_SECRET_KEY", "production E2E control route");
-forbidText(e2eRoute, "ALIBABA_MODEL_STUDIO_API_KEY", "production E2E control route");
+forbidText(e2eRoute, 'z.literal("provision")', "production E2E status route");
+forbidText(e2eRoute, 'z.literal("cleanup")', "production E2E status route");
+forbidText(e2eRoute, "SUPABASE_SECRET_KEY", "production E2E status route");
+forbidText(e2eRoute, "ALIBABA_MODEL_STUDIO_API_KEY", "production E2E status route");
 
-const e2eAdmin = await text("src/platform/ai-media-e2e-admin.server.ts");
-requireText(e2eAdmin, "process.env.SUPABASE_SECRET_KEY", "E2E admin helper");
-requireText(e2eAdmin, 'headers.set("apikey", secretKey())', "E2E admin helper");
-requireText(e2eAdmin, 'E2E_PURPOSE = "relax-fix-ai-media-e2e"', "E2E admin helper");
-requireText(e2eAdmin, "user.user_metadata.purpose !== E2E_PURPOSE", "E2E cleanup guard");
-forbidText(e2eAdmin, "SUPABASE_SERVICE_ROLE_KEY", "E2E admin helper");
+const edgeAdmin = await text("supabase/functions/ai-media-e2e-admin/index.ts");
+for (const needle of [
+  'OIDC_AUDIENCE = "relax-fix-ai-media-e2e"',
+  'EXPECTED_REPOSITORY = "aymanmahrous/swim-fluent-uae"',
+  'EXPECTED_REF = "refs/heads/main"',
+  "crypto.subtle.verify",
+  'Deno.env.get("SUPABASE_SECRET_KEYS")',
+  'Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")',
+  'E2E_PURPOSE = "relax-fix-ai-media-e2e"',
+  "user.user_metadata?.purpose !== E2E_PURPOSE",
+  "created_by=eq.${encoded}",
+  "requested_by=eq.${encoded}",
+]) {
+  requireText(edgeAdmin, needle, "Supabase Edge E2E admin");
+}
+forbidText(edgeAdmin, "sb_secret_", "Supabase Edge E2E admin");
+forbidText(edgeAdmin, "ALIBABA_MODEL_STUDIO_API_KEY", "Supabase Edge E2E admin");
 
 const e2eClient = await text("scripts/ai-media-e2e-admin.mjs");
 for (const needle of [
@@ -132,7 +144,9 @@ for (const needle of [
   "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
   '"wait", "provision", "cleanup"',
   "DEPLOYMENT_WAIT_ATTEMPTS",
-  'e2eCall({ action: "status" })',
+  "E2E_ADMIN_URL",
+  '`${baseUrl}/api/internal/ai-media-e2e`',
+  "oidcCall(adminUrl",
   'code !== "DEPLOYMENT_NOT_READY"',
   "AI_MEDIA_E2E_DEPLOYMENT_TIMEOUT",
   'console.log(`::add-mask::${user.password}`)',
