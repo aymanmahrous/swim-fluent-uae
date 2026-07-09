@@ -75,6 +75,23 @@ for (const needle of [
   forbidText(migration.toLowerCase(), needle.toLowerCase(), "existing queue and workflow boundaries");
 }
 
+const terminalRetry = await text(
+  "supabase/migrations/20260710_000028_retry_terminal_video_generation_with_new_provider_job.sql",
+);
+for (const needle of [
+  "fail_content_media_video_provider_job",
+  "CONTENT_MEDIA_VIDEO_PROVIDER_JOB_MISSING",
+  "update public.ai_media_jobs",
+  "status = 'failed'",
+  "payload - 'provider' - 'providerJobId'",
+  "when v_final_status = 'retrying'",
+  "willCreateNewProviderJob",
+  "v_job.attempt_count >= 5",
+  "grant execute on function public.fail_content_media_video_provider_job(uuid, text) to service_role",
+]) {
+  requireText(terminalRetry, needle, "terminal video provider retry contract");
+}
+
 const storage = await text("src/platform/content-media-worker-storage.server.ts");
 for (const needle of [
   'const MEDIA_BUCKET = "relax-fix-media"',
@@ -124,6 +141,8 @@ for (const needle of [
   "providerState.downloadHeaders",
   'rpcJson("complete_content_media_job"',
   'rpcJson("fail_content_media_job"',
+  'rpcJson("fail_content_media_video_provider_job"',
+  "failVideoProviderJob(",
 ]) {
   requireText(worker, needle, "content media worker route contract");
 }
