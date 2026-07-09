@@ -68,6 +68,13 @@ async function failJob(jobId: string, error: unknown) {
   });
 }
 
+async function failVideoProviderJob(jobId: string, error: unknown) {
+  return rpcJson("fail_content_media_video_provider_job", {
+    p_job_id: jobId,
+    p_error: safeError(error),
+  });
+}
+
 async function completeJob(input: {
   jobId: string;
   storagePath: string;
@@ -270,7 +277,7 @@ export const Route = createFileRoute("/api/internal/content-media-worker")({
           }
 
           if (providerState.status === "failed") {
-            const failed = await failJob(
+            const failed = await failVideoProviderJob(
               job.jobId,
               providerState.error ?? "VIDEO_PROVIDER_FAILED",
             );
