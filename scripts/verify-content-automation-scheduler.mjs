@@ -191,7 +191,7 @@ for (const needle of [
   "Ambiguous publications",
   "Human approval remains mandatory before scheduling",
   "The scheduler does not create Content Brain batches and cannot publish a needs-review item",
-  'run.source === "supabase_cron"',
+  'source === "supabase_cron"',
   "Supabase Cron pulse",
 ]) {
   requireText(page, needle, "automation health UI");
