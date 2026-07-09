@@ -20,7 +20,7 @@ const ImageResponseSchema = z.object({
   mediaAssetId: z.string().uuid(),
   storagePath: z.string().min(1),
   publicUrl: z.string().url(),
-  provider: z.literal("alibaba-wan-image"),
+  provider: z.enum(["openai-gpt-image", "alibaba-wan-image"]),
   uploadMode: z.enum(["standard", "tus"]),
 });
 
@@ -28,7 +28,7 @@ const VideoCreateResponseSchema = z.object({
   success: z.literal(true),
   jobId: z.string().uuid(),
   status: z.enum(["queued", "running", "succeeded", "failed"]),
-  provider: z.literal("alibaba-wan-video"),
+  provider: z.enum(["google-veo", "alibaba-wan-video"]),
   pollAfterSeconds: z.number().int().positive(),
 });
 
@@ -146,7 +146,7 @@ test("live fallback: AI Image and AI Video persist privately and reload from Med
   );
   await imageButton.click();
   const imageResponse = await imageResponsePromise;
-  expect(imageResponse.status()).toBe(200);
+  expect(imageResponse.status()).toBe(201);
   const imageResult = ImageResponseSchema.parse(await imageResponse.json());
   expect(imageResult.storagePath.startsWith(`${primary.userId}/image/`)).toBe(true);
 
