@@ -37,7 +37,7 @@ for (const needle of [
   "created_by = auth.uid()",
   "requested_by = auth.uid()",
   "public = false",
-  'active staff can read own media folder',
+  "active staff can read own media folder",
   "for select",
   "storage.foldername(name)",
   "can_manage_relax_fix_media",
@@ -87,5 +87,59 @@ for (const needle of [
 
 const mediaReadModel = await text("src/platform/os-operations-data.ts");
 requireText(mediaReadModel, "createdBy: z.string().uuid()", "media client ownership schema");
+
+const oidc = await text("src/platform/github-actions-oidc.server.ts");
+for (const needle of [
+  'AI_MEDIA_E2E_AUDIENCE = "relax-fix-ai-media-e2e"',
+  'EXPECTED_REPOSITORY = "aymanmahrous/swim-fluent-uae"',
+  'EXPECTED_REF = "refs/pull/9/merge"',
+  'event_name: z.literal("pull_request")',
+  "RSASSA-PKCS1-v1_5",
+  "crypto.subtle.verify",
+]) {
+  requireText(oidc, needle, "GitHub Actions OIDC verifier");
+}
+forbidText(oidc, "SUPABASE_SECRET_KEY", "GitHub Actions OIDC verifier");
+
+const e2eRoute = await text("src/routes/api.internal.ai-media-e2e.ts");
+for (const needle of [
+  'process.env.VERCEL_ENV === "preview"',
+  'process.env.VERCEL_GIT_COMMIT_REF === EXPECTED_PREVIEW_BRANCH',
+  "verifyGithubActionsOidc",
+  'action: z.literal("provision")',
+  'action: z.literal("cleanup")',
+]) {
+  requireText(e2eRoute, needle, "preview E2E control route");
+}
+forbidText(e2eRoute, "SUPABASE_SECRET_KEY", "preview E2E control route");
+forbidText(e2eRoute, "ALIBABA_MODEL_STUDIO_API_KEY", "preview E2E control route");
+
+const e2eAdmin = await text("src/platform/ai-media-e2e-admin.server.ts");
+requireText(e2eAdmin, "process.env.SUPABASE_SECRET_KEY", "E2E admin helper");
+requireText(e2eAdmin, 'headers.set("apikey", secretKey())', "E2E admin helper");
+requireText(e2eAdmin, 'E2E_PURPOSE = "relax-fix-ai-media-e2e"', "E2E admin helper");
+requireText(e2eAdmin, "user.user_metadata.purpose !== E2E_PURPOSE", "E2E cleanup guard");
+forbidText(e2eAdmin, "SUPABASE_SERVICE_ROLE_KEY", "E2E admin helper");
+
+const e2eClient = await text("scripts/ai-media-e2e-admin.mjs");
+requireText(e2eClient, "ACTIONS_ID_TOKEN_REQUEST_URL", "E2E GitHub client");
+requireText(e2eClient, "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "E2E GitHub client");
+requireText(e2eClient, 'console.log(`::add-mask::${user.password}`)', "E2E credential masking");
+forbidText(e2eClient, "SUPABASE_SECRET_KEY", "E2E GitHub client");
+forbidText(e2eClient, "ALIBABA_MODEL_STUDIO_API_KEY", "E2E GitHub client");
+
+const e2eSpec = await text("tests/e2e/ai-media.spec.ts");
+for (const needle of [
+  "/api/os-media-generate-image",
+  'provider: z.literal("alibaba-wan-image")',
+  'provider: z.literal("alibaba-wan-video")',
+  "assertOwnedImageInLibrary",
+  "assertOwnedVideoInLibrary",
+  "verifyIsolation",
+  'page.reload({ waitUntil: "domcontentloaded" })',
+  'name: "خروج"',
+]) {
+  requireText(e2eSpec, needle, "AI media browser E2E");
+}
 
 console.log(`AI media hardening verification passed (${checks} assertions).`);
