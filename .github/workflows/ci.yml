@@ -41,6 +41,8 @@ jobs:
         run: npm run verify:meta-publishing
       - name: Verify autonomous content media worker contracts
         run: npm run verify:content-media-worker
+      - name: Verify server-side content automation scheduler
+        run: npm run verify:content-automation-scheduler
       - name: Verify Vercel automated preview build policy
         run: node scripts/verify-vercel-build-policy.mjs
       - name: Verify AI OS security and real-data contracts
