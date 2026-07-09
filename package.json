@@ -15,6 +15,7 @@
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
     "verify:content-media-worker": "node scripts/verify-content-media-worker.mjs",
     "verify:content-automation-scheduler": "node scripts/verify-content-automation-scheduler.mjs",
+    "verify:supabase-server-key": "node scripts/verify-supabase-server-key-compatibility.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
