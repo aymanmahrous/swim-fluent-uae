@@ -114,7 +114,7 @@ for (const needle of [
   requireText(cronAuth, needle, "scheduler authentication contract");
 }
 for (const needle of [
-  "SUPABASE_SECRET_KEY",
+  "process.env.SUPABASE_SECRET_KEY",
   "decrypted_secret",
   "console.log",
 ]) {
