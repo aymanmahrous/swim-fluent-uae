@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { persistRemoteProviderAsset } from "../platform/media-storage.server";
+import {
+  persistProviderAssetBytes,
+  persistRemoteProviderAsset,
+} from "../platform/media-storage.server";
 import { getImageProvider } from "../platform/provider-registry.server";
 import {
   resolveStaffSession,
@@ -59,14 +62,26 @@ export const Route = createFileRoute("/api/os-media-generate-image")({
             prompt: parsed.data.prompt,
             aspectRatio: parsed.data.aspectRatio,
           });
-          const persisted = await persistRemoteProviderAsset({
-            providerId: provider.id,
-            providerUrl: generation.assetUrl,
-            accessToken: session.accessToken,
-            staffId: session.profile.id,
-            assetType: "image",
-            contentItemId: parsed.data.contentItemId ?? null,
-          });
+          const persisted = generation.assetBase64
+            ? await persistProviderAssetBytes({
+                bytes: new Uint8Array(Buffer.from(generation.assetBase64, "base64")),
+                contentType: generation.contentType ?? "image/png",
+                accessToken: session.accessToken,
+                staffId: session.profile.id,
+                contentItemId: parsed.data.contentItemId ?? null,
+              })
+            : generation.assetUrl
+              ? await persistRemoteProviderAsset({
+                  providerId: provider.id,
+                  providerUrl: generation.assetUrl,
+                  accessToken: session.accessToken,
+                  staffId: session.profile.id,
+                  assetType: "image",
+                  contentItemId: parsed.data.contentItemId ?? null,
+                })
+              : (() => {
+                  throw new Error("IMAGE_PROVIDER_ASSET_MISSING");
+                })();
 
           const recordResponse = await staffRpc(
             session.accessToken,
