@@ -52,7 +52,8 @@ jobs:
           contains(github.event.pull_request.labels.*.name, 'ai-media-e2e')
         run: |
           for attempt in $(seq 1 60); do
-            status=$(curl --silent --output /dev/null --write-out '%{http_code}' "$E2E_BASE_URL/staff" || true)
+            status=$(curl --location --silent --output /dev/null --write-out '%{http_code}' "$E2E_BASE_URL/staff" || true)
+            echo "Preview probe attempt $attempt: HTTP ${status:-000}"
             if [ "$status" = "200" ]; then
               exit 0
             fi
