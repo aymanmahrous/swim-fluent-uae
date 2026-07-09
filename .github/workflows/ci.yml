@@ -33,6 +33,8 @@ jobs:
           if-no-files-found: error
       - run: npm run lint
       - run: npm run build
+      - name: Verify Vercel automated preview build policy
+        run: node scripts/verify-vercel-build-policy.mjs
       - name: Verify AI OS security and real-data contracts
         run: node scripts/verify-ai-os-contracts.mjs
       - name: Verify AI media ownership and private storage contracts
