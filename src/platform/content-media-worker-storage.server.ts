@@ -19,6 +19,12 @@ type PersistedWorkerAsset = {
   uploadMode: "standard";
 };
 
+function secretKey(): string {
+  const value = process.env.SUPABASE_SECRET_KEY?.trim();
+  if (!value) throw new Error("SUPABASE_SECRET_NOT_CONFIGURED");
+  return value;
+}
+
 function safeUuid(value: string, code: string): string {
   const normalized = value.trim().toLowerCase();
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(normalized)) {
@@ -139,7 +145,7 @@ async function authenticatedObjectExists(path: string): Promise<boolean> {
   const response = await fetch(storageObjectUrl(path), {
     method: "HEAD",
     cache: "no-store",
-    headers: supabaseServerKeyHeaders(),
+    headers: { apikey: secretKey(), ...supabaseServerKeyHeaders() },
   }).catch(() => null);
   return Boolean(response?.ok);
 }
@@ -154,11 +160,13 @@ async function standardUpload(
   const response = await fetch(storageObjectUrl(path), {
     method: "POST",
     cache: "no-store",
-    headers: supabaseServerKeyHeaders({
+    headers: {
+      apikey: secretKey(),
+      ...supabaseServerKeyHeaders(),
       "Content-Type": contentType,
       "Cache-Control": "max-age=3600",
       "x-upsert": "false",
-    }),
+    },
     body: uploadBytes.buffer,
   });
 
