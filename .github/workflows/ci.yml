@@ -21,6 +21,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Probe secure Vercel deploy credential availability
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -n "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN_CONFIGURED"
+          else
+            echo "VERCEL_TOKEN_MISSING"
+          fi
       - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
       - name: Typecheck
         run: npm run typecheck > typecheck.log 2>&1 || { cat typecheck.log; exit 1; }
