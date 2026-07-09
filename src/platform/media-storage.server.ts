@@ -11,6 +11,7 @@ const SIGNED_URL_TTL_SECONDS = 60 * 60;
 const providerHostSuffixes: Readonly<Record<string, readonly string[]>> = {
   "alibaba-wan-image": ["aliyuncs.com", "alicdn.com"],
   "alibaba-wan-video": ["aliyuncs.com", "alicdn.com"],
+  "google-veo": ["googleapis.com", "googleusercontent.com"],
 };
 
 function encodedObjectPath(path: string): string {
@@ -55,18 +56,41 @@ function allowedProviderUrl(providerId: string, candidate: string): URL {
   return url;
 }
 
+function providerDownloadHeaders(
+  providerId: string,
+  candidate?: Record<string, string>,
+): Record<string, string> {
+  if (!candidate) return {};
+  const allowed = providerId === "google-veo" ? new Set(["x-goog-api-key"]) : new Set<string>();
+  const result: Record<string, string> = {};
+  for (const [name, rawValue] of Object.entries(candidate)) {
+    const normalizedName = name.trim().toLowerCase();
+    const normalizedValue = rawValue.trim();
+    if (!allowed.has(normalizedName) || !normalizedValue || /[\r\n]/.test(normalizedValue)) {
+      throw new Error("PROVIDER_ASSET_DOWNLOAD_HEADER_REJECTED");
+    }
+    result[normalizedName] = normalizedValue;
+  }
+  return result;
+}
+
 async function fetchProviderAsset(
   providerId: string,
   providerUrl: string,
   assetType: "image" | "video",
+  downloadHeaders?: Record<string, string>,
 ): Promise<Response> {
   let current = allowedProviderUrl(providerId, providerUrl);
+  const safeHeaders = providerDownloadHeaders(providerId, downloadHeaders);
 
   for (let redirects = 0; redirects <= MAX_PROVIDER_REDIRECTS; redirects += 1) {
     const response = await fetch(current, {
       method: "GET",
       redirect: "manual",
-      headers: { Accept: assetType === "video" ? "video/mp4" : "image/*" },
+      headers: {
+        Accept: assetType === "video" ? "video/mp4" : "image/*",
+        ...safeHeaders,
+      },
     });
     if (![301, 302, 303, 307, 308].includes(response.status)) return response;
 
@@ -220,6 +244,68 @@ async function resumableUpload(
   });
 }
 
+type PersistedAsset = {
+  storagePath: string;
+  publicUrl: string;
+  contentType: string;
+  sizeBytes: number;
+  uploadMode: "standard" | "tus";
+};
+
+async function persistAssetBytes(input: {
+  bytes: Uint8Array;
+  contentType: string;
+  accessToken: string;
+  staffId: string;
+  assetType: "image" | "video";
+  contentItemId?: string | null;
+  deterministicId?: string;
+}): Promise<PersistedAsset> {
+  const contentType = input.contentType.split(";")[0].trim().toLowerCase();
+  if (!allowedContentType(contentType, input.assetType)) {
+    throw new Error(`UNSUPPORTED_PROVIDER_ASSET_TYPE:${contentType || "unknown"}`);
+  }
+  if (input.bytes.byteLength < 1) throw new Error("PROVIDER_ASSET_EMPTY");
+  if (input.bytes.byteLength > MAX_PROVIDER_ASSET_BYTES) throw new Error("PROVIDER_ASSET_TOO_LARGE");
+
+  const storagePath = objectPath({
+    staffId: input.staffId,
+    assetType: input.assetType,
+    contentItemId: input.contentItemId,
+    contentType,
+    deterministicId: input.deterministicId,
+  });
+  const useTus = input.assetType === "video" && input.bytes.byteLength > STANDARD_UPLOAD_LIMIT;
+
+  if (useTus) {
+    await resumableUpload(storagePath, input.bytes, contentType, input.accessToken);
+  } else {
+    await standardUpload(storagePath, input.bytes, contentType, input.accessToken);
+  }
+
+  return {
+    storagePath,
+    publicUrl: await mediaSignedUrl(storagePath, input.accessToken),
+    contentType,
+    sizeBytes: input.bytes.byteLength,
+    uploadMode: useTus ? "tus" : "standard",
+  };
+}
+
+export async function persistProviderAssetBytes(input: {
+  bytes: Uint8Array;
+  contentType: "image/png" | "image/jpeg" | "image/webp";
+  accessToken: string;
+  staffId: string;
+  contentItemId?: string | null;
+  deterministicId?: string;
+}): Promise<PersistedAsset> {
+  return persistAssetBytes({
+    ...input,
+    assetType: "image",
+  });
+}
+
 export async function persistRemoteProviderAsset(input: {
   providerId: string;
   providerUrl: string;
@@ -228,14 +314,14 @@ export async function persistRemoteProviderAsset(input: {
   assetType: "image" | "video";
   contentItemId?: string | null;
   deterministicId?: string;
-}): Promise<{
-  storagePath: string;
-  publicUrl: string;
-  contentType: string;
-  sizeBytes: number;
-  uploadMode: "standard" | "tus";
-}> {
-  const response = await fetchProviderAsset(input.providerId, input.providerUrl, input.assetType);
+  downloadHeaders?: Record<string, string>;
+}): Promise<PersistedAsset> {
+  const response = await fetchProviderAsset(
+    input.providerId,
+    input.providerUrl,
+    input.assetType,
+    input.downloadHeaders,
+  );
   if (!response.ok) throw new Error(`PROVIDER_ASSET_DOWNLOAD_${response.status}`);
 
   const contentType = (response.headers.get("content-type") ?? "")
@@ -252,29 +338,13 @@ export async function persistRemoteProviderAsset(input: {
   }
 
   const bytes = new Uint8Array(await response.arrayBuffer());
-  if (bytes.byteLength < 1) throw new Error("PROVIDER_ASSET_EMPTY");
-  if (bytes.byteLength > MAX_PROVIDER_ASSET_BYTES) throw new Error("PROVIDER_ASSET_TOO_LARGE");
-
-  const storagePath = objectPath({
+  return persistAssetBytes({
+    bytes,
+    contentType,
+    accessToken: input.accessToken,
     staffId: input.staffId,
     assetType: input.assetType,
     contentItemId: input.contentItemId,
-    contentType,
     deterministicId: input.deterministicId,
   });
-  const useTus = input.assetType === "video" && bytes.byteLength > STANDARD_UPLOAD_LIMIT;
-
-  if (useTus) {
-    await resumableUpload(storagePath, bytes, contentType, input.accessToken);
-  } else {
-    await standardUpload(storagePath, bytes, contentType, input.accessToken);
-  }
-
-  return {
-    storagePath,
-    publicUrl: await mediaSignedUrl(storagePath, input.accessToken),
-    contentType,
-    sizeBytes: bytes.byteLength,
-    uploadMode: useTus ? "tus" : "standard",
-  };
 }
