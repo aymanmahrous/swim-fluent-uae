@@ -4,11 +4,13 @@ import {
   cleanupTemporaryStaff,
   provisionTemporaryStaff,
 } from "../platform/ai-media-e2e-admin.server";
-import { verifyGithubActionsOidc } from "../platform/github-actions-oidc.server";
-
-const EXPECTED_PREVIEW_BRANCH = "agent/verify-ai-media-e2e";
+import {
+  type GithubActionsOidcContext,
+  verifyGithubActionsOidc,
+} from "../platform/github-actions-oidc.server";
 
 const RequestSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("status") }),
   z.object({ action: z.literal("provision") }),
   z.object({
     action: z.literal("cleanup"),
@@ -16,10 +18,11 @@ const RequestSchema = z.discriminatedUnion("action", [
   }),
 ]);
 
-function previewScopeAllowed(): boolean {
+function productionDeploymentMatches(context: GithubActionsOidcContext): boolean {
   return (
-    process.env.VERCEL_ENV === "preview" &&
-    process.env.VERCEL_GIT_COMMIT_REF === EXPECTED_PREVIEW_BRANCH
+    process.env.VERCEL_ENV === "production" &&
+    process.env.VERCEL_GIT_COMMIT_REF === "main" &&
+    process.env.VERCEL_GIT_COMMIT_SHA === context.sha
   );
 }
 
@@ -39,13 +42,17 @@ export const Route = createFileRoute("/api/internal/ai-media-e2e")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!previewScopeAllowed()) {
-          return Response.json({ success: false, code: "NOT_FOUND" }, { status: 404 });
-        }
-        if (!(await verifyGithubActionsOidc(request))) {
+        const oidc = await verifyGithubActionsOidc(request);
+        if (!oidc) {
           return Response.json(
             { success: false, code: "UNAUTHORIZED" },
             { status: 401, headers: responseHeaders() },
+          );
+        }
+        if (!productionDeploymentMatches(oidc)) {
+          return Response.json(
+            { success: false, code: "DEPLOYMENT_NOT_READY" },
+            { status: 409, headers: responseHeaders() },
           );
         }
 
@@ -54,6 +61,13 @@ export const Route = createFileRoute("/api/internal/ai-media-e2e")({
           return Response.json(
             { success: false, code: "INVALID_INPUT" },
             { status: 400, headers: responseHeaders() },
+          );
+        }
+
+        if (parsed.data.action === "status") {
+          return Response.json(
+            { success: true, ready: true, sha: oidc.sha },
+            { headers: responseHeaders() },
           );
         }
 
