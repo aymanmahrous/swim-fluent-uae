@@ -74,11 +74,11 @@ function aspectRatio(value?: string): "16:9" | "9:16" {
   return value === "16:9" ? "16:9" : "9:16";
 }
 
-function durationSeconds(value?: number): "4" | "6" | "8" {
+function durationSeconds(value?: number): 4 | 6 | 8 {
   const duration = value ?? 4;
-  if (duration <= 5) return "4";
-  if (duration <= 7) return "6";
-  return "8";
+  if (duration <= 5) return 4;
+  if (duration <= 7) return 6;
+  return 8;
 }
 
 function personGeneration(sourceAssetUrl?: string): "allow_all" | "allow_adult" {

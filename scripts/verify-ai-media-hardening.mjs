@@ -49,6 +49,10 @@ for (const needle of [
   'value("GEMINI_API_KEY")',
   ':predictLongRunning',
   'aspectRatio: aspectRatio(input.aspectRatio)',
+  'function durationSeconds(value?: number): 4 | 6 | 8',
+  'if (duration <= 5) return 4;',
+  'if (duration <= 7) return 6;',
+  'return 8;',
   'durationSeconds: durationSeconds(input.durationSeconds)',
   'resolution: "720p"',
   'return sourceAssetUrl ? "allow_adult" : "allow_all"',
@@ -59,6 +63,9 @@ for (const needle of [
   'id: "google-veo"',
 ]) {
   requireText(googleVeo, needle, "Google Veo provider");
+}
+for (const needle of ['return "4";', 'return "6";', 'return "8";']) {
+  forbidText(googleVeo, needle, "Google Veo numeric durationSeconds");
 }
 forbidText(googleVeo, "numberOfVideos", "Google Veo unsupported request parameter");
 forbidText(googleVeo, 'personGeneration: "allow_adult"', "Google Veo text-to-video person generation");
