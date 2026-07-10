@@ -50,6 +50,8 @@ for (const needle of [
   ':predictLongRunning',
   'durationSeconds: durationSeconds(input.durationSeconds)',
   'resolution: "720p"',
+  'personGeneration: "allow_adult"',
+  'googleErrorDetail(parsed.data.error, response.status)',
   'normalized.includes("..")',
   'downloadHeaders: { "x-goog-api-key": apiKey }',
   'id: "google-veo"',

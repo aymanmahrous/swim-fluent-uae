@@ -81,6 +81,12 @@ function durationSeconds(value?: number): "4" | "6" | "8" {
   return "8";
 }
 
+function googleErrorDetail(error: z.infer<typeof GoogleErrorSchema>["error"], status: number): string {
+  return [error.status, error.message]
+    .filter((part): part is string => Boolean(part?.trim()))
+    .join(": ") || `HTTP_${status}`;
+}
+
 async function jsonRequest(url: string, apiKey: string, init?: RequestInit): Promise<unknown> {
   const response = await fetch(url, {
     ...init,
@@ -95,7 +101,7 @@ async function jsonRequest(url: string, apiKey: string, init?: RequestInit): Pro
   if (!response.ok) {
     const parsed = GoogleErrorSchema.safeParse(payload);
     const detail = parsed.success
-      ? parsed.data.error.status ?? parsed.data.error.message ?? `HTTP_${response.status}`
+      ? googleErrorDetail(parsed.data.error, response.status)
       : `HTTP_${response.status}`;
     throw new Error(`GOOGLE_VEO_${detail}`.slice(0, 1000));
   }
@@ -127,6 +133,7 @@ export const googleVeoProvider: VideoGenerationProvider = {
               aspectRatio: aspectRatio(input.aspectRatio),
               durationSeconds: durationSeconds(input.durationSeconds),
               resolution: "720p",
+              personGeneration: "allow_adult",
             },
           }),
         },
