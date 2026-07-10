@@ -7,7 +7,24 @@ const SchedulerTokenResponseSchema = z.object({
   code: z.string(),
 });
 
+const SupabaseServerErrorSchema = z.object({
+  success: z.literal(false).optional(),
+  code: z.string(),
+});
+
 export type AutomationSchedulerSource = "vercel_cron" | "supabase_cron";
+
+export type AutomationSchedulerAuthResult =
+  | { authenticated: true; source: AutomationSchedulerSource }
+  | {
+      authenticated: false;
+      code:
+        | "UNAUTHORIZED"
+        | "SUPABASE_SECRET_NOT_CONFIGURED"
+        | "SUPABASE_SECRET_KEY_FORMAT_INVALID"
+        | "SCHEDULER_AUTH_UPSTREAM_FAILED";
+      status: 401 | 503;
+    };
 
 function cronSecret(): string | null {
   const value = process.env.CRON_SECRET?.trim();
@@ -29,30 +46,50 @@ function timingSafeSecretMatch(expected: string, provided: string): boolean {
   return timingSafeEqual(expectedBuffer, providedBuffer);
 }
 
-async function verifySupabaseSchedulerToken(token: string): Promise<boolean> {
+async function verifySupabaseSchedulerToken(
+  token: string,
+): Promise<AutomationSchedulerAuthResult> {
   const response = await supabaseSecretRpc("verify_content_automation_scheduler_token", {
     p_token: token,
   });
   const payload: unknown = await response.json().catch(() => null);
-  if (!response.ok) return false;
+
+  if (!response.ok) {
+    const parsed = SupabaseServerErrorSchema.safeParse(payload);
+    const code = parsed.success ? parsed.data.code : null;
+    if (code === "SUPABASE_SECRET_NOT_CONFIGURED") {
+      return { authenticated: false, code, status: 503 };
+    }
+    if (code === "SUPABASE_SECRET_KEY_FORMAT_INVALID") {
+      return { authenticated: false, code, status: 503 };
+    }
+    return {
+      authenticated: false,
+      code: "SCHEDULER_AUTH_UPSTREAM_FAILED",
+      status: 503,
+    };
+  }
+
   const parsed = SchedulerTokenResponseSchema.safeParse(payload);
-  return parsed.success && parsed.data.valid;
+  if (!parsed.success || !parsed.data.valid) {
+    return { authenticated: false, code: "UNAUTHORIZED", status: 401 };
+  }
+
+  return { authenticated: true, source: "supabase_cron" };
 }
 
 export async function authenticateContentAutomationRequest(
   request: Request,
-): Promise<AutomationSchedulerSource | null> {
+): Promise<AutomationSchedulerAuthResult> {
   const token = bearerToken(request);
-  if (!token) return null;
+  if (!token) {
+    return { authenticated: false, code: "UNAUTHORIZED", status: 401 };
+  }
 
   const expectedCronSecret = cronSecret();
   if (expectedCronSecret && timingSafeSecretMatch(expectedCronSecret, token)) {
-    return "vercel_cron";
+    return { authenticated: true, source: "vercel_cron" };
   }
 
-  if (await verifySupabaseSchedulerToken(token)) {
-    return "supabase_cron";
-  }
-
-  return null;
+  return verifySupabaseSchedulerToken(token);
 }

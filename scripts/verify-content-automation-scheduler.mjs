@@ -104,11 +104,21 @@ for (const needle of [
   'const prefix = "Bearer "',
   "timingSafeEqual(expectedBuffer, providedBuffer)",
   'supabaseSecretRpc("verify_content_automation_scheduler_token"',
-  'return "vercel_cron"',
-  'return "supabase_cron"',
+  '"SUPABASE_SECRET_NOT_CONFIGURED"',
+  '"SUPABASE_SECRET_KEY_FORMAT_INVALID"',
+  '"SCHEDULER_AUTH_UPSTREAM_FAILED"',
+  'return { authenticated: true, source: "vercel_cron" }',
+  'return { authenticated: true, source: "supabase_cron" }',
   "authenticateContentAutomationRequest",
 ]) {
   requireText(cronAuth, needle, "scheduler authentication contract");
+}
+for (const needle of [
+  "process.env.SUPABASE_SECRET_KEY",
+  "decrypted_secret",
+  "console.log",
+]) {
+  forbidText(cronAuth, needle, "scheduler authentication secret isolation");
 }
 
 const automation = await text("src/platform/content-automation.server.ts");
@@ -156,10 +166,16 @@ const cronRoute = await text("src/routes/api.cron.content-automation.ts");
 for (const needle of [
   'createFileRoute("/api/cron/content-automation")',
   "authenticateContentAutomationRequest(request)",
-  "runContentAutomationCycle(source)",
+  "if (!auth.authenticated)",
+  "code: auth.code",
+  "status: auth.status",
+  "runContentAutomationCycle(auth.source)",
   '"Cache-Control": "no-store"',
 ]) {
   requireText(cronRoute, needle, "content automation cron route");
+}
+for (const needle of ["process.env", "SUPABASE_SECRET_KEY", "CRON_SECRET"]) {
+  forbidText(cronRoute, needle, "cron route delegates authentication");
 }
 
 const statusRoute = await text("src/routes/api.os-automation-status.ts");
