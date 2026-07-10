@@ -133,7 +133,6 @@ export const googleVeoProvider: VideoGenerationProvider = {
           body: JSON.stringify({
             instances: [{ prompt: input.prompt }],
             parameters: {
-              numberOfVideos: 1,
               aspectRatio: aspectRatio(input.aspectRatio),
               durationSeconds: durationSeconds(input.durationSeconds),
               resolution: "720p",
