@@ -39,7 +39,7 @@ for (const needle of [
 const server = await text("src/platform/password-recovery.server.ts");
 for (const needle of [
   'const RECOVERY_REDIRECT_URL = "https://relaxfixuae.com/reset-password"',
-  '"/auth/v1/recover?redirect_to="',
+  "/auth/v1/recover?redirect_to=",
   '"/auth/v1/user"',
   'MAX_ATTEMPTS = 3',
   'WINDOW_MS = 15 * 60 * 1000',
