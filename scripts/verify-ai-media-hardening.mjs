@@ -50,7 +50,8 @@ for (const needle of [
   ':predictLongRunning',
   'durationSeconds: durationSeconds(input.durationSeconds)',
   'resolution: "720p"',
-  'personGeneration: "allow_adult"',
+  'return sourceAssetUrl ? "allow_adult" : "allow_all"',
+  'personGeneration: personGeneration(input.sourceAssetUrl)',
   'googleErrorDetail(parsed.data.error, response.status)',
   'normalized.includes("..")',
   'downloadHeaders: { "x-goog-api-key": apiKey }',
@@ -58,6 +59,7 @@ for (const needle of [
 ]) {
   requireText(googleVeo, needle, "Google Veo provider");
 }
+forbidText(googleVeo, 'personGeneration: "allow_adult"', "Google Veo text-to-video person generation");
 
 const registry = await text("src/platform/provider-registry.server.ts");
 for (const needle of [
@@ -127,12 +129,28 @@ requireText(mediaApi, '"MEDIA_SIGN_FAILED"', "media API signed URLs");
 requireText(mediaApi, "resolveStaffSession", "media API auth");
 
 const videoRoute = await text("src/routes/api.os-media-generate-video.ts");
-requireText(videoRoute, "mediaSignedUrl", "video route signed URLs");
-requireText(videoRoute, "getVideoProviderById(job.data.provider)", "video route provider resume");
-requireText(videoRoute, '"STORED_PROVIDER_NOT_READY"', "video route provider resume");
-requireText(videoRoute, "downloadHeaders: providerState.downloadHeaders", "Veo authenticated download");
-forbidText(videoRoute, "OPENAI_API_KEY", "video route secret isolation");
-forbidText(videoRoute, "GEMINI_API_KEY", "video route secret isolation");
+for (const needle of [
+  "mediaSignedUrl",
+  "getVideoProviderById(job.data.provider)",
+  '"STORED_PROVIDER_NOT_READY"',
+  "downloadHeaders: providerState.downloadHeaders",
+  "sanitizeProviderDetail",
+  "safeProviderError",
+  '"[REDACTED_URL]"',
+  '"Bearer [REDACTED]"',
+  '"?[REDACTED_QUERY]"',
+  "{ success: false, ...safeProviderError(error) }",
+]) {
+  requireText(videoRoute, needle, "video route safe provider errors");
+}
+for (const needle of [
+  'message.split(":")[0]',
+  "OPENAI_API_KEY",
+  "GEMINI_API_KEY",
+  "Authorization: `Bearer",
+]) {
+  forbidText(videoRoute, needle, "video route secret isolation");
+}
 
 const mediaPage = await text("src/routes/os.media.tsx");
 for (const needle of [
