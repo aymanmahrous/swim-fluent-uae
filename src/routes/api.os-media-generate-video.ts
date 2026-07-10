@@ -58,6 +58,8 @@ const UpdatedJobSchema = z.object({
   updatedAt: z.string().optional(),
 });
 
+type PostStage = "auth" | "validation" | "job_creation" | "provider_call" | "persistence";
+
 function allowedRole(role: string): boolean {
   return ["super_admin", "admin", "content_manager"].includes(role);
 }
@@ -87,6 +89,23 @@ function safeProviderError(error: unknown): { code: string; detail?: string } {
   return detail ? { code, detail } : { code };
 }
 
+function safeErrorStatus(error: unknown): string | number | null {
+  if (!error || typeof error !== "object" || !("status" in error)) return null;
+  const status = (error as { status?: unknown }).status;
+  return typeof status === "string" || typeof status === "number" ? status : null;
+}
+
+function logPostFailure(stage: PostStage, error: unknown, provider: string | null): void {
+  const safe = safeProviderError(error);
+  console.error("os_media_generate_video_post_failed", {
+    stage,
+    error_name: error instanceof Error ? error.name : "UnknownError",
+    error_status: safeErrorStatus(error),
+    sanitized_message: safe.detail ?? safe.code,
+    provider,
+  });
+}
+
 async function rpcBody(
   accessToken: string,
   functionName: string,
@@ -100,32 +119,43 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const session = await resolveStaffSession(request);
-        if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
-        if (!allowedRole(session.profile.role)) {
-          return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
-        }
-
-        const parsed = CreateRequestSchema.safeParse(await request.json().catch(() => null));
-        if (!parsed.success) {
-          return Response.json({ success: false, code: "INVALID_INPUT" }, { status: 400 });
-        }
-
-        const provider = getVideoProvider();
-        if (!provider) {
-          return Response.json(
-            { success: false, code: "PROVIDER_NOT_READY" },
-            { status: 503, headers: sessionCookieHeaders(session) },
-          );
-        }
+        let stage: PostStage = "auth";
+        let providerId: string | null = null;
+        let responseHeaders: HeadersInit | undefined;
 
         try {
+          const session = await resolveStaffSession(request);
+          if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
+          responseHeaders = sessionCookieHeaders(session);
+          if (!allowedRole(session.profile.role)) {
+            return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
+          }
+
+          stage = "validation";
+          const parsed = CreateRequestSchema.safeParse(await request.json().catch(() => null));
+          if (!parsed.success) {
+            return Response.json({ success: false, code: "INVALID_INPUT" }, { status: 400 });
+          }
+
+          stage = "job_creation";
+          const provider = getVideoProvider();
+          if (!provider) {
+            return Response.json(
+              { success: false, code: "PROVIDER_NOT_READY" },
+              { status: 503, headers: responseHeaders },
+            );
+          }
+          providerId = provider.id;
+
+          stage = "provider_call";
           const providerJob = await provider.createVideoJob({
             prompt: parsed.data.prompt,
             sourceAssetUrl: parsed.data.sourceAssetUrl ?? undefined,
             aspectRatio: parsed.data.aspectRatio,
             durationSeconds: parsed.data.durationSeconds,
           });
+
+          stage = "persistence";
           const created = await rpcBody(
             session.accessToken,
             "create_staff_video_generation_job",
@@ -146,7 +176,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           if (!created.response.ok || !job.success) {
             return Response.json(
               { success: false, code: "VIDEO_JOB_RECORD_FAILED" },
-              { status: 502, headers: sessionCookieHeaders(session) },
+              { status: 502, headers: responseHeaders },
             );
           }
 
@@ -158,12 +188,13 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
               provider: provider.id,
               pollAfterSeconds: 15,
             },
-            { status: 202, headers: sessionCookieHeaders(session) },
+            { status: 202, headers: responseHeaders },
           );
         } catch (error) {
+          logPostFailure(stage, error, providerId);
           return Response.json(
             { success: false, ...safeProviderError(error) },
-            { status: 502, headers: sessionCookieHeaders(session) },
+            { status: 502, headers: responseHeaders },
           );
         }
       },
