@@ -48,6 +48,7 @@ for (const needle of [
   'DEFAULT_VIDEO_MODEL = "veo-3.1-fast-generate-preview"',
   'value("GEMINI_API_KEY")',
   ':predictLongRunning',
+  'aspectRatio: aspectRatio(input.aspectRatio)',
   'durationSeconds: durationSeconds(input.durationSeconds)',
   'resolution: "720p"',
   'return sourceAssetUrl ? "allow_adult" : "allow_all"',
@@ -59,6 +60,7 @@ for (const needle of [
 ]) {
   requireText(googleVeo, needle, "Google Veo provider");
 }
+forbidText(googleVeo, "numberOfVideos", "Google Veo unsupported request parameter");
 forbidText(googleVeo, 'personGeneration: "allow_adult"', "Google Veo text-to-video person generation");
 
 const registry = await text("src/platform/provider-registry.server.ts");
