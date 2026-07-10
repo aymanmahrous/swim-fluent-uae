@@ -81,6 +81,10 @@ function durationSeconds(value?: number): "4" | "6" | "8" {
   return "8";
 }
 
+function personGeneration(sourceAssetUrl?: string): "allow_all" | "allow_adult" {
+  return sourceAssetUrl ? "allow_adult" : "allow_all";
+}
+
 function googleErrorDetail(error: z.infer<typeof GoogleErrorSchema>["error"], status: number): string {
   return [error.status, error.message]
     .filter((part): part is string => Boolean(part?.trim()))
@@ -133,7 +137,7 @@ export const googleVeoProvider: VideoGenerationProvider = {
               aspectRatio: aspectRatio(input.aspectRatio),
               durationSeconds: durationSeconds(input.durationSeconds),
               resolution: "720p",
-              personGeneration: "allow_adult",
+              personGeneration: personGeneration(input.sourceAssetUrl),
             },
           }),
         },

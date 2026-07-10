@@ -62,9 +62,29 @@ function allowedRole(role: string): boolean {
   return ["super_admin", "admin", "content_manager"].includes(role);
 }
 
-function safeCode(error: unknown): string {
+function sanitizeProviderDetail(value: string): string {
+  return value
+    .replace(/https?:\/\/[^\s"'<>]+/gi, "[REDACTED_URL]")
+    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
+    .replace(
+      /\b(authorization|cookie|set-cookie|x-goog-api-key|api[_-]?key|access[_-]?token|refresh[_-]?token)\b\s*[:=]\s*[^\s,;]+/gi,
+      "$1=[REDACTED]",
+    )
+    .replace(/[?&](key|api_key|access_token|refresh_token|token|signature|sig)=[^&#\s]+/gi, "?[REDACTED_QUERY]")
+    .replace(/[\r\n\t]+/g, " ")
+    .trim()
+    .slice(0, 500);
+}
+
+function safeProviderError(error: unknown): { code: string; detail?: string } {
   const message = error instanceof Error ? error.message : "VIDEO_GENERATION_FAILED";
-  return message.split(":")[0].replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "VIDEO_GENERATION_FAILED";
+  const separator = message.indexOf(":");
+  const rawCode = separator >= 0 ? message.slice(0, separator) : message;
+  const code =
+    rawCode.replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "VIDEO_GENERATION_FAILED";
+  if (separator < 0) return { code };
+  const detail = sanitizeProviderDetail(message.slice(separator + 1));
+  return detail ? { code, detail } : { code };
 }
 
 async function rpcBody(
@@ -142,7 +162,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           );
         } catch (error) {
           return Response.json(
-            { success: false, code: safeCode(error) },
+            { success: false, ...safeProviderError(error) },
             { status: 502, headers: sessionCookieHeaders(session) },
           );
         }
@@ -184,8 +204,9 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
             );
           }
           if (job.data.status === "failed") {
+            const providerError = safeProviderError(job.data.error ?? "VIDEO_GENERATION_FAILED");
             return Response.json(
-              { success: true, jobId: job.data.jobId, status: "failed", error: job.data.error },
+              { success: true, jobId: job.data.jobId, status: "failed", ...providerError },
               { headers: sessionCookieHeaders(session) },
             );
           }
@@ -219,11 +240,14 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           }
 
           if (providerState.status === "failed") {
+            const providerError = safeProviderError(
+              providerState.error ?? "VIDEO_GENERATION_FAILED",
+            );
             await rpcBody(session.accessToken, "update_staff_video_generation_job", {
               p_job_id: job.data.jobId,
               p_status: "failed",
               p_storage_path: null,
-              p_error: providerState.error ?? "VIDEO_GENERATION_FAILED",
+              p_error: [providerError.code, providerError.detail].filter(Boolean).join(": "),
               p_metadata: {},
             });
             return Response.json(
@@ -231,7 +255,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
                 success: true,
                 jobId: job.data.jobId,
                 status: "failed",
-                error: providerState.error ?? "VIDEO_GENERATION_FAILED",
+                ...providerError,
               },
               { headers: sessionCookieHeaders(session) },
             );
@@ -278,7 +302,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           );
         } catch (error) {
           return Response.json(
-            { success: false, code: safeCode(error) },
+            { success: false, ...safeProviderError(error) },
             { status: 502, headers: sessionCookieHeaders(session) },
           );
         }
