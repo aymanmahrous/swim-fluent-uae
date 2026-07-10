@@ -62,9 +62,28 @@ function allowedRole(role: string): boolean {
   return ["super_admin", "admin", "content_manager"].includes(role);
 }
 
-function safeCode(error: unknown): string {
+function sanitizeProviderDetail(detail: string): string | undefined {
+  const sanitized = detail
+    .replace(/https?:\/\/\S+/gi, "[REDACTED_URL]")
+    .replace(/\b(?:authorization|cookie|set-cookie|x-goog-api-key|api[_-]?key)\s*[:=]\s*\S+/gi, "$1=[REDACTED]")
+    .replace(/\b(?:access[_-]?token|refresh[_-]?token|id[_-]?token|token)\s*[:=]\s*\S+/gi, "$1=[REDACTED]")
+    .replace(/\b[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\b/g, "[REDACTED_TOKEN]")
+    .replace(/([?&](?:key|api_key|access_token|token|signature|sig)=)[^\s&#]+/gi, "$1[REDACTED]")
+    .replace(/[\r\n\t]+/g, " ")
+    .trim()
+    .slice(0, 800);
+  return sanitized || undefined;
+}
+
+function providerError(error: unknown): { code: string; detail?: string } {
   const message = error instanceof Error ? error.message : "VIDEO_GENERATION_FAILED";
-  return message.split(":")[0].replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "VIDEO_GENERATION_FAILED";
+  const separator = message.indexOf(":");
+  const rawCode = separator >= 0 ? message.slice(0, separator) : message;
+  const rawDetail = separator >= 0 ? message.slice(separator + 1) : "";
+  const code =
+    rawCode.replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "VIDEO_GENERATION_FAILED";
+  const detail = sanitizeProviderDetail(rawDetail);
+  return detail ? { code, detail } : { code };
 }
 
 async function rpcBody(
@@ -142,7 +161,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           );
         } catch (error) {
           return Response.json(
-            { success: false, code: safeCode(error) },
+            { success: false, ...providerError(error) },
             { status: 502, headers: sessionCookieHeaders(session) },
           );
         }
@@ -278,7 +297,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           );
         } catch (error) {
           return Response.json(
-            { success: false, code: safeCode(error) },
+            { success: false, ...providerError(error) },
             { status: 502, headers: sessionCookieHeaders(session) },
           );
         }
