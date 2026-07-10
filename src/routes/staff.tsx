@@ -163,6 +163,11 @@ function StaffPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
               />
+              <div className="mt-2 text-end">
+                <Link to="/forgot-password" className="text-sm font-black text-primary hover:underline">
+                  نسيت كلمة السر؟ / Forgot password?
+                </Link>
+              </div>
             </div>
             <button
               type="submit"
