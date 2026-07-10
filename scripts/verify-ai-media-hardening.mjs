@@ -50,7 +50,8 @@ for (const needle of [
   ':predictLongRunning',
   'durationSeconds: durationSeconds(input.durationSeconds)',
   'resolution: "720p"',
-  'personGeneration: "allow_adult"',
+  'return sourceAssetUrl ? "allow_adult" : "allow_all"',
+  'personGeneration: personGeneration(input.sourceAssetUrl)',
   'googleErrorDetail(parsed.data.error, response.status)',
   'normalized.includes("..")',
   'downloadHeaders: { "x-goog-api-key": apiKey }',
@@ -127,10 +128,20 @@ requireText(mediaApi, '"MEDIA_SIGN_FAILED"', "media API signed URLs");
 requireText(mediaApi, "resolveStaffSession", "media API auth");
 
 const videoRoute = await text("src/routes/api.os-media-generate-video.ts");
-requireText(videoRoute, "mediaSignedUrl", "video route signed URLs");
-requireText(videoRoute, "getVideoProviderById(job.data.provider)", "video route provider resume");
-requireText(videoRoute, '"STORED_PROVIDER_NOT_READY"', "video route provider resume");
-requireText(videoRoute, "downloadHeaders: providerState.downloadHeaders", "Veo authenticated download");
+for (const needle of [
+  "mediaSignedUrl",
+  "getVideoProviderById(job.data.provider)",
+  '"STORED_PROVIDER_NOT_READY"',
+  "downloadHeaders: providerState.downloadHeaders",
+  "sanitizeProviderDetail",
+  "providerError(error)",
+  '{ success: false, ...providerError(error) }',
+  '"[REDACTED_URL]"',
+  '"[REDACTED_TOKEN]"',
+]) {
+  requireText(videoRoute, needle, "video route safe provider errors");
+}
+forbidText(videoRoute, 'message.split(":")[0]', "video route safe provider errors");
 forbidText(videoRoute, "OPENAI_API_KEY", "video route secret isolation");
 forbidText(videoRoute, "GEMINI_API_KEY", "video route secret isolation");
 
@@ -214,8 +225,8 @@ for (const needle of [
 ]) {
   requireText(e2eClient, needle, "E2E GitHub client");
 }
-forbidText(e2eClient, "SUPABASE_SECRET_KEY", "E2E GitHub client");
-forbidText(e2eClient, "ALIBABA_MODEL_STUDIO_API_KEY", "E2E GitHub client");
+forbidText(e2eClient, "SUPABASE_SECRET_KEY", "GitHub E2E client secret isolation");
+forbidText(e2eClient, "ALIBABA_MODEL_STUDIO_API_KEY", "GitHub E2E client secret isolation");
 
 const e2eSpec = await text("tests/e2e/ai-media.spec.ts");
 for (const needle of [
