@@ -1,9 +1,18 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, LogOut, ShieldCheck, Sparkles, Waves } from "lucide-react";
+import {
+  CheckCircle2,
+  LogOut,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+  Waves,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { canonicalPhoneDisplay } from "../platform/international-phone";
 
 export const Route = createFileRoute("/staff")({
   head: () => ({ meta: [{ title: "Staff — Relax Fix UAE" }] }),
@@ -24,6 +33,7 @@ const BookingSchema = z.object({
   id: z.string().uuid(),
   full_name: z.string(),
   phone: z.string(),
+  normalized_phone: z.string(),
   gender: z.string(),
   category: z.string(),
   location: z.string(),
@@ -233,52 +243,79 @@ function StaffPage() {
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {bookingsQuery.data?.map((booking) => (
-                <article
-                  key={booking.id}
-                  className="grid gap-5 p-6 lg:grid-cols-[1.3fr_1fr_auto] lg:items-center"
-                >
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-lg font-black">{booking.full_name}</h3>
-                      {booking.fear_of_water && (
-                        <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-black text-foreground">
-                          خوف من الماء
-                        </span>
-                      )}
+              {bookingsQuery.data?.map((booking) => {
+                const phoneDigits = booking.normalized_phone.replace(/\D/g, "");
+                const phoneDisplay = canonicalPhoneDisplay(phoneDigits, booking.phone);
+                const canLinkPhone = /^[1-9][0-9]{7,14}$/.test(phoneDigits);
+                return (
+                  <article
+                    key={booking.id}
+                    className="grid gap-5 p-6 lg:grid-cols-[1.3fr_1fr_auto] lg:items-center"
+                  >
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-lg font-black">{booking.full_name}</h3>
+                        {booking.fear_of_water && (
+                          <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-black text-foreground">
+                            خوف من الماء
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                        {canLinkPhone ? (
+                          <>
+                            <a
+                              href={`tel:+${phoneDigits}`}
+                              dir="ltr"
+                              className="inline-flex items-center gap-1 font-bold text-foreground hover:text-primary hover:underline"
+                            >
+                              <Phone className="h-3.5 w-3.5" /> {phoneDisplay}
+                            </a>
+                            <a
+                              href={`https://wa.me/${phoneDigits}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`WhatsApp ${phoneDisplay}`}
+                              className="inline-flex rounded-lg p-1.5 text-primary hover:bg-primary/10"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </a>
+                          </>
+                        ) : (
+                          <span dir="ltr">{booking.phone}</span>
+                        )}
+                        <span>• {booking.category} • {booking.training_type}</span>
+                      </div>
                     </div>
-                    <div className="mt-2 text-sm text-muted-foreground">
-                      {booking.phone} • {booking.category} • {booking.training_type}
+                    <div className="text-sm">
+                      <div className="font-black">
+                        {booking.requested_date} — {booking.requested_time.slice(0, 5)}
+                      </div>
+                      <div className="mt-1 text-muted-foreground">
+                        {booking.location === "Other" ? booking.other_location : booking.location}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm">
-                    <div className="font-black">
-                      {booking.requested_date} — {booking.requested_time.slice(0, 5)}
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary" />
+                      <select
+                        value={booking.status}
+                        onChange={(event) => updateStatus(booking.id, event.target.value)}
+                        disabled={
+                          session.profile.role === "coach" ||
+                          session.profile.role === "content_manager"
+                        }
+                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-bold disabled:opacity-50"
+                      >
+                        <option value="pending">قيد الانتظار</option>
+                        <option value="contacted">تم التواصل</option>
+                        <option value="confirmed">مؤكد</option>
+                        <option value="declined">مرفوض</option>
+                        <option value="cancelled">ملغي</option>
+                      </select>
                     </div>
-                    <div className="mt-1 text-muted-foreground">
-                      {booking.location === "Other" ? booking.other_location : booking.location}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                    <select
-                      value={booking.status}
-                      onChange={(event) => updateStatus(booking.id, event.target.value)}
-                      disabled={
-                        session.profile.role === "coach" ||
-                        session.profile.role === "content_manager"
-                      }
-                      className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-bold disabled:opacity-50"
-                    >
-                      <option value="pending">قيد الانتظار</option>
-                      <option value="contacted">تم التواصل</option>
-                      <option value="confirmed">مؤكد</option>
-                      <option value="declined">مرفوض</option>
-                      <option value="cancelled">ملغي</option>
-                    </select>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
               {bookingsQuery.data?.length === 0 && (
                 <div className="p-12 text-center text-muted-foreground">لا توجد طلبات حجز.</div>
               )}

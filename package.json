@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "typecheck": "vite build --mode development >/dev/null && tsc --noEmit",
     "test:e2e:ai-media": "playwright test tests/e2e/ai-media.spec.ts",
+    "test:e2e:booking-phone": "playwright test --config=playwright.booking.config.ts",
     "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
@@ -17,6 +18,7 @@
     "verify:content-automation-scheduler": "node scripts/verify-content-automation-scheduler.mjs",
     "verify:supabase-server-key": "node scripts/verify-supabase-server-key-compatibility.mjs",
     "verify:password-recovery": "node scripts/verify-password-recovery.mjs",
+    "verify:international-booking-phone": "node --experimental-strip-types scripts/verify-international-booking-phone.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -59,6 +61,7 @@
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
+    "libphonenumber-js": "^1.13.7",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-day-picker": "^9.14.0",

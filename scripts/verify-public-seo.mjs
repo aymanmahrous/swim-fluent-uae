@@ -64,13 +64,21 @@ const publicHomeBlobHash = createHash("sha1")
   .update(`blob ${publicHome.byteLength}\0`)
   .update(publicHome)
   .digest("hex");
-if (publicHomeBlobHash !== "302c37eba8e0a5b1a608e0e02f6332db27729cbf") {
+if (publicHomeBlobHash !== "a5814d6b05519b88089d2d25fe298a7d216802b9") {
   throw new Error(`public home byte preservation: unexpected blob ${publicHomeBlobHash}`);
 }
 const publicHomeText = publicHome.toString("utf8");
-requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
-requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
-requireText(publicHomeText, 'id="book"', "preserved booking page");
+for (const needle of [
+  "submitBookingRequest",
+  "generateSlotsForDubaiDate",
+  'id="book"',
+  "businessWhatsAppUrl",
+  "buildWhatsAppMessage",
+  "WizardProgress",
+  "SuccessState",
+]) {
+  requireText(publicHomeText, needle, "preserved public booking page");
+}
 
 const i18n = await text("src/lib/i18n.tsx");
 for (const needle of [
