@@ -109,17 +109,18 @@ select public.submit_booking_request(
   time '16:00',
   true,
   '40000000-0000-4000-8000-000000000001'::uuid
-) as disposable_booking_result
-\gset
+);
 
 reset role;
 
 do $$
-declare
-  v_result jsonb := :'disposable_booking_result'::jsonb;
 begin
-  if coalesce((v_result->>'success')::boolean, false) is distinct from true then
-    raise exception 'FRESH_HISTORY_LEGACY_UAE_BOOKING_FAILED: %', v_result;
+  if not exists (
+    select 1
+    from public.booking_requests
+    where idempotency_key = '40000000-0000-4000-8000-000000000001'::uuid
+  ) then
+    raise exception 'FRESH_HISTORY_LEGACY_UAE_BOOKING_FAILED';
   end if;
 
   if (select normalized_phone
