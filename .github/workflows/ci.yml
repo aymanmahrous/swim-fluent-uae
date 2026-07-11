@@ -36,7 +36,14 @@ jobs:
       - name: Verify public SEO, localization, and indexing boundaries
         run: npm run verify:public-seo
       - name: Verify international booking phone contracts
-        run: npm run verify:international-booking-phone
+        run: npm run verify:international-booking-phone > international-phone-verification.log 2>&1 || { cat international-phone-verification.log; exit 1; }
+      - name: Upload international phone diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: international-phone-diagnostics
+          path: international-phone-verification.log
+          if-no-files-found: error
       - name: Run non-production booking phone integration tests
         run: npm run test:e2e:booking-phone
       - name: Verify Content Brain cadence and fatigue boundaries
