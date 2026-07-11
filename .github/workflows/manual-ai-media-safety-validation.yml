@@ -7,12 +7,26 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Publish pending validation status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: "pending",
+              context: "Manual AI Media Workflow Safety Validation",
+              description: "Non-live workflow safety validation is running",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -99,3 +113,22 @@ jobs:
           node scripts/verify-ai-os-contracts.mjs
           node scripts/verify-ai-media-hardening.mjs
           node scripts/verify-ai-media-e2e-admin-contracts.mjs
+      - name: Publish final validation status
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const passed = process.env.JOB_STATUS === "success";
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: passed ? "success" : "failure",
+              context: "Manual AI Media Workflow Safety Validation",
+              description: passed
+                ? "Non-live workflow safety validation passed"
+                : "Non-live workflow safety validation failed",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
