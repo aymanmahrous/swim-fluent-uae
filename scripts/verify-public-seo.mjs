@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -57,7 +58,16 @@ const englishRoute = await text("src/routes/en.tsx");
 requireText(englishRoute, 'publicHomeHead("en")', "English public route");
 requireText(englishRoute, 'createFileRoute("/en")', "English public route");
 
-const publicHomeText = await text("src/components/public-home.tsx");
+const publicHome = await readFile(join(root, "src/components/public-home.tsx"));
+checks += 1;
+const publicHomeBlobHash = createHash("sha1")
+  .update(`blob ${publicHome.byteLength}\0`)
+  .update(publicHome)
+  .digest("hex");
+if (publicHomeBlobHash !== "a5814d6b05519b88089d2d25fe298a7d216802b9") {
+  throw new Error(`public home byte preservation: unexpected blob ${publicHomeBlobHash}`);
+}
+const publicHomeText = publicHome.toString("utf8");
 for (const needle of [
   "submitBookingRequest",
   "generateSlotsForDubaiDate",
