@@ -1,0 +1,13 @@
+-- Review-only rollback example. Do not apply automatically.
+-- Abort if international data exists; never delete or rewrite bookings.
+
+do $$
+begin
+  if exists (
+    select 1 from public.booking_requests
+    where normalized_phone !~ '^9715[0-9]{8}$'
+  ) then
+    raise exception 'ROLLBACK_BLOCKED_INTERNATIONAL_BOOKINGS_PRESENT';
+  end if;
+end
+$$;
