@@ -2,7 +2,7 @@
 
 Status: **MIGRATION_VERSION_STRATEGY_BLOCKED for Production deployment**
 
-This audit was performed read-only before changing the campaigns compatibility SQL. No Production migration, history repair, rename, deletion, or data write was performed.
+This audit was performed read-only before changing the historical compatibility SQL. No Production migration, history repair, rename, deletion, or data write was performed.
 
 ## Parsing rule observed
 
@@ -19,8 +19,8 @@ Production currently records 36 distinct 14-digit timestamp versions, such as `2
 | `20260708_000002_public_booking_requests.sql` | `20260708` | YES | UNKNOWN | REQUIRES APPROVAL | NO |
 | `20260708_000002b_booking_request_compatibility_and_concurrency.sql` | `20260708` | YES | UNKNOWN | REQUIRES APPROVAL | NO |
 | `20260708_000003_business_settings.sql` | `20260708` | YES | YES | REQUIRES APPROVAL | NO |
-| `20260708_000004_lock_legacy_public_surface.sql` | `20260708` | YES | YES | REQUIRES APPROVAL | NO |
-| `20260708_000005_add_foundation_foreign_key_indexes.sql` | `20260708` | YES | YES | REQUIRES APPROVAL | NO |
+| `20260708_000004_lock_legacy_public_surface.sql` | `20260708` | YES | YES | YES | NO |
+| `20260708_000005_add_foundation_foreign_key_indexes.sql` | `20260708` | YES | YES | YES | NO |
 | `20260708_000006_harden_public_booking_rpc.sql` | `20260708` | YES | YES | REQUIRES APPROVAL | NO |
 | `20260708_000007_add_staff_auth_rbac.sql` | `20260708` | YES | UNKNOWN | REQUIRES APPROVAL | NO |
 | `20260708_000008_add_staff_booking_rpcs.sql` | `20260708` | YES | YES | REQUIRES APPROVAL | NO |
@@ -47,6 +47,8 @@ Production currently records 36 distinct 14-digit timestamp versions, such as `2
 | `20260710_000029_content_automation_scheduler.sql` | `20260710` | YES | YES | REQUIRES APPROVAL | NO |
 | `20260710_000030_supabase_content_automation_pulse.sql` | `20260710` | YES | YES | REQUIRES APPROVAL | NO |
 
+`safe to edit = YES` is limited to the three verified compatibility corrections in this PR. It is not permission to rename or repair their Production history.
+
 ## Production history differences
 
 - Production has no exact migration versions `20260708`, `20260709`, or `20260710`.
@@ -55,6 +57,14 @@ Production currently records 36 distinct 14-digit timestamp versions, such as `2
 - The repository ownership hardening migration combines changes represented by several split Production history records.
 - Whether unrecorded repository files were applied manually, generated from an earlier baseline, or reconstructed later cannot be established safely from the migration table alone.
 - No Production history mutation is permitted without a separately approved mapping and reconciliation plan.
+
+## Fresh compatibility defects verified
+
+1. `000001b` statically referenced optional `campaigns.title` and `campaigns.type`. It now checks catalog metadata and uses Dynamic SQL only when each legacy column exists.
+2. `000004` assumed legacy helper `public.rls_auto_enable()` exists. Fresh foundation does not create it. The hardening statements now execute only when the helper exists; Production behavior remains the same when present.
+3. `000005` assumed legacy `campaigns.user_id`, `invoices`, and `sessions` dependencies. Each index is now created only when its exact table and column exist; all applicable Fresh and legacy indexes remain idempotent.
+
+These corrections do not create fake legacy columns or helper functions, do not remove legacy objects, and do not add grants.
 
 ## Strategy comparison
 
@@ -74,4 +84,4 @@ Production currently records 36 distinct 14-digit timestamp versions, such as `2
 - Do not call `supabase migration repair`.
 - Keep Production `db push`, normal migration-list alignment, renumbering, and baseline adoption **BLOCKED**.
 
-This PR fixes only the column-aware campaigns compatibility defect. It does not claim that Production migration history has been reconciled.
+This PR verifies the exact historical SQL chain in disposable Supabase and fixes only the direct Fresh compatibility defects encountered before that chain completed. It does not claim that Production migration history has been reconciled or that Production has been changed.
