@@ -1,0 +1,66 @@
+name: Booking Phone Foundation
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/booking-phone-foundation.yml"
+      - "supabase/migrations/**"
+      - "scripts/test-booking-phone-foundation-migrations.sh"
+      - "scripts/test-full-supabase-migration-chain.sh"
+      - "scripts/sql/verify-booking-phone-*.sql"
+      - "src/routes/api.booking-request.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: booking-phone-foundation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  booking-foundation-execution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.84.2
+      - name: Initialize disposable Supabase configuration
+        run: supabase init
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Execute staged and fresh booking migration scenarios
+        run: bash scripts/test-booking-phone-foundation-migrations.sh > booking-phone-foundation.log 2>&1 || { cat booking-phone-foundation.log; exit 1; }
+      - name: Upload booking migration diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: booking-phone-foundation-diagnostics
+          path: booking-phone-foundation.log
+          if-no-files-found: error
+
+  full-migration-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.84.2
+      - name: Initialize disposable Supabase configuration
+        run: supabase init
+      - name: Execute complete repository migration chain from scratch
+        run: bash scripts/test-full-supabase-migration-chain.sh > full-migration-chain.log 2>&1 || { cat full-migration-chain.log; exit 1; }
+      - name: Upload full-chain diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-migration-chain-diagnostics
+          path: full-migration-chain.log
+          if-no-files-found: error
