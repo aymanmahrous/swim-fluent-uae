@@ -29,7 +29,7 @@ test("rejects a short number before any database booking call", async ({ request
   });
 
   expect(response.status()).toBe(400);
-  await expect(response).toHaveHeader("cache-control", "no-store");
+  expect(response.headers()["cache-control"]).toBe("no-store");
   const body = await response.json();
   expect(body).toEqual({
     success: false,
