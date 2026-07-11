@@ -35,6 +35,8 @@ jobs:
       - run: npm run build
       - name: Verify public SEO, localization, and indexing boundaries
         run: npm run verify:public-seo
+      - name: Verify international booking phone contracts
+        run: npm run verify:international-booking-phone
       - name: Verify Content Brain cadence and fatigue boundaries
         run: npm run verify:content-brain
       - name: Verify Meta publishing receipts and Planner schedule suggestions
@@ -55,5 +57,5 @@ jobs:
         run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify AI media E2E admin contracts
         run: node scripts/verify-ai-media-e2e-admin-contracts.mjs
-      - name: Verify Supabase settings and booking RPC
+      - name: Verify Supabase booking contracts without live writes
         run: node scripts/verify-supabase-booking.mjs
