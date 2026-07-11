@@ -108,6 +108,11 @@ export function InternationalPhoneField({
             aria-haspopup="listbox"
             aria-expanded={open}
             aria-controls="booking-country-list"
+            aria-label={
+              language === "ar"
+                ? `الدولة وكود الاتصال: ${countryName(country, language)} +${phoneCountryCallingCode(country)}`
+                : `Country and calling code: ${countryName(country, language)} +${phoneCountryCallingCode(country)}`
+            }
             onClick={() => {
               setOpen((current) => !current);
               window.setTimeout(() => searchRef.current?.focus(), 0);
@@ -115,7 +120,9 @@ export function InternationalPhoneField({
             className="flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border border-border bg-background px-4 py-3 text-start text-sm outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"
           >
             <span className="flex min-w-0 items-center gap-2">
-              <span aria-hidden="true" className="text-xl">{flagEmoji(country)}</span>
+              <span aria-hidden="true" className="text-xl">
+                {flagEmoji(country)}
+              </span>
               <span className="min-w-0">
                 <span className="block truncate font-bold">{countryName(country, language)}</span>
                 <span className="block text-xs text-muted-foreground" dir="ltr">
@@ -123,7 +130,10 @@ export function InternationalPhoneField({
                 </span>
               </span>
             </span>
-            <ChevronsUpDown aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <ChevronsUpDown
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 text-muted-foreground"
+            />
           </button>
 
           {open && (
@@ -139,14 +149,18 @@ export function InternationalPhoneField({
               <label className="flex items-center gap-2 border-b border-border px-3 py-2">
                 <Search aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
                 <span className="sr-only">
-                  {language === "ar" ? "ابحث عن الدولة أو كود الاتصال" : "Search country or calling code"}
+                  {language === "ar"
+                    ? "ابحث عن الدولة أو كود الاتصال"
+                    : "Search country or calling code"}
                 </span>
                 <input
                   ref={searchRef}
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder={language === "ar" ? "بحث عن الدولة أو الكود" : "Search country or code"}
+                  placeholder={
+                    language === "ar" ? "بحث عن الدولة أو الكود" : "Search country or code"
+                  }
                   className="w-full bg-transparent px-1 py-2 text-sm outline-none"
                 />
               </label>
@@ -165,10 +179,16 @@ export function InternationalPhoneField({
                     onClick={() => chooseCountry(item.code)}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm hover:bg-muted focus:bg-muted focus:outline-none"
                   >
-                    <span aria-hidden="true" className="text-xl">{flagEmoji(item.code)}</span>
+                    <span aria-hidden="true" className="text-xl">
+                      {flagEmoji(item.code)}
+                    </span>
                     <span className="min-w-0 flex-1 truncate">{item.name}</span>
-                    <span className="shrink-0 text-muted-foreground" dir="ltr">+{item.callingCode}</span>
-                    {item.code === country && <Check aria-hidden="true" className="h-4 w-4 text-primary" />}
+                    <span className="shrink-0 text-muted-foreground" dir="ltr">
+                      +{item.callingCode}
+                    </span>
+                    {item.code === country && (
+                      <Check aria-hidden="true" className="h-4 w-4 text-primary" />
+                    )}
                   </button>
                 ))}
                 {countries.length === 0 && (
@@ -197,11 +217,13 @@ export function InternationalPhoneField({
               +{phoneCountryCallingCode(country)}
             </span>
             <input
+              id="booking-phone"
               type="tel"
               inputMode="tel"
               autoComplete="tel-national"
               value={value}
               onChange={(event) => onValueChange(event.target.value)}
+              aria-label={language === "ar" ? "رقم الهاتف المحلي" : "Local phone number"}
               aria-invalid={showError}
               aria-describedby={`${hintId}${showError ? ` ${errorId}` : ""}`}
               placeholder={language === "ar" ? "رقم الهاتف المحلي" : "Local phone number"}
