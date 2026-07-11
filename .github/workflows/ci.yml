@@ -55,5 +55,7 @@ jobs:
         run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify AI media E2E admin contracts
         run: node scripts/verify-ai-media-e2e-admin-contracts.mjs
-      - name: Verify Supabase settings and booking RPC
-        run: node scripts/verify-supabase-booking.mjs
+      - name: Verify Production-writing workflows remain manual-only
+        run: node scripts/verify-production-workflows-manual-only.mjs
+      - name: Verify Supabase booking settings without writes
+        run: node scripts/verify-supabase-booking-readonly.mjs
