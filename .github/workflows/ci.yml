@@ -37,6 +37,8 @@ jobs:
         run: npm run verify:public-seo
       - name: Verify international booking phone contracts
         run: npm run verify:international-booking-phone
+      - name: Run non-production booking phone integration tests
+        run: npm run test:e2e:booking-phone
       - name: Verify Content Brain cadence and fatigue boundaries
         run: npm run verify:content-brain
       - name: Verify Meta publishing receipts and Planner schedule suggestions
