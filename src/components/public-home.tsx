@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { CountryCode } from "libphonenumber-js/max";
 import {
   ArrowLeft,
   ArrowRight,
@@ -21,6 +22,7 @@ import {
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import heroImg from "../assets/hero-pool.jpg";
+import { InternationalPhoneField } from "./international-phone-field";
 import { useLang, type TranslationKey } from "../lib/i18n";
 import {
   buildWhatsAppMessage,
@@ -33,6 +35,10 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
+import {
+  DEFAULT_PHONE_COUNTRY,
+  validateInternationalPhone,
+} from "../platform/international-phone";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +57,7 @@ export const Route = createFileRoute("/")({
 type BookingForm = {
   name: string;
   phone: string;
+  phoneCountry: CountryCode;
   gender: string;
   category: string;
   location: string;
@@ -61,11 +68,13 @@ type BookingForm = {
   requestedDate: string;
   slot: string;
   agree: boolean;
+  honeypot: string;
 };
 
 const emptyForm: BookingForm = {
   name: "",
   phone: "",
+  phoneCountry: DEFAULT_PHONE_COUNTRY,
   gender: "",
   category: "",
   location: "",
@@ -76,6 +85,7 @@ const emptyForm: BookingForm = {
   requestedDate: "",
   slot: "",
   agree: false,
+  honeypot: "",
 };
 
 function upcomingDubaiDates(): string[] {
@@ -92,6 +102,7 @@ function Home() {
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const [form, setForm] = useState<BookingForm>(emptyForm);
+  const [formStartedAt] = useState(() => Date.now());
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState<Booking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,6 +115,10 @@ function Home() {
         : [],
     [form.requestedDate, settings.sessionDurationMinutes],
   );
+  const phoneValidation = useMemo(
+    () => validateInternationalPhone(form.phoneCountry, form.phone),
+    [form.phone, form.phoneCountry],
+  );
   const settingsReady = settingsQuery.isSuccess && settings.bookingEnabled;
   const isOther = form.location === "Other";
   const offer =
@@ -111,7 +126,7 @@ function Home() {
 
   const canContinue =
     step === 1
-      ? Boolean(form.name.trim().length >= 2 && form.phone.trim())
+      ? Boolean(form.name.trim().length >= 2 && phoneValidation.success)
       : step === 2
         ? Boolean(
             form.gender &&
@@ -140,12 +155,23 @@ function Home() {
     }
     if (!canContinue || isSubmitting || step !== 5) return;
 
+    const validatedPhone = validateInternationalPhone(form.phoneCountry, form.phone);
+    if (!validatedPhone.success) {
+      toast.error(
+        lang === "ar"
+          ? "رقم الهاتف غير صالح للدولة المختارة."
+          : "The phone number is not valid for the selected country.",
+      );
+      setStep(1);
+      return;
+    }
+
     const booking: Booking = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       fearOfWater: form.afraid === "yes",
       name: form.name.trim(),
-      phone: form.phone.trim(),
+      phone: validatedPhone.internationalDisplay,
       gender: form.gender,
       category: form.category,
       location: form.location,
@@ -161,7 +187,9 @@ function Home() {
     try {
       const result = await submitBookingRequest({
         name: booking.name,
-        phone: booking.phone,
+        phone: form.phone,
+        phoneCountry: form.phoneCountry,
+        language: lang,
         gender: booking.gender,
         category: booking.category,
         location: booking.location,
@@ -173,6 +201,8 @@ function Home() {
         requestedTime: booking.slot,
         termsAccepted: form.agree,
         idempotencyKey: booking.id,
+        honeypot: form.honeypot,
+        formElapsedMs: Math.min(Date.now() - formStartedAt, 86_400_000),
       });
 
       if (!result.success) {
@@ -348,11 +378,23 @@ function Home() {
             <p className="mt-4 text-muted-foreground">{tr("wizardIntro")}</p>
           </div>
 
-          <div className="mt-10 overflow-hidden rounded-[2rem] border border-border bg-card shadow-elegant">
+          <div className="mt-10 overflow-visible rounded-[2rem] border border-border bg-card shadow-elegant">
             {submitted ? (
               <SuccessState booking={submitted} settings={settings} />
             ) : (
               <form onSubmit={submit}>
+                <input
+                  type="text"
+                  name="website"
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  value={form.honeypot}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, honeypot: event.target.value }))
+                  }
+                  className="absolute -start-[10000px] h-px w-px opacity-0"
+                />
                 <WizardProgress step={step} />
                 <div className="p-6 sm:p-10">
                   {settingsQuery.isError && (
@@ -490,28 +532,29 @@ type StepProps = {
 };
 
 function AboutStep({ form, setForm }: StepProps) {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   return (
-    <div className="grid gap-6 sm:grid-cols-2 animate-float-in">
+    <div className="grid gap-6 animate-float-in">
       <div>
-        <label className={labelClass}>{tr("fullName")} *</label>
+        <label htmlFor="booking-full-name" className={labelClass}>{tr("fullName")} *</label>
         <input
+          id="booking-full-name"
           autoComplete="name"
           className={inputClass}
           value={form.name}
-          onChange={(e) => setForm((value) => ({ ...value, name: e.target.value }))}
+          onChange={(event) => setForm((value) => ({ ...value, name: event.target.value }))}
         />
       </div>
       <div>
-        <label className={labelClass}>{tr("phone")} *</label>
-        <input
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          className={inputClass}
+        <div className={labelClass}>{tr("phone")} *</div>
+        <InternationalPhoneField
+          country={form.phoneCountry}
           value={form.phone}
-          onChange={(e) => setForm((value) => ({ ...value, phone: e.target.value }))}
-          placeholder="+971 5X XXX XXXX"
+          language={lang}
+          onCountryChange={(phoneCountry) =>
+            setForm((value) => ({ ...value, phoneCountry, phone: "" }))
+          }
+          onValueChange={(phone) => setForm((value) => ({ ...value, phone }))}
         />
       </div>
     </div>
@@ -547,8 +590,8 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
         <select
           className={inputClass}
           value={form.location}
-          onChange={(e) =>
-            setForm((value) => ({ ...value, location: e.target.value, otherLocation: "" }))
+          onChange={(event) =>
+            setForm((value) => ({ ...value, location: event.target.value, otherLocation: "" }))
           }
         >
           <option value="">—</option>
@@ -561,7 +604,7 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
           <input
             className={`${inputClass} mt-3`}
             value={form.otherLocation}
-            onChange={(e) => setForm((value) => ({ ...value, otherLocation: e.target.value }))}
+            onChange={(event) => setForm((value) => ({ ...value, otherLocation: event.target.value }))}
             placeholder={tr("otherLabel")}
           />
         )}
@@ -668,9 +711,10 @@ function TimeStep({
 
 function ConfirmStep({ form, setForm }: StepProps) {
   const { tr } = useLang();
+  const phone = validateInternationalPhone(form.phoneCountry, form.phone);
   const summary = [
     [tr("fullName"), form.name],
-    [tr("phone"), form.phone],
+    [tr("phone"), phone.success ? phone.internationalDisplay : form.phone],
     [tr("category"), form.category],
     [tr("neighborhood"), form.location === "Other" ? form.otherLocation : form.location],
     [tr("trainingType"), form.trainingType],
@@ -685,7 +729,9 @@ function ConfirmStep({ form, setForm }: StepProps) {
           {summary.map(([label, value]) => (
             <div key={label} className="rounded-xl bg-card p-3">
               <dt className="text-xs text-muted-foreground">{label}</dt>
-              <dd className="mt-1 text-sm font-black">{value || "—"}</dd>
+              <dd className="mt-1 text-sm font-black" dir={label === tr("phone") ? "ltr" : undefined}>
+                {value || "—"}
+              </dd>
             </div>
           ))}
         </dl>
@@ -697,7 +743,7 @@ function ConfirmStep({ form, setForm }: StepProps) {
           <input
             type="checkbox"
             checked={form.agree}
-            onChange={(e) => setForm((value) => ({ ...value, agree: e.target.checked }))}
+            onChange={(event) => setForm((value) => ({ ...value, agree: event.target.checked }))}
             className="mt-1 h-5 w-5 accent-primary"
           />
           <span className="text-sm font-black">{tr("agree")}</span>
