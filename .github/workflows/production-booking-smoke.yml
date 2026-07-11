@@ -1,0 +1,67 @@
+name: Production Booking Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_production_write:
+        description: Confirm that this run may create one idempotent test booking in Production
+        required: true
+        default: false
+        type: boolean
+      execution_reason:
+        description: Non-secret operational reason for this Production booking smoke
+        required: true
+        type: string
+      target_sha:
+        description: Exact lowercase 40-character SHA of the current main commit to test
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-booking-smoke
+  cancel-in-progress: false
+
+jobs:
+  production-booking-smoke:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.confirm_production_write == true && inputs.execution_reason != '' && inputs.target_sha == github.sha }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Validate manual Production authorization
+        shell: bash
+        env:
+          EXECUTION_REASON: ${{ inputs.execution_reason }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          reason="$(printf '%s' "$EXECUTION_REASON" | xargs)"
+          if [[ -z "$reason" ]]; then
+            echo "::error::A non-empty execution reason is required."
+            exit 1
+          fi
+          if printf '%s' "$reason" | grep -Eiq '(secret|token|password|credential|api[ _-]?key|bearer|sb_secret_|sk-[A-Za-z0-9])'; then
+            echo "::error::Execution reason must not contain secrets, tokens, credentials, or API keys."
+            exit 1
+          fi
+          if [[ ! "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::target_sha must be an exact lowercase 40-character Git commit SHA."
+            exit 1
+          fi
+          if [[ "$TARGET_SHA" != "$GITHUB_SHA" ]]; then
+            echo "::error::target_sha must equal the selected main workflow commit."
+            exit 1
+          fi
+          echo "Manual Production booking authorization validated."
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - name: Run idempotent Production booking smoke
+        env:
+          PRODUCTION_BOOKING_SMOKE_CONFIRMED: "true"
+          PRODUCTION_BOOKING_TARGET_SHA: ${{ inputs.target_sha }}
+        run: node scripts/verify-supabase-booking.mjs
