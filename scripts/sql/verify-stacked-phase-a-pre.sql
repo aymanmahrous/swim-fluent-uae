@@ -19,17 +19,18 @@ select public.submit_booking_request(
   time '16:00',
   true,
   '50000000-0000-4000-8000-000000000001'::uuid
-) as legacy_result
-\gset
+);
 
 reset role;
 
 do $$
-declare
-  v_result jsonb := :'legacy_result'::jsonb;
 begin
-  if coalesce((v_result->>'success')::boolean, false) is distinct from true then
-    raise exception 'STACKED_PRE_LEGACY_UAE_BOOKING_FAILED: %', v_result;
+  if not exists (
+    select 1
+    from public.booking_requests
+    where idempotency_key = '50000000-0000-4000-8000-000000000001'::uuid
+  ) then
+    raise exception 'STACKED_PRE_LEGACY_UAE_BOOKING_FAILED';
   end if;
 end
 $$;
