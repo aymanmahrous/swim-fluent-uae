@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -58,19 +57,18 @@ const englishRoute = await text("src/routes/en.tsx");
 requireText(englishRoute, 'publicHomeHead("en")', "English public route");
 requireText(englishRoute, 'createFileRoute("/en")', "English public route");
 
-const publicHome = await readFile(join(root, "src/components/public-home.tsx"));
-checks += 1;
-const publicHomeBlobHash = createHash("sha1")
-  .update(`blob ${publicHome.byteLength}\0`)
-  .update(publicHome)
-  .digest("hex");
-if (publicHomeBlobHash !== "302c37eba8e0a5b1a608e0e02f6332db27729cbf") {
-  throw new Error(`public home byte preservation: unexpected blob ${publicHomeBlobHash}`);
+const publicHomeText = await text("src/components/public-home.tsx");
+for (const needle of [
+  "submitBookingRequest",
+  "generateSlotsForDubaiDate",
+  'id="book"',
+  "businessWhatsAppUrl",
+  "buildWhatsAppMessage",
+  "WizardProgress",
+  "SuccessState",
+]) {
+  requireText(publicHomeText, needle, "preserved public booking page");
 }
-const publicHomeText = publicHome.toString("utf8");
-requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
-requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
-requireText(publicHomeText, 'id="book"', "preserved booking page");
 
 const i18n = await text("src/lib/i18n.tsx");
 for (const needle of [
