@@ -1,3 +1,16 @@
+const authorized =
+  process.env.GITHUB_EVENT_NAME === "workflow_dispatch" &&
+  process.env.GITHUB_REF === "refs/heads/main" &&
+  process.env.PRODUCTION_BOOKING_SMOKE_CONFIRMED === "true" &&
+  /^[0-9a-f]{40}$/.test(process.env.PRODUCTION_BOOKING_TARGET_SHA ?? "") &&
+  process.env.PRODUCTION_BOOKING_TARGET_SHA === process.env.GITHUB_SHA;
+
+if (!authorized) {
+  throw new Error(
+    "Production booking smoke is manual-only and requires confirmed workflow_dispatch on the exact main SHA.",
+  );
+}
+
 const projectUrl = "https://nmzxrjdxvmmzzmajrskm.supabase.co";
 const publishableKey = "sb_publishable_qXOPVaD5_f60qf1UbYrm2A_sH9c0lW5";
 const validIdempotencyKey = "ca87d16b-0f59-4fef-a548-0ea702e5a002";
@@ -9,19 +22,17 @@ const headers = {
 };
 
 const settingsResponse = await fetch(
-  `${projectUrl}/rest/v1/business_settings?select=id,booking_enabled,whatsapp_number&id=eq.primary&limit=1`,
-  { headers },
+  `${projectUrl}/rest/v1/business_settings?select=id,booking_enabled&id=eq.primary&limit=1`,
+  { method: "GET", headers },
 );
 
 if (!settingsResponse.ok) {
-  throw new Error(
-    `business_settings smoke test failed (${settingsResponse.status}): ${await settingsResponse.text()}`,
-  );
+  throw new Error(`Business settings check failed with HTTP ${settingsResponse.status}.`);
 }
 
 const settings = await settingsResponse.json();
 if (settings.length !== 1 || settings[0].id !== "primary" || settings[0].booking_enabled !== true) {
-  throw new Error(`Unexpected business_settings response: ${JSON.stringify(settings)}`);
+  throw new Error("Business settings contract did not match the expected primary enabled row.");
 }
 
 async function callBooking(overrides = {}) {
@@ -29,7 +40,7 @@ async function callBooking(overrides = {}) {
     method: "POST",
     headers,
     body: JSON.stringify({
-      p_full_name: "Relax Fix CI Booking Smoke Hardened",
+      p_full_name: "Relax Fix Manual Production Booking Smoke",
       p_phone: "+971552468135",
       p_gender: "Male",
       p_category: "Adult",
@@ -47,7 +58,7 @@ async function callBooking(overrides = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(`booking RPC HTTP failure (${response.status}): ${await response.text()}`);
+    throw new Error(`Booking RPC failed with HTTP ${response.status}.`);
   }
 
   return response.json();
@@ -58,7 +69,7 @@ const invalidPhone = await callBooking({
   p_idempotency_key: "ca87d16b-0f59-4fef-a548-0ea702e5a003",
 });
 if (invalidPhone?.success !== false || invalidPhone?.code !== "INVALID_PHONE") {
-  throw new Error(`Invalid-phone guard failed: ${JSON.stringify(invalidPhone)}`);
+  throw new Error("Invalid-phone guard did not return INVALID_PHONE.");
 }
 
 const invalidOption = await callBooking({
@@ -66,7 +77,7 @@ const invalidOption = await callBooking({
   p_idempotency_key: "ca87d16b-0f59-4fef-a548-0ea702e5a004",
 });
 if (invalidOption?.success !== false || invalidOption?.code !== "INVALID_INPUT") {
-  throw new Error(`Option allowlist guard failed: ${JSON.stringify(invalidOption)}`);
+  throw new Error("Option allowlist guard did not return INVALID_INPUT.");
 }
 
 const invalidSlot = await callBooking({
@@ -74,12 +85,12 @@ const invalidSlot = await callBooking({
   p_idempotency_key: "ca87d16b-0f59-4fef-a548-0ea702e5a005",
 });
 if (invalidSlot?.success !== false || invalidSlot?.code !== "INVALID_INPUT") {
-  throw new Error(`Schedule guard failed: ${JSON.stringify(invalidSlot)}`);
+  throw new Error("Schedule guard did not return INVALID_INPUT.");
 }
 
 const first = await callBooking();
 if (first?.success !== true || typeof first.bookingRequestId !== "string") {
-  throw new Error(`Valid booking failed: ${JSON.stringify(first)}`);
+  throw new Error("Valid manual Production booking smoke did not succeed.");
 }
 
 const second = await callBooking();
@@ -88,7 +99,7 @@ if (
   second?.bookingRequestId !== first.bookingRequestId ||
   second?.duplicate !== true
 ) {
-  throw new Error(`Idempotency guard failed: ${JSON.stringify({ first, second })}`);
+  throw new Error("Manual Production booking idempotency verification failed.");
 }
 
 console.log(
@@ -99,6 +110,5 @@ console.log(
     schedule: "ok",
     booking: "ok",
     idempotency: "ok",
-    bookingRequestId: first.bookingRequestId,
   }),
 );
