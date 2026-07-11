@@ -43,7 +43,7 @@ begin
 
   if public.normalize_international_phone('+1 202-555-0123') <> '12025550123'
      or public.normalize_international_phone('0012025550123') <> '12025550123'
-     or public.normalize_international_phone('0500000000') <> '971500000000' then
+     or public.normalize_international_phone('0500000002') <> '971500000002' then
     raise exception 'FRESH_CHAIN_NORMALIZATION_FAILED';
   end if;
 
@@ -70,7 +70,7 @@ declare
 begin
   v_result := public.submit_booking_request(
     'Fresh Legacy UAE Test',
-    '0500000000',
+    '0500000002',
     'Male',
     'Adult',
     'Al Falah',
@@ -129,7 +129,7 @@ do $$
 begin
   if (select normalized_phone from public.booking_requests
       where idempotency_key = '00000000-0000-4000-8000-0000000000c1'::uuid)
-      <> '971500000000' then
+      <> '971500000002' then
     raise exception 'FRESH_CHAIN_LEGACY_CANONICAL_PHONE_FAILED';
   end if;
 
