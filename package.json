@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "typecheck": "vite build --mode development >/dev/null && tsc --noEmit",
     "test:e2e:ai-media": "playwright test tests/e2e/ai-media.spec.ts",
+    "test:e2e:booking-phone": "playwright test --config=playwright.booking.config.ts",
     "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
@@ -87,14 +88,14 @@
     "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "nitro": "3.0.260603-beta",
-    "prettier": "^3.7.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.56.1",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.0",
     "vite": "^8.0.16"
   }
 }
