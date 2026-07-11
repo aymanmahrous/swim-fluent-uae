@@ -133,17 +133,18 @@ select public.submit_booking_request_ingress(
   repeat('a', 64),
   '',
   3000
-) as international_result
-\gset
+);
 
 reset role;
 
 do $$
-declare
-  v_result jsonb := :'international_result'::jsonb;
 begin
-  if coalesce((v_result->>'success')::boolean, false) is distinct from true then
-    raise exception 'STACKED_PHASE_A_INTERNATIONAL_INGRESS_FAILED: %', v_result;
+  if not exists (
+    select 1
+    from public.booking_requests
+    where idempotency_key = '50000000-0000-4000-8000-000000000002'::uuid
+  ) then
+    raise exception 'STACKED_PHASE_A_INTERNATIONAL_INGRESS_FAILED';
   end if;
 
   if (select normalized_phone
