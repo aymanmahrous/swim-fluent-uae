@@ -52,8 +52,9 @@ function invalidPhoneMessage(language: "ar" | "en"): string {
 }
 
 function requestFingerprint(request: Request): string {
-  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const sourceAddress = forwardedFor || request.headers.get("x-real-ip")?.trim() || "unknown";
+  // Vercel overwrites x-forwarded-for at its edge. Do not trust user-controlled IP fallbacks.
+  const sourceAddress =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim().slice(0, 128) || "unknown";
   const userAgent = request.headers.get("user-agent")?.slice(0, 512) || "unknown";
   return createHash("sha256").update(`${sourceAddress}\n${userAgent}`).digest("hex");
 }
