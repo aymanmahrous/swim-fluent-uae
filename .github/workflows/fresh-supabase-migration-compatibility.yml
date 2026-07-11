@@ -1,0 +1,118 @@
+name: Fresh Supabase Migration Compatibility
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/fresh-supabase-migration-compatibility.yml"
+      - "supabase/migrations/**"
+      - "scripts/audit-supabase-migration-history.mjs"
+      - "scripts/test-campaigns-migration-compatibility.sh"
+      - "scripts/test-fresh-supabase-history.sh"
+      - "scripts/test-stacked-phase-a.sh"
+      - "scripts/sql/verify-fresh-supabase-history.sql"
+      - "scripts/sql/verify-stacked-phase-a-*.sql"
+      - "docs/supabase-migration-history-audit.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fresh-supabase-history-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  migration-history-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Audit exact historical filenames and parsed versions
+        run: node scripts/audit-supabase-migration-history.mjs
+
+  campaigns-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.84.2
+      - name: Initialize disposable Supabase configuration
+        run: supabase init
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Execute fresh, legacy, mixed, empty, and repeat campaigns scenarios
+        run: bash scripts/test-campaigns-migration-compatibility.sh > campaigns-compatibility.log 2>&1 || { cat campaigns-compatibility.log; exit 1; }
+      - name: Upload campaigns diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campaigns-compatibility-diagnostics
+          path: campaigns-compatibility.log
+          if-no-files-found: error
+
+  full-history-execution:
+    needs: migration-history-audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.84.2
+      - name: Initialize disposable Supabase configuration
+        run: supabase init
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Execute all exact repository SQL files in full-filename order
+        run: bash scripts/test-fresh-supabase-history.sh > fresh-history.log 2>&1 || { cat fresh-history.log; exit 1; }
+      - name: Upload fresh history diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fresh-supabase-history-diagnostics
+          path: fresh-history.log
+          if-no-files-found: error
+
+  stacked-phase-a:
+    needs:
+      - campaigns-compatibility
+      - full-history-execution
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.84.2
+      - name: Initialize disposable Supabase configuration
+        run: supabase init
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Execute pinned PR 37 Phase A over repaired exact history
+        run: bash scripts/test-stacked-phase-a.sh > stacked-phase-a.log 2>&1 || { cat stacked-phase-a.log; exit 1; }
+      - name: Upload stacked Phase A diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stacked-phase-a-diagnostics
+          path: stacked-phase-a.log
+          if-no-files-found: error

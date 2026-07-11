@@ -25,15 +25,65 @@ alter table public.campaigns add column if not exists starts_on date;
 alter table public.campaigns add column if not exists ends_on date;
 alter table public.campaigns add column if not exists created_at timestamptz default now();
 
--- Preserve legacy title/type semantics while backfilling the AI OS compatibility columns.
-update public.campaigns
-set name = coalesce(nullif(btrim(name), ''), nullif(btrim(title), ''), 'Legacy campaign')
-where name is null or btrim(name) = '';
+-- Preserve legacy title/type semantics only when those optional columns exist.
+-- Dynamic SQL prevents PostgreSQL from resolving absent legacy columns during parse time.
+do $campaign_name_backfill$
+declare
+  v_has_title boolean;
+begin
+  select exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'campaigns'
+      and column_name = 'title'
+  ) into v_has_title;
+
+  if v_has_title then
+    execute $sql$
+      update public.campaigns
+      set name = nullif(btrim(title), '')
+      where (name is null or btrim(name) = '')
+        and nullif(btrim(title), '') is not null
+    $sql$;
+  end if;
+
+  update public.campaigns
+  set name = 'Legacy campaign'
+  where name is null or btrim(name) = '';
+end;
+$campaign_name_backfill$;
+
+do $campaign_goal_backfill$
+declare
+  v_has_type boolean;
+begin
+  select exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'campaigns'
+      and column_name = 'type'
+  ) into v_has_type;
+
+  if v_has_type then
+    execute $sql$
+      update public.campaigns
+      set goal = nullif(btrim(type), '')
+      where (goal is null or btrim(goal) = '')
+        and nullif(btrim(type), '') is not null
+    $sql$;
+  end if;
+
+  update public.campaigns
+  set goal = 'unspecified'
+  where goal is null or btrim(goal) = '';
+end;
+$campaign_goal_backfill$;
 
 update public.campaigns
-set goal = coalesce(nullif(btrim(goal), ''), nullif(btrim(type), ''), 'unspecified'),
-    created_at = coalesce(created_at, now())
-where goal is null or btrim(goal) = '' or created_at is null;
+set created_at = now()
+where created_at is null;
 
 create table if not exists public.conversations (
   id uuid primary key default gen_random_uuid(),
