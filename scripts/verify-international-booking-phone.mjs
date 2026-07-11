@@ -87,6 +87,10 @@ const migration = await readFile(
   join(root, "supabase/migrations/20260711_000031_international_booking_phones.sql"),
   "utf8",
 );
+const phoneUtility = await readFile(
+  join(root, "src/platform/international-phone.ts"),
+  "utf8",
+);
 const phoneField = await readFile(
   join(root, "src/components/international-phone-field.tsx"),
   "utf8",
@@ -97,8 +101,12 @@ const client = await readFile(join(root, "src/platform/booking-request.ts"), "ut
 const staff = await readFile(join(root, "src/routes/staff.tsx"), "utf8");
 const store = await readFile(join(root, "src/lib/store.ts"), "utf8");
 
+verify(
+  phoneUtility.includes('DEFAULT_PHONE_COUNTRY: CountryCode = "AE"'),
+  "UAE must remain the default booking phone country",
+);
+
 for (const needle of [
-  'DEFAULT_PHONE_COUNTRY = "AE"',
   'type="search"',
   'role="listbox"',
   'role="option"',
