@@ -7,7 +7,20 @@ const filenames = (await readdir(migrationsDirectory))
   .filter((filename) => filename.endsWith(".sql"))
   .sort((left, right) => left.localeCompare(right, "en"));
 
-assert.equal(filenames.length, 32, `Expected 32 historical migrations, found ${filenames.length}`);
+const phaseAFilename = "20260711003100_international_booking_phone_foundation.sql";
+const historicalFilenames = filenames.filter((filename) => filename !== phaseAFilename);
+const phaseAPresent = filenames.includes(phaseAFilename);
+
+assert.equal(
+  historicalFilenames.length,
+  32,
+  `Expected 32 historical migrations, found ${historicalFilenames.length}`,
+);
+assert.equal(
+  filenames.length,
+  phaseAPresent ? 33 : 32,
+  `Unexpected migration inventory: found ${filenames.length}`,
+);
 
 const entries = filenames.map((filename, executionIndex) => {
   const separator = filename.indexOf("_");
@@ -41,6 +54,15 @@ assert.deepEqual(
   "Historical migration collision inventory changed; review Production history before changing strategy",
 );
 
+if (phaseAPresent) {
+  const phaseAEntry = entries.find((entry) => entry.filename === phaseAFilename);
+  assert.equal(
+    phaseAEntry?.parsedVersion,
+    "20260711003100",
+    "Phase A must keep its unique 14-digit Supabase migration version",
+  );
+}
+
 const uniqueExecutionKeys = new Set(entries.map((entry) => entry.filename));
 assert.equal(
   uniqueExecutionKeys.size,
@@ -53,6 +75,8 @@ console.log(
     {
       strategy: "repository_full_filename_lexical_order_for_disposable_validation_only",
       productionDeploymentStrategy: "BLOCKED",
+      historicalMigrationCount: historicalFilenames.length,
+      phaseAPresent,
       migrationCount: entries.length,
       duplicateVersions,
       executionOrder: entries,

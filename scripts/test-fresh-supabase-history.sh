@@ -9,6 +9,7 @@ MIGRATIONS_DIR="supabase/migrations"
 MIGRATIONS_BACKUP="$(mktemp -d /tmp/relax-fix-full-history.XXXXXX)"
 DATABASE_RUNNING=0
 MIGRATIONS_HIDDEN=0
+PHASE_A_FILENAME="20260711003100_international_booking_phone_foundation.sql"
 
 cleanup() {
   if [[ "$DATABASE_RUNNING" -eq 1 ]]; then
@@ -39,8 +40,13 @@ mapfile -d '' migration_files < <(
   find "$MIGRATIONS_DIR" -maxdepth 1 -type f -name '*.sql' -print0 | LC_ALL=C sort -z
 )
 
-if [[ "${#migration_files[@]}" -ne 32 ]]; then
-  echo "Expected 32 exact historical SQL files, found ${#migration_files[@]}" >&2
+expected_count=32
+if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" ]]; then
+  expected_count=33
+fi
+
+if [[ "${#migration_files[@]}" -ne "$expected_count" ]]; then
+  echo "Expected $expected_count exact repository SQL files, found ${#migration_files[@]}" >&2
   exit 1
 fi
 
@@ -51,8 +57,13 @@ done
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-fresh-supabase-history.sql
 
+if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" ]]; then
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-readonly.sql
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-fresh.sql
+fi
+
 supabase stop --no-backup
 DATABASE_RUNNING=0
 
-echo "Exact historical Supabase SQL chain completed in full-filename lexical order on a disposable database."
+echo "Exact repository Supabase SQL chain completed in full-filename lexical order on a disposable database."
 echo "This is a validation strategy only; Supabase CLI migration deployment remains blocked by historical version collisions."
