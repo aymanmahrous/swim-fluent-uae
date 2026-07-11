@@ -1,3 +1,4 @@
+import type { CountryCode } from "libphonenumber-js/max";
 import { z } from "zod";
 
 export const BookingRequestResultSchema = z.discriminatedUnion("success", [
@@ -8,7 +9,15 @@ export const BookingRequestResultSchema = z.discriminatedUnion("success", [
   }),
   z.object({
     success: z.literal(false),
-    code: z.enum(["INVALID_INPUT", "INVALID_PHONE", "DUPLICATE_REQUEST", "SERVER_ERROR"]),
+    code: z.enum([
+      "INVALID_INPUT",
+      "INVALID_PHONE",
+      "DUPLICATE_REQUEST",
+      "RATE_LIMITED",
+      "BOT_REJECTED",
+      "INGRESS_UNAVAILABLE",
+      "SERVER_ERROR",
+    ]),
     message: z.string(),
   }),
 ]);
@@ -18,6 +27,8 @@ export type BookingRequestResult = z.infer<typeof BookingRequestResultSchema>;
 export interface SubmitBookingRequestInput {
   name: string;
   phone: string;
+  phoneCountry: CountryCode;
+  language: "ar" | "en";
   gender: string;
   category: string;
   location: string;
@@ -29,6 +40,8 @@ export interface SubmitBookingRequestInput {
   requestedTime: string;
   termsAccepted: boolean;
   idempotencyKey: string;
+  honeypot: string;
+  formElapsedMs: number;
 }
 
 export function formatDubaiCalendarDate(date: Date): string {
@@ -54,6 +67,8 @@ export async function submitBookingRequest(
     body: JSON.stringify({
       p_full_name: input.name,
       p_phone: input.phone,
+      p_phone_country: input.phoneCountry,
+      p_language: input.language,
       p_gender: input.gender,
       p_category: input.category,
       p_location: input.location,
@@ -65,6 +80,8 @@ export async function submitBookingRequest(
       p_requested_time: input.requestedTime,
       p_terms_accepted: input.termsAccepted,
       p_idempotency_key: input.idempotencyKey,
+      p_honeypot: input.honeypot,
+      p_form_elapsed_ms: input.formElapsedMs,
     }),
   });
 
