@@ -33,6 +33,13 @@ jobs:
           if-no-files-found: error
       - run: npm run lint
       - run: npm run build
+      - name: Parse Production workflow YAML
+        run: |
+          ruby -e 'require "yaml"; ARGV.each { |file| YAML.parse_file(file); puts "parsed #{file}" }' \
+            .github/workflows/ai-media-e2e.yml \
+            .github/workflows/ai-media-current-production-e2e.yml \
+            .github/workflows/ai-media-live-fallback.yml \
+            .github/workflows/production-booking-smoke.yml
       - name: Verify public SEO, localization, and indexing boundaries
         run: npm run verify:public-seo
       - name: Verify Content Brain cadence and fatigue boundaries
@@ -55,5 +62,7 @@ jobs:
         run: node scripts/verify-ai-media-hardening.mjs
       - name: Verify AI media E2E admin contracts
         run: node scripts/verify-ai-media-e2e-admin-contracts.mjs
-      - name: Verify Supabase settings and booking RPC
-        run: node scripts/verify-supabase-booking.mjs
+      - name: Verify Production-writing workflows remain manual-only
+        run: node scripts/verify-production-workflows-manual-only.mjs
+      - name: Verify Supabase booking settings without writes
+        run: node scripts/verify-supabase-booking-readonly.mjs

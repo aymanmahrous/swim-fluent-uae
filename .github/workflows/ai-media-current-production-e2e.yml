@@ -1,8 +1,21 @@
 name: AI Media Current Production E2E
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      confirm_production_writes:
+        description: Confirm that this run may create and delete isolated Production test data and use paid AI providers
+        required: true
+        default: false
+        type: boolean
+      execution_reason:
+        description: Non-secret operational reason for this Production run
+        required: true
+        type: string
+      target_sha:
+        description: Exact 40-character SHA of the current main commit to test
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -10,8 +23,8 @@ permissions:
   statuses: write
 
 concurrency:
-  group: ai-media-current-production-e2e
-  cancel-in-progress: true
+  group: production-ai-media-live-e2e
+  cancel-in-progress: false
 
 env:
   E2E_BASE_URL: https://swim-fluent-uae-w532.vercel.app
@@ -20,9 +33,35 @@ env:
 
 jobs:
   ai-media-current-production-e2e:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.confirm_production_writes == true && inputs.execution_reason != '' && inputs.target_sha == github.sha }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
+      - name: Validate manual Production authorization
+        shell: bash
+        env:
+          EXECUTION_REASON: ${{ inputs.execution_reason }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          reason="$(printf '%s' "$EXECUTION_REASON" | xargs)"
+          if [[ -z "$reason" ]]; then
+            echo "::error::A non-empty execution reason is required."
+            exit 1
+          fi
+          if printf '%s' "$reason" | grep -Eiq '(secret|token|password|credential|api[ _-]?key|bearer|sb_secret_|sk-[A-Za-z0-9])'; then
+            echo "::error::Execution reason must not contain secrets, tokens, credentials, or API keys."
+            exit 1
+          fi
+          if [[ ! "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::target_sha must be an exact lowercase 40-character Git commit SHA."
+            exit 1
+          fi
+          if [[ "$TARGET_SHA" != "$GITHUB_SHA" ]]; then
+            echo "::error::target_sha must equal the selected main workflow commit."
+            exit 1
+          fi
+          echo "Manual Production AI Media E2E authorization validated."
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
