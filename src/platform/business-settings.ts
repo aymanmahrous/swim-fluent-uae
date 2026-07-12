@@ -42,6 +42,25 @@ export interface BusinessSettings {
   websiteUrl: string | null;
 }
 
+const approvedOpeningOffer = {
+  ar: "طلب تقييم أولي",
+  en: "Request an initial assessment",
+} as const;
+
+const unapprovedFreeClaimPattern =
+  /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|free\s+(?:assessment|consultation|session)|complimentary(?:\s+(?:assessment|consultation|session|first assessment))?|no[-\s]?cost)/iu;
+
+export function sanitizePublicOpeningOffer(
+  value: string | null,
+  language: "ar" | "en",
+): string {
+  const trimmed = value?.trim();
+  if (!trimmed || unapprovedFreeClaimPattern.test(trimmed)) {
+    return approvedOpeningOffer[language];
+  }
+  return trimmed;
+}
+
 export const fallbackBusinessSettings: BusinessSettings = {
   businessName: "Relax Fix UAE",
   coachName: "Coach Ayman",
@@ -54,8 +73,8 @@ export const fallbackBusinessSettings: BusinessSettings = {
   timezone: "Asia/Dubai",
   locations: [],
   bookingEnabled: false,
-  openingOfferTextAr: null,
-  openingOfferTextEn: null,
+  openingOfferTextAr: approvedOpeningOffer.ar,
+  openingOfferTextEn: approvedOpeningOffer.en,
   instagramUrl: null,
   facebookUrl: null,
   tiktokUrl: null,
@@ -90,8 +109,8 @@ export async function fetchBusinessSettings(): Promise<BusinessSettings> {
     timezone: row.timezone,
     locations: row.locations,
     bookingEnabled: row.booking_enabled,
-    openingOfferTextAr: row.opening_offer_text_ar,
-    openingOfferTextEn: row.opening_offer_text_en,
+    openingOfferTextAr: sanitizePublicOpeningOffer(row.opening_offer_text_ar, "ar"),
+    openingOfferTextEn: sanitizePublicOpeningOffer(row.opening_offer_text_en, "en"),
     instagramUrl: row.instagram_url,
     facebookUrl: row.facebook_url,
     tiktokUrl: row.tiktok_url,
