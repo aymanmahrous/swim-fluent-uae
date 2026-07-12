@@ -42,6 +42,11 @@ export interface BusinessSettings {
   websiteUrl: string | null;
 }
 
+const approvedPublicOfferCopy = {
+  ar: "مناقشة أولية لمعرفة نقطة البداية",
+  en: "An initial discussion to understand your starting point",
+} as const;
+
 export const fallbackBusinessSettings: BusinessSettings = {
   businessName: "Relax Fix UAE",
   coachName: "Coach Ayman",
@@ -54,8 +59,8 @@ export const fallbackBusinessSettings: BusinessSettings = {
   timezone: "Asia/Dubai",
   locations: [],
   bookingEnabled: false,
-  openingOfferTextAr: null,
-  openingOfferTextEn: null,
+  openingOfferTextAr: approvedPublicOfferCopy.ar,
+  openingOfferTextEn: approvedPublicOfferCopy.en,
   instagramUrl: null,
   facebookUrl: null,
   tiktokUrl: null,
@@ -90,8 +95,8 @@ export async function fetchBusinessSettings(): Promise<BusinessSettings> {
     timezone: row.timezone,
     locations: row.locations,
     bookingEnabled: row.booking_enabled,
-    openingOfferTextAr: row.opening_offer_text_ar,
-    openingOfferTextEn: row.opening_offer_text_en,
+    openingOfferTextAr: approvedPublicOfferCopy.ar,
+    openingOfferTextEn: approvedPublicOfferCopy.en,
     instagramUrl: row.instagram_url,
     facebookUrl: row.facebook_url,
     tiktokUrl: row.tiktok_url,
