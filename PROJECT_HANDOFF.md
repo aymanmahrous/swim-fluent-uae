@@ -1,689 +1,360 @@
 # PROJECT HANDOFF
 
-Last Updated: 2026-07-11 22:33 UTC
+Last verified: 2026-07-13 (Asia/Dubai)
 
-## 1. Project identity
+This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md` and the named project source documents. Do not restart or redesign the project without an approved reason.
 
-- Project name: Relax Fix UAE
+## 1. Current repository state
+
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Default branch: `main`
-- Confirmed current main merge commit at the end of the last completed engineering phase: `952cbe252147a6d56a1e8d5a86e48bd7af60f4b3`
-- Public business: UAE swimming lessons and booking operations.
-- Product scope: bilingual public website, secure booking, Staff Dashboard, CRM, content operations, AI media, publishing, automation, analytics, SEO, and future Stock Media management.
-
-## 2. Final product goal
-
-Build and operate a production-grade bilingual platform that can:
+- PR #42: **Merged**
+- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
+- PR #40: Draft documentation-only PR for these Handoff files; do not merge automatically.
+- PR #36: Draft, unmerged, and deferred International Phone application cutover.
+- Issue #43: Open and isolated accessibility/mobile backlog.
 
-1. Attract local UAE customers through SEO, content, Google Business Profile, and advertising.
-2. Accept secure swimming lesson booking requests.
-3. Let staff manage leads, bookings, conversations, content, media, publishing, integrations, and audit history.
-4. Generate, review, approve, schedule, publish, and measure marketing content.
-5. Use existing media, stock providers, generated images, and Google Veo under explicit cost controls.
-6. Add n8n later for notifications, follow-ups, review requests, and reports without replacing the internal Scheduler or Media Worker.
-7. Add international phone booking through a staged zero-downtime rollout when a recoverable database backup exists.
-
-## 3. Adopted platform and technology
-
-### Frontend and application
+## 2. Current Production state
 
-- React
-- TypeScript
-- Vite / TanStack Start application architecture
-- Tailwind CSS
-- Shadcn UI / Radix primitives
-- Lucide React icons
-- React Hook Form
-- Zod
-- TanStack Query
-- TanStack Table
-- Recharts
-- Project i18n layer for Arabic and English
+Latest owner-approved verification after PR #42:
 
-### Backend and database
+- Vercel Production: **Ready / Success**.
+- Arabic public page verified.
+- English public page verified.
+- Booking form opens normally and displays the first step.
+- No Production test booking was submitted.
+- No Production migration or Production-writing workflow was run during the PR #42 verification.
 
-- Supabase PostgreSQL
-- Supabase Authentication
-- Supabase Storage
-- Supabase Edge Functions
-- PostgreSQL RPC functions
-- Row Level Security
-- Security Definer functions with explicit `search_path`
-- Background job and audit tables
+### Approved public copy
 
-### Testing and CI
+Arabic:
 
-- TypeScript typecheck
-- ESLint
-- Production build
-- Playwright
-- Node contract verification scripts
-- Supabase Local / disposable PostgreSQL migration execution
-- GitHub Actions
+- `طلب تقييم أولي`
+- `مناقشة أولية لمعرفة نقطة البداية`
 
-### Hosting and connected services
+English:
 
-- GitHub repository: `https://github.com/aymanmahrous/swim-fluent-uae`
-- Vercel project: `swim-fluent-uae-w532`
-- Vercel project ID: `prj_4wRrALwNzlU0msHb9pGOsExmNID0`
-- Vercel team: `swimmingayman-8492s-projects`
-- Supabase Production ref: `nmzxrjdxvmmzzmajrskm`
-- Production domains known in the project:
-  - `https://www.relaxfixuae.com`
-  - `https://relaxfixuae.com`
-  - `https://swim-fluent-uae-w532.vercel.app`
+- `Request an initial assessment`
+- `Initial conversation to understand your starting point`
 
-## 4. Decisions that must be preserved
+### Prohibited public claims
 
-### International phone rollout
+Do not publish or restore these claims without separate explicit approval:
 
-The rollout is staged:
+- `مجاني`
+- `مجانًا`
+- `Free`
+- `Complimentary`
+- `Free assessment`
+- `Free consultation`
+- `Complimentary assessment`
 
-- Phase A: database compatibility foundation.
-- Phase B: application and UI cutover.
-- Phase C: retirement of the old public RPC after live verification.
+## 3. Completed and verified work
 
-Accepted reasons:
+### PR #42 — public free-claim removal
 
-- Migration-first alone could break the currently deployed UAE-only client.
-- Application-first alone could call database contracts that did not yet exist.
-- Revoking the old RPC in the same migration would create a downtime risk.
+- Status: Merged.
+- Merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`.
+- Removed unapproved free/complimentary claims from the public Arabic and English presentation boundary.
+- Preserved the booking flow and valid dynamic Business Settings behavior.
+- Added a static contract to prevent public free claims from returning.
+- Production Arabic and English pages were verified after deployment.
 
-Current decision:
+### Earlier durable engineering work
 
-- Phase A is merged into `main`.
-- Phase A is not applied to Production.
-- PR #36, the Phase B application cutover, remains deferred.
-- Phase C has not been created.
+- PR #39 made Production-writing and paid live verification workflows manual-only.
+- PR #38 repaired disposable/fresh migration-chain compatibility without reconciling Production migration history.
+- PR #37 added the International Phone Phase A database foundation to code, but it has not been applied to Production.
+- Current booking protections include idempotency and duplicate-request handling.
+- The repository contains Staff, content, media, scheduling, audit, and publishing contracts.
+- Contract-tested integrations are not automatically Live integrations.
 
-### Production migration safety
+### Existing SEO foundations
 
-Do not use these against Production without a separate approved migration-history plan:
+The repository already contains or contract-tests:
 
-```bash
-supabase db push
-supabase migration repair
-```
-
-Do not manually edit:
-
-```text
-supabase_migrations.schema_migrations
-```
-
-Reason: the repository contains historical migration filename prefixes that do not directly match the 14-digit versions recorded in Production.
-
-### Backup decision
-
-- Supabase is currently on the Free Plan.
-- Supabase project backups are not available on the Free Plan.
-- Do not upgrade to Supabase Pro now.
-- Do not apply Phase A until a recoverable backup strategy is approved and completed.
-- A future acceptable path is either:
-  - a completed Supabase Pro backup, or
-  - a verified encrypted logical backup with a successful disposable restore test.
-
-### CI and live workflow safety
-
-All Production-writing or paid live test workflows were changed to manual-only.
-
-Manual-only workflows:
-
-- AI Media E2E
-- AI Media Current Production E2E
-- AI Media Live Fallback
-- Production Booking Smoke
-
-Automatic CI must remain read-only with respect to Supabase booking data.
-
-### Subscription policy
-
-Do not buy subscriptions until they create direct value in the current phase.
-
-Currently deferred:
-
-- Supabase Pro
-- Envato
-- Canva Pro
-- Freepik
-- n8n Cloud
-
-### Deferred scope
-
-- Stock Media Provider management is a future independent scope.
-- International phone Production rollout is deferred.
-- n8n integration is deferred until product and marketing operations need it.
-
-## 5. Work completed and verified
-
-### PR #39 — Production-writing workflows made manual-only
-
-Merged as:
-
-```text
-8c793bdb0f0f1cbe29a73ea173aaa8acd5510b3a
-```
-
-Implemented:
-
-- Removed automatic `push` triggers from the three live AI Media workflows.
-- Added `workflow_dispatch` inputs and job guards.
-- Added exact-main-SHA guards.
-- Added execution reason checks.
-- Added shared live AI Media concurrency with `cancel-in-progress: false`.
-- Moved Production booking write smoke to a manual-only workflow.
-- Replaced automatic Production booking write verification with read-only settings verification.
-- Added a static regression script that prevents automatic Production write workflows from returning.
-
-Important files:
-
-```text
-.github/workflows/ai-media-e2e.yml
-.github/workflows/ai-media-current-production-e2e.yml
-.github/workflows/ai-media-live-fallback.yml
-.github/workflows/production-booking-smoke.yml
-.github/workflows/ci.yml
-scripts/verify-production-workflows-manual-only.mjs
-scripts/verify-supabase-booking-readonly.mjs
-scripts/verify-supabase-booking.mjs
-```
-
-### PR #38 — Fresh Supabase migration chain compatibility
-
-Merged as:
-
-```text
-ef5d127fc3a053d653449bccf612dd21b64100a6
-```
-
-Implemented and tested on disposable databases:
-
-- Fixed direct references to optional legacy `campaigns.title` and `campaigns.type`.
-- Used catalog checks and Dynamic SQL only when optional legacy columns exist.
-- Preserved valid `name` and `goal` values.
-- Kept legacy columns and rows.
-- Applied legacy `rls_auto_enable()` hardening only when the function exists.
-- Created legacy/foundation indexes only when their exact table and column exist.
-- Preserved RLS and grants.
-- Added exact historical SQL execution and migration history audit.
-
-Important files:
-
-```text
-supabase/migrations/20260708_000001b_legacy_campaigns_and_missing_ai_os_tables.sql
-supabase/migrations/20260708_000004_lock_legacy_public_surface.sql
-supabase/migrations/20260708_000005_add_foundation_foreign_key_indexes.sql
-.github/workflows/fresh-supabase-migration-compatibility.yml
-docs/supabase-migration-history-audit.md
-scripts/audit-supabase-migration-history.mjs
-scripts/test-campaigns-migration-compatibility.sh
-scripts/test-fresh-supabase-history.sh
-scripts/test-stacked-phase-a.sh
-scripts/sql/verify-fresh-supabase-history.sql
-scripts/sql/verify-stacked-phase-a-pre.sql
-scripts/sql/verify-stacked-phase-a-post.sql
-```
-
-### PR #37 — Phase A international booking phone database foundation
-
-Merged as:
-
-```text
-952cbe252147a6d56a1e8d5a86e48bd7af60f4b3
-```
-
-Migration:
-
-```text
-supabase/migrations/20260711003100_international_booking_phone_foundation.sql
-```
-
-Verified migration properties:
-
-- Additive.
-- Does not replace `submit_booking_request`.
-- Does not revoke `anon` execute from the existing UAE booking RPC.
-- Creates `normalize_international_phone`.
-- Creates `submit_international_booking_request` as a service-role-only internal function.
-- Updates protected ingress to call the international function.
-- Broadens structural phone constraints to E.164-compatible digits.
-- Does not update, delete, or backfill existing booking rows.
-- Does not widen table grants or RLS.
-
-Verified disposable test coverage:
-
-- Full fresh SQL chain.
-- Phase A over the existing booking schema.
-- Existing UAE booking compatibility.
-- International ingress under `service_role`.
-- No public execute on international functions.
-- Duplicate detection across equivalent formats.
-- Phone rate limiting across equivalent formats.
-- Idempotency.
-- Grants and RLS.
-
-Important files:
-
-```text
-supabase/migrations/20260711003100_international_booking_phone_foundation.sql
-.github/workflows/booking-phone-foundation.yml
-scripts/test-booking-phone-foundation-migrations.sh
-scripts/sql/verify-booking-phone-pre-foundation.sql
-scripts/sql/verify-booking-phone-foundation.sql
-scripts/sql/verify-booking-phone-foundation-fresh.sql
-scripts/sql/verify-booking-phone-foundation-readonly.sql
-```
-
-### Google Veo integration
-
-Verified historical result:
-
-- Numeric `durationSeconds` was fixed.
-- A real Production Google Veo job succeeded.
-- A video asset was persisted and played in the Production UI.
-
-This is historical verification only. Do not run Veo without explicit approval.
-
-### SEO contracts
-
-Implemented and contract-tested:
-
-- Canonical URL.
+- Canonical URLs.
 - Arabic and English public routes.
 - `hreflang`.
 - `x-default`.
 - Sitemap.
 - Robots directives.
-- Structured data contracts.
-- noindex protections for private routes.
+- Structured-data contracts.
+- `noindex` protection for private routes.
 
-### Booking security
+SEO is **not complete**. Production crawling, metadata review, mobile validation, Local SEO, and Core Web Vitals evidence remain outstanding.
 
-Implemented:
+## 4. Incomplete work and parallel-track status
 
-- UAE phone normalization on the current Production path.
-- Idempotency.
-- Duplicate booking protection.
-- Rate limiting.
-- Honeypot.
-- Form elapsed-time checks.
-- Protected ingress.
-- Staff booking display and WhatsApp flow contracts.
+Approved strategy: **REVENUE-FIRST PARALLEL LAUNCH**.
 
-### Internal system contracts
+### Track 1 — Close Batch A1
 
-Implemented or contract-tested:
+Status: **Not closed**.
 
-- Staff authentication and RBAC.
-- CRM and leads.
-- Inbox and conversation mode.
-- Content review, editing, approval, and scheduling.
-- Content Brain cadence contracts.
-- Media Worker contracts.
-- AI media ownership/private storage.
-- Publishing receipts.
-- Scheduler contracts.
-- Audit logs.
-- Meta publishing contracts.
+- `WEEK 1 FINAL COPY` is approved.
+- `Relax Fix UAE Final Brand Kit` is approved.
+- Realistic water visual direction is approved.
+- Batch A1 contains 23 PNG assets.
+- Cairo font verification is still required.
+- Actual font-weight verification is still required.
+- Arabic visual review is still required.
+- Asset inventory and Owner Approval Pack are still required.
+- No Batch A1 asset may be published before final owner approval.
+- Batch A2 must not begin before Batch A1 closure unless explicitly approved.
 
-Do not interpret a contract-tested integration as live configured unless separate live evidence exists.
+Closure requires: 23/23 inventory, visual/typography/export review, correction of all findings, re-verification, Owner Approval Pack, and explicit owner approval.
 
-## 6. Problems encountered and resolutions
+### Track 2 — SEO
 
-### Fresh migration failure: `column "title" does not exist`
+Status: **Foundations exist; audit and implementation remain incomplete**.
 
-Cause:
+Next read-only SEO pack:
 
-- Fresh `campaigns` schema contained `name` and `goal`.
-- A compatibility migration directly referenced legacy `title` and `type` columns.
+- SEO Gap Report.
+- URL and Indexation Map.
+- Metadata Matrix in Arabic and English.
+- Keyword-to-Page Map.
+- Structured Data Plan.
+- Internal Linking Plan.
+- Technical SEO PR Plan.
+- Production crawl validation.
+- Mobile validation.
+- Core Web Vitals baseline.
+
+Do not change approved public copy or add unapproved offers, prices, claims, or keyword stuffing.
 
-Resolution:
+### Track 3 — Local SEO
 
-- Added catalog checks.
-- Used Dynamic SQL only when each legacy column exists.
-- Preserved valid new and old values.
+Status: **Not completed**.
 
-### Fresh migration failure: missing `rls_auto_enable()`
+Next phase:
 
-Cause:
+- Confirm NAP source of truth.
+- Decide approved service-area-business representation.
+- Decide public address policy.
+- Prepare Google Business Profile readiness checklist.
+- Prepare Local Keyword Map.
+- Prepare Local Landing Page Recommendation.
+- Prepare Local Structured Data Contract.
+- Prepare UAE citation plan.
+- Prepare review collection workflow.
 
-- A hardening migration assumed a legacy helper existed.
+Do not invent an address, service areas, opening hours, categories, phone numbers, or descriptions. Do not create or edit a Google Business Profile without approval.
 
-Resolution:
+### Track 4 — Analytics and attribution
 
-- Harden the helper only when `to_regprocedure(...)` confirms it exists.
+Status: **Documentation only; implementation has not started**.
 
-### Fresh migration failure: missing legacy index dependencies
+Approved decisions:
 
-Cause:
+- GA4 through `gtag.js`.
+- No GTM in the first phase.
+- Analytics behind a feature flag.
+- Feature flag disabled by default.
+- No PII sent to Analytics.
+- `booking_complete` is the Primary Conversion.
+- `conversation_start`, `whatsapp_click`, and `call_click` are Secondary Conversions.
+- Attribution will later use a separate table related to `booking_requests`.
+- No GA4 Production activation before Privacy and Consent approval.
 
-- Index migration assumed legacy tables/columns such as `campaigns.user_id`, `invoices`, and `sessions` existed.
+The Analytics Measurement Contract exists, but these owner decisions remain open:
 
-Resolution:
+1. Retention duration.
+2. Consent UI format.
+3. Privacy route structure.
+4. `view_service` granularity.
+5. Final CTA ID registry.
+6. Staff attribution visibility.
+7. Production booking test policy.
+8. GCLID and FBCLID retention.
+9. Attribution handling when Analytics consent is denied.
 
-- Create each index only when its exact table and column exist.
+Do not implement `gtag.js`, environment variables, Consent UI, Analytics events, attribution storage, database migrations, or GA4 configuration before contract closure and approval.
 
-### Historical migration version collisions
+### Track 5 — Publishing readiness
 
-Observed repository parsing:
+Status: **Partial engineering contracts exist; Live readiness is not proven**.
 
-```text
-20260708 -> 25 files
-20260709 -> 1 file
-20260710 -> 6 files
-```
+Remaining gates:
 
-Production records distinct 14-digit versions, so repository and Production migration histories are not directly aligned.
-
-Resolution for CI only:
-
-- Preserve historical filenames.
-- Execute the exact SQL files in deterministic full-filename order on disposable PostgreSQL.
-- Do not claim this is a safe Production `db push` strategy.
-
-Open issue:
-
-- A future formal baseline/history reconciliation remains unapproved.
-
-### Automatic Production writes on merge
-
-Cause:
-
-- AI Media workflows and booking verification ran automatically on pushes or PR CI.
-
-Resolution:
-
-- Converted live workflows to manual-only.
-- Replaced booking write verification in automatic CI with GET/read-only checks.
-- Added static regression verification.
-
-### Phase A Production rollout blocked by backups
-
-Cause:
-
-- Supabase Free Plan has no project backups.
-- No manual logical backup and restore test exists.
-
-Resolution:
-
-- Defer Phase A Production application.
-- Defer PR #36 deployment.
-- Continue other product and marketing work.
-
-## 7. Current open issues
-
-1. Phase A exists in code but is not applied to Production.
-2. PR #36 remains deferred and must not be merged or deployed.
-3. No recoverable Production database backup exists.
-4. No formal Production migration-history reconciliation exists.
-5. Product Completion and Marketing Readiness Audit has not yet been executed as a complete factual audit.
-6. Analytics, attribution, Search Console, Local SEO, Google Business Profile, and paid advertising readiness require a current audit.
-7. Meta publishing contracts exist, but live publishing readiness must be verified separately.
-8. Supabase Cron is not to be activated without explicit approval.
-9. n8n is not connected.
-10. Stock Media management is not implemented.
-
-## 8. Important repository paths
-
-### Public website and SEO
-
-```text
-src/components/public-home.tsx
-src/routes/index.tsx
-src/routes/en.tsx
-src/routes/__root.tsx
-src/lib/i18n.tsx
-src/platform/public-seo.ts
-public/robots.txt
-public/sitemap.xml
-scripts/verify-public-seo.mjs
-```
-
-### Booking
-
-```text
-src/platform/booking-request.ts
-src/routes/api.booking-request.ts
-scripts/verify-supabase-booking.mjs
-scripts/verify-supabase-booking-readonly.mjs
-```
-
-The international phone UI/application files belong to the deferred PR #36 branch. Verify their presence on that branch before using them; do not assume they are on `main`.
-
-### Staff and platform logic
-
-```text
-src/routes/staff.tsx
-src/platform/
-src/components/
-```
-
-### Supabase
-
-```text
-supabase/migrations/
-supabase/functions/
-```
-
-### Workflows
-
-```text
-.github/workflows/ci.yml
-.github/workflows/ai-media-e2e.yml
-.github/workflows/ai-media-current-production-e2e.yml
-.github/workflows/ai-media-live-fallback.yml
-.github/workflows/production-booking-smoke.yml
-.github/workflows/fresh-supabase-migration-compatibility.yml
-.github/workflows/booking-phone-foundation.yml
-```
-
-### Contracts and migration tests
-
-```text
-scripts/verify-content-brain.mjs
-scripts/verify-meta-publishing.mjs
-scripts/verify-content-media-worker.mjs
-scripts/verify-content-automation-scheduler.mjs
-scripts/verify-supabase-server-key-compatibility.mjs
-scripts/verify-password-recovery.mjs
-scripts/verify-vercel-build-policy.mjs
-scripts/verify-ai-os-contracts.mjs
-scripts/verify-ai-media-hardening.mjs
-scripts/verify-ai-media-e2e-admin-contracts.mjs
-scripts/verify-production-workflows-manual-only.mjs
-scripts/audit-supabase-migration-history.mjs
-```
-
-## 9. Database summary
-
-Key tables include:
-
-```text
-booking_requests
-booking_ingress_attempts
-business_settings
-leads
-conversations
-messages
-follow_up_jobs
-campaigns
-content_items
-content_metrics
-brand_brain
-knowledge_entries
-media_assets
-background_jobs
-webhook_events
-content_publication_receipts
-content_automation_runs
-content_automation_leases
-staff_profiles
-audit_logs
-```
-
-Key relationships:
-
-- Conversations belong to leads.
-- Messages belong to conversations.
-- Follow-up jobs belong to leads and can reference conversations.
-- Content items can belong to campaigns.
-- Content metrics belong to content items.
-- Media assets can belong to content items.
-- Publication receipts record real publishing outcomes.
-
-Key security expectations:
-
-- RLS enabled on sensitive tables.
-- No direct public table writes for bookings.
-- Public booking goes through approved RPC contracts.
-- Internal international booking and ingress are service-role-only after Phase A is applied.
-
-Last read-only Production Phase A preflight facts recorded before this handoff:
-
-- `normalize_international_phone` absent.
-- `submit_international_booking_request` absent.
-- Existing `submit_booking_request` present.
-- `anon EXECUTE` on the old UAE RPC present.
-- Ingress service-role-only.
-- Ingress constraint still UAE-only.
-- Phase A version `20260711003100` not recorded.
-- Phase A was not applied.
-
-Do not treat these as current without a fresh read-only verification.
-
-## 10. Environment variable names
-
-Never store values in this file.
-
-### Vercel Production / server runtime
-
-```text
-SUPABASE_URL
-SUPABASE_PUBLISHABLE_KEY
-SUPABASE_SECRET_KEY
-INTERNAL_WORKER_TOKEN
-CRON_SECRET
-META_GRAPH_VERSION
-META_PAGE_ACCESS_TOKEN
-META_PAGE_ID
-INSTAGRAM_BUSINESS_ACCOUNT_ID
-```
-
-AI provider variables may also exist. Verify names from `.env.example` and provider modules before changing anything.
-
-Locations:
-
-- Vercel project settings -> Environment Variables -> Production scope.
-- Supabase Edge Function Secrets when an Edge Function explicitly requires one.
-- GitHub repository secrets only for explicitly approved workflows.
-
-Rules:
-
-- Do not expose values.
-- Do not place server secrets in browser code.
-- An Environment Variable change affects only new deployments.
-
-## 11. Design and UX constraints
-
-- Arabic uses RTL.
-- English uses LTR.
-- Public routes include `/` and `/en`.
-- Preserve the current visual system and page architecture.
-- Mobile-first.
-- Keyboard accessible.
-- Screen-reader labels required.
-- Do not rebuild the public site from scratch.
-- Read exact colors and fonts from the repository before any design change; no authoritative standalone palette or font name was recorded in the completed work.
-
-## 12. Security and operations rules
-
-Do not perform without explicit approval:
-
-```text
-Production SQL
-supabase db push
-supabase migration repair
-manual migration-history edits
-Production Booking Smoke
-AI Media E2E workflows
-Google Veo generation
-AI image/video generation
-Meta publishing
-Supabase Cron activation
-set_content_automation_pulse_active(true)
-Environment Variable changes
-manual redeploy
-```
-
-Do not:
-
-- Print secrets or tokens.
-- Print customer phone numbers.
-- Create fake publication receipts.
-- Expand RLS or public table grants for convenience.
-- Add unauthenticated temporary endpoints.
-- Claim live readiness from static contract tests alone.
-
-## 13. Commands used and important validation commands
-
-Core validation:
-
-```bash
-npm run typecheck
-npm run lint
-npm run build
-npm run verify:public-seo
-npm run verify:content-brain
-npm run verify:meta-publishing
-npm run verify:content-media-worker
-npm run verify:content-automation-scheduler
-npm run verify:supabase-server-key
-npm run verify:password-recovery
-node scripts/verify-vercel-build-policy.mjs
-node scripts/verify-ai-os-contracts.mjs
-node scripts/verify-ai-media-hardening.mjs
-node scripts/verify-ai-media-e2e-admin-contracts.mjs
-node scripts/verify-production-workflows-manual-only.mjs
-node scripts/verify-supabase-booking-readonly.mjs
-```
-
-Disposable migration validation:
-
-```bash
-bash scripts/test-campaigns-migration-compatibility.sh
-bash scripts/test-fresh-supabase-history.sh
-bash scripts/test-stacked-phase-a.sh
-bash scripts/test-booking-phone-foundation-migrations.sh
-```
-
-Never run disposable migration commands against Production.
-
-## 14. Current stage and exact stopping point
-
-The completed engineering sequence is:
-
-1. PR #39 merged: automatic Production-writing tests were made manual-only.
-2. PR #38 merged: Fresh migration chain compatibility was repaired and tested.
-3. PR #37 merged: Phase A international booking database foundation entered `main`.
-4. Production Phase A preflight was performed read-only.
-5. Supabase Free backup limitation was confirmed.
-6. Decision adopted: defer Phase A Production application and PR #36 deployment; continue the rest of the product.
-7. No backup, migration, Production booking, paid AI generation, or live publishing was executed in the final phase.
-8. This documentation branch creates `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md`; it does not modify application or Production behavior.
-
-## 15. Next work in priority order
-
-1. Product Completion and Marketing Readiness Audit, read-only.
-2. Product completion for current UAE-only customer acquisition.
-3. SEO, Local SEO, analytics, and attribution readiness.
-4. Content operations and a realistic 30-day plan.
-5. n8n automation only when operational triggers are defined.
-6. Paid advertising only after tracking is complete.
-7. International phone rollout only after recoverable backup and explicit approval.
-8. Stock Media Provider management as a later independent enhancement.
-
-## 16. Next single task
-
-Perform a factual, read-only Product Completion and Marketing Readiness Audit against the current `main`, public site, Vercel, Supabase, and repository contracts.
-
-Do not change code or Production during that audit.
+- Facebook Page verification.
+- Instagram Professional account verification.
+- Meta Business ownership.
+- Account linkage.
+- Required permissions.
+- Server-only credential custody.
+- Token expiry and rotation policy.
+- Publication receipt operational verification.
+- Retry and ambiguous-state procedure.
+- Batch A1 approval.
+- Pilot-post approval.
+- UTM readiness.
+- Explicit owner publishing approval.
+
+Do not install Production credentials, publish, schedule, trigger Meta workflows, create Ads, or spend money.
+
+### Track 6 — Organic Pilot
+
+Status: **Blocked** until all of the following are true:
+
+- Batch A1 is closed.
+- Assets and captions are approved.
+- Minimum Analytics and UTM measurement is ready.
+- Publishing readiness is complete.
+- Accounts are verified.
+- Success criteria are approved.
+- Owner explicitly approves publishing.
+
+### Track 7 — Google Ads
+
+Status: **Deferred** until:
+
+- GA4 Production is approved.
+- `booking_complete` is proven.
+- Privacy and Consent are live.
+- PII protection is verified.
+- Conversion deduplication is verified.
+- Booking stability is verified.
+- Mobile performance is acceptable.
+- Budget is approved.
+- Keywords are approved.
+- Stop-loss rules are approved.
+- Owner gives separate launch approval.
+
+Google Ads precedes Meta Ads. Do not create campaigns, connect billing, import conversions, or spend money now.
+
+### Track 8 — Meta Ads
+
+Status: **Later than Google Ads** and not approved to start.
+
+## 5. Open PRs and issues
+
+### PR #40 — Documentation baseline
+
+- Branch: `docs/project-handoff-strategy`.
+- Scope: `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md` only.
+- Must remain Draft until owner review.
+- Do not merge automatically.
+
+### PR #36 — International Phone Phase B
+
+- Draft and deferred.
+- No merge.
+- No Production deployment.
+- No Production migration.
+- No progression without explicit owner approval.
+- Phase A is in repository code but is not applied to Production.
+
+### Issue #43 — isolated accessibility/mobile backlog
+
+Scope only:
+
+1. Form labels accessibility.
+2. Color contrast.
+3. Sticky-header booking offset on mobile.
+
+Must not be mixed with:
+
+- Analytics.
+- SEO.
+- Local SEO.
+- Batch A1.
+- International Phone.
+- Publishing.
+- Production migrations.
+
+## 6. Current blockers
+
+- Batch A1 lacks completed typography, Arabic, export, and owner-approval evidence.
+- Analytics Contract owner decisions remain open.
+- Privacy and Consent are not approved for GA4 Production use.
+- Local SEO NAP/address/service-area decisions are not confirmed.
+- Publishing accounts, ownership, permissions, and Production credential custody are not verified.
+- Organic Pilot gates are not satisfied.
+- Conversion proof does not yet exist for Google Ads.
+- International Phone Production rollout remains blocked and deferred.
+- Production migration history is not approved for `db push` or repair.
+
+## 7. Mandatory safety rules
+
+- No Production migrations.
+- No `supabase db push`.
+- No `supabase migration repair`.
+- No manual editing of Production migration history.
+- No Production test booking.
+- No Production-writing workflow without explicit approval.
+- No automatic merge.
+- No automatic Production feature-flag activation.
+- No Batch A2.
+- No publishing.
+- No scheduling.
+- No advertising.
+- No budget spending.
+- No unapproved public claims.
+- No PII in Analytics.
+- No mixing unrelated workstreams in one PR.
+- No treating contract-tested integrations as Live integrations.
+- No marking a phase complete without validation evidence.
+- No changing the approved strategy or sequence without documented reason, explicit owner approval, and a strategy-Handoff update.
+
+## 8. Approved strategy and execution order
+
+**REVENUE-FIRST PARALLEL LAUNCH**
+
+Approved parallel tracks:
+
+1. Close Batch A1.
+2. SEO.
+3. Local SEO.
+4. Analytics and attribution.
+5. Publishing readiness.
+6. Organic Pilot after approval gates.
+7. Google Ads after conversion proof.
+8. Meta Ads later.
+
+Durable sequencing rules are maintained in `PROJECT_STRATEGY_HANDOFF.md`.
+
+## 9. Actions requiring owner approval
+
+Owner approval is required before:
+
+- Merging PR #40 or any other PR.
+- Correcting or finally approving Batch A1.
+- Starting Batch A2.
+- Changing public copy or claims.
+- Implementing or merging SEO changes.
+- Creating Local SEO pages or editing Google Business Profile.
+- Closing Analytics Contract decisions.
+- Implementing Analytics, Consent, attribution, or database changes.
+- Configuring GA4 on Preview or Production.
+- Applying any Production migration.
+- Progressing PR #36.
+- Installing Meta Production credentials.
+- Selecting, scheduling, or publishing Pilot posts.
+- Running Production-writing workflows.
+- Creating or launching advertising.
+- Spending any budget.
+
+## 10. Exact references
+
+- PR #42: `https://github.com/aymanmahrous/swim-fluent-uae/pull/42`
+- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
+- PR #40: `https://github.com/aymanmahrous/swim-fluent-uae/pull/40`
+- PR #36: `https://github.com/aymanmahrous/swim-fluent-uae/pull/36`
+- Issue #43: `https://github.com/aymanmahrous/swim-fluent-uae/issues/43`
+
+## 11. Next approved task
+
+Current approved task is limited to preparing and reviewing this Documentation Baseline in PR #40.
+
+After owner approval of this baseline, the recommended next single action is a **read-only Batch A1 inventory and verification audit of all 23 PNG assets**, producing per-asset `Approved`, `Needs correction`, or `Blocked` status and an Owner Approval Pack draft. Do not correct, publish, or start Batch A2 without a separate approval.
+
+## 12. Handoff maintenance
+
+At the end of every major approved phase:
+
+1. Update `PROJECT_HANDOFF.md` with current facts, PRs, commits, tests, Production state, blockers, and next approved action.
+2. Update `PROJECT_STRATEGY_HANDOFF.md` only if a durable approved strategy decision changed.
+3. Record evidence and distinguish contract-tested, Preview-tested, and Production-verified states.
+4. Ensure a new agent can continue without relying on previous chat history.
