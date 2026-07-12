@@ -42,6 +42,8 @@ jobs:
             .github/workflows/production-booking-smoke.yml
       - name: Verify public SEO, localization, and indexing boundaries
         run: npm run verify:public-seo
+      - name: Verify public pages contain no unapproved free claims
+        run: npm run verify:public-free-claims
       - name: Verify Content Brain cadence and fatigue boundaries
         run: npm run verify:content-brain
       - name: Verify Meta publishing receipts and Planner schedule suggestions
