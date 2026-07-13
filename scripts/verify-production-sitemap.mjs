@@ -24,9 +24,15 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+const routeXmlMatch = routeSource.match(/const SITEMAP_XML = `([\s\S]*?)`;/);
+assert(routeXmlMatch, "server route sitemap XML constant missing");
+const routeXml = routeXmlMatch[1];
+assert(staticSitemap.trimEnd() === routeXml, "public sitemap and server route sitemap must remain byte-equivalent");
+
 assert(staticSitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>'), "sitemap XML declaration missing");
 assert(/<urlset\b[^>]*xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9"/.test(staticSitemap), "valid sitemap urlset namespace missing");
 assert((staticSitemap.match(/<url>/g) ?? []).length === 2, "sitemap must contain exactly two <url> entries");
+assert(!staticSitemap.includes("<lastmod>"), "unverified lastmod values must not be published");
 
 const locs = [...staticSitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert(JSON.stringify(locs) === JSON.stringify(expectedUrls), `unexpected sitemap URLs: ${JSON.stringify(locs)}`);
@@ -38,7 +44,6 @@ for (const value of locs) {
   assert(url.search === "", `query string is not allowed in sitemap URL: ${value}`);
   assert(url.hash === "", `fragment is not allowed in sitemap URL: ${value}`);
   assert(!prohibitedPathPrefixes.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`)), `private or prohibited sitemap path: ${value}`);
-  assert(routeSource.includes(value), `server route missing ${value}`);
 }
 
 assert(routeSource.includes('createFileRoute("/sitemap.xml")'), "server sitemap route missing");
@@ -47,4 +52,4 @@ assert(routeSource.includes("status: 200"), "HTTP 200 response missing");
 assert(robots.split(/\r?\n/).filter((line) => line.startsWith("Sitemap:")).length === 1, "robots.txt must contain exactly one Sitemap line");
 assert(robots.includes("Sitemap: https://www.relaxfixuae.com/sitemap.xml"), "robots.txt sitemap reference is incorrect");
 
-console.log("Production sitemap verification passed (2 canonical public URLs, XML route, robots reference).");
+console.log("Production sitemap verification passed (exact source parity, 2 canonical public URLs, XML route, robots reference, no unverified lastmod).");
