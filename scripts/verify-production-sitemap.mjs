@@ -6,16 +6,12 @@ const expectedUrls = [
   "https://www.relaxfixuae.com/",
   "https://www.relaxfixuae.com/en",
 ];
-const prohibitedFragments = [
+const prohibitedPathPrefixes = [
   "/contact",
   "/admin",
   "/staff",
   "/os",
   "/api",
-  "?",
-  "#",
-  "http://",
-  "https://relaxfixuae.com",
 ];
 
 const [staticSitemap, routeSource, robots] = await Promise.all([
@@ -35,11 +31,14 @@ assert((staticSitemap.match(/<url>/g) ?? []).length === 2, "sitemap must contain
 const locs = [...staticSitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert(JSON.stringify(locs) === JSON.stringify(expectedUrls), `unexpected sitemap URLs: ${JSON.stringify(locs)}`);
 
-for (const url of expectedUrls) {
-  assert(routeSource.includes(url), `server route missing ${url}`);
-}
-for (const fragment of prohibitedFragments) {
-  assert(!staticSitemap.includes(fragment), `prohibited sitemap fragment found: ${fragment}`);
+for (const value of locs) {
+  const url = new URL(value);
+  assert(url.protocol === "https:", `non-HTTPS sitemap URL: ${value}`);
+  assert(url.hostname === "www.relaxfixuae.com", `non-canonical sitemap host: ${value}`);
+  assert(url.search === "", `query string is not allowed in sitemap URL: ${value}`);
+  assert(url.hash === "", `fragment is not allowed in sitemap URL: ${value}`);
+  assert(!prohibitedPathPrefixes.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`)), `private or prohibited sitemap path: ${value}`);
+  assert(routeSource.includes(value), `server route missing ${value}`);
 }
 
 assert(routeSource.includes('createFileRoute("/sitemap.xml")'), "server sitemap route missing");
