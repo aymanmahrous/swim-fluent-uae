@@ -23,6 +23,31 @@ This document is documentation only. It does not authorize or implement:
 
 Any implementation requires a separate owner-approved scope and PR.
 
+## 1A. Approved initial analytics implementation technology
+
+The approved initial implementation method is:
+
+**Google Analytics 4 through `gtag.js`.**
+
+Rules:
+
+- `gtag.js` is the approved initial implementation path.
+- It must remain behind the approved disabled-by-default feature flag.
+- It must remain blocked by the approved consent gate.
+- This decision does not authorize implementation or Production activation.
+
+### Google Tag Manager decision
+
+Google Tag Manager is not approved for the initial analytics phase.
+
+Rules:
+
+- Do not introduce GTM in the first implementation phase.
+- Do not add a GTM container.
+- Do not add GTM environment variables.
+- Do not route GA4 through GTM.
+- GTM may be considered only through a future contract amendment and explicit owner approval.
+
 ## 2. Measurement priorities
 
 ### Primary conversion
