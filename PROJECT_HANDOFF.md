@@ -16,7 +16,7 @@ This file is the operational source of truth for continuing the existing Relax F
 
 ## 2. Current Production state
 
-Latest owner-approved verification after PR #42:
+Latest owner-approved verification after the Production Business Settings correction:
 
 - Vercel Production: **Ready / Success**.
 - Arabic public page verified.
@@ -24,6 +24,7 @@ Latest owner-approved verification after PR #42:
 - Booking form opens normally and displays the first step.
 - No Production test booking was submitted.
 - No Production migration or Production-writing workflow was run during the PR #42 verification.
+- Production free-claim data conflict: **Resolved and verified**.
 
 ### Approved public copy
 
@@ -57,8 +58,35 @@ Do not publish or restore these claims without separate explicit approval:
 - Merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`.
 - Removed unapproved free/complimentary claims from the public Arabic and English presentation boundary.
 - Preserved the booking flow and valid dynamic Business Settings behavior.
-- Added a static contract to prevent public free claims from returning.
+- Added `sanitizePublicOpeningOffer` and a static contract to prevent prohibited public free claims from rendering even if stale dynamic values are returned.
 - Production Arabic and English pages were verified after deployment.
+
+### Production Business Settings correction — actual data-source reconciliation
+
+- Root-cause classification: `MULTIPLE_SOURCE_CONFLICT`.
+- PR #42 protected the Presentation boundary and added the sanitizer; it did not change the Production Business Settings row.
+- The actual Production data source was `public.business_settings`, record `id = 'primary'`.
+- Previous Production values were:
+  - `opening_offer_text_ar`: `عرض الافتتاح: 150 درهم / 45 دقيقة مع تقييم أولي مجاني`
+  - `opening_offer_text_en`: `Opening offer: 150 AED / 45 minutes with a free first assessment`
+- The owner explicitly approved one narrowly scoped administrative SQL update to that row only.
+- Current approved Production values are:
+  - `opening_offer_text_ar`: `طلب تقييم أولي`
+  - `opening_offer_text_en`: `Request an initial assessment`
+- `assessmentValue` remains independent static i18n copy and was not moved into Business Settings:
+  - Arabic: `مناقشة أولية لمعرفة نقطة البداية`
+  - English: `Initial conversation to understand your starting point`
+- Production row `updated_at`: `2026-07-12T23:06:08.515144+00:00`.
+- Dubai execution time: `2026-07-13 03:06:08`.
+- Exactly one row was updated.
+- Read-only post-write verification confirmed:
+  - `GET /api/business-settings` returns the new values.
+  - The Arabic page renders both approved Arabic texts in their correct roles.
+  - The English page renders both approved English texts in their correct roles.
+  - None of these prohibited forms remain in the API or rendered public pages: `مجاني`, `مجانًا`, `Free`, `Complimentary`, `free first assessment`, `complimentary first assessment`.
+  - Price, session duration, `booking_enabled`, phone, email, locations, and all other Business Settings remained unchanged.
+- No Migration, `supabase db push`, `supabase migration repair`, Production booking, Redeploy, Cache purge, or additional workflow was executed.
+- Final verified status: `PRODUCTION_BUSINESS_SETTINGS_COPY_CORRECTED_AND_VERIFIED`.
 
 ### Earlier durable engineering work
 
@@ -266,6 +294,7 @@ Must not be mixed with:
 
 ## 6. Current blockers
 
+- The prior Production free-claim `MULTIPLE_SOURCE_CONFLICT` is resolved and is no longer a current blocker.
 - Batch A1 lacks completed typography, Arabic, export, and owner-approval evidence.
 - Analytics Contract owner decisions remain open.
 - Privacy and Consent are not approved for GA4 Production use.
@@ -346,9 +375,9 @@ Owner approval is required before:
 
 ## 11. Next approved task
 
-Current approved task is limited to preparing and reviewing this Documentation Baseline in PR #40.
+Current approved task is limited to preparing and reviewing this Production copy-correction Handoff update in a documentation-only Draft PR.
 
-After owner approval of this baseline, the recommended next single action is a **read-only Batch A1 inventory and verification audit of all 23 PNG assets**, producing per-asset `Approved`, `Needs correction`, or `Blocked` status and an Owner Approval Pack draft. Do not correct, publish, or start Batch A2 without a separate approval.
+After owner review, choose the next task explicitly. Do not merge this PR or start another workstream automatically.
 
 ## 12. Handoff maintenance
 
