@@ -5,14 +5,12 @@ const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.relaxfixuae.com/</loc>
-    <lastmod>2026-07-10</lastmod>
     <xhtml:link rel="alternate" hreflang="ar-AE" href="https://www.relaxfixuae.com/" />
     <xhtml:link rel="alternate" hreflang="en-AE" href="https://www.relaxfixuae.com/en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.relaxfixuae.com/" />
   </url>
   <url>
     <loc>https://www.relaxfixuae.com/en</loc>
-    <lastmod>2026-07-10</lastmod>
     <xhtml:link rel="alternate" hreflang="ar-AE" href="https://www.relaxfixuae.com/" />
     <xhtml:link rel="alternate" hreflang="en-AE" href="https://www.relaxfixuae.com/en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.relaxfixuae.com/" />
