@@ -6,11 +6,33 @@ Documentation and production preparation only. Do not publish, schedule, boost, 
 
 - Status: Published on Facebook and Instagram.
 - Published timestamp: **2026-07-13 09:40 Asia/Dubai**
-- Facebook URL: `[OWNER TO PROVIDE]`
-- Instagram URL: `[OWNER TO PROVIDE]`
-- Available evidence: Instagram/combined views evidence exists; reach evidence exists.
+- Instagram official profile: https://www.instagram.com/relaxfixuae/
+- Instagram Post 1: https://www.instagram.com/p/DauMAlfnMPM/
+- Facebook Post 1: https://m.facebook.com/story.php?story_fbid=pfbid05s1xYWUczts38h1B8BNabdezBZdAWY8Ci1g2tgq7gBiPhfeNrpEb2jn7heVShr8Nl&id=61591484921597
+- Facebook official page URL: **OWNER_INPUT_REQUIRED**
+- The Facebook Post 1 receipt is not the canonical Facebook Page URL.
 - Boost: No.
 - Ads: No.
+
+### Instagram direct insights
+
+- Views: **25**
+- Accounts reached: **15**
+- Likes: **0**
+- Comments: **0**
+- Reposts: **0**
+- Shares: **0**
+- Saves: **0**
+- Follows: **0**
+
+### Meta combined evidence
+
+- Total views observed: **25**
+- Instagram views observed: **23**
+- Facebook views observed: **2**
+- Interactions: **0**
+
+The difference between the Instagram direct figure and the Meta combined breakdown is recorded as a measurement-screen or data-refresh timing difference. Do not overwrite either evidence set; preserve the source and observation time with future screenshots.
 
 ## Post 2 — Fear of water / water confidence
 
@@ -115,15 +137,18 @@ Real photo of Coach Ayman beside the pool with a clipboard or coaching plan, nav
 ## 24-hour insights template
 
 - Content ID:
+- Measurement source/screen:
 - Measurement timestamp:
 - Views/plays:
 - Reach:
 - Impressions:
 - Likes/reactions:
 - Comments:
+- Reposts:
 - Shares:
 - Saves:
+- Follows:
 - Profile visits:
 - Link/CTA actions if available:
 - Screenshot reference:
-- Notes on metric definition:
+- Notes on metric definition or refresh-time differences:
