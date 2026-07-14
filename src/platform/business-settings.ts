@@ -42,13 +42,13 @@ export interface BusinessSettings {
   websiteUrl: string | null;
 }
 
-const approvedOpeningOffer = {
+export const approvedPublicAssessmentCopy = {
   ar: "طلب تقييم أولي",
   en: "Request an initial assessment",
 } as const;
 
 const unapprovedFreeClaimPattern =
-  /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|free\s+(?:assessment|consultation|session)|complimentary(?:\s+(?:assessment|consultation|session|first assessment))?|no[-\s]?cost)/iu;
+  /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|\bfree\b|\bcomplimentary\b|no[-\s]?cost)/iu;
 
 export function sanitizePublicOpeningOffer(
   value: string | null,
@@ -56,7 +56,7 @@ export function sanitizePublicOpeningOffer(
 ): string {
   const trimmed = value?.trim();
   if (!trimmed || unapprovedFreeClaimPattern.test(trimmed)) {
-    return approvedOpeningOffer[language];
+    return approvedPublicAssessmentCopy[language];
   }
   return trimmed;
 }
@@ -73,8 +73,8 @@ export const fallbackBusinessSettings: BusinessSettings = {
   timezone: "Asia/Dubai",
   locations: [],
   bookingEnabled: false,
-  openingOfferTextAr: approvedOpeningOffer.ar,
-  openingOfferTextEn: approvedOpeningOffer.en,
+  openingOfferTextAr: approvedPublicAssessmentCopy.ar,
+  openingOfferTextEn: approvedPublicAssessmentCopy.en,
   instagramUrl: null,
   facebookUrl: null,
   tiktokUrl: null,
@@ -109,8 +109,10 @@ export async function fetchBusinessSettings(): Promise<BusinessSettings> {
     timezone: row.timezone,
     locations: row.locations,
     bookingEnabled: row.booking_enabled,
-    openingOfferTextAr: sanitizePublicOpeningOffer(row.opening_offer_text_ar, "ar"),
-    openingOfferTextEn: sanitizePublicOpeningOffer(row.opening_offer_text_en, "en"),
+    // Public assessment copy is owner-approved and intentionally fixed at the presentation boundary.
+    // The API fields remain readable for operational review, but cannot reintroduce offer claims.
+    openingOfferTextAr: approvedPublicAssessmentCopy.ar,
+    openingOfferTextEn: approvedPublicAssessmentCopy.en,
     instagramUrl: row.instagram_url,
     facebookUrl: row.facebook_url,
     tiktokUrl: row.tiktok_url,
