@@ -56,9 +56,9 @@ Complete one receipt per platform and content type after actual publication.
 
 No public URL may be invented. Story receipts may use direct screenshot evidence if no durable public URL is available.
 
-## 3. POST 3 — Choosing the right starting point
+## 3. POST 3 — ابدأ من نقطة البداية المناسبة لك / Start from where you are
 
-Current state:
+### Approved state
 
 - `POST3_CONTENT_APPROVED`
 - `POST3_VISUAL_BRIEF_APPROVED`
@@ -68,14 +68,14 @@ Current state:
 
 No Feed, Story, Reel, final design, video, scheduling action, or publication has been created or completed for Post 3.
 
-### Objective
-
-Explain that swimming coaching should start from the person's current experience, comfort in the water, and goal. The message builds confidence without exaggerated promises.
-
 ### Approved headline
 
 - Arabic: `ابدأ من نقطة البداية المناسبة لك`
 - English: `Start from where you are`
+
+### Approved English sentence
+
+`Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach.`
 
 ### Core visual message
 
@@ -118,38 +118,7 @@ Explain that swimming coaching should start from the person's current experience
 - No unverified claims.
 - Do not use: `Free`, `Complimentary`, `مجاني`, or `مجانًا`.
 
-### Arabic caption
-
-لا توجد نقطة بداية واحدة تناسب الجميع في تعلم السباحة.
-
-قبل اختيار التمرين أو البرنامج، نحتاج إلى فهم خبرتك السابقة، ومستوى راحتك داخل الماء، والهدف الذي تريد الوصول إليه. عندما تكون نقطة البداية واضحة، تصبح الخطوات التالية أكثر تنظيمًا وملاءمة لاحتياجاتك.
-
-مع كوتش أيمن، يبدأ التدريب من مستواك الحالي ثم يتقدم خطوة بخطوة.
-
-📍 أبوظبي
-🎯 اطلب تقييمًا أوليًا
-
-### English caption
-
-There is no single starting point that suits everyone learning to swim.
-
-Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach. When the starting point is clear, the next steps can be more structured and better suited to your needs.
-
-With Coach Ayman, coaching starts at your current level and progresses one step at a time.
-
-📍 Abu Dhabi
-🎯 Request an initial assessment
-
-### Hashtags
-
-`#RelaxFixUAE #CoachAyman #LearnToSwim #SwimmingAbuDhabi #WaterConfidence #BeginnerSwimming #SwimmingCoach #AbuDhabi`
-
-### Proposed publishing time
-
-- Proposed date: **2026-07-18**
-- Proposed time: **20:00 Asia/Dubai**
-- Platforms: Facebook + Instagram
-- Status: Proposal only; no scheduling authorization.
+No Post 3 asset may be created, scheduled, or published without separate owner authorization.
 
 ## 4. Google Business Profile — manual owner checklist
 
