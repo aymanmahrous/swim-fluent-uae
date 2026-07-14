@@ -13,6 +13,8 @@ Status: Approved business identity reference for owner review.
 - Business model: **Service-area swimming and water confidence coaching**
 - Public street address: **Do not publish unless explicitly approved by the owner**
 - Primary target category: **Swimming instructor / مدرس سباحة**
+- Business hours: **OWNER_DECISION_REQUIRED**
+- Prohibited hours assumption: **Do not publish Open 24 hours / مفتوح على مدار الساعة without an explicit owner decision**
 
 ## Approved descriptions
 
@@ -30,10 +32,13 @@ Relax Fix UAE provides swimming and water confidence coaching in Abu Dhabi with 
 
 ## Social profiles
 
-- Facebook: `[OWNER TO PROVIDE CANONICAL PAGE URL]`
-- Instagram: `[OWNER TO PROVIDE CANONICAL PROFILE URL — expected @relaxfixuae]`
+- Facebook official page: `OWNER_INPUT_REQUIRED`
+- Facebook Post 1 receipt: https://m.facebook.com/story.php?story_fbid=pfbid05s1xYWUczts38h1B8BNabdezBZdAWY8Ci1g2tgq7gBiPhfeNrpEb2jn7heVShr8Nl&id=61591484921597
+- Instagram official profile: https://www.instagram.com/relaxfixuae/
 - TikTok: `[NOT CONFIRMED]`
 - YouTube: `[NOT CONFIRMED]`
+
+The Facebook Post 1 receipt must not be used as a substitute for the canonical Facebook Page URL.
 
 ## NAP consistency checklist
 
@@ -44,7 +49,10 @@ Relax Fix UAE provides swimming and water confidence coaching in Abu Dhabi with 
 - Keep the street address hidden unless the owner approves publication.
 - Use Swimming instructor / مدرس سباحة as the target primary category where the platform supports it.
 - Remove or correct old design-agency descriptions and categories.
-- Confirm business hours before publication; do not assume 24-hour operation.
+- Keep business hours as **OWNER_DECISION_REQUIRED** until the owner supplies accurate hours.
+- Do not assume or publish 24-hour operation.
+- Use the official Instagram profile URL exactly as recorded above.
+- Do not use an individual Facebook post URL as the official Facebook Page URL.
 
 ## Prohibited variants
 
@@ -57,3 +65,5 @@ Do not use:
 - `وكالة تصميم`
 - `Swimming Club`
 - `نادي سباحة`
+- `Open 24 hours`
+- `مفتوح على مدار الساعة`
