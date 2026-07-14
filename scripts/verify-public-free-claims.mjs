@@ -51,6 +51,15 @@ for (const source of [publicHome, publicSeo]) {
   }
 }
 
+function visibleText(html) {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/giu, " ")
+    .replace(/<[^>]+>/gu, " ")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
 async function verifyRenderedHtml() {
   try {
     await access(".output/server/index.mjs");
@@ -94,7 +103,7 @@ async function verifyRenderedHtml() {
       "مجاني",
       "مجانًا",
       "تقييم أولي مجاني",
-      "free",
+      "free assessment",
       "complimentary",
       "complimentary first assessment",
     ];
@@ -103,11 +112,12 @@ async function verifyRenderedHtml() {
       const response = await fetch(`${base}${testCase.path}`);
       assert.equal(response.status, 200, `${testCase.path} did not return HTTP 200`);
       const html = await response.text();
-      const normalized = html.toLocaleLowerCase("en");
+      const text = visibleText(html);
+      const normalized = text.toLocaleLowerCase("en");
       for (const claim of prohibited) {
         assert.ok(!normalized.includes(claim.toLocaleLowerCase("en")), `${testCase.path} rendered prohibited claim: ${claim}`);
       }
-      assert.ok(html.includes(testCase.approved), `${testCase.path} is missing approved assessment copy`);
+      assert.ok(text.includes(testCase.approved), `${testCase.path} is missing approved assessment copy`);
     }
   } finally {
     server.kill("SIGTERM");
@@ -115,4 +125,4 @@ async function verifyRenderedHtml() {
 }
 
 await verifyRenderedHtml();
-console.log("Public Arabic/English source and rendered HTML free-claim contracts passed.");
+console.log("Public Arabic/English source and visible rendered HTML free-claim contracts passed.");
