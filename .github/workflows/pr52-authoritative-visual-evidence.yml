@@ -56,21 +56,45 @@ jobs:
       - name: Install dependencies
         run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
 
-      - name: Build application
-        run: npm run build
+      - name: Build application as isolated Node preview
+        env:
+          NITRO_PRESET: node-server
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build
+          {
+            echo '=== build outputs ==='
+            find .output dist -maxdepth 4 -type f 2>/dev/null | sort || true
+          } | tee build-output.txt
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Start isolated preview
+      - name: Start isolated built preview
         shell: bash
         run: |
           set -euo pipefail
-          npm run preview -- --host 127.0.0.1 --port 4173 > preview.log 2>&1 &
+          if [ -f .output/server/index.mjs ]; then
+            PORT=4173 HOST=127.0.0.1 NITRO_PORT=4173 NITRO_HOST=127.0.0.1 \
+              node .output/server/index.mjs > preview.log 2>&1 &
+          elif [ -f dist/server/server.js ]; then
+            PORT=4173 HOST=127.0.0.1 node dist/server/server.js > preview.log 2>&1 &
+          elif [ -f dist/server/index.js ]; then
+            PORT=4173 HOST=127.0.0.1 node dist/server/index.js > preview.log 2>&1 &
+          else
+            echo 'No runnable built server entry found.' | tee preview.log
+            cat build-output.txt
+            exit 1
+          fi
           echo $! > preview.pid
-          for i in {1..60}; do
+          for i in {1..90}; do
             if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
               exit 0
+            fi
+            if ! kill -0 "$(cat preview.pid)" 2>/dev/null; then
+              cat preview.log
+              exit 1
             fi
             sleep 1
           done
@@ -192,6 +216,7 @@ jobs:
           node /tmp/capture.mjs
           cp source-verification.txt "$EVIDENCE_DIR/"
           cp preview.log "$EVIDENCE_DIR/logs/"
+          cp build-output.txt "$EVIDENCE_DIR/logs/"
 
       - name: Re-verify source remained unchanged
         shell: bash
@@ -209,5 +234,6 @@ jobs:
             pr52-visual-evidence
             source-verification.txt
             preview.log
+            build-output.txt
           if-no-files-found: warn
           retention-days: 14
