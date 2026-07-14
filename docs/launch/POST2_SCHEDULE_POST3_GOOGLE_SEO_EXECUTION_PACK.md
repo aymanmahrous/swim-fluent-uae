@@ -246,7 +246,7 @@ No assumption is made that Search Console is connected. No new indexing request 
 
 Current approved public presentation sources use:
 
-- `طلب تقييم أوليًا`
+- `طلب تقييم أولي`
 - `Request an initial assessment`
 
 The historical seed migration contains old free-assessment wording. No database write, migration, or Production correction was executed in this task.
