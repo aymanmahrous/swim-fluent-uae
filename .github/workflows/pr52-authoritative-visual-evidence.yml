@@ -106,7 +106,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$EVIDENCE_DIR/screenshots" "$EVIDENCE_DIR/logs"
-          cat > /tmp/capture.mjs <<'EOF'
+          cat > .pr52-capture.mjs <<'EOF'
           import { chromium, devices } from '@playwright/test';
           import fs from 'node:fs';
           import path from 'node:path';
@@ -213,7 +213,8 @@ jobs:
           fs.writeFileSync(path.join(outDir, 'logs', 'blocked-writes.json'), JSON.stringify(blockedWrites, null, 2));
           if (captures.length !== 4) throw new Error(`Expected 4 captures, received ${captures.length}`);
           EOF
-          node /tmp/capture.mjs
+          node .pr52-capture.mjs
+          rm -f .pr52-capture.mjs
           cp source-verification.txt "$EVIDENCE_DIR/"
           cp preview.log "$EVIDENCE_DIR/logs/"
           cp build-output.txt "$EVIDENCE_DIR/logs/"
