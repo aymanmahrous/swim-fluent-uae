@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
-import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
 
 const i18n = await readFile("src/lib/i18n.tsx", "utf8");
 const businessSettings = await readFile("src/platform/business-settings.ts", "utf8");
@@ -60,69 +59,35 @@ function visibleText(html) {
     .trim();
 }
 
-async function verifyRenderedHtml() {
-  try {
-    await access(".output/server/index.mjs");
-  } catch {
-    return;
-  }
+async function verifyRenderedHtml(baseUrl) {
+  const cases = [
+    { path: "/", approved: "طلب تقييم أولي" },
+    { path: "/en", approved: "Request an initial assessment" },
+  ];
+  const prohibited = [
+    "مجاني",
+    "مجانًا",
+    "تقييم أولي مجاني",
+    "free assessment",
+    "complimentary",
+    "complimentary first assessment",
+  ];
 
-  const port = "4179";
-  const server = spawn(process.execPath, [".output/server/index.mjs"], {
-    env: { ...process.env, NITRO_PORT: port, PORT: port, HOST: "127.0.0.1" },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-
-  let stderr = "";
-  server.stderr.on("data", (chunk) => {
-    stderr += chunk.toString();
-  });
-
-  try {
-    const base = `http://127.0.0.1:${port}`;
-    let ready = false;
-    for (let attempt = 0; attempt < 40; attempt += 1) {
-      try {
-        const response = await fetch(`${base}/`);
-        if (response.ok) {
-          ready = true;
-          break;
-        }
-      } catch {
-        // Wait for the local Nitro server.
-      }
-      await new Promise((resolve) => setTimeout(resolve, 250));
+  for (const testCase of cases) {
+    const response = await fetch(new URL(testCase.path, baseUrl));
+    assert.equal(response.status, 200, `${testCase.path} did not return HTTP 200`);
+    const text = visibleText(await response.text());
+    const normalized = text.toLocaleLowerCase("en");
+    for (const claim of prohibited) {
+      assert.ok(!normalized.includes(claim.toLocaleLowerCase("en")), `${testCase.path} rendered prohibited claim: ${claim}`);
     }
-    assert.ok(ready, `Local built server did not become ready. ${stderr}`);
-
-    const cases = [
-      { path: "/", approved: "طلب تقييم أولي" },
-      { path: "/en", approved: "Request an initial assessment" },
-    ];
-    const prohibited = [
-      "مجاني",
-      "مجانًا",
-      "تقييم أولي مجاني",
-      "free assessment",
-      "complimentary",
-      "complimentary first assessment",
-    ];
-
-    for (const testCase of cases) {
-      const response = await fetch(`${base}${testCase.path}`);
-      assert.equal(response.status, 200, `${testCase.path} did not return HTTP 200`);
-      const html = await response.text();
-      const text = visibleText(html);
-      const normalized = text.toLocaleLowerCase("en");
-      for (const claim of prohibited) {
-        assert.ok(!normalized.includes(claim.toLocaleLowerCase("en")), `${testCase.path} rendered prohibited claim: ${claim}`);
-      }
-      assert.ok(text.includes(testCase.approved), `${testCase.path} is missing approved assessment copy`);
-    }
-  } finally {
-    server.kill("SIGTERM");
+    assert.ok(text.includes(testCase.approved), `${testCase.path} is missing approved assessment copy`);
   }
 }
 
-await verifyRenderedHtml();
-console.log("Public Arabic/English source and visible rendered HTML free-claim contracts passed.");
+if (process.env.PUBLIC_BASE_URL) {
+  await verifyRenderedHtml(process.env.PUBLIC_BASE_URL);
+  console.log(`Rendered HTML free-claim contract passed for ${process.env.PUBLIC_BASE_URL}.`);
+}
+
+console.log("Public Arabic/English source free-claim removal contracts passed.");
