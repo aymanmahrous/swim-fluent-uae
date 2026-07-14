@@ -56,45 +56,67 @@ Complete one receipt per platform and content type after actual publication.
 
 No public URL may be invented. Story receipts may use direct screenshot evidence if no durable public URL is available.
 
-## 3. POST 3 review pack — Choosing the right starting point
+## 3. POST 3 — Choosing the right starting point
 
-Status: **Review pack only — not scheduled and not published.**
+Current state:
+
+- `POST3_CONTENT_APPROVED`
+- `POST3_VISUAL_BRIEF_APPROVED`
+- `POST3_ASSETS_NOT_CREATED`
+- `POST3_NOT_SCHEDULED`
+- `POST3_NOT_PUBLISHED`
+
+No Feed, Story, Reel, final design, video, scheduling action, or publication has been created or completed for Post 3.
 
 ### Objective
 
 Explain that swimming coaching should start from the person's current experience, comfort in the water, and goal. The message builds confidence without exaggerated promises.
 
-### Feed concept
+### Approved headline
 
-Use a clean two-part visual:
+- Arabic: `ابدأ من نقطة البداية المناسبة لك`
+- English: `Start from where you are`
 
-1. `خبرتك الحالية + مستوى الراحة + هدفك`
-2. `هذه هي نقطة البداية المناسبة لك`
+### Core visual message
 
-Coach Ayman may appear only as a direct cutout from an approved original owner photo. Do not regenerate, reconstruct, swap, or beauty-retouch the face. Use the official Relax Fix UAE logo and no external brand marks.
+- `الخبرة السابقة`
+- `+`
+- `مستوى الراحة داخل الماء`
+- `+`
+- `الهدف`
 
-Suggested headline:
+### Approved Visual Brief
 
-- Arabic: `ابدأ من النقطة المناسبة لك`
-- English: `Start at the right point for you`
+#### Feed
 
-CTA:
+- Required size: **1080 × 1350**.
+- Present the three-part core message clearly and keep the approved Arabic and English headlines readable.
+- CTA:
+  - `اطلب تقييمًا أوليًا`
+  - `Request an initial assessment`
 
-- `اطلب تقييمًا أوليًا`
-- `Request an initial assessment`
+#### Story
 
-### Story concept
+- Required size: **1080 × 1920**.
+- Adapt the same approved headline, three-part core message, and CTA without changing the approved meaning.
 
-Four frames:
+#### Reel
 
-1. `من أين تبدأ في تعلم السباحة؟`
-2. `خبرتك السابقة + مستوى راحتك + هدفك`
-3. `لا توجد خطة واحدة تناسب الجميع`
-4. `اطلب تقييمًا أوليًا | Request an initial assessment`
+- Duration: **15–30 seconds**.
+- Use a short poolside explanation supported by safe detail shots, with no children or clients.
+- End on the approved headline and CTA.
 
-### Reel concept — 15 to 30 seconds
+#### Identity and asset rules
 
-A short poolside explanation from Coach Ayman, supported by safe detail shots. No clients or children are required.
+- Use an approved original Coach Ayman photo as a direct cutout only.
+- No Face Swap.
+- Do not regenerate or reconstruct the face.
+- No beauty retouching that changes facial features.
+- Use only the official Relax Fix UAE logo.
+- No children or clients.
+- No external logos.
+- No unverified claims.
+- Do not use: `Free`, `Complimentary`, `مجاني`, or `مجانًا`.
 
 ### Arabic caption
 
@@ -111,7 +133,7 @@ A short poolside explanation from Coach Ayman, supported by safe detail shots. N
 
 There is no single starting point that suits everyone learning to swim.
 
-Before choosing an exercise or coaching path, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach. When the starting point is clear, the next steps can be more structured and better suited to your needs.
+Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach. When the starting point is clear, the next steps can be more structured and better suited to your needs.
 
 With Coach Ayman, coaching starts at your current level and progresses one step at a time.
 
@@ -128,15 +150,6 @@ With Coach Ayman, coaching starts at your current level and progresses one step 
 - Proposed time: **20:00 Asia/Dubai**
 - Platforms: Facebook + Instagram
 - Status: Proposal only; no scheduling authorization.
-
-### Reel shot list — 15 to 30 seconds
-
-- 0–3s: Clean pool establishing shot.
-- 3–7s: Coach Ayman direct-to-camera: `قبل أن تبدأ، نحتاج أن نعرف نقطة البداية.`
-- 7–12s: Close-up of a blank assessment checklist without personal data.
-- 12–18s: Coach Ayman: `هل سبحت من قبل؟ ما مستوى راحتك؟ وما هدفك؟`
-- 18–24s: Safe poolside demonstration of breathing or body-position preparation outside the water.
-- 24–30s: Official branded CTA frame: `اطلب تقييمًا أوليًا | Request an initial assessment`.
 
 ## 4. Google Business Profile — manual owner checklist
 
@@ -233,7 +246,7 @@ No assumption is made that Search Console is connected. No new indexing request 
 
 Current approved public presentation sources use:
 
-- `طلب تقييم أولي`
+- `طلب تقييم أوليًا`
 - `Request an initial assessment`
 
 The historical seed migration contains old free-assessment wording. No database write, migration, or Production correction was executed in this task.
