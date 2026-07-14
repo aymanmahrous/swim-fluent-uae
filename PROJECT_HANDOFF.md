@@ -1,389 +1,369 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-13 (Asia/Dubai)
+Last verified: 2026-07-14 (Asia/Dubai)
 
-This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md` and the named project source documents. Do not restart or redesign the project without an approved reason.
+This file is the operational source of truth for continuing the Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md`. Do not restart the project, repeat completed work, or change the approved sequence without a documented reason and explicit owner approval.
 
-## 1. Current repository state
+## 1. Current confirmed state
 
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Default branch: `main`
-- PR #42: **Merged**
-- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
-- PR #40: Draft documentation-only PR for these Handoff files; do not merge automatically.
-- PR #36: Draft, unmerged, and deferred International Phone application cutover.
-- Issue #43: Open and isolated accessibility/mobile backlog.
+- Latest confirmed `main` SHA: `5f0d955ff3b5e3ac6a9dde3a4ade2d3d5d8d4fc8`
+- Approved strategy: `REVENUE-FIRST PARALLEL LAUNCH`
+- No Merge, Deploy, Production database write, Google write, Ads, Boost, or Production Analytics activation is authorized by this handoff.
 
-## 2. Current Production state
+## 2. POST 2 — Fear of Water
 
-Latest owner-approved verification after the Production Business Settings correction:
+### Approved
 
-- Vercel Production: **Ready / Success**.
-- Arabic public page verified.
-- English public page verified.
-- Booking form opens normally and displays the first step.
-- No Production test booking was submitted.
-- No Production migration or Production-writing workflow was run during the PR #42 verification.
-- Production free-claim data conflict: **Resolved and verified**.
+- Feed asset approved.
+- Story asset approved.
+- Arabic caption approved.
+- English caption approved.
+- Hashtags approved.
+- CTA approved:
+  - `اطلب تقييمًا أوليًا`
+  - `Request an initial assessment`
+- Feed and Story visual composition approved.
+- Final shirt logo cleanup approved.
 
-### Approved public copy
+### Scheduled
 
-Arabic:
+- Facebook Feed: Scheduled.
+- Instagram Feed: Scheduled.
+- Feed date/time: `2026-07-15 20:00 Asia/Dubai`.
+- Facebook Story: Scheduled.
+- Instagram Story: Scheduled.
+- Story date/time: `2026-07-15 19:50 Asia/Dubai`.
+- Story action: `Send Message`.
+- Website link in Story: No.
+- Boost: No.
+- Ads: No.
 
-- `طلب تقييم أولي`
-- `مناقشة أولية لمعرفة نقطة البداية`
+### Current status
 
-English:
+- `POST2_SCHEDULED_WAITING_FOR_PUBLICATION`
+- `PUBLICATION_RECEIPTS_PENDING`
 
-- `Request an initial assessment`
-- `Initial conversation to understand your starting point`
+Do not record `Published`, `SUCCESSFUL_PUBLICATION`, a public URL, or a receipt before the content is actually live and verified.
 
-### Prohibited public claims
+After the scheduled time, verify only:
 
-Do not publish or restore these claims without separate explicit approval:
+1. Facebook Feed.
+2. Instagram Feed.
+3. Facebook Story.
+4. Instagram Story.
+5. Actual publication time.
+6. Public URL, if available.
+7. Screenshot evidence.
+8. Differences from the approved asset or caption.
+9. Owner verification.
 
-- `مجاني`
-- `مجانًا`
-- `Free`
-- `Complimentary`
-- `Free assessment`
-- `Free consultation`
-- `Complimentary assessment`
+Do not invent links or receipts.
 
-## 3. Completed and verified work
+## 3. POST 3 — Choosing the right starting point
 
-### PR #42 — public free-claim removal
+### Approved content and brief
 
-- Status: Merged.
-- Merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`.
-- Removed unapproved free/complimentary claims from the public Arabic and English presentation boundary.
-- Preserved the booking flow and valid dynamic Business Settings behavior.
-- Added `sanitizePublicOpeningOffer` and a static contract to prevent prohibited public free claims from rendering even if stale dynamic values are returned.
-- Production Arabic and English pages were verified after deployment.
+- `POST3_CONTENT_APPROVED`
+- `POST3_VISUAL_BRIEF_APPROVED`
+- `POST3_ASSETS_NOT_CREATED`
+- `POST3_NOT_SCHEDULED`
+- `POST3_NOT_PUBLISHED`
 
-### Production Business Settings correction — actual data-source reconciliation
+Approved headline:
 
-- Root-cause classification: `MULTIPLE_SOURCE_CONFLICT`.
-- PR #42 protected the Presentation boundary and added the sanitizer; it did not change the Production Business Settings row.
-- The actual Production data source was `public.business_settings`, record `id = 'primary'`.
-- Previous Production values were:
-  - `opening_offer_text_ar`: `عرض الافتتاح: 150 درهم / 45 دقيقة مع تقييم أولي مجاني`
-  - `opening_offer_text_en`: `Opening offer: 150 AED / 45 minutes with a free first assessment`
-- The owner explicitly approved one narrowly scoped administrative SQL update to that row only.
-- Current approved Production values are:
-  - `opening_offer_text_ar`: `طلب تقييم أولي`
-  - `opening_offer_text_en`: `Request an initial assessment`
-- `assessmentValue` remains independent static i18n copy and was not moved into Business Settings:
-  - Arabic: `مناقشة أولية لمعرفة نقطة البداية`
-  - English: `Initial conversation to understand your starting point`
-- Production row `updated_at`: `2026-07-12T23:06:08.515144+00:00`.
-- Dubai execution time: `2026-07-13 03:06:08`.
-- Exactly one row was updated.
-- Read-only post-write verification confirmed:
-  - `GET /api/business-settings` returns the new values.
-  - The Arabic page renders both approved Arabic texts in their correct roles.
-  - The English page renders both approved English texts in their correct roles.
-  - None of these prohibited forms remain in the API or rendered public pages: `مجاني`, `مجانًا`, `Free`, `Complimentary`, `free first assessment`, `complimentary first assessment`.
-  - Price, session duration, `booking_enabled`, phone, email, locations, and all other Business Settings remained unchanged.
-- No Migration, `supabase db push`, `supabase migration repair`, Production booking, Redeploy, Cache purge, or additional workflow was executed.
-- Final verified status: `PRODUCTION_BUSINESS_SETTINGS_COPY_CORRECTED_AND_VERIFIED`.
+- Arabic: `ابدأ من نقطة البداية المناسبة لك`
+- English: `Start from where you are`
 
-### Earlier durable engineering work
+Approved English sentence:
 
-- PR #39 made Production-writing and paid live verification workflows manual-only.
-- PR #38 repaired disposable/fresh migration-chain compatibility without reconciling Production migration history.
-- PR #37 added the International Phone Phase A database foundation to code, but it has not been applied to Production.
-- Current booking protections include idempotency and duplicate-request handling.
-- The repository contains Staff, content, media, scheduling, audit, and publishing contracts.
-- Contract-tested integrations are not automatically Live integrations.
+`Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach.`
 
-### Existing SEO foundations
+Core visual message:
 
-The repository already contains or contract-tests:
+- `الخبرة السابقة`
+- `+`
+- `مستوى الراحة داخل الماء`
+- `+`
+- `الهدف`
 
-- Canonical URLs.
-- Arabic and English public routes.
-- `hreflang`.
-- `x-default`.
-- Sitemap.
-- Robots directives.
-- Structured-data contracts.
-- `noindex` protection for private routes.
+Approved formats:
 
-SEO is **not complete**. Production crawling, metadata review, mobile validation, Local SEO, and Core Web Vitals evidence remain outstanding.
+- Feed: `1080 × 1350`.
+- Story: `1080 × 1920`.
+- Reel concept: `15–30 seconds`.
 
-## 4. Incomplete work and parallel-track status
+Identity rules:
 
-Approved strategy: **REVENUE-FIRST PARALLEL LAUNCH**.
+- Use an approved original Coach Ayman photo as a direct cutout only.
+- No Face Swap.
+- No face regeneration or reconstruction.
+- No beauty retouching that changes facial features.
+- Use only the official Relax Fix UAE logo.
+- No children or clients.
+- No external logos.
+- No unverified claims.
+- Do not use: `Free`, `Complimentary`, `مجاني`, or `مجانًا`.
 
-### Track 1 — Close Batch A1
+No final Post 3 asset may be created, scheduled, or published without separate owner authorization.
 
-Status: **Not closed**.
+## 4. Content Hub
 
-- `WEEK 1 FINAL COPY` is approved.
-- `Relax Fix UAE Final Brand Kit` is approved.
-- Realistic water visual direction is approved.
-- Batch A1 contains 23 PNG assets.
-- Cairo font verification is still required.
-- Actual font-weight verification is still required.
-- Arabic visual review is still required.
-- Asset inventory and Owner Approval Pack are still required.
-- No Batch A1 asset may be published before final owner approval.
-- Batch A2 must not begin before Batch A1 closure unless explicitly approved.
+Current status:
 
-Closure requires: 23/23 inventory, visual/typography/export review, correction of all findings, re-verification, Owner Approval Pack, and explicit owner approval.
+- `CONTENT_HUB_UPDATE_UNCONFIRMED_CONNECTION_TIMEOUT`
 
-### Track 2 — SEO
+Do not claim that Post 2 was recorded in the app.
 
-Status: **Foundations exist; audit and implementation remain incomplete**.
+Prepared record data:
 
-Next read-only SEO pack:
+- Post: `POST 2 — Fear of Water`
+- Overall status: `Scheduled`
+- Feed: `2026-07-15 20:00 Asia/Dubai`
+- Story: `2026-07-15 19:50 Asia/Dubai`
+- Facebook: `Scheduled`
+- Instagram: `Scheduled`
+- Publication Receipt: `Pending`
+- Boost: `No`
+- Ads: `No`
 
-- SEO Gap Report.
-- URL and Indexation Map.
-- Metadata Matrix in Arabic and English.
-- Keyword-to-Page Map.
-- Structured Data Plan.
-- Internal Linking Plan.
-- Technical SEO PR Plan.
-- Production crawl validation.
-- Mobile validation.
-- Core Web Vitals baseline.
+Do not retry randomly. Retry only after confirming application connectivity, or provide owner manual-entry steps.
 
-Do not change approved public copy or add unapproved offers, prices, claims, or keyword stuffing.
+## 5. Google Business Profile
 
-### Track 3 — Local SEO
+No account access or modification has been performed.
 
-Status: **Not completed**.
+Await these owner screenshots in order:
 
-Next phase:
+1. Verification.
+2. Business information.
+3. Business category.
+4. Phone and website.
+5. Address / service area.
+6. Opening hours.
+7. Business description.
+8. Services.
+9. Photos and logo.
 
-- Confirm NAP source of truth.
-- Decide approved service-area-business representation.
-- Decide public address policy.
-- Prepare Google Business Profile readiness checklist.
-- Prepare Local Keyword Map.
-- Prepare Local Landing Page Recommendation.
-- Prepare Local Structured Data Contract.
-- Prepare UAE citation plan.
-- Prepare review collection workflow.
+Do not provide final GBP recommendations before receiving the screenshots. Do not perform Google writes.
 
-Do not invent an address, service areas, opening hours, categories, phone numbers, or descriptions. Do not create or edit a Google Business Profile without approval.
+## 6. Google Search Console
 
-### Track 4 — Analytics and attribution
+No assumption is made that Search Console is connected. No indexing request or Google write is authorized.
 
-Status: **Documentation only; implementation has not started**.
+Await these owner screenshots:
 
-Approved decisions:
+1. Property selector.
+2. Overview.
+3. Pages indexing.
+4. Sitemaps.
+5. URL Inspection for `/`.
+6. URL Inspection for `/en`.
+7. Core Web Vitals.
+8. HTTPS.
+9. Manual Actions.
+10. Security Issues.
 
-- GA4 through `gtag.js`.
-- No GTM in the first phase.
-- Analytics behind a feature flag.
-- Feature flag disabled by default.
-- No PII sent to Analytics.
-- `booking_complete` is the Primary Conversion.
-- `conversation_start`, `whatsapp_click`, and `call_click` are Secondary Conversions.
-- Attribution will later use a separate table related to `booking_requests`.
-- No GA4 Production activation before Privacy and Consent approval.
+After receipt, classify each finding as:
 
-The Analytics Measurement Contract exists, but these owner decisions remain open:
+- Healthy.
+- Needs intervention.
+- Needs code change.
+- Needs manual owner action.
 
-1. Retention duration.
-2. Consent UI format.
-3. Privacy route structure.
-4. `view_service` granularity.
-5. Final CTA ID registry.
-6. Staff attribution visibility.
-7. Production booking test policy.
-8. GCLID and FBCLID retention.
-9. Attribution handling when Analytics consent is denied.
+## 7. SEO current state
 
-Do not implement `gtag.js`, environment variables, Consent UI, Analytics events, attribution storage, database migrations, or GA4 configuration before contract closure and approval.
+### Existing foundations
 
-### Track 5 — Publishing readiness
+- Arabic and English titles and meta descriptions.
+- Canonical URLs for `/` and `/en`.
+- `hreflang` for Arabic, English, and `x-default`.
+- Public robots directives and `robots.txt`.
+- Sitemap route and robots sitemap reference.
+- Open Graph title, description, type, URL, site name, and locale fields.
+- Twitter large-image card type, title, and description.
+- JSON-LD using Organization, Person, Service, WebSite, and WebPage.
+- Public business name, phone, email, and Abu Dhabi service representation.
 
-Status: **Partial engineering contracts exist; Live readiness is not proven**.
+### Prioritized gaps
 
-Remaining gates:
+#### P1
 
-- Facebook Page verification.
-- Instagram Professional account verification.
-- Meta Business ownership.
-- Account linkage.
-- Required permissions.
-- Server-only credential custody.
-- Token expiry and rotation policy.
-- Publication receipt operational verification.
-- Retry and ambiguous-state procedure.
-- Batch A1 approval.
-- Pilot-post approval.
-- UTM readiness.
-- Explicit owner publishing approval.
+- `og:image`.
+- `twitter:image`.
+- Official Facebook and Instagram links in `sameAs`, only after owner confirmation.
+- Search Console validation of Sitemap and Canonical.
 
-Do not install Production credentials, publish, schedule, trigger Meta workflows, create Ads, or spend money.
+#### P2
 
-### Track 6 — Organic Pilot
+- `LocalBusiness` schema only after confirming address policy, service area, and opening hours.
+- Real LCP and Core Web Vitals measurement.
 
-Status: **Blocked** until all of the following are true:
+#### P3
 
-- Batch A1 is closed.
-- Assets and captions are approved.
-- Minimum Analytics and UTM measurement is ready.
-- Publishing readiness is complete.
-- Accounts are verified.
-- Success criteria are approved.
-- Owner explicitly approves publishing.
+- Separate Programs page.
+- Coach Ayman page.
+- FAQ page.
+- Contact page.
 
-### Track 7 — Google Ads
+Do not combine all SEO changes into one PR. Do not invent LocalBusiness data.
 
-Status: **Deferred** until:
+## 8. Historical migration note
 
-- GA4 Production is approved.
-- `booking_complete` is proven.
-- Privacy and Consent are live.
-- PII protection is verified.
-- Conversion deduplication is verified.
-- Booking stability is verified.
-- Mobile performance is acceptable.
-- Budget is approved.
-- Keywords are approved.
-- Stop-loss rules are approved.
-- Owner gives separate launch approval.
+A historical seed migration contains old prohibited assessment wording.
 
-Google Ads precedes Meta Ads. Do not create campaigns, connect billing, import conversions, or spend money now.
+Current classification:
 
-### Track 8 — Meta Ads
+- Historical and not executed by a normal application build.
+- Not read directly by the current UI or API.
+- Does not alter current Production unless a migration or database rebuild is explicitly run.
+- Current CI contracts do not fail because of its presence.
 
-Status: **Later than Google Ads** and not approved to start.
+Do not edit the historical migration merely because it contains old copy. If future evidence shows that it can be reapplied or affects an active environment, prepare a separate migration correction plan without executing it.
 
-## 5. Open PRs and issues
+## 9. Open pull requests
 
-### PR #40 — Documentation baseline
+### PR #50 — Documentation launch continuation pack
 
-- Branch: `docs/project-handoff-strategy`.
-- Scope: `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md` only.
-- Must remain Draft until owner review.
-- Do not merge automatically.
+- Status: Open, Draft, Unmerged, Mergeable.
+- Branch: `docs/post2-schedule-post3-google-seo-pack`.
+- Latest confirmed head SHA: `69203ce4577643f7537fc4cda0d626de75771e3f`.
+- CI run `324`: Success.
+- Scope: documentation only.
+- Contains Post 2 scheduling state, Publication Receipt template, corrected Post 3 content and Visual Brief, Google checklists, SEO read-only findings, and Content Hub target state.
+- Do not mark Ready or merge without explicit owner approval.
+
+### PR #49 — Production prohibited assessment claims fix
+
+- Status: Open, Draft, Unmerged, Mergeable.
+- Branch: `fix/production-prohibited-claims-regression`.
+- Head SHA: `54153cb2eb36297ff73942cda903b5844d23dc93`.
+- CI previously confirmed successful.
+- No Production deployment or merge is authorized.
+
+### PR #46 — Privacy and consent copy pack
+
+- Status: Open, Draft, Unmerged.
+- Documentation only.
+- Awaiting factual owner decisions and possible legal review.
+- Do not use it as approval to activate Analytics.
 
 ### PR #36 — International Phone Phase B
 
-- Draft and deferred.
-- No merge.
-- No Production deployment.
-- No Production migration.
-- No progression without explicit owner approval.
-- Phase A is in repository code but is not applied to Production.
+- Status: Open, Draft, Blocked, Unmerged.
+- Do not merge or deploy.
 
-### Issue #43 — isolated accessibility/mobile backlog
+### PR #28 — AI media fallback target
 
-Scope only:
+- Status: Open and Unmerged.
+- Not part of the current priority sequence.
 
-1. Form labels accessibility.
-2. Color contrast.
-3. Sticky-header booking offset on mobile.
+## 10. Approved, rejected, and historical decisions
 
-Must not be mixed with:
+### Approved
 
-- Analytics.
-- SEO.
-- Local SEO.
-- Batch A1.
-- International Phone.
-- Publishing.
-- Production migrations.
+- `REVENUE-FIRST PARALLEL LAUNCH`.
+- Official Relax Fix UAE brand kit.
+- CTA wording listed in this file.
+- Post 2 final Feed and Story.
+- Post 2 schedule listed in this file.
+- Post 3 content and Visual Brief only.
 
-## 6. Current blockers
+### Rejected or not selected
 
-- The prior Production free-claim `MULTIPLE_SOURCE_CONFLICT` is resolved and is no longer a current blocker.
-- Batch A1 lacks completed typography, Arabic, export, and owner-approval evidence.
-- Analytics Contract owner decisions remain open.
-- Privacy and Consent are not approved for GA4 Production use.
-- Local SEO NAP/address/service-area decisions are not confirmed.
-- Publishing accounts, ownership, permissions, and Production credential custody are not verified.
-- Organic Pilot gates are not satisfied.
-- Conversion proof does not yet exist for Google Ads.
-- International Phone Production rollout remains blocked and deferred.
-- Production migration history is not approved for `db push` or repair.
+- Post 2 Design 3 was not selected.
+- Earlier Feed versions with visible external logos, poor crop, duplicated logos, or altered facial appearance were rejected.
+- Do not reuse rejected assets.
 
-## 7. Mandatory safety rules
+### Historical completed work
 
-- No Production migrations.
-- No `supabase db push`.
-- No `supabase migration repair`.
-- No manual editing of Production migration history.
-- No Production test booking.
-- No Production-writing workflow without explicit approval.
-- No automatic merge.
-- No automatic Production feature-flag activation.
-- No Batch A2.
-- No publishing.
-- No scheduling.
-- No advertising.
-- No budget spending.
-- No unapproved public claims.
-- No PII in Analytics.
-- No mixing unrelated workstreams in one PR.
-- No treating contract-tested integrations as Live integrations.
-- No marking a phase complete without validation evidence.
-- No changing the approved strategy or sequence without documented reason, explicit owner approval, and a strategy-Handoff update.
+- PR #48 merged and added Local SEO and Week 1 documentation packs.
+- PR #47 merged and repaired the Production sitemap route.
+- PR #45 merged and closed the Analytics Measurement Contract documentation decisions, without activating Analytics.
+- PR #44 merged and documented the Production Business Settings copy correction.
+- PR #42 merged and protected public presentation copy from prohibited free/complimentary claims.
+- PR #39 merged and made Production-writing workflows manual-only.
 
-## 8. Approved strategy and execution order
+Historical completion does not authorize reopening or expanding those scopes.
 
-**REVENUE-FIRST PARALLEL LAUNCH**
+## 11. Rules that must not change
 
-Approved parallel tracks:
+- Do not change the approved plan order without a documented reason and explicit owner approval.
+- Do not claim work that was not executed.
+- No automatic Merge.
+- No Deploy.
+- No Production database write.
+- No Production migration, `supabase db push`, or migration repair.
+- No Google write or indexing request.
+- No Ads or Boost.
+- No Production Analytics activation.
+- No Post 4.
+- No n8n reopening.
+- No duplicate Post 2 Feed or Story.
+- No Post 3 asset creation, scheduling, or publication without owner authorization.
+- Do not use prohibited words or claims.
+- Do not regenerate Coach Ayman's face for future content; use approved original-photo cutouts.
 
-1. Close Batch A1.
-2. SEO.
-3. Local SEO.
-4. Analytics and attribution.
-5. Publishing readiness.
-6. Organic Pilot after approval gates.
-7. Google Ads after conversion proof.
-8. Meta Ads later.
+## 12. Current blockers and risks
 
-Durable sequencing rules are maintained in `PROJECT_STRATEGY_HANDOFF.md`.
+- Post 2 publication receipts cannot exist until the scheduled content is actually live.
+- Content Hub write remains unconfirmed because of a connection timeout.
+- GBP and Search Console reviews are blocked pending owner screenshots.
+- SEO P1 implementation is blocked pending approved social images, official social links, and Search Console evidence.
+- LocalBusiness schema is blocked pending address, service-area, and hours decisions.
+- PR #49 remains Draft and unmerged; Production behavior must not be inferred from its branch.
+- PR #46 remains unresolved and Analytics must remain inactive.
 
-## 9. Actions requiring owner approval
+## 13. What has not been done
 
-Owner approval is required before:
+- Post 2 has not been verified as published yet.
+- No Post 2 Publication Receipt has been completed.
+- Post 3 assets have not been created.
+- Post 3 has not been scheduled or published.
+- Content Hub update has not been confirmed.
+- GBP has not been edited.
+- Search Console has not been changed and no indexing request was sent.
+- No SEO implementation PR has been started from the prioritized gaps.
+- No Merge, Deploy, Ads, Boost, Analytics activation, or Production database write was performed in the latest work.
 
-- Merging PR #40 or any other PR.
-- Correcting or finally approving Batch A1.
-- Starting Batch A2.
-- Changing public copy or claims.
-- Implementing or merging SEO changes.
-- Creating Local SEO pages or editing Google Business Profile.
-- Closing Analytics Contract decisions.
-- Implementing Analytics, Consent, attribution, or database changes.
-- Configuring GA4 on Preview or Production.
-- Applying any Production migration.
-- Progressing PR #36.
-- Installing Meta Production credentials.
-- Selecting, scheduling, or publishing Pilot posts.
-- Running Production-writing workflows.
-- Creating or launching advertising.
-- Spending any budget.
+## 14. Remaining tasks in approved order
 
-## 10. Exact references
+1. Keep PR #50 Draft until owner review and explicit merge decision.
+2. After `2026-07-15 19:50–20:00 Asia/Dubai`, verify Post 2 Feed and Story publication on Facebook and Instagram and prepare evidence-based receipts.
+3. Wait for owner confirmation before recording publication success.
+4. Retry Content Hub only after confirmed connectivity, or provide manual-entry steps.
+5. Receive and review GBP screenshots.
+6. Receive and review Search Console screenshots.
+7. After owner approval, decide whether to create Post 3 assets from the approved Visual Brief.
+8. Keep SEO implementation separated by P1, P2, and P3 and do not start without required confirmations.
 
-- PR #42: `https://github.com/aymanmahrous/swim-fluent-uae/pull/42`
-- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
-- PR #40: `https://github.com/aymanmahrous/swim-fluent-uae/pull/40`
-- PR #36: `https://github.com/aymanmahrous/swim-fluent-uae/pull/36`
-- Issue #43: `https://github.com/aymanmahrous/swim-fluent-uae/issues/43`
+# NEXT CONVERSATION START HERE
 
-## 11. Next approved task
+## Current summary
 
-Current approved task is limited to preparing and reviewing this Production copy-correction Handoff update in a documentation-only Draft PR.
+Post 2 Feed and Story are approved and scheduled for Facebook and Instagram on `2026-07-15` at `19:50` and `20:00 Asia/Dubai`. They are not yet verified as published. Post 3 content and Visual Brief are approved, but no assets exist and nothing is scheduled. PR #50 is Draft, unmerged, and its latest CI succeeded. Content Hub remains unconfirmed because of a connection timeout. GBP and Search Console reviews are waiting for owner screenshots.
 
-After owner review, choose the next task explicitly. Do not merge this PR or start another workstream automatically.
+## First task
 
-## 12. Handoff maintenance
+Read this file first. Then check the current date and time. If the Post 2 scheduled time has passed, verify the four publication targets and prepare Publication Receipts using only real URLs, timestamps, screenshots, and observed differences. If the scheduled time has not passed, do not claim publication and report that receipts remain pending.
 
-At the end of every major approved phase:
+## Owner approvals still required
 
-1. Update `PROJECT_HANDOFF.md` with current facts, PRs, commits, tests, Production state, blockers, and next approved action.
-2. Update `PROJECT_STRATEGY_HANDOFF.md` only if a durable approved strategy decision changed.
-3. Record evidence and distinguish contract-tested, Preview-tested, and Production-verified states.
-4. Ensure a new agent can continue without relying on previous chat history.
+- Merge decision for PR #50.
+- Any creation of Post 3 Feed, Story, or Reel assets.
+- Any Post 3 scheduling or publication.
+- Any SEO implementation PR.
+- Any GBP or Search Console change.
+- Any Merge, Deploy, Ads, Boost, Analytics activation, or Production database action.
+
+## Currently prohibited
+
+- No invented publication evidence.
+- No duplicate Post 2 content.
+- No Post 4.
+- No Ads or Boost.
+- No Production Analytics.
+- No Google write.
+- No Production database write.
+- No Merge or Deploy without explicit owner approval.
