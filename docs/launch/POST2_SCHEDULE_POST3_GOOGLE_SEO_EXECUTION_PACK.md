@@ -56,9 +56,21 @@ Complete one receipt per platform and content type after actual publication.
 
 No public URL may be invented. Story receipts may use direct screenshot evidence if no durable public URL is available.
 
-## 3. POST 3 — ابدأ من نقطة البداية المناسبة لك / Start from where you are
+## 3. POST 3
 
-### Approved state
+### Approved Arabic headline
+
+`ابدأ من نقطة البداية المناسبة لك`
+
+### Approved English headline
+
+`Start from where you are`
+
+### Approved English sentence
+
+`Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach.`
+
+### Approved states
 
 - `POST3_CONTENT_APPROVED`
 - `POST3_VISUAL_BRIEF_APPROVED`
@@ -66,59 +78,7 @@ No public URL may be invented. Story receipts may use direct screenshot evidence
 - `POST3_NOT_SCHEDULED`
 - `POST3_NOT_PUBLISHED`
 
-No Feed, Story, Reel, final design, video, scheduling action, or publication has been created or completed for Post 3.
-
-### Approved headline
-
-- Arabic: `ابدأ من نقطة البداية المناسبة لك`
-- English: `Start from where you are`
-
-### Approved English sentence
-
-`Before choosing the right coaching approach, we need to understand your previous experience, your current comfort in the water, and the goal you want to reach.`
-
-### Core visual message
-
-- `الخبرة السابقة`
-- `+`
-- `مستوى الراحة داخل الماء`
-- `+`
-- `الهدف`
-
-### Approved Visual Brief
-
-#### Feed
-
-- Required size: **1080 × 1350**.
-- Present the three-part core message clearly and keep the approved Arabic and English headlines readable.
-- CTA:
-  - `اطلب تقييمًا أوليًا`
-  - `Request an initial assessment`
-
-#### Story
-
-- Required size: **1080 × 1920**.
-- Adapt the same approved headline, three-part core message, and CTA without changing the approved meaning.
-
-#### Reel
-
-- Duration: **15–30 seconds**.
-- Use a short poolside explanation supported by safe detail shots, with no children or clients.
-- End on the approved headline and CTA.
-
-#### Identity and asset rules
-
-- Use an approved original Coach Ayman photo as a direct cutout only.
-- No Face Swap.
-- Do not regenerate or reconstruct the face.
-- No beauty retouching that changes facial features.
-- Use only the official Relax Fix UAE logo.
-- No children or clients.
-- No external logos.
-- No unverified claims.
-- Do not use: `Free`, `Complimentary`, `مجاني`, or `مجانًا`.
-
-No Post 3 asset may be created, scheduled, or published without separate owner authorization.
+No Post 3 asset has been created. Post 3 has not been scheduled or published. No Post 3 asset may be created, scheduled, or published without separate owner authorization.
 
 ## 4. Google Business Profile — manual owner checklist
 
