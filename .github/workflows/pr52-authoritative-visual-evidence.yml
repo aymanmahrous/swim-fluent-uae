@@ -68,6 +68,25 @@ jobs:
             find .output dist -maxdepth 4 -type f 2>/dev/null | sort || true
           } | tee build-output.txt
 
+          git status --short --untracked-files=no | tee build-tracked-status.txt
+          git diff --name-only | tee build-tracked-diff.txt
+          if [ -s build-tracked-diff.txt ]; then
+            while IFS= read -r changed_file; do
+              case "$changed_file" in
+                *routeTree.gen.ts)
+                  echo "Allowed generated route-tree refresh: $changed_file"
+                  ;;
+                *)
+                  echo "Unexpected tracked modification during build: $changed_file"
+                  git diff -- "$changed_file"
+                  exit 1
+                  ;;
+              esac
+            done < build-tracked-diff.txt
+            git checkout -- .
+          fi
+          test -z "$(git status --short --untracked-files=no)"
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
@@ -218,6 +237,8 @@ jobs:
           cp source-verification.txt "$EVIDENCE_DIR/"
           cp preview.log "$EVIDENCE_DIR/logs/"
           cp build-output.txt "$EVIDENCE_DIR/logs/"
+          cp build-tracked-status.txt "$EVIDENCE_DIR/logs/"
+          cp build-tracked-diff.txt "$EVIDENCE_DIR/logs/"
 
       - name: Re-verify source remained unchanged
         shell: bash
@@ -225,6 +246,8 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git status --short --untracked-files=no)"
+          printf 'POST_CAPTURE_SHA=%s\nPOST_CAPTURE_TRACKED_STATUS=CLEAN\n' "$(git rev-parse HEAD)" | tee post-capture-verification.txt
+          cp post-capture-verification.txt "$EVIDENCE_DIR/"
 
       - name: Upload evidence artifact
         if: always()
@@ -234,7 +257,10 @@ jobs:
           path: |
             pr52-visual-evidence
             source-verification.txt
+            post-capture-verification.txt
             preview.log
             build-output.txt
+            build-tracked-status.txt
+            build-tracked-diff.txt
           if-no-files-found: warn
           retention-days: 14
