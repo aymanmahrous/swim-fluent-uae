@@ -9,7 +9,7 @@ const pageCopy = {
   ar: {
     title: "تعليم السباحة والثقة المائية في أبوظبي | كوتش أيمن | Relax Fix UAE",
     description:
-      "تدريب سباحة وثقة مائية في أبوظبي مع كوتش أيمن للأطفال والبالغين وأصحاب الهمم. تقييم أولي وخطة تدريب تناسب الخبرة والراحة داخل الماء.",
+      "تدريب سباحة وثقة مائية في أبوظبي مع كوتش أيمن، يبدأ بتقييم واضح وتدرج يناسب نقطة بداية كل متدرب.",
     url: `${SITE_URL}/`,
     locale: "ar_AE",
     alternateLocale: "en_AE",
@@ -19,7 +19,7 @@ const pageCopy = {
   en: {
     title: "Swimming & Water Confidence Coach Abu Dhabi | Coach Ayman | Relax Fix UAE",
     description:
-      "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman for children, adults and People of Determination. Start with an assessment and a coaching path built around your experience and comfort in the water.",
+      "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman, with a clear assessment and step-by-step training based on each learner’s starting point.",
     url: `${SITE_URL}/en`,
     locale: "en_AE",
     alternateLocale: "ar_AE",
@@ -42,7 +42,6 @@ function structuredData(lang: PublicLanguage) {
         url: SITE_URL,
         email: "swimmingayman@gmail.com",
         telephone: "+971551378660",
-        founder: { "@id": COACH_ID },
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer service",
@@ -61,7 +60,6 @@ function structuredData(lang: PublicLanguage) {
         knowsAbout: [
           "Swimming coaching",
           "Water confidence",
-          "Adaptive aquatic coaching",
           "Swimming technique",
         ],
         knowsLanguage: ["Arabic", "English"],
