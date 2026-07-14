@@ -1,0 +1,209 @@
+name: PR52 Authoritative Visual Evidence
+
+on:
+  push:
+    branches:
+      - agent/pr52-visual-evidence-tooling
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact commit SHA to inspect
+        required: true
+        default: d078bb1336272216f9011e8c1153dc28e1a51910
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.inputs.target_sha || 'd078bb1336272216f9011e8c1153dc28e1a51910' }}
+  EVIDENCE_DIR: pr52-visual-evidence
+  CI: true
+  NODE_ENV: production
+  VITE_DISABLE_ANALYTICS: 'true'
+  VITE_DISABLE_ADS: 'true'
+  VITE_DISABLE_EMAIL: 'true'
+  VITE_DISABLE_WRITES: 'true'
+
+jobs:
+  capture:
+    name: Build and capture exact PR head
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact target SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+
+      - name: Verify immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$TARGET_SHA"
+          test -z "$(git status --short)"
+          printf 'TARGET_SHA=%s\nACTUAL_SHA=%s\n' "$TARGET_SHA" "$actual" | tee source-verification.txt
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+
+      - name: Build application
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start isolated preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run preview -- --host 127.0.0.1 --port 4173 > preview.log 2>&1 &
+          echo $! > preview.pid
+          for i in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat preview.log
+          exit 1
+
+      - name: Capture authoritative screenshots and diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR/screenshots" "$EVIDENCE_DIR/logs"
+          cat > /tmp/capture.mjs <<'EOF'
+          import { chromium, devices } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const baseURL = 'http://127.0.0.1:4173';
+          const outDir = process.env.EVIDENCE_DIR || 'pr52-visual-evidence';
+          const targetSha = process.env.TARGET_SHA;
+          const consoleEvents = [];
+          const failedRequests = [];
+          const blockedWrites = [];
+          const captures = [];
+
+          const profiles = [
+            { name: 'desktop', viewport: { width: 1440, height: 1100 }, isMobile: false },
+            { name: 'mobile', ...devices['iPhone 13'] },
+          ];
+          const routes = [
+            { name: 'arabic-home', url: '/' },
+            { name: 'english-home', url: '/en' },
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          for (const profile of profiles) {
+            const context = await browser.newContext({
+              ...profile,
+              locale: profile.name === 'mobile' ? 'ar-AE' : 'en-US',
+              serviceWorkers: 'block',
+            });
+
+            await context.route('**/*', async route => {
+              const req = route.request();
+              const method = req.method().toUpperCase();
+              const url = req.url();
+              if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+                blockedWrites.push({ method, url, reason: 'mutation-blocked' });
+                return route.abort('blockedbyclient');
+              }
+              if (/google-analytics|googletagmanager|facebook\.com\/tr|connect\.facebook|doubleclick|supabase|mailgun|sendgrid|resend|stripe/i.test(url)) {
+                return route.abort('blockedbyclient');
+              }
+              return route.continue();
+            });
+
+            const page = await context.newPage();
+            page.on('console', msg => {
+              if (['error', 'warning'].includes(msg.type())) {
+                consoleEvents.push({ profile: profile.name, type: msg.type(), text: msg.text() });
+              }
+            });
+            page.on('pageerror', error => {
+              consoleEvents.push({ profile: profile.name, type: 'pageerror', text: error.message });
+            });
+            page.on('requestfailed', req => {
+              const failure = req.failure();
+              const url = req.url();
+              if (failure?.errorText === 'net::ERR_BLOCKED_BY_CLIENT') return;
+              failedRequests.push({ profile: profile.name, method: req.method(), url, error: failure?.errorText || 'unknown' });
+            });
+
+            for (const routeInfo of routes) {
+              const response = await page.goto(baseURL + routeInfo.url, { waitUntil: 'networkidle', timeout: 30000 });
+              await page.waitForTimeout(1500);
+              const filename = `${routeInfo.name}-${profile.name}.png`;
+              await page.screenshot({ path: path.join(outDir, 'screenshots', filename), fullPage: true });
+              captures.push({
+                route: routeInfo.url,
+                profile: profile.name,
+                filename,
+                status: response?.status() ?? null,
+                title: await page.title(),
+                viewport: page.viewportSize(),
+              });
+            }
+            await context.close();
+          }
+          await browser.close();
+
+          const manifest = {
+            generatedAt: new Date().toISOString(),
+            targetSha,
+            baseURL,
+            captures,
+            safety: {
+              productionDeployment: false,
+              mutationRequestsBlocked: true,
+              analyticsAndAdsBlocked: true,
+              bookingSubmitted: false,
+              databaseWritesAllowed: false,
+            },
+            consoleEventCount: consoleEvents.length,
+            failedRequestCount: failedRequests.length,
+            blockedWriteCount: blockedWrites.length,
+          };
+
+          fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
+          fs.writeFileSync(path.join(outDir, 'logs', 'console.json'), JSON.stringify(consoleEvents, null, 2));
+          fs.writeFileSync(path.join(outDir, 'logs', 'network-failures.json'), JSON.stringify(failedRequests, null, 2));
+          fs.writeFileSync(path.join(outDir, 'logs', 'blocked-writes.json'), JSON.stringify(blockedWrites, null, 2));
+
+          if (captures.length !== 4) {
+            throw new Error(`Expected 4 captures, received ${captures.length}`);
+          }
+          EOF
+          node /tmp/capture.mjs
+          cp source-verification.txt "$EVIDENCE_DIR/"
+          cp preview.log "$EVIDENCE_DIR/logs/"
+
+      - name: Re-verify source remained unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          status="$(git status --short --untracked-files=no)"
+          test -z "$status"
+
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr52-authoritative-visual-evidence-${{ env.TARGET_SHA }}
+          path: |
+            pr52-visual-evidence
+            source-verification.txt
+            preview.log
+          if-no-files-found: warn
+          retention-days: 14
