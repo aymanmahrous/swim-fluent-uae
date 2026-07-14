@@ -78,7 +78,61 @@ No public URL may be invented. Story receipts may use direct screenshot evidence
 - `POST3_NOT_SCHEDULED`
 - `POST3_NOT_PUBLISHED`
 
-No Post 3 asset has been created. Post 3 has not been scheduled or published. No Post 3 asset may be created, scheduled, or published without separate owner authorization.
+### Canonical approved Visual Brief
+
+#### Formats
+
+- Feed: **1080 × 1350**.
+- Story: **1080 × 1920**.
+- Reel: **15–30 seconds**.
+
+#### Core message
+
+نقطة البداية المناسبة تُحدد من:
+
+- الخبرة السابقة.
+- مستوى الراحة داخل الماء.
+- الهدف الذي يريد العميل الوصول إليه.
+
+#### CTA
+
+- `اطلب تقييمًا أوليًا`
+- `Request an initial assessment`
+
+#### Coach Ayman image rules
+
+- استخدام صورة Coach Ayman الأصلية كـDirect Cutout فقط.
+- إزالة الخلفية وتنظيف الحواف فقط.
+- الحفاظ على الرأس والوجه والشعر والكتفين والجسم والوضعية الأصلية.
+- ممنوع Face Swap.
+- ممنوع إعادة توليد الوجه أو الشعر أو الجسم أو القميص.
+- ممنوع Beauty Retouch يغيّر الملامح.
+- ممنوع تغيير العينين أو الأنف أو الفك أو الفم أو الابتسامة.
+
+#### Brand rules
+
+- استخدام شعار Relax Fix UAE الرسمي فقط.
+- الألوان:
+  - Navy.
+  - Turquoise.
+  - Gold.
+- لا أطفال أو عملاء.
+- لا شعارات خارجية.
+- لا تستخدم:
+  - `Free`
+  - `Complimentary`
+  - `مجاني`
+  - `مجانًا`
+
+#### Execution status
+
+- الـVisual Brief معتمد.
+- لم يتم إنشاء Feed أو Story أو Reel نهائي.
+- لم تتم الجدولة.
+- لم يتم النشر.
+- لا يجوز إنشاء الأصول أو جدولتها أو نشرها دون موافقة منفصلة من المالك.
+
+This Post 3 section is the canonical approved brief for this execution pack. Any older conflicting Post 3 wording is superseded for this pack.
 
 ## 4. Google Business Profile — manual owner checklist
 
@@ -202,8 +256,10 @@ Do not create a duplicate Post 2 record. Do not set `Published` before actual pu
 - No Ads or Boost.
 - No Analytics Production activation.
 - No Google write.
-- No Production deployment.
-- No database write.
 - No n8n.
 - No Parent Gallery.
 - No claim that Post 2 has published before the scheduled time and evidence exists.
+
+No production deployment was performed. The repository integration created an automatic Vercel Preview deployment for this documentation-only PR.
+
+No production write was performed by the implementation agent as part of this task. No independent audit of all external production systems was conducted.
