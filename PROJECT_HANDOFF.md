@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-13 (Asia/Dubai)
+Last verified: 2026-07-15 (Asia/Dubai)
 
 This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md` and the named project source documents. Do not restart or redesign the project without an approved reason.
 
@@ -8,382 +8,433 @@ This file is the operational source of truth for continuing the existing Relax F
 
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Default branch: `main`
-- PR #42: **Merged**
-- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
-- PR #40: Draft documentation-only PR for these Handoff files; do not merge automatically.
-- PR #36: Draft, unmerged, and deferred International Phone application cutover.
-- Issue #43: Open and isolated accessibility/mobile backlog.
+- Approved strategy: `REVENUE-FIRST PARALLEL LAUNCH`
+- PR #52: **Merged** on 2026-07-15.
+- PR #52 reviewed head: `d078bb1336272216f9011e8c1153dc28e1a51910`.
+- PR #52 squash merge commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`.
+- PR #52 CI: run #333, completed successfully.
+- PR #52 authoritative visual-evidence workflow: final run #23, completed successfully.
+- PR #53: temporary visual-evidence tooling PR, closed without merge.
+- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, or Ads action was part of PR #52.
 
-## 2. Current Production state
+## 2. PR #52 completed scope and evidence
 
-Latest owner-approved verification after the Production Business Settings correction:
+PR #52 aligned the Arabic and English public website with approved public-claims safety boundaries.
 
-- Vercel Production: **Ready / Success**.
-- Arabic public page verified.
-- English public page verified.
-- Booking form opens normally and displays the first step.
+Completed changes include:
+
+- preserved the approved CTA:
+  - Arabic: `طلب تقييم أولي`
+  - English: `Request an initial assessment`
+- removed the unverified `15+ yrs` claim and replaced it with:
+  - Arabic: `تدريب شخصي`
+  - English: `Personal Coaching`
+- removed the adaptive program card, supportive aquatic movement section, and People of Determination public booking category
+- removed adaptive wording from public metadata and Person `knowsAbout`
+- removed the unverified Organization `founder` relationship
+- applied approved Arabic and English metadata descriptions
+- strengthened public-claims and sanitizer contracts
+- preserved legitimate words such as `Freestyle` and `Freedom of movement`
+
+Authoritative visual evidence covered:
+
+- Arabic home — desktop
+- Arabic home — mobile
+- English home — desktop
+- English home — mobile
+
+The isolated evidence run verified:
+
+- exact target SHA
+- successful Install and Build
+- runnable local Node preview
+- HTTP 200 for all four captures
+- no Console warnings/errors recorded
+- no failed network requests recorded
+- no mutation requests recorded
+- no Production deployment or Production secrets
+- no booking or database write
+- tracked source clean after capture
+
+Final PR #52 QA state before merge:
+
+`PR52_APPROVED_FOR_MERGE`
+
+## 3. Current Production state
+
+The last owner-approved Production verification before the PR #52 merge confirmed:
+
+- Vercel Production was Ready / Success.
+- Arabic and English public pages loaded.
+- The booking form opened and displayed the first step.
 - No Production test booking was submitted.
-- No Production migration or Production-writing workflow was run during the PR #42 verification.
-- Production free-claim data conflict: **Resolved and verified**.
+- The Production Business Settings free-claim conflict was corrected and verified.
 
-### Approved public copy
+The approved Business Settings values remain:
+
+- `opening_offer_text_ar`: `طلب تقييم أولي`
+- `opening_offer_text_en`: `Request an initial assessment`
+
+Independent static assessment copy remains:
+
+- Arabic: `مناقشة أولية لمعرفة نقطة البداية`
+- English: `Initial conversation to understand your starting point`
+
+### Post-merge verification gate
+
+A fresh read-only Production verification of the PR #52 merge commit is still required before claiming that the merged visual/content state is Production-verified.
+
+Required checks:
+
+- Production deployment corresponds to the expected merge commit or approved descendant.
+- `/` and `/en` return successfully.
+- Approved Arabic and English CTA/copy appear.
+- Removed experience, adaptive, rehabilitation, therapy, founder, and related claims remain absent.
+- Booking form opens without submitting a booking.
+- No unexpected Console or critical network error is observed.
+
+Do not perform a Production booking or Production write during this verification.
+
+## 4. Approved public-copy boundaries
+
+Approved public wording includes:
 
 Arabic:
 
 - `طلب تقييم أولي`
 - `مناقشة أولية لمعرفة نقطة البداية`
+- `تدريب شخصي`
 
 English:
 
 - `Request an initial assessment`
 - `Initial conversation to understand your starting point`
+- `Personal Coaching`
 
-### Prohibited public claims
-
-Do not publish or restore these claims without separate explicit approval:
-
-- `مجاني`
-- `مجانًا`
-- `Free`
-- `Complimentary`
-- `Free assessment`
-- `Free consultation`
-- `Complimentary assessment`
-
-## 3. Completed and verified work
-
-### PR #42 — public free-claim removal
-
-- Status: Merged.
-- Merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`.
-- Removed unapproved free/complimentary claims from the public Arabic and English presentation boundary.
-- Preserved the booking flow and valid dynamic Business Settings behavior.
-- Added `sanitizePublicOpeningOffer` and a static contract to prevent prohibited public free claims from rendering even if stale dynamic values are returned.
-- Production Arabic and English pages were verified after deployment.
-
-### Production Business Settings correction — actual data-source reconciliation
-
-- Root-cause classification: `MULTIPLE_SOURCE_CONFLICT`.
-- PR #42 protected the Presentation boundary and added the sanitizer; it did not change the Production Business Settings row.
-- The actual Production data source was `public.business_settings`, record `id = 'primary'`.
-- Previous Production values were:
-  - `opening_offer_text_ar`: `عرض الافتتاح: 150 درهم / 45 دقيقة مع تقييم أولي مجاني`
-  - `opening_offer_text_en`: `Opening offer: 150 AED / 45 minutes with a free first assessment`
-- The owner explicitly approved one narrowly scoped administrative SQL update to that row only.
-- Current approved Production values are:
-  - `opening_offer_text_ar`: `طلب تقييم أولي`
-  - `opening_offer_text_en`: `Request an initial assessment`
-- `assessmentValue` remains independent static i18n copy and was not moved into Business Settings:
-  - Arabic: `مناقشة أولية لمعرفة نقطة البداية`
-  - English: `Initial conversation to understand your starting point`
-- Production row `updated_at`: `2026-07-12T23:06:08.515144+00:00`.
-- Dubai execution time: `2026-07-13 03:06:08`.
-- Exactly one row was updated.
-- Read-only post-write verification confirmed:
-  - `GET /api/business-settings` returns the new values.
-  - The Arabic page renders both approved Arabic texts in their correct roles.
-  - The English page renders both approved English texts in their correct roles.
-  - None of these prohibited forms remain in the API or rendered public pages: `مجاني`, `مجانًا`, `Free`, `Complimentary`, `free first assessment`, `complimentary first assessment`.
-  - Price, session duration, `booking_enabled`, phone, email, locations, and all other Business Settings remained unchanged.
-- No Migration, `supabase db push`, `supabase migration repair`, Production booking, Redeploy, Cache purge, or additional workflow was executed.
-- Final verified status: `PRODUCTION_BUSINESS_SETTINGS_COPY_CORRECTED_AND_VERIFIED`.
-
-### Earlier durable engineering work
-
-- PR #39 made Production-writing and paid live verification workflows manual-only.
-- PR #38 repaired disposable/fresh migration-chain compatibility without reconciling Production migration history.
-- PR #37 added the International Phone Phase A database foundation to code, but it has not been applied to Production.
-- Current booking protections include idempotency and duplicate-request handling.
-- The repository contains Staff, content, media, scheduling, audit, and publishing contracts.
-- Contract-tested integrations are not automatically Live integrations.
-
-### Existing SEO foundations
-
-The repository already contains or contract-tests:
-
-- Canonical URLs.
-- Arabic and English public routes.
-- `hreflang`.
-- `x-default`.
-- Sitemap.
-- Robots directives.
-- Structured-data contracts.
-- `noindex` protection for private routes.
-
-SEO is **not complete**. Production crawling, metadata review, mobile validation, Local SEO, and Core Web Vitals evidence remain outstanding.
-
-## 4. Incomplete work and parallel-track status
-
-Approved strategy: **REVENUE-FIRST PARALLEL LAUNCH**.
-
-### Track 1 — Close Batch A1
-
-Status: **Not closed**.
-
-- `WEEK 1 FINAL COPY` is approved.
-- `Relax Fix UAE Final Brand Kit` is approved.
-- Realistic water visual direction is approved.
-- Batch A1 contains 23 PNG assets.
-- Cairo font verification is still required.
-- Actual font-weight verification is still required.
-- Arabic visual review is still required.
-- Asset inventory and Owner Approval Pack are still required.
-- No Batch A1 asset may be published before final owner approval.
-- Batch A2 must not begin before Batch A1 closure unless explicitly approved.
-
-Closure requires: 23/23 inventory, visual/typography/export review, correction of all findings, re-verification, Owner Approval Pack, and explicit owner approval.
-
-### Track 2 — SEO
-
-Status: **Foundations exist; audit and implementation remain incomplete**.
-
-Next read-only SEO pack:
-
-- SEO Gap Report.
-- URL and Indexation Map.
-- Metadata Matrix in Arabic and English.
-- Keyword-to-Page Map.
-- Structured Data Plan.
-- Internal Linking Plan.
-- Technical SEO PR Plan.
-- Production crawl validation.
-- Mobile validation.
-- Core Web Vitals baseline.
-
-Do not change approved public copy or add unapproved offers, prices, claims, or keyword stuffing.
-
-### Track 3 — Local SEO
-
-Status: **Not completed**.
-
-Next phase:
-
-- Confirm NAP source of truth.
-- Decide approved service-area-business representation.
-- Decide public address policy.
-- Prepare Google Business Profile readiness checklist.
-- Prepare Local Keyword Map.
-- Prepare Local Landing Page Recommendation.
-- Prepare Local Structured Data Contract.
-- Prepare UAE citation plan.
-- Prepare review collection workflow.
+Do not publish or restore unapproved claims without separate explicit approval, including:
 
-Do not invent an address, service areas, opening hours, categories, phone numbers, or descriptions. Do not create or edit a Google Business Profile without approval.
+- `مجاني`, `مجانًا`, `مجاناً`, `بدون مقابل`
+- `Free`, `Complimentary`, `no-cost`, `no cost`
+- unverified years-of-experience claims
+- unverified founder relationships
+- credentials or certifications not approved for publication
+- Adaptive Swimming, Aquatic Rehabilitation, therapy, treatment, medical, diagnostic, or similar professional claims not separately approved
 
-### Track 4 — Analytics and attribution
-
-Status: **Documentation only; implementation has not started**.
-
-Approved decisions:
-
-- GA4 through `gtag.js`.
-- No GTM in the first phase.
-- Analytics behind a feature flag.
-- Feature flag disabled by default.
-- No PII sent to Analytics.
-- `booking_complete` is the Primary Conversion.
-- `conversation_start`, `whatsapp_click`, and `call_click` are Secondary Conversions.
-- Attribution will later use a separate table related to `booking_requests`.
-- No GA4 Production activation before Privacy and Consent approval.
+## 5. Active program board and agent tasks
 
-The Analytics Measurement Contract exists, but these owner decisions remain open:
+The owner approved the remaining execution plan and the following workstreams on 2026-07-15.
 
-1. Retention duration.
-2. Consent UI format.
-3. Privacy route structure.
-4. `view_service` granularity.
-5. Final CTA ID registry.
-6. Staff attribution visibility.
-7. Production booking test policy.
-8. GCLID and FBCLID retention.
-9. Attribution handling when Analytics consent is denied.
+### Issue #54 — Program Board
 
-Do not implement `gtag.js`, environment variables, Consent UI, Analytics events, attribution storage, database migrations, or GA4 configuration before contract closure and approval.
-
-### Track 5 — Publishing readiness
-
-Status: **Partial engineering contracts exist; Live readiness is not proven**.
-
-Remaining gates:
-
-- Facebook Page verification.
-- Instagram Professional account verification.
-- Meta Business ownership.
-- Account linkage.
-- Required permissions.
-- Server-only credential custody.
-- Token expiry and rotation policy.
-- Publication receipt operational verification.
-- Retry and ambiguous-state procedure.
-- Batch A1 approval.
-- Pilot-post approval.
-- UTM readiness.
-- Explicit owner publishing approval.
-
-Do not install Production credentials, publish, schedule, trigger Meta workflows, create Ads, or spend money.
-
-### Track 6 — Organic Pilot
-
-Status: **Blocked** until all of the following are true:
-
-- Batch A1 is closed.
-- Assets and captions are approved.
-- Minimum Analytics and UTM measurement is ready.
-- Publishing readiness is complete.
-- Accounts are verified.
-- Success criteria are approved.
-- Owner explicitly approves publishing.
-
-### Track 7 — Google Ads
-
-Status: **Deferred** until:
-
-- GA4 Production is approved.
-- `booking_complete` is proven.
-- Privacy and Consent are live.
-- PII protection is verified.
-- Conversion deduplication is verified.
-- Booking stability is verified.
-- Mobile performance is acceptable.
-- Budget is approved.
-- Keywords are approved.
-- Stop-loss rules are approved.
-- Owner gives separate launch approval.
-
-Google Ads precedes Meta Ads. Do not create campaigns, connect billing, import conversions, or spend money now.
-
-### Track 8 — Meta Ads
-
-Status: **Later than Google Ads** and not approved to start.
-
-## 5. Open PRs and issues
-
-### PR #40 — Documentation baseline
-
-- Branch: `docs/project-handoff-strategy`.
-- Scope: `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md` only.
-- Must remain Draft until owner review.
-- Do not merge automatically.
-
-### PR #36 — International Phone Phase B
-
-- Draft and deferred.
-- No merge.
-- No Production deployment.
-- No Production migration.
-- No progression without explicit owner approval.
-- Phase A is in repository code but is not applied to Production.
-
-### Issue #43 — isolated accessibility/mobile backlog
-
-Scope only:
-
-1. Form labels accessibility.
-2. Color contrast.
-3. Sticky-header booking offset on mobile.
-
-Must not be mixed with:
-
-- Analytics.
-- SEO.
-- Local SEO.
-- Batch A1.
-- International Phone.
-- Publishing.
-- Production migrations.
-
-## 6. Current blockers
-
-- The prior Production free-claim `MULTIPLE_SOURCE_CONFLICT` is resolved and is no longer a current blocker.
-- Batch A1 lacks completed typography, Arabic, export, and owner-approval evidence.
-- Analytics Contract owner decisions remain open.
-- Privacy and Consent are not approved for GA4 Production use.
-- Local SEO NAP/address/service-area decisions are not confirmed.
-- Publishing accounts, ownership, permissions, and Production credential custody are not verified.
-- Organic Pilot gates are not satisfied.
-- Conversion proof does not yet exist for Google Ads.
-- International Phone Production rollout remains blocked and deferred.
-- Production migration history is not approved for `db push` or repair.
-
-## 7. Mandatory safety rules
-
-- No Production migrations.
-- No `supabase db push`.
-- No `supabase migration repair`.
-- No manual editing of Production migration history.
-- No Production test booking.
-- No Production-writing workflow without explicit approval.
-- No automatic merge.
-- No automatic Production feature-flag activation.
-- No Batch A2.
-- No publishing.
-- No scheduling.
-- No advertising.
-- No budget spending.
-- No unapproved public claims.
-- No PII in Analytics.
-- No mixing unrelated workstreams in one PR.
-- No treating contract-tested integrations as Live integrations.
-- No marking a phase complete without validation evidence.
-- No changing the approved strategy or sequence without documented reason, explicit owner approval, and a strategy-Handoff update.
-
-## 8. Approved strategy and execution order
-
-**REVENUE-FIRST PARALLEL LAUNCH**
-
-Approved parallel tracks:
+`PROGRAM_COORDINATION_AGENT`
+
+Coordinates the approved `REVENUE-FIRST PARALLEL LAUNCH` tracks, dependencies, evidence, and owner gates.
+
+### Issue #55 — PR #52 release package
+
+`RELEASE_QA_AGENT`
+
+PR #52 is now merged. Remaining work is post-merge read-only verification and Handoff synchronization.
+
+### Issue #56 — Batch A1 closure
+
+`BATCH_A1_VISUAL_QA_AGENT`
+
+Required outcome:
+
+- 23/23 asset inventory
+- Cairo/font-weight verification
+- Arabic visual review
+- export and safe-margin review
+- findings and corrections
+- Owner Approval Pack
+
+No Batch A2, scheduling, or publishing.
+
+### Issue #57 — 30-day content plan
+
+`CONTENT_STRATEGY_AGENT`
+
+Preparing a bilingual 30-day operating calendar, captions, CTAs, media briefs, UTM placeholders, dependencies, and owner-review queue.
+
+Planning only. No publishing, scheduling, or Batch A2 asset generation before Batch A1 closure.
+
+### Issue #58 — SEO and Local SEO audit
+
+`SEO_LOCAL_SEO_AUDIT_AGENT`
+
+Preparing:
+
+- Production crawl and indexation evidence
+- Arabic/English metadata matrix
+- keyword-to-page map
+- technical SEO plan
+- mobile/Core Web Vitals baseline
+- NAP decision pack
+- Google Business Profile readiness
+- local keyword, citation, and review workflow plans
+
+No Google profile/Search Console write and no invented business facts.
+
+### Issue #59 — Privacy, Consent, and Analytics decisions
+
+`PRIVACY_ANALYTICS_GOVERNANCE_AGENT`
+
+Consolidating owner decisions for Privacy, Consent, retention, CTA IDs, attribution, GCLID/FBCLID, Staff visibility, and Production test policy.
+
+No GA4 implementation or activation, cookies, browser storage, database migration, or Production booking.
+
+### Issue #60 — Publishing readiness and Organic Pilot
+
+`PUBLISHING_OPERATIONS_AGENT`
+
+Auditing Meta account ownership/linkage, permissions, credential custody, token rotation, publication receipts, retry/ambiguous-state procedures, Post 2 receipts, Post 3 readiness, and Organic Pilot gates.
+
+No credentials installation, scheduling, publishing, Boost, Ads, or spend.
+
+### Issue #61 — Open PR and backlog triage
+
+`REPOSITORY_HYGIENE_AGENT`
+
+Reviewing PRs #51, #49, #46, and #36 plus Issue #43, and preparing owner disposition recommendations without merge, close, rebase, or force-push actions.
+
+### Issue #62 — Lead Operations and Automation
+
+`LEAD_OPERATIONS_AUTOMATION_AGENT`
+
+Approved strategic workstream:
+
+`LEAD_OPERATIONS_AND_AUTOMATION`
+
+Planning scope:
+
+- bilingual Arabic/English chatbot for approved FAQs, service explanations, initial-assessment guidance, and lead routing
+- explicit consent and data minimization
+- Staff CRM/handoff design
+- n8n new-lead alerts
+- missed-follow-up reminders
+- booking-status follow-up
+- daily and weekly summaries
+- idempotency, duplicate prevention, audit, retry, and safe-stop design
+
+No chatbot deployment, credentials, Production workflow activation, automatic messaging, or database migration.
+
+### Issue #63 — Revenue Readiness Scorecard and Owner Decision Queue
+
+`PROGRAM_OPERATIONS_AGENT`
+
+Preparing a Green/Amber/Red evidence scorecard and the recurring:
+
+`OWNER_DECISION_QUEUE`
+
+Each decision must include recommendation, alternatives, risk, safe default, dependency, and impact of delay.
+
+### Issue #64 — Handoff synchronization
+
+`DOCUMENTATION_HANDOFF_AGENT`
+
+Preparing a documentation-only Draft PR to synchronize both Handoff files after PR #52 and the newly approved durable strategy decisions.
+
+## 6. Approved execution order
+
+Approved parallel-track order:
 
 1. Close Batch A1.
 2. SEO.
 3. Local SEO.
 4. Analytics and attribution.
 5. Publishing readiness.
-6. Organic Pilot after approval gates.
-7. Google Ads after conversion proof.
-8. Meta Ads later.
+6. Lead Operations and Automation planning; implementation remains gated.
+7. Organic Pilot after all required gates.
+8. Google Ads after conversion proof.
+9. Meta Ads later.
 
-Durable sequencing rules are maintained in `PROJECT_STRATEGY_HANDOFF.md`.
+The Owner Decision Queue operates across all tracks.
 
-## 9. Actions requiring owner approval
+## 7. Track status
 
-Owner approval is required before:
+### Batch A1
 
-- Merging PR #40 or any other PR.
-- Correcting or finally approving Batch A1.
-- Starting Batch A2.
-- Changing public copy or claims.
-- Implementing or merging SEO changes.
-- Creating Local SEO pages or editing Google Business Profile.
-- Closing Analytics Contract decisions.
-- Implementing Analytics, Consent, attribution, or database changes.
-- Configuring GA4 on Preview or Production.
-- Applying any Production migration.
-- Progressing PR #36.
-- Installing Meta Production credentials.
-- Selecting, scheduling, or publishing Pilot posts.
-- Running Production-writing workflows.
-- Creating or launching advertising.
-- Spending any budget.
+Status: **Not closed**.
 
-## 10. Exact references
+Blocking evidence:
 
-- PR #42: `https://github.com/aymanmahrous/swim-fluent-uae/pull/42`
-- PR #42 merge commit: `6643c66550d6edff771a376c7a7ac9707437b090`
-- PR #40: `https://github.com/aymanmahrous/swim-fluent-uae/pull/40`
+- 23/23 inventory not yet completed
+- Cairo and actual font-weight evidence pending
+- Arabic visual review pending
+- export review pending
+- Owner Approval Pack pending
+
+Batch A2 remains prohibited until Batch A1 closure unless the owner approves a specific exception.
+
+### Content plan
+
+Status: **Authorized and in preparation**.
+
+The 30-day calendar may be planned now. New Batch A2 production, scheduling, and publishing remain gated.
+
+### SEO
+
+Status: **Foundations exist; audit and implementation incomplete**.
+
+Production crawl, metadata review, mobile evidence, structured-data validation, internal linking, and Core Web Vitals baseline remain required.
+
+### Local SEO
+
+Status: **Not completed**.
+
+NAP, public-address policy, service-area representation, hours, categories, Google Business Profile readiness, citations, and review workflow decisions remain outstanding.
+
+### Privacy, Consent, Analytics, and attribution
+
+Status: **Documentation and owner decisions only**.
+
+Durable decisions remain:
+
+- GA4 via `gtag.js`
+- no GTM in Phase 1
+- feature flag off by default
+- no PII in Analytics
+- `booking_complete` primary conversion
+- `conversation_start`, `whatsapp_click`, and `call_click` secondary conversions
+
+No Production Analytics activation before Privacy and Consent approval.
+
+### Publishing readiness
+
+Status: **Partial contracts exist; Live readiness unproven**.
+
+Account ownership, linkage, permissions, credentials, token lifecycle, receipts, retries, ambiguous states, and duplicate prevention require evidence.
+
+### Lead Operations and Automation
+
+Status: **Strategically approved; architecture/planning started; implementation not authorized**.
+
+Privacy, Consent, security, human handoff, credential custody, and safe-stop gates remain mandatory.
+
+### Organic Pilot
+
+Status: **Blocked** until Batch A1, content approval, minimum measurement/UTM, publishing readiness, account verification, success/stop rules, follow-up ownership, and explicit owner publishing approval are complete.
+
+### Google Ads
+
+Status: **Deferred** until conversion proof, Privacy/Consent, GA4 Production approval, booking stability, mobile performance, PII/deduplication verification, lead follow-up readiness, budget, keywords, and stop-loss rules are approved.
+
+### Meta Ads
+
+Status: **Later than Google Ads** and not approved to launch.
+
+## 8. Open PRs and deferred backlog
+
+### PR #51 — Handoff refresh
+
+- Open Draft.
+- Predates the PR #52 final evidence and merge.
+- Requires triage; do not merge in its current stale state without review.
+
+### PR #49 — Production prohibited-claims regression
+
+- Open Draft.
+- Likely overlapping or superseded by the broader merged PR #52.
+- Requires formal comparison and owner-approved disposition.
+
+### PR #46 — Privacy and Consent copy pack
+
+- Open Draft.
+- Remains a documentation source for owner decisions.
+- Do not merge as publication/legal approval until factual and legal-review requirements are resolved.
+
+### PR #36 — International Phone Phase B
+
+- Open Draft and deferred.
+- Must remain isolated from content, SEO, Analytics, chatbot, n8n, accessibility, publishing, and advertising work.
+- No Production migration or deployment.
+
+### Issue #43 — Accessibility/mobile backlog
+
+Isolated scope:
+
+1. Form-label accessibility.
+2. Color contrast.
+3. Sticky-header booking offset on mobile.
+
+Do not mix with marketing or Production migration work.
+
+## 9. Current blockers
+
+- Fresh post-merge read-only Production verification for PR #52 is pending.
+- Handoff synchronization Draft PR is pending review.
+- Batch A1 closure evidence is incomplete.
+- Local SEO factual decisions are incomplete.
+- Privacy/Consent and Analytics owner decisions remain open.
+- Publishing account and Live receipt evidence are incomplete.
+- Organic Pilot gates are not satisfied.
+- Conversion proof does not exist for paid advertising.
+- Lead Operations and Automation is planning-only; implementation gates remain closed.
+- International Phone Production rollout remains blocked and deferred.
+- Production migration history is not approved for `db push` or repair.
+
+## 10. Mandatory safety rules
+
+- No Production migration without explicit approval and an approved plan.
+- No `supabase db push` against Production.
+- No `supabase migration repair` against Production.
+- No manual editing of Production migration history.
+- No Production test booking without explicit approval.
+- No Production-writing workflow without explicit approval.
+- No automatic merge.
+- No automatic Production feature-flag activation.
+- No Batch A2 before Batch A1 closure unless explicitly approved.
+- No publishing or scheduling without explicit approval.
+- No automatic outbound chatbot, WhatsApp, email, or SMS messaging.
+- No Ads, billing connection, conversion import, or budget spend without separate approval.
+- No unapproved public claims or credentials.
+- No PII in Analytics or advertising systems.
+- No mixing unrelated workstreams in one PR.
+- Do not describe contract-tested integrations as Live without Live evidence.
+- Do not mark a phase complete without validation evidence.
+
+## 11. Owner Decision Queue
+
+The owner approved a recurring decision package to reduce agent blocking.
+
+Every queued decision must contain:
+
+- decision
+- recommendation
+- alternatives
+- risks/costs
+- safe default while unanswered
+- dependency/deadline
+- impact of delay
+
+Silence does not authorize merge, Production, migration, credentials, Analytics activation, publishing, scheduling, messaging, Ads, or spend.
+
+## 12. Next approved actions
+
+1. Complete read-only post-merge Production verification for PR #52.
+2. Complete the Handoff synchronization Draft PR.
+3. Continue the parallel documentation/read-only tasks in Issues #56–#64.
+4. Bring only consolidated owner decisions and evidence-backed approval packs to the owner.
+5. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
+
+## 13. Exact references
+
+- PR #52: `https://github.com/aymanmahrous/swim-fluent-uae/pull/52`
+- PR #52 merge commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
+- PR #51: `https://github.com/aymanmahrous/swim-fluent-uae/pull/51`
+- PR #49: `https://github.com/aymanmahrous/swim-fluent-uae/pull/49`
+- PR #46: `https://github.com/aymanmahrous/swim-fluent-uae/pull/46`
 - PR #36: `https://github.com/aymanmahrous/swim-fluent-uae/pull/36`
 - Issue #43: `https://github.com/aymanmahrous/swim-fluent-uae/issues/43`
+- Program Board: Issue #54
+- Active agent tasks: Issues #55–#64
 
-## 11. Next approved task
-
-Current approved task is limited to preparing and reviewing this Production copy-correction Handoff update in a documentation-only Draft PR.
-
-After owner review, choose the next task explicitly. Do not merge this PR or start another workstream automatically.
-
-## 12. Handoff maintenance
+## 14. Handoff maintenance
 
 At the end of every major approved phase:
 
-1. Update `PROJECT_HANDOFF.md` with current facts, PRs, commits, tests, Production state, blockers, and next approved action.
-2. Update `PROJECT_STRATEGY_HANDOFF.md` only if a durable approved strategy decision changed.
+1. Update `PROJECT_HANDOFF.md` with current facts, commits, PRs, tests, Production status, blockers, and next approved action.
+2. Update `PROJECT_STRATEGY_HANDOFF.md` only when a durable approved strategy decision changes.
 3. Record evidence and distinguish contract-tested, Preview-tested, and Production-verified states.
 4. Ensure a new agent can continue without relying on previous chat history.
