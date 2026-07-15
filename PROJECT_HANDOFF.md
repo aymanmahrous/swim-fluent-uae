@@ -2,125 +2,198 @@
 
 Last verified: 2026-07-15 (Asia/Dubai)
 
-This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it with `PROJECT_STRATEGY_HANDOFF.md`, `docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`, `docs/program/COMPLETE_DIGITAL_ECOSYSTEM.md`, Program Board Issue #54, and the named Issues/PRs below.
+This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
-Do not restart, rebuild, or redesign the project from scratch. An open Issue is an assignment, not proof that an agent is actively working or that a deliverable exists. Progress and completion require evidence such as a commit, PR, CI result, Preview, test output, receipt, or reviewed artifact.
+- `PROJECT_STRATEGY_HANDOFF.md`
+- `docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`
+- `docs/program/COMPLETE_DIGITAL_ECOSYSTEM.md`
+- Program Board Issue #54
+- the exact Issues, PRs, commits, CI runs, deployments, and evidence packs named below
 
-## 1. Current repository state
+Do not restart, rebuild, or redesign the project from scratch.
+
+An open Issue is an assignment or unresolved work item. It is not proof that an agent is active, that code is running, or that a deliverable exists. Progress and completion require evidence such as a commit, PR, CI result, Preview, direct Production verification, test output, receipt, or reviewed artifact.
+
+## 1. Repository and strategy
 
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Default branch: `main`
-- Current execution strategy: `REVENUE-FIRST PARALLEL LAUNCH`
+- Current strategy: `REVENUE-FIRST PARALLEL LAUNCH`
 - Long-term product direction: `RELAX_FIX_GROWTH_OS / COMPLETE_DIGITAL_ECOSYSTEM`
-- The ecosystem direction expands the capability map; it does not replace the Revenue-First order or bypass current gates.
+- GitHub and Vercel remain authoritative for the customer website.
+- Replit `Command Center Hub` is a separate internal application and is not the Production website or database.
+- The Complete Digital Ecosystem expands the capability map; it does not replace the Revenue-First order or bypass current gates.
 
-### Verified merged milestones
+## 2. Latest verified repository milestones
 
-- PR #52 merged on 2026-07-15.
-  - Reviewed head: `d078bb1336272216f9011e8c1153dc28e1a51910`
-  - Squash merge: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
-  - CI run #333 succeeded.
-  - Authoritative visual-evidence run #23 succeeded.
-  - Read-only Production verification completed.
+### Public website and core governance
+
+- PR #52 merged at `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90` after CI #333 and authoritative visual-evidence run #23.
+  - Arabic/English public claims were aligned.
+  - `15+ yrs`, free/complimentary implications, public Adaptive Aquatics, supportive aquatic movement, People of Determination booking category, adaptive metadata, and unverified founder relationship were removed.
 - PR #65 merged at `4fb7efdc02b3298b95ff157d693e4926b60a75c7`; Issue #64 closed.
 - PR #72 merged at `d4f53097ed960da075a2331eaabc61f6539dd0c3` after CI #343; Issue #63 closed.
 - PR #74 merged at `b36b35de2c6f23d46637f5fb61f3d2e4b6c1f767` after CI #346; Issue #73 closed.
-- PR #89 passed CI #350 and merged at `642190e8cfddd48ae24d3b0e854160a4b18c1a4d`.
-  - `PROJECT_STRATEGY_HANDOFF.md` now contains the durable Complete Digital Ecosystem strategy.
-  - `docs/program/COMPLETE_DIGITAL_ECOSYSTEM.md` is on `main`.
-- PR #93 passed CI #352 and merged at `fe48cd48d87d94625701575c5016847548244d2f`.
-  - `docs/media/SMART_MEDIA_LIBRARY_OPERATING_MODEL.md` is on `main`.
-- PR #94 passed CI #355 and merged at `246632faef65e3f55534df3a2e15d1568c05bfdd`.
-  - It recreated the isolated canonical URL correction from current `main`.
-  - No Production workflow was executed by PR #94.
+- PR #89 merged at `642190e8cfddd48ae24d3b0e854160a4b18c1a4d` after CI #350.
+  - Durable Complete Digital Ecosystem strategy is on `main`.
+- PR #93 merged at `fe48cd48d87d94625701575c5016847548244d2f` after CI #352.
+  - Smart Media Library operating model is on `main`.
+- PR #94 merged at `246632faef65e3f55534df3a2e15d1568c05bfdd` after CI #355.
+  - Canonical URL correction was recreated from current `main`.
 
-### Repository hygiene
+### Issue #90 — Handoff synchronization
 
-- PR #51 was closed without merge as superseded and must not be used as the current Handoff.
-- PR #28 was closed without merge as superseded by PR #94.
-- PR #49 was closed without merge as superseded by PR #52.
-- PR #46 remains an intentionally gated Draft for Privacy/Consent copy and owner/legal decisions.
-- PR #36 remains an intentionally gated Draft for International Phone Phase B and must not be merged as-is.
-- Issues #66 and #67 remain closed as superseded by #69 and #68 respectively.
+Status: `COMPLETED`
 
-No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of the documentation and repository-hygiene milestones above unless explicitly stated otherwise.
+- PR #95 changed `PROJECT_HANDOFF.md` only.
+- Reviewed head: `59339525fd870e5d2646aa6f81b5c8406d2f8ece`
+- CI #357 passed.
+- Factual review completed.
+- Squash merge: `5386e43bdbfae4450dd7c8df855ff49c2581d5a8`
+- Issue #90 closed.
 
-## 2. Verified public website and Production state
+### Issue #71 — Quality Department operating model
 
-PR #52 aligned Arabic and English public pages with approved public-claims boundaries.
+Status: `OPERATING_MODEL_COMPLETED_OPERATIONAL_ADOPTION_PENDING`
 
-Verified completed scope:
+- File: `docs/quality/INTEGRATED_QUALITY_DEPARTMENT_OPERATING_MODEL.md`
+- PR #96 reviewed head: `da9dbc68f587b9a01fe815c3effaa462fc98fa6f`
+- CI #359 passed.
+- Squash merge: `7f4d22e1e35f584eee19d100319dc041093448fe`
+- Issue #71 closed.
 
-- approved CTA preserved:
-  - Arabic: `طلب تقييم أولي`
-  - English: `Request an initial assessment`
-- unverified `15+ yrs` replaced with:
-  - Arabic: `تدريب شخصي`
-  - English: `Personal Coaching`
-- adaptive program card, supportive aquatic movement, and People of Determination public booking category removed
-- adaptive wording removed from public metadata and Person `knowsAbout`
-- unverified Organization `founder` relationship removed
-- public-claims sanitizer and direct contracts strengthened
+The model includes evidence-first rules, S0–S4 severity, version-specific receipts, rework SLA, design/video/content/product/accessibility/SEO/privacy/AI/lesson/adaptive/family-report gates, incident handling, and rollback rules.
 
-Verified Production deployment after PR #52:
+Quality approval does not authorize publishing, Production deployment, credentials, messaging, Analytics, legal/clinical claims, real sensitive data, Ads, billing, or spend.
 
-- Vercel project: `swim-fluent-uae-w532`
+### Issue #57 — 30-day bilingual content plan
+
+Status: `PLAN_COMPLETED_OWNER_REVIEW_AND_PRODUCTION_GATES_PENDING`
+
+- File: `docs/content/CONTENT_30_DAY_BILINGUAL_OPERATING_PLAN.md`
+- PR #97 reviewed head: `7aa63a8a4003e1d5f3e4b274d90e8420e75f1d56`
+- CI #360 passed.
+- Squash merge: `778e670062a53eda0807fb460c0f51c39b137369`
+- Issue #57 closed.
+
+The plan contains 30 dated Arabic/English editorial slots with objective, funnel category, caption, CTA, media brief, source requirement, UTM placeholder, approval state, dependency, success metric, and receipt requirement.
+
+Post 3 retains approved copy and Visual Brief, but its assets are not created, scheduled, or published. Days 2–30 remain drafts. No Batch A1 asset is considered reusable without the actual file/hash and human review evidence.
+
+### Issue #59 — Privacy, Consent, Analytics, and sensitive-data decisions
+
+Status: `DECISION_PACK_MERGED_PROTECTED_DECISIONS_AND_IMPLEMENTATION_PENDING`
+
+- File: `docs/privacy/PRIVACY_ANALYTICS_OWNER_DECISION_PACK.md`
+- PR #98 reviewed head: `395f5cb88b3a61624daa4fc22c514751a2348241`
+- CI #361 passed.
+- Squash merge: `94dcfdd17f914afe89e77379dfbea9cee83c7096`
+- Issue #59 remains open.
+- PR #46 remains a gated Draft.
+
+The merged pack preserves the existing Analytics Measurement Contract and records 23 owner/legal/provider decisions, including public identity, privacy contact, minors/guardians, sensitive booking fields, retention, Staff access, privacy requests, providers/backups, Consent UI, Privacy routes, CTA IDs, attribution, click IDs, Production-test policy, learner records, family reports, and vendors.
+
+No legal-compliance claim, Privacy route, Consent UI, browser storage, GA4/GTM, migration, Production booking/write, real sensitive record, messaging, publishing, Ads, billing, or spend is authorized.
+
+### Issues #58 and #79 — SEO, Local SEO, and conversion readiness
+
+Status: `EVIDENCE_PACK_MERGED_EXTERNAL_ACCOUNT_FIELD_AND_OWNER_FACTS_PENDING`
+
+- Files:
+  - `docs/seo/SEO_LOCAL_SEO_CONVERSION_EVIDENCE_PACK.md`
+  - `docs/seo/LOCAL_SEO_SOURCE_OF_TRUTH.md`
+  - `docs/seo/GBP_REVIEW_AND_RECOVERY_PACK.md`
+- PR #99 reviewed head: `abe76a3189f37e6547f73fb7d9ecee677731bb82`
+- CI #362 passed.
+- Squash merge: `539cf28d6d68cced0abd460e19e41138d8813bf4`
+- Issues #58 and #79 remain open.
+
+Verified and documented:
+
+- current Production deployment and public responses
+- Arabic/English titles, descriptions, canonical, hreflang, x-default, robots, Open Graph/Twitter, JSON-LD, sitemap, private-route boundaries, keyword map, internal links, NAP, GBP readiness, conversion gaps, and CWV evidence gaps
+- direct Production contains the corrected public claims
+- an external cache/index snapshot may still expose a superseded page
+- classification: `SEARCH_INDEX_CACHE_STALE_NOT_CURRENT_PRODUCTION`
+- stale People of Determation/Adaptive-related descriptions were removed from the Local SEO source
+- GBP target values are now separated from unverified live account state
+
+Still required:
+
+- Search Console account and URL Inspection evidence
+- GBP verification/current-field evidence
+- owner-confirmed hours, category state, address visibility, supported service areas, and canonical Facebook Page
+- field/mobile Core Web Vitals and full Preview form-friction/accessibility evidence
+- separately approved isolated implementation PRs
+
+No Search Console/GBP write, indexing request, appeal, external citation, review request, Production booking, Analytics activation, or new public fact occurred.
+
+## 3. Latest verified Production state
+
+Connected Vercel project:
+
+- Project: `swim-fluent-uae-w532`
 - Project ID: `prj_4wRrALwNzlU0msHb9pGOsExmNID0`
-- Deployment ID: `dpl_BBBZzpwUqQe6eg9jxWRifY8rmG9z`
+- Latest verified Production deployment: `dpl_FPm3xHCjoZ1f3jGggLHHZqYTjvGJ`
 - State: `READY`
-- Target: `production`
-- Git commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
+- Git commit: `539cf28d6d68cced0abd460e19e41138d8813bf4`
 - Aliases include `www.relaxfixuae.com` and `relaxfixuae.com`
-- Arabic `/` and English `/en` returned HTTP 200 in read-only verification.
-- The first booking-form step rendered without submitting data.
+- Arabic `/`: HTTP 200 in direct verification after the latest merge.
+- Current Arabic response contains approved metadata and public claims.
+- The recent PRs #96–#99 were documentation-only; normal Git integration created Production deployments, but no application code, database, booking, credential, Analytics, publishing, or messaging change was included.
 
-Approved Business Settings:
+Approved public wording remains:
 
-- `opening_offer_text_ar`: `طلب تقييم أولي`
-- `opening_offer_text_en`: `Request an initial assessment`
+- Arabic: `طلب تقييم أولي`
+- English: `Request an initial assessment`
+- Arabic trust label: `تدريب شخصي`
+- English trust label: `Personal Coaching`
 
-Independent static assessment copy:
+Current public services remain limited to:
 
-- Arabic: `مناقشة أولية لمعرفة نقطة البداية`
-- English: `Initial conversation to understand your starting point`
+- Learn to Swim / تعلم السباحة
+- Water Confidence / التغلب على خوف الماء
+- Technique & Performance / تطوير الأداء
 
-Do not publish or restore unapproved claims, including free/complimentary wording, unverified years of experience, unverified founder relationships, unverified credentials, Adaptive Swimming, Aquatic Rehabilitation, therapy, treatment, medical, diagnostic, or similar professional claims without separate evidence and approval.
+Do not restore or add free/complimentary wording, unverified years, founder relationships, credentials, Adaptive Swimming, People of Determation specialization, aquatic rehabilitation, therapy, treatment, diagnosis, medical claims, prices, testimonials, locations, hours, or guaranteed outcomes without separate evidence and approval.
 
-## 3. Governance and delegated authority
+## 4. Governance and protected boundaries
 
 ### Issue #54 — Program Board
 
 `PROGRAM_COORDINATION_AGENT`
 
-Coordinates dependencies, evidence, owner gates, and the Revenue-First tracks. Its open state is not evidence that every child agent is active.
+Coordinates dependencies, evidence, owner gates, and Revenue-First workstreams. Its open state does not mean every child task has an active agent.
 
 ### Issue #70 — Delegated authority
 
 Status: `DELEGATED_AUTHORITY_ACTIVE_WITH_PROTECTED_BOUNDARIES`
 
-The Main Project Director may proceed without repeated owner confirmation for routine, reversible, evidence-backed work, including:
+Routine, reversible, evidence-backed work may proceed without repeated owner confirmation, including:
 
-- issue and board maintenance
-- documentation, briefs, internal designs, schemas, templates, mock-data prototypes, and small isolated PRs
+- issue/board maintenance
+- documentation, briefs, schemas, templates, internal designs, and sample-data prototypes
 - factual repository cleanup and stale-document correction
 - read-only audits
-- evidence-backed QA and routine non-protected merges after required CI/QA
-- safe prioritization of independent work while another task is blocked
+- small isolated PRs
+- routine non-protected merges after required CI and factual/Quality review
+- safe independent work while another agent/tool is blocked
 
 Protected approval remains required for:
 
 - budgets, billing, paid spend, and stop-loss values
 - credentials and external writes
-- legal/regulatory acceptance and unverified public professional or medical claims
+- legal/regulatory acceptance
+- public professional, medical, credential, or outcome claims
 - real bookings or customer records
 - Production migrations, destructive database changes, migration repair, or manual migration-history edits
-- new identifiable lead, customer, child, family, disability, diagnosis, health, or safeguarding data
+- new identifiable lead, learner, child, guardian, family, disability, diagnosis, health, or safeguarding data
 - automatic outbound WhatsApp, email, or SMS
-- Production publishing, scheduling, Analytics activation, Ads, or other irreversible actions
+- Production publishing, scheduling, Analytics activation, Ads, or irreversible actions
 
-The director must challenge unsafe proposals and provide a safer alternative. Missing protected facts belong in the Owner Decision Queue; they must not be invented.
+Missing protected facts must remain in the Owner Decision Queue and must not be invented.
 
-## 4. Revenue-First tracks
+## 5. Revenue-First tracks
 
 ### Issue #56 — Batch A1
 
@@ -129,298 +202,243 @@ Status: `BATCH_A1_23_OF_23_MANIFEST_EVIDENCE_RECOVERED_VISUAL_AND_FONT_WEIGHT_PR
 Verified partial evidence:
 
 - 23/23 filenames and manifest entries recovered
-- automated records report 1080×1350, RTL, glyph, contrast, mobile, safe-zone, and CTA checks
+- automated records report dimensions, RTL, glyph, contrast, mobile, safe-zone, and CTA checks
 - source/rights record recovered
 
 Still blocked:
 
-- 23/23 individual PNGs or complete contact sheet for human Arabic visual review
-- Cairo Bold/SemiBold proof conflicts with the recovered Cairo Regular/weight 400 binary evidence
+- 23/23 actual PNGs or complete contact sheet for human Arabic review
+- Cairo Bold/SemiBold proof conflicts with recovered Cairo Regular/weight 400 evidence
 - final export review, finding log, and Owner Approval Pack are incomplete
 
-No Batch A2, scheduling, or publishing before Batch A1 closure unless an explicit exception is approved.
+No Batch A2, scheduling, or publishing before closure unless an explicit exception is approved.
 
-### Issue #57 — 30-day content plan
+### Issue #57 — Content planning
 
-Status: authorized for planning, not proven complete.
+Completed as a planning deliverable. Owner review, Quality approval, source/rights evidence, production, scheduling, and publication remain separate gates.
 
-Allowed now:
+### Issues #58/#79 — SEO and conversion
 
-- bilingual 30-day calendar
-- captions, CTAs, media briefs, UTM placeholders, dependencies, and owner-review queue
+Read-only evidence pack is merged. External account evidence, owner facts, mobile/field data, Privacy/Consent, and implementation remain open.
 
-Not allowed yet:
+### Issue #59 — Privacy/Consent/Analytics
 
-- Batch A2 production
-- scheduling
-- publishing
+Decision instrument is merged. Protected decisions and implementation remain open. Analytics stays off.
 
-### Issue #58 and Issue #79 — SEO, Local SEO, and conversion audit
-
-Status: foundations exist; read-only audit and implementation remain incomplete.
-
-Required evidence includes:
-
-- Production crawl and indexation
-- Arabic/English metadata matrix
-- keyword-to-page and internal-link map
-- structured-data validation
-- mobile/Core Web Vitals baseline
-- NAP, service-area, opening-hours, category, GBP, citation, and review-workflow decisions
-- bilingual booking/WhatsApp journey, trust, accessibility, CTA hierarchy, form labels, validation, sticky-header, and friction audit
-
-No Search Console or Google Business Profile write, invented business fact, Production booking, or Analytics activation.
-
-### Issue #59 and PR #46 — Privacy, Consent, Analytics, and attribution
-
-Status: durable measurement contract exists; Privacy/Consent decisions and implementation remain gated.
-
-Durable decisions:
+Durable Phase 1 measurement decisions:
 
 - GA4 via `gtag.js`
 - no GTM in Phase 1
 - feature flag off by default
+- affirmative consent before initialization/events
+- rejection must not block website or booking
 - no PII in Analytics
-- `booking_complete` is the primary conversion
-- `conversation_start`, `whatsapp_click`, and `call_click` are secondary conversions
-- consent rejection must not block the website or booking form
-
-No Production Analytics activation before Privacy and Consent approval. PR #46 is not legal/publication approval.
+- `booking_complete` primary conversion
+- `conversation_start`, `whatsapp_click`, and `call_click` secondary conversions
+- no click-ID storage in Phase 1
+- no Production test booking by default
 
 ### Issue #60 — Publishing readiness
 
-Status: partial contracts exist; Live readiness is unproven.
+Status: `PARTIAL_CONTRACTS_LIVE_READINESS_UNPROVEN`
 
-Required evidence:
+Still requires account ownership/linkage, permissions, credential custody, token lifecycle, publication receipts, idempotency, ambiguous-state handling, duplicate prevention, retry/safe-stop rules, and human approval.
 
-- account ownership and linkage
-- permissions and credential custody
-- token lifecycle
-- publication receipts
-- retry and ambiguous-state rules
-- duplicate prevention
-- human approval
-
-No credentials installation, scheduling, publishing, Boost, Ads, or spend.
+No credentials, scheduling, publishing, Boost, Ads, or spend.
 
 ### Issue #62 — Lead Operations and Automation
 
-Status: strategically approved; planning only; implementation not authorized.
+Status: `PLANNING_ONLY_IMPLEMENTATION_NOT_AUTHORIZED`
 
-Includes controlled bilingual chatbot, Staff handoff/CRM design, and n8n alerts/summaries. Privacy, Consent, security, human escalation, credentials, idempotency, duplicate prevention, audit, retry, and safe-stop gates remain mandatory.
+Chatbot, CRM/Staff handoff, n8n alerts/summaries, and follow-up remain gated by Privacy, Consent, security, human escalation, credentials, audit, idempotency, duplicate prevention, retry, and safe-stop rules.
 
-## 5. Replit Command Center
-
-The separate internal application is `Command Center Hub`. GitHub and Vercel remain authoritative for the customer website. Replit is not a replacement for the Production website or database.
-
-### Issue #69 — Command Center product architecture
-
-Status: architecture/product workstream active, but active execution requires evidence.
+## 6. Replit Command Center
 
 ### Issue #76 — Phase 1 persistent foundation
 
-Verified status on 2026-07-15:
+Current truthful status:
 
-`REPLIT_PHASE_1_PAUSED_NO_ACCEPTANCE_EVIDENCE`
+`REPLIT_PHASE_1_EXECUTION_RETRIED_PAUSED_NO_ACCEPTANCE_EVIDENCE`
 
-Evidence available:
+Verified on 2026-07-15:
 
-- the Replit app exists
-- the earlier browser prototype has 17 navigable pages, Arabic RTL/English toggle, responsive layout, and browser interactions
-- earlier limitations include sample data, browser localStorage, no verified authentication/RBAC/shared persistence/backups/full audit/tests, and placeholder external integrations
-- a direct Replit status query returned `phase: paused`
-- no completion report was returned
+- exact app: `Command Center Hub`
+- replId: `744ff594-34c9-410f-92d4-5287d6efdc41`
+- initial direct status query returned no report and `phase: paused`
+- an authorized safe Phase 1 completion request was sent
+- Replit briefly returned `phase: updating`
+- a post-request check again returned no report and `phase: paused`
+- app `timeUpdated` remained `2026-07-15T05:00:15.462Z`
+- no running Preview, schema/API inventory, screen-to-endpoint matrix, persistence proof, audit-event proof, unit/API/UI/e2e results, accessibility/mobile report, limitations report, or rollback evidence was delivered
 
-No Phase 1 completion or Production-readiness claim is permitted.
+Issue #76 remains open and blocked. Do not claim Phase 1 complete or Production-ready.
 
-Required before acceptance:
+Acceptance still requires:
 
-- running Preview evidence
+- running Preview
 - schema and endpoint inventory
 - screen-to-endpoint matrix
-- persistence proof across reload and another session
-- proof localStorage is not the authoritative project-data store
-- audit-event proof for mutations
-- passing unit/API/UI/e2e tests for critical lifecycles
-- malformed-input validation evidence
-- Arabic/English, RTL, accessibility, mobile, loading/empty/error-state review
+- persistence across reload and another session
+- proof localStorage is not authoritative project storage
+- audit events for every mutation
+- passing critical unit/API/UI/e2e tests
+- malformed-input validation
+- Arabic/English, RTL/LTR, accessibility, mobile, loading/empty/error review
 - known limitations and rollback note
 
 ### Issue #77 — Phase 2 security
 
 Status: `PHASE_2_PLANNED_BLOCKED_BY_PHASE_1_ACCEPTANCE`
 
-Authentication, roles, least privilege, secure sessions, recovery, server authorization, and negative-access tests must not start as implementation until #76 passes.
+Do not start implementation before #76 acceptance.
 
 ### Issue #78 — reliability and hardening
 
 Status: `RELIABILITY_PLANNING_AUTHORIZED_IMPLEMENTATION_GATED`
 
-Planning may continue, but backup/restore, observability, performance, incident readiness, and production-readiness claims remain gated by #76 and #77.
+Planning may continue; Production-readiness claims remain gated by #76 and #77.
 
-## 6. Complete Digital Ecosystem workstreams
+## 7. Complete Digital Ecosystem
 
-PR #89 documented the durable architecture. Issues remain open according to their exact states; open does not equal active autonomous execution.
+### Issue #80
 
-### Issue #80 — Complete Digital Ecosystem architecture
-
-Status: architecture is documented on `main`; broader execution mapping remains an open workstream.
+Architecture documented on `main`; broader execution mapping remains open.
 
 ### Issue #81 — Aquatics Evidence Center
 
 Status: `INITIAL_OFFICIAL_EVIDENCE_REGISTRY_STARTED`
 
-Initial official entries were recorded for:
-
-- STA/Safety Training Awards swimming-teaching and aquatics qualifications
-- STA Water Safety Code and education
-- STA online-learning directory and listed Autism Swim modules
-
-Current limitation: these entries do not yet prove course prerequisites, cost, assessment, validity, UAE recognition, clinical scope, or effectiveness. Named-course recommendations require the dedicated current certification audit and official/primary sources.
+Initial official entries cover STA/Safety Training Awards qualifications, Water Safety Code/education, online learning, and listed Autism Swim modules. They do not yet establish current prerequisites, cost, assessment, validity, UAE recognition, clinical scope, or effectiveness. Named-course recommendations require the dedicated current official-source audit.
 
 ### Issues #82–#88
 
-These are authorized product/design workstreams, not verified completed implementations:
+Authorized product/design workstreams, not verified implementations:
 
-- #82 AI Swimming Education Assistant — design authorized
-- #83 Adaptive Aquatics Education Assistant — design authorized
-- #84 aquatic exercise/rehabilitation scope and referral governance — authorized
-- #85 Knowledge Base and Decision Memory — architecture authorized
-- #86 Social Media Intelligence Center — architecture authorized
-- #87 Owner Intelligence Dashboard and Notification Center — architecture authorized
-- #88 Learner Progress and Family Plan System — architecture authorized
+- #82 AI Swimming Education Assistant
+- #83 Adaptive Aquatics Education Assistant
+- #84 aquatic exercise/rehabilitation scope and referral governance
+- #85 Knowledge Base and Decision Memory
+- #86 Social Media Intelligence Center
+- #87 Owner Intelligence Dashboard and Notification Center
+- #88 Learner Progress and Family Plan System
 
-No issue in #82–#88 may be described as implemented without a reviewed artifact, commit/PR, tests, or equivalent evidence.
+No item may be described as implemented without a reviewed artifact, commit/PR, tests, or equivalent evidence.
 
 ### Issue #91 — Smart Media Library
 
 Status: `SMART_MEDIA_LIBRARY_STRUCTURE_CREATED_WORKFLOW_AUTHORIZED`
 
-Verified:
-
-- Google Drive canonical working root exists: `Relax Fix Growth OS - Media Library`
-- 12 bilingual folders exist from `00_UPLOAD_INBOX - صندوق الرفع` through `11_ARCHIVE - الارشيف`
-- Google Drive is the canonical working media and approval source
-- Dropbox was inventoried read-only and remains an intake/archive source until an exact mutation plan is approved
-- no Dropbox moves, copies, or deletions were performed
+- Google Drive canonical root exists: `Relax Fix Growth OS - Media Library`
+- 12 bilingual folders exist
+- Google Drive is the canonical working media/approval source
+- Dropbox was inventoried read-only and remains intake/archive pending an approved mutation plan
 - PR #93 merged the operating model
 
-No facial recognition, disability/diagnosis/health inference, automatic moving/deleting, or unapproved child-sensitive/certificate publication.
+No facial recognition, disability/diagnosis/health inference, automatic move/delete, or unapproved child-sensitive/certificate publication.
 
 ### Issue #92 — Coach Ayman Mobile App
 
 Status: `MOBILE_APP_ARCHITECTURE_AUTHORIZED_IMPLEMENTATION_GATED`
 
-Phase M0 product/UX architecture may proceed. Production mobile coding is blocked until Command Center Phase 1 acceptance and security architecture. The mobile app must not create a duplicate source of truth.
+M0 product/UX architecture may proceed. Production mobile coding is blocked until Command Center Phase 1 acceptance and security architecture. The app must not create a duplicate source of truth.
 
-## 7. Data, safety, and clinical-scope default
+## 8. Sensitive-data and AI safety default
 
 Until Privacy/Consent, security, role access, retention, correction, deletion, sharing, vendor, safeguarding, and incident rules are approved:
 
-- do not store real identifiable learner, child, family, disability, diagnosis, health, safeguarding, lead, or customer data
+- do not store real identifiable learner, child, guardian, family, disability, diagnosis, health, safeguarding, lead, or customer data
 - use anonymous codes, fictional/sample records, schemas, templates, and evaluation cases only
-- clearly distinguish sample records from verified project or business data
+- distinguish sample records from verified project/business data
 
-AI or product recommendations must be evidence-referenced, show assumptions and limitations, remain coach-editable, and require coach review. The system must not diagnose, prescribe clinical treatment, independently design clinician-supervised rehabilitation, guarantee outcomes, or recommend forced submersion, forced eye contact, coercive exposure, punishment, restraint, unsafe breath-holding, or unsupervised child instruction.
+AI or product recommendations must be evidence-referenced, show limitations, remain coach-editable, and require coach review.
 
-## 8. Quality Department
+The system must not diagnose, prescribe treatment, independently design clinician-supervised rehabilitation, guarantee outcomes, or recommend forced submersion, forced eye contact, coercive exposure, punishment, restraint, unsafe breath-holding, or unsupervised child instruction.
 
-### Issue #71
+## 9. Repository hygiene
 
-Status: active operating-model and governance workstream; no completion claim without deliverables.
+- PR #51 closed without merge as superseded; do not use it as current Handoff.
+- PR #28 closed without merge as superseded by #94.
+- PR #49 closed without merge as superseded by #52.
+- PR #46 remains gated Draft for Privacy/Consent copy and owner/legal decisions.
+- PR #36 remains gated Draft for International Phone Phase B and must not be merged as-is.
+- Issues #66 and #67 remain closed as superseded by #69 and #68.
 
-Required quality system includes:
-
-- severity model
-- design, video, content, website, and product checklists
-- evidence receipts
-- approval/rejection/rework states
-- rework SLA
-- Arabic/English, rights, factual-claims, accessibility, privacy, safety, and source checks
-
-QA approval does not authorize publishing, Production deployment, credentials, or protected writes.
-
-## 9. Approved execution order
-
-The durable Revenue-First order remains:
-
-1. Close Batch A1.
-2. SEO.
-3. Local SEO.
-4. Analytics and attribution.
-5. Publishing readiness.
-6. Lead Operations and Automation planning; implementation gated.
-7. Organic Pilot after all gates.
-8. Google Ads after conversion proof.
-9. Meta Ads later.
-
-For the current continuation session, the immediate operational sequence is:
-
-1. Complete Issue #90 through a narrow Handoff-only PR, CI, factual review, and owner-controlled merge.
-2. Resolve Issue #76 truthfully: resume/finish Replit Phase 1 and collect all acceptance evidence, or keep it blocked/paused with a documented evidence gap. Do not close it merely because it is open or assigned.
-3. Continue content priorities in #57 without Batch A2 production or publishing.
-4. Continue SEO/Local SEO and conversion-readiness work in #58 and #79 through read-only evidence and isolated implementation proposals.
-5. Close Privacy/Consent decisions in #59/PR #46 before Analytics activation or sensitive data.
-6. Continue Quality governance in #71 and apply it to every new artifact.
-7. Continue #81, #91, and architecture work only where it does not delay current revenue foundations or cross protected gates.
-
-The immediate sequence above does not waive Batch A1, Privacy/Consent, security, publishing, financial, or Production gates.
+Do not mix unrelated workstreams in one PR.
 
 ## 10. Current blockers
 
-- Batch A1 human visual review and font-weight proof are incomplete.
-- Replit Phase 1 is paused with no acceptance evidence.
-- Phase 2 security and reliability implementation are gated.
-- Local SEO factual values and GBP decisions are incomplete.
-- Privacy/Consent and owner/legal decisions remain open.
-- Publishing account and Live receipt evidence are incomplete.
-- No real learner/child/health data controls are approved.
-- Organic Pilot gates are not satisfied.
-- Conversion proof does not exist for paid advertising.
-- International Phone Production rollout remains deferred.
-- Production migration history is not approved for `db push`, repair, or manual editing.
+- Batch A1 actual visual evidence and font-weight proof
+- Replit Phase 1 paused with no acceptance evidence
+- Replit Phase 2 security and reliability implementation gated
+- Search Console and GBP account evidence
+- business hours, live category state, address visibility, extra service-area facts, and canonical Facebook Page
+- mobile/field CWV and full Preview form-friction/accessibility evidence
+- Privacy/Consent owner/legal/provider decisions
+- PR #46 final correction/review/approval
+- publishing account/credential/receipt evidence
+- no approved real learner/child/health data controls
+- Organic Pilot gates not satisfied
+- conversion proof absent for paid advertising
+- International Phone Production rollout deferred
+- Production migration history not approved for `db push`, repair, or manual editing
 
-## 11. Mandatory safety rules
+## 11. Approved next execution order
+
+1. **Batch A1 closure:** recover actual PNG/contact-sheet evidence, resolve Cairo weight contradiction, complete human review and Owner Approval Pack.
+2. **Issue #58/#79 external evidence:** obtain read-only Search Console, GBP, mobile/field performance, and Preview form-friction/accessibility evidence; do not write externally.
+3. **Issue #59 owner decisions:** record exact owner/legal/provider answers in the merged decision pack; correct/review PR #46 without treating copy QA as legal approval.
+4. **Content owner review:** review the 30-day plan; keep Days 2–30 as drafts; do not create Batch A2 before the Batch A1 gate.
+5. **Post 3:** asset production only after a separate authorization using the canonical approved Visual Brief and approved source/rights evidence.
+6. **Quality adoption:** use the merged Quality model and version/hash receipts for every new artifact.
+7. **Replit #76:** accept only after the complete evidence bundle; while paused, continue independent safe repository work.
+8. **Publishing readiness:** collect account, permissions, token lifecycle, idempotency, retry, human-approval, and publication-receipt evidence before any external write.
+9. **Organic Pilot:** only after content, Quality, Privacy/Consent, SEO, Analytics, publishing, and receipt gates pass.
+10. **Google Ads:** only after conversion proof, budget ceiling, stop-loss, and explicit approval.
+11. **Meta Ads:** later, after Google learning and separate approval.
+
+## 12. Mandatory prohibitions
 
 - No automatic merge.
 - No Production migration without explicit approval and an approved plan.
 - No `supabase db push` or `supabase migration repair` against Production.
-- No manual editing of Production migration history.
-- No Production test booking or customer-record creation without an approved test policy.
+- No manual Production migration-history editing.
+- No Production test booking/customer record without an approved test policy.
 - No Production-writing workflow without explicit approval.
 - No automatic feature-flag activation.
 - No Batch A2 before Batch A1 closure unless explicitly approved.
-- No publishing or scheduling without explicit gate, human approval, and evidence.
+- No publishing/scheduling without explicit gate, human approval, and evidence.
 - No automatic outbound chatbot, WhatsApp, email, or SMS.
+- No Search Console/GBP write, indexing request, citation submission, review request, or appeal without authorization.
 - No Ads, billing, conversion import, or spend without a budget ceiling, stop-loss rules, and separate approval.
-- No unapproved public claims, credentials, medical/therapy/rehabilitation claims, or invented business facts.
-- No PII in Analytics or advertising systems.
+- No unapproved public claim, credential, medical/therapy/rehabilitation claim, price, offer, testimonial, address, hours, or location.
+- No PII or sensitive data in Analytics or advertising systems.
 - No credentials, tokens, private links, or secrets in public records or browser code.
-- No mixing unrelated workstreams in one PR.
-- Do not describe contract-tested or assigned work as Live, active, complete, or Production-ready without matching evidence.
+- Do not describe assigned, planned, contract-tested, Preview-tested, or paused work as Live, complete, or Production-ready without matching evidence.
 
-## 12. Owner Decision Queue
+## 13. Owner Decision Queue format
 
-Source: `docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`
+Every protected decision entry must include:
 
-Every decision entry must contain:
-
-- decision
+- decision/question
 - recommendation
 - alternatives
 - risks/costs
 - safe default while unanswered
 - dependency/deadline
 - impact of delay
+- owner answer
+- supporting evidence
+- approver/date
 
-Silence does not authorize Production, migrations, credentials, real data, Analytics activation, publishing, scheduling, messaging, Ads, billing, spend, or merge.
+Silence does not authorize Production, migrations, credentials, real data, Analytics activation, publishing, scheduling, messaging, Ads, billing, spend, external writes, or merge.
 
-## 13. Handoff maintenance
+## 14. Handoff maintenance
 
 At the end of every approved major phase:
 
-1. Update `PROJECT_HANDOFF.md` with verified facts, commits, PRs, tests, Preview/Production distinctions, blockers, and next approved action.
-2. Update `PROJECT_STRATEGY_HANDOFF.md` only when a durable approved strategy decision changes.
-3. Record evidence and distinguish assigned, planned, contract-tested, Preview-tested, and Production-verified states.
-4. Ensure a new agent can continue without prior chat history.
-5. Never use an open Issue as evidence that an agent is working or has delivered.
+1. update `PROJECT_HANDOFF.md` with verified Issues, PRs, commits, CI, Preview/Production distinctions, direct evidence, blockers, and next approved action;
+2. update `PROJECT_STRATEGY_HANDOFF.md` only when a durable approved strategy changes;
+3. distinguish assigned, planned, documented, contract-tested, Preview-tested, Production-deployed, and Production-verified states;
+4. preserve protected gates and do not invent missing facts;
+5. ensure the next agent can continue without prior chat history;
+6. never use an open Issue as evidence that an agent is working or has delivered.
