@@ -23,7 +23,8 @@ This file is the operational source of truth for continuing the existing Relax F
 - Issue #63: **Closed / completed**.
 - Issue #66: closed as superseded by Issue #69.
 - Issue #67: closed as superseded by Issue #68.
-- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of PR #52, PR #65, or PR #72.
+- Issue #73: **Completed by the isolated post-PR #65 Handoff correction represented in this file**; close it after merge verification.
+- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of PR #52, PR #65, PR #72, or this Handoff correction.
 
 ## 2. PR #52 completed scope and evidence
 
@@ -327,7 +328,9 @@ QA approval does not itself authorize publishing or Production deployment.
 
 `DOCUMENTATION_HANDOFF_AGENT`
 
-This isolated documentation task corrects the stale pre-merge PR #65 wording and current board references. It changes no application code or durable strategy.
+Status: **Completed by this isolated Handoff correction**. Close the Issue after merge and CI verification.
+
+This task changes no application code or durable strategy.
 
 ## 6. Approved execution order
 
@@ -561,13 +564,12 @@ Silence does not authorize Production, migration, credentials, Analytics activat
 
 ## 12. Next approved actions
 
-1. Complete Issue #73 through exact-diff review, CI, and documentation-only merge.
-2. Recover/open the actual Batch A1 final-correction PNG package or contact sheet, inspect 23/23, and resolve the Cairo weight contradiction.
-3. Continue the 30-day content plan in Issue #57 without Batch A2 production or publishing.
-4. Continue read-only SEO, Local SEO, Privacy/Analytics, publishing-readiness, repository-hygiene, and Lead Operations work in Issues #58–#62.
-5. Continue the integrated 90-day strategy, Replit Command Center, and Quality Department work in Issues #68, #69, and #71.
-6. Bring only consolidated protected decisions and evidence-backed approval packs to the owner.
-7. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
+1. Recover/open the actual Batch A1 final-correction PNG package or contact sheet, inspect 23/23, and resolve the Cairo weight contradiction.
+2. Continue the 30-day content plan in Issue #57 without Batch A2 production or publishing.
+3. Continue read-only SEO, Local SEO, Privacy/Analytics, publishing-readiness, repository-hygiene, and Lead Operations work in Issues #58–#62.
+4. Continue the integrated 90-day strategy, Replit Command Center, and Quality Department work in Issues #68, #69, and #71.
+5. Bring only consolidated protected decisions and evidence-backed approval packs to the owner.
+6. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
 
 ## 13. Exact references
 
@@ -584,8 +586,8 @@ Silence does not authorize Production, migration, credentials, Analytics activat
 - PR #28: `https://github.com/aymanmahrous/swim-fluent-uae/pull/28`
 - Issue #43: `https://github.com/aymanmahrous/swim-fluent-uae/issues/43`
 - Program Board: Issue #54
-- Active execution tasks: Issues #56–#62, #68–#71, and #73
-- Completed execution tasks: Issues #55, #63, and #64
+- Active execution tasks: Issues #56–#62 and #68–#71
+- Completed execution tasks: Issues #55, #63, #64, #66, #67, and #73
 
 ## 14. Handoff maintenance
 
