@@ -14,12 +14,32 @@ This document defines the public Local SEO values that may be used in future rev
 - Display phone: **+971 55 137 8660**
 - Canonical website: **https://www.relaxfixuae.com/**
 - Primary service area: **Abu Dhabi, United Arab Emirates**
-- Business model: **Service-area swimming and water-confidence coaching**
-- Public street address: **Do not publish unless explicitly approved by the owner**
+- Business model: **Service-area swimming and water-confidence coaching using owner-approved coaching locations**
+- Public street address: **Do not publish an unverified street-address string; use the approved Maps links until exact account/location fields are evidenced and reviewed**
 - Target primary category: **Swimming instructor / مدرس سباحة**
 - Live category/Google acceptance: **ACCOUNT_EVIDENCE_REQUIRED**
-- Business hours: **OWNER_DECISION_REQUIRED**
-- Prohibited hours assumption: **Do not publish Open 24 hours / مفتوح على مدار الساعة without an explicit owner decision**
+- Business/coaching availability:
+  - **Saturday and Sunday: 10:00 AM–10:00 PM**
+  - **Monday through Friday: 4:00 PM–9:00 PM**
+- Hours meaning: **Relax Fix UAE coaching availability at the approved locations; do not describe these as school administrative or campus opening hours**
+- Prohibited hours assumption: **Do not publish Open 24 hours / مفتوح على مدار الساعة**
+
+## Owner-approved coaching locations
+
+The owner approved these four operating locations on 2026-07-15:
+
+1. **ICS Al Najda**
+   - https://maps.app.goo.gl/XL9weMpSJcpVDNCV6?g_st=ac
+2. **ICS Al Falah**
+   - https://maps.app.goo.gl/b5LULVrArcD8BwhF9?g_st=ac
+3. **ICS Khalifa**
+   - https://maps.app.goo.gl/cbWqzLqDSYXmEFyS9?g_st=ac
+4. **ICS Al Mushrif**
+   - https://maps.app.goo.gl/Rgu2vKH7JDigAQQx6?g_st=ac
+
+Evidence receipt: `docs/seo/OWNER_APPROVED_LOCATIONS_AND_HOURS_RECEIPT_2026-07-15.md`.
+
+These links and location labels are owner-provided facts. Exact street-address strings, coordinates, live GBP fields, verification status, category state, and public address-visibility settings remain `ACCOUNT_EVIDENCE_REQUIRED` before external implementation.
 
 ## Approved descriptions
 
@@ -35,11 +55,11 @@ Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman.
 
 ### Long — English
 
-Relax Fix UAE provides swimming and water-confidence coaching in Abu Dhabi with Coach Ayman. Coaching begins with a clear discussion of previous experience, current comfort in the water, and the learner’s goal. Current public service descriptions are limited to learn-to-swim foundations, water confidence, and technique or performance coaching. The business operates as a service-area provider and does not publish a street address unless the owner explicitly approves it.
+Relax Fix UAE provides swimming and water-confidence coaching in Abu Dhabi with Coach Ayman. Coaching begins with a clear discussion of previous experience, current comfort in the water, and the learner’s goal. Current public service descriptions are limited to learn-to-swim foundations, water confidence, and technique or performance coaching. Coaching is available at the owner-approved ICS Al Najda, ICS Al Falah, ICS Khalifa, and ICS Al Mushrif locations. Exact street-address text and live Google Business Profile fields must remain evidence-gated.
 
 ### Long — Arabic
 
-تقدم Relax Fix UAE تدريب السباحة والثقة المائية في أبوظبي مع كوتش أيمن. تبدأ مناقشة التدريب بفهم الخبرة السابقة، ومستوى الراحة الحالي داخل الماء، والهدف الذي يرغب المتدرب في العمل عليه. تقتصر أوصاف الخدمات العامة الحالية على تأسيس تعلم السباحة، وبناء الثقة داخل الماء، وتحسين التقنية أو الأداء. يعمل النشاط كمقدم خدمة ضمن نطاق جغرافي، ولا يُنشر عنوان شارع إلا بموافقة صريحة من المالك.
+تقدم Relax Fix UAE تدريب السباحة والثقة المائية في أبوظبي مع كوتش أيمن. تبدأ مناقشة التدريب بفهم الخبرة السابقة، ومستوى الراحة الحالي داخل الماء، والهدف الذي يرغب المتدرب في العمل عليه. تقتصر أوصاف الخدمات العامة الحالية على تأسيس تعلم السباحة، وبناء الثقة داخل الماء، وتحسين التقنية أو الأداء. يتوفر التدريب في المواقع المعتمدة من المالك: ICS Al Najda وICS Al Falah وICS Khalifa وICS Al Mushrif. تظل صياغة عناوين الشوارع الدقيقة وحقول Google Business Profile الفعلية خاضعة لدليل الحساب والمراجعة.
 
 ## Public-claims boundary
 
@@ -49,7 +69,7 @@ Do not publish or target Local SEO content that states or implies any of the fol
 - People of Determination as a current public booking category or public service specialization
 - Aquatic Rehabilitation, aquatic therapy, treatment, diagnosis, medical care, or clinician-supervised services
 - unverified qualifications, certificates, founder relationships, years of experience, prices, free/complimentary offers, testimonials, or outcomes
-- a specific pool, street address, service area, or opening hours that the owner has not confirmed
+- an exact street-address string, coordinates, additional service area, category, or opening-hours interpretation that is not supported by owner/account evidence
 
 Internal evidence/research workstreams do not automatically become public service claims.
 
@@ -69,11 +89,11 @@ The Facebook Post 1 receipt must not be used as a substitute for the canonical F
 - Use the canonical HTTPS + www website URL.
 - Use the same E.164 phone number in website, GBP, social bios, directories, and structured data.
 - Use Abu Dhabi as the approved broad primary service area.
-- Keep the street address hidden unless the owner approves publication.
+- Use the four owner-approved ICS location labels and Maps links exactly as recorded above.
+- Keep exact street-address strings and coordinates gated until account/location evidence is captured.
 - Use Swimming instructor / مدرس سباحة only as the target category until live Google acceptance/current state is evidenced.
 - Remove or correct old design-agency descriptions and categories.
-- Keep business hours as **OWNER_DECISION_REQUIRED** until the owner supplies accurate hours.
-- Do not assume or publish 24-hour operation.
+- Use the owner-approved coaching availability hours; do not convert them to 24-hour operation or school opening hours.
 - Use the official Instagram profile URL exactly as recorded above.
 - Do not use an individual Facebook post URL as the official Facebook Page URL.
 - Compare current Production responses separately from search-engine cache/index snapshots.
@@ -92,6 +112,7 @@ Do not use:
 - `Open 24 hours`
 - `مفتوح على مدار الساعة`
 - any old description that includes removed Adaptive Aquatics, People of Determination, rehabilitation, or therapy claims
+- any unverified street-address string, coordinates, category, or school-hours claim
 
 ## Evidence rule
 
