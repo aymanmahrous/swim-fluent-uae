@@ -27,7 +27,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  E2E_BASE_URL: https://swim-fluent-uae-w532-3xid5nr1v-swimmingayman-8492s-projects.vercel.app
+  E2E_BASE_URL: https://swim-fluent-uae-w532.vercel.app
   E2E_ADMIN_URL: https://nmzxrjdxvmmzzmajrskm.supabase.co/functions/v1/ai-media-e2e-admin
   E2E_CREDENTIALS_PATH: /tmp/relax-fix-ai-media-e2e.json
 
