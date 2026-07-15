@@ -15,7 +15,8 @@ This file is the operational source of truth for continuing the existing Relax F
 - PR #52 CI: run #333, completed successfully.
 - PR #52 authoritative visual-evidence workflow: final run #23, completed successfully.
 - PR #53: temporary visual-evidence tooling PR, closed without merge.
-- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, or Ads action was part of PR #52.
+- PR #65: open Draft documentation-only Handoff synchronization PR.
+- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, or Ads action was part of PR #52 or PR #65.
 
 ## 2. PR #52 completed scope and evidence
 
@@ -62,15 +63,57 @@ Final PR #52 QA state before merge:
 
 ## 3. Current Production state
 
-The last owner-approved Production verification before the PR #52 merge confirmed:
+### PR #52 post-merge Production verification — completed
 
-- Vercel Production was Ready / Success.
-- Arabic and English public pages loaded.
-- The booking form opened and displayed the first step.
-- No Production test booking was submitted.
-- The Production Business Settings free-claim conflict was corrected and verified.
+Read-only verification completed after merge.
 
-The approved Business Settings values remain:
+Vercel evidence:
+
+- Project: `swim-fluent-uae-w532`
+- Project ID: `prj_4wRrALwNzlU0msHb9pGOsExmNID0`
+- Deployment ID: `dpl_BBBZzpwUqQe6eg9jxWRifY8rmG9z`
+- State: `READY`
+- Target: `production`
+- Git source branch: `main`
+- Git commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
+- Production aliases include `www.relaxfixuae.com` and `relaxfixuae.com`.
+
+Read-only public verification used cache-busting requests and confirmed fresh `x-vercel-cache: MISS` responses:
+
+- `https://www.relaxfixuae.com/` — HTTP 200
+- `https://www.relaxfixuae.com/en` — HTTP 200
+
+Arabic Production evidence:
+
+- `تدريب شخصي` appears.
+- `طلب تقييم أولي` appears.
+- `مناقشة أولية لمعرفة نقطة البداية` appears.
+- only three approved program cards appear.
+- the adaptive program and supportive movement sections are absent.
+- the first booking-form step renders without submitting data.
+
+English Production evidence:
+
+- `Personal Coaching` appears.
+- `Request an initial assessment` appears.
+- `Initial conversation to understand your starting point` appears.
+- only three approved program cards appear.
+- `Adaptive Aquatic Coaching`, `Supportive Aquatic Movement`, and People of Determination sections are absent.
+- the first booking-form step renders without submitting data.
+
+Metadata and structured-data evidence:
+
+- approved Arabic and English descriptions render.
+- Person `knowsAbout` is limited to swimming coaching, water confidence, and swimming technique.
+- the unverified Organization `founder` relationship is absent.
+
+No Production booking, database mutation, migration, Analytics event, publishing action, chatbot/n8n action, or Ads action was performed.
+
+Final Production verification state:
+
+`PR52_PRODUCTION_READ_ONLY_VERIFIED`
+
+### Approved Business Settings values
 
 - `opening_offer_text_ar`: `طلب تقييم أولي`
 - `opening_offer_text_en`: `Request an initial assessment`
@@ -79,21 +122,6 @@ Independent static assessment copy remains:
 
 - Arabic: `مناقشة أولية لمعرفة نقطة البداية`
 - English: `Initial conversation to understand your starting point`
-
-### Post-merge verification gate
-
-A fresh read-only Production verification of the PR #52 merge commit is still required before claiming that the merged visual/content state is Production-verified.
-
-Required checks:
-
-- Production deployment corresponds to the expected merge commit or approved descendant.
-- `/` and `/en` return successfully.
-- Approved Arabic and English CTA/copy appear.
-- Removed experience, adaptive, rehabilitation, therapy, founder, and related claims remain absent.
-- Booking form opens without submitting a booking.
-- No unexpected Console or critical network error is observed.
-
-Do not perform a Production booking or Production write during this verification.
 
 ## 4. Approved public-copy boundaries
 
@@ -122,7 +150,7 @@ Do not publish or restore unapproved claims without separate explicit approval, 
 
 ## 5. Active program board and agent tasks
 
-The owner approved the remaining execution plan and the following workstreams on 2026-07-15.
+The owner approved the remaining execution plan and following workstreams on 2026-07-15.
 
 ### Issue #54 — Program Board
 
@@ -134,7 +162,7 @@ Coordinates the approved `REVENUE-FIRST PARALLEL LAUNCH` tracks, dependencies, e
 
 `RELEASE_QA_AGENT`
 
-PR #52 is now merged. Remaining work is post-merge read-only verification and Handoff synchronization.
+PR #52 is merged and Production read-only verification is complete. Remaining release work is documentation synchronization and closure reporting.
 
 ### Issue #56 — Batch A1 closure
 
@@ -233,7 +261,7 @@ Each decision must include recommendation, alternatives, risk, safe default, dep
 
 `DOCUMENTATION_HANDOFF_AGENT`
 
-Preparing a documentation-only Draft PR to synchronize both Handoff files after PR #52 and the newly approved durable strategy decisions.
+Draft PR #65 is open with updates to `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md` only.
 
 ## 6. Approved execution order
 
@@ -326,16 +354,23 @@ Status: **Later than Google Ads** and not approved to launch.
 
 ## 8. Open PRs and deferred backlog
 
-### PR #51 — Handoff refresh
+### PR #65 — Handoff synchronization
 
 - Open Draft.
-- Predates the PR #52 final evidence and merge.
+- Exactly two documentation files changed.
+- Records PR #52 merge/Production evidence and the newly approved strategy decisions.
+- Do not merge automatically.
+
+### PR #51 — earlier Handoff refresh
+
+- Open Draft.
+- Predates PR #52 final evidence, merge, Production verification, and the newly approved strategy decisions.
 - Requires triage; do not merge in its current stale state without review.
 
 ### PR #49 — Production prohibited-claims regression
 
 - Open Draft.
-- Likely overlapping or superseded by the broader merged PR #52.
+- Likely overlapping or superseded by the broader merged and Production-verified PR #52.
 - Requires formal comparison and owner-approved disposition.
 
 ### PR #46 — Privacy and Consent copy pack
@@ -362,8 +397,7 @@ Do not mix with marketing or Production migration work.
 
 ## 9. Current blockers
 
-- Fresh post-merge read-only Production verification for PR #52 is pending.
-- Handoff synchronization Draft PR is pending review.
+- Handoff synchronization Draft PR #65 is pending CI/review and explicit merge approval.
 - Batch A1 closure evidence is incomplete.
 - Local SEO factual decisions are incomplete.
 - Privacy/Consent and Analytics owner decisions remain open.
@@ -373,6 +407,8 @@ Do not mix with marketing or Production migration work.
 - Lead Operations and Automation is planning-only; implementation gates remain closed.
 - International Phone Production rollout remains blocked and deferred.
 - Production migration history is not approved for `db push` or repair.
+
+PR #52 Production verification is complete and is no longer a blocker.
 
 ## 10. Mandatory safety rules
 
@@ -412,9 +448,9 @@ Silence does not authorize merge, Production, migration, credentials, Analytics 
 
 ## 12. Next approved actions
 
-1. Complete read-only post-merge Production verification for PR #52.
-2. Complete the Handoff synchronization Draft PR.
-3. Continue the parallel documentation/read-only tasks in Issues #56–#64.
+1. Complete CI/review for documentation-only PR #65.
+2. Continue the parallel documentation/read-only tasks in Issues #56–#64.
+3. Produce the first Revenue Readiness Scorecard and Owner Decision Queue.
 4. Bring only consolidated owner decisions and evidence-backed approval packs to the owner.
 5. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
 
@@ -422,6 +458,7 @@ Silence does not authorize merge, Production, migration, credentials, Analytics 
 
 - PR #52: `https://github.com/aymanmahrous/swim-fluent-uae/pull/52`
 - PR #52 merge commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
+- PR #65: `https://github.com/aymanmahrous/swim-fluent-uae/pull/65`
 - PR #51: `https://github.com/aymanmahrous/swim-fluent-uae/pull/51`
 - PR #49: `https://github.com/aymanmahrous/swim-fluent-uae/pull/49`
 - PR #46: `https://github.com/aymanmahrous/swim-fluent-uae/pull/46`
