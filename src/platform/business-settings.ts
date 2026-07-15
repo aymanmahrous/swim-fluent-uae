@@ -48,7 +48,7 @@ const approvedOpeningOffer = {
 } as const;
 
 const unapprovedFreeClaimPattern =
-  /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|free\s+(?:assessment|consultation|session)|complimentary(?:\s+(?:assessment|consultation|session|first assessment))?|no[-\s]?cost)/iu;
+  /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|\bfree\b(?:\s+(?:assessment|consultation|session|first assessment))?|\bcomplimentary\b(?:\s+(?:assessment|consultation|session|first assessment))?|\bno(?:-|\s+)cost\b)/iu;
 
 export function sanitizePublicOpeningOffer(
   value: string | null,

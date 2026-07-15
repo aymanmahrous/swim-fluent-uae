@@ -64,7 +64,7 @@ const publicHomeBlobHash = createHash("sha1")
   .update(`blob ${publicHome.byteLength}\0`)
   .update(publicHome)
   .digest("hex");
-if (publicHomeBlobHash !== "302c37eba8e0a5b1a608e0e02f6332db27729cbf") {
+if (publicHomeBlobHash !== "6ee7463c4ee42d1946ea0dc7f7c66c314572ba55") {
   throw new Error(`public home byte preservation: unexpected blob ${publicHomeBlobHash}`);
 }
 const publicHomeText = publicHome.toString("utf8");

@@ -15,7 +15,6 @@ import {
   Star,
   Target,
   UserRound,
-  Users,
   Waves,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -41,7 +40,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Premium swimming and water-confidence coaching in Abu Dhabi with Coach Ayman. Private, semi-private and adaptive aquatic coaching.",
+          "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman, with a clear assessment and step-by-step training based on each learner’s starting point.",
       },
     ],
   }),
@@ -198,7 +197,6 @@ function Home() {
     { icon: Waves, title: "programLearn", body: "programLearnD" },
     { icon: HeartHandshake, title: "programConfidence", body: "programConfidenceD" },
     { icon: Dumbbell, title: "programPerformance", body: "programPerformanceD" },
-    { icon: Users, title: "programAdaptive", body: "programAdaptiveD" },
   ];
 
   return (
@@ -255,7 +253,7 @@ function Home() {
                   value={`${settings.sessionDurationMinutes} min`}
                 />
                 <Metric icon={Target} label={tr("abuDhabi")} value={tr("coverage")} />
-                <Metric icon={Award} label={tr("coachTitle")} value="15+ yrs" />
+                <Metric icon={Award} label={tr("coachTitle")} value={tr("feat1")} />
               </div>
             </div>
           </div>
@@ -290,7 +288,7 @@ function Home() {
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("programsTitle")}</h2>
           <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">{tr("programsBody")}</p>
         </div>
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {programs.map(({ icon: Icon, title, body }, index) => (
             <article
               key={title}
@@ -307,22 +305,9 @@ function Home() {
         </div>
       </section>
 
-      <section className="bg-deep py-24 text-white">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="max-w-3xl">
-            <SectionEyebrow light>{tr("specialtiesTitle")}</SectionEyebrow>
-            <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("specialtiesTitle")}</h2>
-          </div>
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <SpecialtyCard icon={HeartHandshake} title={tr("rehabTitle")} body={tr("rehabBody")} />
-            <SpecialtyCard icon={Users} title={tr("podTitle")} body={tr("podBody")} />
-          </div>
-        </div>
-      </section>
-
       <section className="mx-auto grid max-w-7xl gap-10 px-6 py-24 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
         <div className="relative min-h-[420px] overflow-hidden rounded-[2.25rem] bg-deep shadow-elegant">
-          <img src={heroImg} alt="Coach Ayman aquatic coaching" className="absolute inset-0 h-full w-full object-cover opacity-75" />
+          <img src={heroImg} alt="Coach Ayman swimming coaching" className="absolute inset-0 h-full w-full object-cover opacity-75" />
           <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/40 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-7 text-white">
             <div className="text-sm font-bold uppercase tracking-[0.2em] text-aqua">Relax Fix UAE</div>
@@ -434,18 +419,6 @@ function SectionEyebrow({ children, light = false }: { children: string; light?:
   );
 }
 
-function SpecialtyCard({ icon: Icon, title, body }: { icon: typeof Waves; title: string; body: string }) {
-  return (
-    <article className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 backdrop-blur sm:p-9">
-      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-aqua/15 text-aqua">
-        <Icon className="h-7 w-7" />
-      </div>
-      <h3 className="mt-6 text-2xl font-black">{title}</h3>
-      <p className="mt-4 leading-8 text-white/70">{body}</p>
-    </article>
-  );
-}
-
 function WizardProgress({ step }: { step: number }) {
   const { tr } = useLang();
   const labels: TranslationKey[] = ["stepAbout", "stepProfile", "stepGoal", "stepTime", "stepConfirm"];
@@ -538,7 +511,6 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
           ["Boy", tr("boy")],
           ["Girl", tr("girl")],
           ["Adult", tr("adult")],
-          ["People of Determination", tr("pod")],
         ]}
         onChange={(category) => setForm((value) => ({ ...value, category }))}
       />
