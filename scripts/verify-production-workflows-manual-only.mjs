@@ -30,7 +30,7 @@ const manualWorkflows = {
     job: "ai-media-live-fallback",
     concurrency: "production-ai-media-live-e2e",
     expectedUrls: [
-      "https://swim-fluent-uae-w532-3xid5nr1v-swimmingayman-8492s-projects.vercel.app",
+      "https://swim-fluent-uae-w532.vercel.app",
       "https://nmzxrjdxvmmzzmajrskm.supabase.co/functions/v1/ai-media-e2e-admin",
     ],
   },
