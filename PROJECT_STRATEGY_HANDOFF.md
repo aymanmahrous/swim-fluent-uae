@@ -1,6 +1,6 @@
 # PROJECT STRATEGY HANDOFF
 
-Last verified: 2026-07-13 (Asia/Dubai)
+Last verified: 2026-07-15 (Asia/Dubai)
 
 This file records durable strategic decisions only. Operational facts, temporary blockers, current PR states, and implementation evidence belong in `PROJECT_HANDOFF.md`.
 
@@ -18,6 +18,11 @@ Do not change the strategy, track order, or approval gates without:
 
 Do not rebuild the existing platform from scratch. Continue from the verified repository state and preserve the existing React, TypeScript, Supabase, GitHub, Vercel, bilingual Arabic/English, and human-approval architecture unless a separately approved technical reason requires change.
 
+Owner approval recorded on 2026-07-15 added two durable operating decisions:
+
+- `LEAD_OPERATIONS_AND_AUTOMATION` is an approved strategic workstream.
+- `OWNER_DECISION_QUEUE` is an approved recurring governance mechanism.
+
 ## 2. Approved parallel-track order
 
 1. Close Batch A1.
@@ -25,11 +30,14 @@ Do not rebuild the existing platform from scratch. Continue from the verified re
 3. Local SEO.
 4. Analytics and attribution.
 5. Publishing readiness.
-6. Organic Pilot after approval gates.
-7. Google Ads after conversion proof.
-8. Meta Ads later.
+6. Lead Operations and Automation planning, with implementation gated by Privacy, Consent, security, and human-approval requirements.
+7. Organic Pilot after approval gates.
+8. Google Ads after conversion proof.
+9. Meta Ads later.
 
 Parallel work is allowed only when boundaries remain isolated and the required gates are respected.
+
+The Owner Decision Queue operates across all tracks and does not replace the required approval gates.
 
 ## 3. Batch sequencing
 
@@ -85,7 +93,66 @@ Analytics implementation proceeds only after the Measurement Contract is fully a
 - Automatic republishing is forbidden after an ambiguous provider response until the real platform state is manually verified.
 - Completed publication receipts must prevent duplicate posts.
 
-## 8. Organic Pilot gate
+## 8. Lead Operations and Automation strategy
+
+Approved workstream name:
+
+`LEAD_OPERATIONS_AND_AUTOMATION`
+
+Purpose:
+
+- Connect approved content, SEO, Local SEO, WhatsApp, and booking journeys to controlled Staff follow-up.
+- Provide a bilingual Arabic/English chatbot for approved FAQs, service explanations, initial-assessment guidance, and lead routing.
+- Use n8n for controlled operational alerts, missed-follow-up reminders, booking-status follow-up, and daily/weekly summaries.
+- Improve follow-up speed without weakening human approval, Privacy, Consent, or data-minimization requirements.
+
+Durable rules:
+
+- Planning may proceed in parallel now.
+- Chatbot or n8n Production implementation requires separate approval.
+- Privacy and Consent decisions must be closed before collecting or retaining new chatbot data.
+- No PII is sent to Analytics or advertising systems.
+- The chatbot must not provide medical, therapeutic, diagnostic, emergency, rehabilitation, or credential-based advice.
+- Human escalation is mandatory for uncertain, sensitive, complaint, safeguarding, health, or booking-exception cases.
+- Outbound messaging beyond a user-initiated conversation requires explicit approval and an approved consent basis.
+- Production credentials remain server-only.
+- Workflow idempotency, duplicate prevention, audit logs, retry rules, ambiguous-state handling, and safe-stop behavior are required.
+- Any database change uses a new migration and separate approval; historical migrations are never edited.
+- Contract-tested automation must not be described as Live without Live evidence.
+
+Implementation must use small isolated PRs with Preview-only evidence first.
+
+## 9. Owner Decision Queue governance
+
+Approved governance mechanism:
+
+`OWNER_DECISION_QUEUE`
+
+Purpose:
+
+- Prevent agents from repeatedly stopping for scattered owner questions.
+- Group decisions into a short, prioritized review package.
+- Make the safest default state explicit while a decision is unanswered.
+
+Every decision entry must include:
+
+- Decision statement.
+- Recommended option.
+- Alternatives.
+- Risks and costs.
+- Safe default while unanswered.
+- Dependency or deadline.
+- Impact of delay.
+
+Operating rules:
+
+- The queue may be prepared weekly or at the end of a major phase.
+- The queue does not grant approval by itself.
+- Silence never authorizes Production, publishing, scheduling, migration, credentials, Analytics activation, Ads, spend, or merge.
+- Urgent safety or Production-risk decisions must be escalated immediately rather than waiting for the weekly queue.
+- Approved decisions must be recorded in the appropriate Handoff or source-of-truth document.
+
+## 10. Organic Pilot gate
 
 Organic Pilot begins only after:
 
@@ -95,26 +162,27 @@ Organic Pilot begins only after:
 - Publishing readiness is complete.
 - Accounts are verified.
 - Success criteria and correction procedures are approved.
+- Lead-routing and follow-up ownership are clear.
 - The owner explicitly approves publishing.
 
 The Pilot is organic and limited. It precedes paid advertising.
 
-## 9. Paid advertising order
+## 11. Paid advertising order
 
 - Organic publishing and conversion measurement precede paid advertising.
 - Google Ads comes before Meta Ads.
-- No paid campaign starts before `booking_complete` is proven, GA4 Production is approved, Privacy and Consent are live, PII and deduplication protections are verified, booking is stable, mobile performance is acceptable, and budget/keywords/stop-loss rules are approved.
+- No paid campaign starts before `booking_complete` is proven, GA4 Production is approved, Privacy and Consent are live, PII and deduplication protections are verified, booking is stable, mobile performance is acceptable, lead follow-up ownership is ready, and budget/keywords/stop-loss rules are approved.
 - Meta Ads follow later, after creative and measurement performance are proven.
 - No campaign, billing connection, conversion import, or spend is allowed without separate owner approval.
 
-## 10. International Phone strategy
+## 12. International Phone strategy
 
 - International Phone remains a staged, separately controlled rollout.
 - PR #36 remains deferred until its prerequisites and explicit owner approval are satisfied.
-- No International Phone merge, Production deployment, or Production migration occurs implicitly through marketing, SEO, Analytics, accessibility, or publishing work.
+- No International Phone merge, Production deployment, or Production migration occurs implicitly through marketing, SEO, Analytics, accessibility, publishing, chatbot, or n8n work.
 - Production migration safety restrictions remain binding.
 
-## 11. Production safety restrictions
+## 13. Production safety restrictions
 
 - No Production migrations without explicit approval and an approved migration/backup plan.
 - No `supabase db push` against Production.
@@ -124,11 +192,11 @@ The Pilot is organic and limited. It precedes paid advertising.
 - No Production-writing workflow without explicit approval.
 - No automatic merge.
 - No automatic Production feature-flag activation.
-- No automatic publishing, scheduling, advertising, or paid generation.
+- No automatic publishing, scheduling, messaging, advertising, or paid generation.
 - Contract-tested integrations must not be described as Live unless Live evidence exists.
 - A phase is not complete without explicit validation evidence.
 
-## 12. Small isolated PR policy
+## 14. Small isolated PR policy
 
 Each PR must have one clear workstream and one review purpose.
 
@@ -139,6 +207,8 @@ Do not mix unrelated scopes such as:
 - SEO and Accessibility.
 - Analytics and International Phone.
 - Publishing and Production migrations.
+- Chatbot/n8n and Ads.
+- Lead automation and Production migration history.
 - Issue #43 and marketing implementation.
 
 Every implementation PR must document:
@@ -152,7 +222,7 @@ Every implementation PR must document:
 
 No PR is merged automatically.
 
-## 13. Handoff maintenance policy
+## 15. Handoff maintenance policy
 
 - `PROJECT_HANDOFF.md` is updated at the end of every major approved phase with current facts, commits, PRs, tests, Production status, blockers, and the next approved action.
 - This file is updated only when a durable strategic decision changes.
