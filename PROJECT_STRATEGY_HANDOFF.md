@@ -229,3 +229,50 @@ No PR is merged automatically.
 - Temporary technical observations must not be promoted into strategy unless the owner approves them as lasting decisions.
 - Any approved strategy change must record the reason and approval context.
 - A new agent must be able to continue the project by reading both Handoff files and the mandatory project source documents without relying on prior chat history.
+
+## 16. Complete Digital Ecosystem strategy
+
+Owner approval recorded on 2026-07-15 establishes:
+
+`RELAX_FIX_GROWTH_OS / COMPLETE_DIGITAL_ECOSYSTEM`
+
+This is a durable long-term product and operating direction. It expands the capability map without replacing `REVENUE-FIRST PARALLEL LAUNCH`, bypassing current gates, or requiring all modules to be built immediately.
+
+Canonical detailed architecture:
+
+- `docs/program/COMPLETE_DIGITAL_ECOSYSTEM.md`
+- Ecosystem architecture Issue #80.
+
+Approved ecosystem domains include:
+
+- the customer website and conversion system;
+- SEO, Local SEO, content, publishing, Social Media Intelligence, and later paid acquisition;
+- CRM, Lead Operations, controlled chatbot/n8n, and human follow-up;
+- Agent Management, Quality Department, Owner Dashboard, notifications, analytics, and Knowledge Base;
+- AI Swimming Education and evidence-referenced coach-reviewed lesson planning;
+- Adaptive Aquatics educational planning based on individual needs and observations rather than diagnosis stereotypes;
+- anonymous-first learner progress and family educational reports;
+- general aquatic exercise guidance within verified competence;
+- explicit separation of swimming education, general exercise, and clinician-supervised rehabilitation;
+- future Academy, LMS, memberships, community, mobile, multi-coach, and multi-branch expansion after evidence-backed prioritization.
+
+Durable ecosystem rules:
+
+- GitHub and Vercel remain authoritative for the customer website; the Replit Command Center remains a separate internal application.
+- One canonical system of record is chosen for each business concept; duplicated sources of truth are prohibited.
+- New modules are bilingual, mobile-ready, accessible, auditable, versioned, and API-first where appropriate.
+- An open Issue is an assignment, not proof of active autonomous execution; evidence is required for progress and completion.
+- AI-generated swimming or adaptive plans require source validation, visible assumptions and limitations, and coach approval before use.
+- The system does not diagnose, prescribe clinical treatment, independently design clinician-supervised rehabilitation, guarantee outcomes, or use unsupported medical, sensory, attention, developmental, therapy, rehabilitation, qualification, or performance claims.
+- A diagnosis label alone never determines an educational plan.
+- Forced submersion, forced eye contact, coercive exposure, punishment, restraint, unsafe breath-holding, and unsupervised child instruction are prohibited product recommendations.
+- No identifiable lead, customer, child, family, disability, diagnosis, health, or safeguarding data is stored until Privacy/Consent, security, role access, retention, correction, deletion, sharing, vendor, and incident rules are approved.
+- Before those gates, architecture uses anonymous codes, fictional records, sample data, schemas, templates, and evaluation cases only.
+- Public titles and aquatic therapy/rehabilitation claims require verified qualifications and applicable UAE professional/regulatory review.
+- Long-term ecosystem features must not delay current revenue foundations or destabilize the verified website without an evidence-backed decision.
+
+Expanded delegated-authority rule:
+
+The Main Project Director may proceed with routine, reversible, evidence-backed architecture, research, internal prototypes, mock data, schemas, templates, QA systems, documentation, issues, and isolated PRs. The director must challenge or reject owner/agent proposals that create safety, clinical-scope, privacy, security, legal, rights, financial, duplicated-system, premature-complexity, or Production risk, and must provide a safer alternative.
+
+Protected approvals remain required for budgets and paid spend, credentials and external writes, legal facts and publication acceptance, real customer/child/health data, Production migrations or writes, real bookings, outbound messages, public medical/therapy/rehabilitation/qualification claims, and clinician-supervised decisions.
