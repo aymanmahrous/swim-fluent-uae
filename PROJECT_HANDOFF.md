@@ -21,10 +21,13 @@ This file is the operational source of truth for continuing the existing Relax F
 - PR #72: **Merged** after CI run #343 succeeded.
 - PR #72 merge commit: `d4f53097ed960da075a2331eaabc61f6539dd0c3`.
 - Issue #63: **Closed / completed**.
+- PR #74: **Merged** after CI run #346 succeeded.
+- PR #74 merge commit: `b36b35de2c6f23d46637f5fb61f3d2e4b6c1f767`.
+- Issue #73: **Closed / completed**.
 - Issue #66: closed as superseded by Issue #69.
 - Issue #67: closed as superseded by Issue #68.
-- Issue #73: **Completed by the isolated post-PR #65 Handoff correction represented in this file**; close it after merge verification.
-- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of PR #52, PR #65, PR #72, or this Handoff correction.
+- PR #49: closed without merge as superseded by the broader merged PR #52.
+- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of PR #52, PR #65, PR #72, PR #74, or the PR #49 administrative closure.
 
 ## 2. PR #52 completed scope and evidence
 
@@ -247,7 +250,11 @@ No credentials installation, scheduling, publishing, Boost, Ads, or spend.
 
 `REPOSITORY_HYGIENE_AGENT`
 
-Reviewing PRs #51, #49, #46, #36, and #28 plus Issue #43.
+Reviewing PRs #51, #46, #36, and #28 plus Issue #43.
+
+Completed disposition:
+
+- PR #49 closed without merge because current `main` already contains its required sanitizer and public-claims contract through the broader merged PR #52
 
 PR #28 finding:
 
@@ -328,9 +335,9 @@ QA approval does not itself authorize publishing or Production deployment.
 
 `DOCUMENTATION_HANDOFF_AGENT`
 
-Status: **Completed by this isolated Handoff correction**. Close the Issue after merge and CI verification.
+Status: **Closed / completed**.
 
-This task changes no application code or durable strategy.
+PR #74 merged at `b36b35de2c6f23d46637f5fb61f3d2e4b6c1f767` after CI run #346 succeeded. This task changed no application code or durable strategy.
 
 ## 6. Approved execution order
 
@@ -455,6 +462,13 @@ Status: **Later than Google Ads** and not approved to launch.
 - CI run #343 succeeded.
 - Documentation only.
 
+### PR #74 — final post-PR #65 Handoff correction
+
+- Merged.
+- Merge commit: `b36b35de2c6f23d46637f5fb61f3d2e4b6c1f767`.
+- CI run #346 succeeded.
+- Documentation only.
+
 ### PR #65 — Handoff synchronization
 
 - Merged.
@@ -464,14 +478,13 @@ Status: **Later than Google Ads** and not approved to launch.
 ### PR #51 — earlier Handoff refresh
 
 - Open Draft.
-- Predates PR #52 final evidence, merge, Production verification, PR #65, PR #72, and the current governance extensions.
+- Predates PR #52 final evidence, merge, Production verification, PR #65, PR #72, PR #74, and the current governance extensions.
 - Requires triage; do not merge in its current stale state without review.
 
 ### PR #49 — Production prohibited-claims regression
 
-- Open Draft.
-- Likely overlapping or superseded by the broader merged and Production-verified PR #52.
-- Requires formal comparison and evidence-based disposition.
+- Closed without merge as superseded by PR #52.
+- Current `main` contains the approved Arabic/English replacements, expanded sanitizer, direct tests, and broader public-claims/schema protections.
 
 ### PR #46 — Privacy and Consent copy pack
 
@@ -482,6 +495,8 @@ Status: **Later than Google Ads** and not approved to launch.
 ### PR #36 — International Phone Phase B
 
 - Open Draft and deferred.
+- PR #37 Phase A was merged, but no Production application or current stacked compatibility proof is established.
+- The Phase B branch is 34 commits behind current `main` and must not be merged as-is.
 - Must remain isolated from content, SEO, Analytics, chatbot, n8n, accessibility, publishing, and advertising work.
 - No Production migration or deployment.
 
@@ -520,7 +535,7 @@ Do not mix with marketing or Production migration work.
 - International Phone Production rollout remains blocked and deferred.
 - Production migration history is not approved for `db push` or repair.
 
-PR #52 Production verification, PR #65 Handoff synchronization, and PR #72 Revenue Readiness Scorecard are complete and are no longer blockers.
+PR #52 Production verification, PR #65 and PR #74 Handoff synchronization, and PR #72 Revenue Readiness Scorecard are complete and are no longer blockers.
 
 ## 10. Mandatory safety rules
 
@@ -579,6 +594,8 @@ Silence does not authorize Production, migration, credentials, Analytics activat
 - PR #65 merge commit: `4fb7efdc02b3298b95ff157d693e4926b60a75c7`
 - PR #72: `https://github.com/aymanmahrous/swim-fluent-uae/pull/72`
 - PR #72 merge commit: `d4f53097ed960da075a2331eaabc61f6539dd0c3`
+- PR #74: `https://github.com/aymanmahrous/swim-fluent-uae/pull/74`
+- PR #74 merge commit: `b36b35de2c6f23d46637f5fb61f3d2e4b6c1f767`
 - PR #51: `https://github.com/aymanmahrous/swim-fluent-uae/pull/51`
 - PR #49: `https://github.com/aymanmahrous/swim-fluent-uae/pull/49`
 - PR #46: `https://github.com/aymanmahrous/swim-fluent-uae/pull/46`
