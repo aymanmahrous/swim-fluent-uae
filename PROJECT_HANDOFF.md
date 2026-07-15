@@ -2,7 +2,7 @@
 
 Last verified: 2026-07-15 (Asia/Dubai)
 
-This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md` and the named project source documents. Do not restart or redesign the project without an approved reason.
+This file is the operational source of truth for continuing the existing Relax Fix UAE / Swim Fluent UAE project. Read it together with `PROJECT_STRATEGY_HANDOFF.md`, `docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`, GitHub Program Board Issue #54, and the named project source documents. Do not restart or redesign the project without an approved reason.
 
 ## 1. Current repository state
 
@@ -15,8 +15,15 @@ This file is the operational source of truth for continuing the existing Relax F
 - PR #52 CI: run #333, completed successfully.
 - PR #52 authoritative visual-evidence workflow: final run #23, completed successfully.
 - PR #53: temporary visual-evidence tooling PR, closed without merge.
-- PR #65: open Draft documentation-only Handoff synchronization PR.
-- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, or Ads action was part of PR #52 or PR #65.
+- PR #65: **Merged**.
+- PR #65 merge commit: `4fb7efdc02b3298b95ff157d693e4926b60a75c7`.
+- Issue #64: **Closed / completed**.
+- PR #72: **Merged** after CI run #343 succeeded.
+- PR #72 merge commit: `d4f53097ed960da075a2331eaabc61f6539dd0c3`.
+- Issue #63: **Closed / completed**.
+- Issue #66: closed as superseded by Issue #69.
+- Issue #67: closed as superseded by Issue #68.
+- No database migration, booking submission, Production write, Analytics activation, publishing, scheduling, chatbot/n8n activation, Ads, billing, or spend was part of PR #52, PR #65, or PR #72.
 
 ## 2. PR #52 completed scope and evidence
 
@@ -148,7 +155,7 @@ Do not publish or restore unapproved claims without separate explicit approval, 
 - credentials or certifications not approved for publication
 - Adaptive Swimming, Aquatic Rehabilitation, therapy, treatment, medical, diagnostic, or similar professional claims not separately approved
 
-## 5. Active program board and agent tasks
+## 5. Program board and agent tasks
 
 The owner approved the remaining execution plan and following workstreams on 2026-07-15.
 
@@ -162,7 +169,9 @@ Coordinates the approved `REVENUE-FIRST PARALLEL LAUNCH` tracks, dependencies, e
 
 `RELEASE_QA_AGENT`
 
-PR #52 is merged and Production read-only verification is complete. Remaining release work is documentation synchronization and closure reporting.
+Status: **Closed / completed**.
+
+PR #52 is merged and Production read-only verification is complete.
 
 ### Issue #56 — Batch A1 closure
 
@@ -176,6 +185,19 @@ Required outcome:
 - export and safe-margin review
 - findings and corrections
 - Owner Approval Pack
+
+Current recovered evidence:
+
+- manifests and file lists identify 23/23 PNG exports across five Content IDs
+- automated records report 1080×1350, RTL, glyph, contrast, mobile 390px, safe-zone, and CTA-duplication checks as passed
+- the final-correction manifest labels titles `Cairo Bold` and secondary copy `Cairo SemiBold`
+- the available font binary evidence identifies only Cairo Regular / weight 400, so the actual Bold/SemiBold proof is contradictory and not accepted as complete
+- individual PNGs or a complete contact sheet/Owner Approval Pack have not yet been recovered for 23/23 human visual inspection
+- the rights record says no stock media and no people/children, but it does not claim completed trademark clearance or legal-rights review
+
+Current status:
+
+`BATCH_A1_23_OF_23_MANIFEST_EVIDENCE_RECOVERED_VISUAL_AND_FONT_WEIGHT_PROOF_BLOCKED`
 
 No Batch A2, scheduling, or publishing.
 
@@ -224,7 +246,13 @@ No credentials installation, scheduling, publishing, Boost, Ads, or spend.
 
 `REPOSITORY_HYGIENE_AGENT`
 
-Reviewing PRs #51, #49, #46, and #36 plus Issue #43, and preparing owner disposition recommendations without merge, close, rebase, or force-push actions.
+Reviewing PRs #51, #49, #46, #36, and #28 plus Issue #43.
+
+PR #28 finding:
+
+- the one-line canonical URL fix is still relevant because `main` retains the stale deployment-specific URL
+- the branch is 65 commits behind current `main` and must not be merged as-is
+- recreate or refresh the isolated change from current `main`, then rerun CI and authorization-boundary review
 
 ### Issue #62 — Lead Operations and Automation
 
@@ -251,17 +279,55 @@ No chatbot deployment, credentials, Production workflow activation, automatic me
 
 `PROGRAM_OPERATIONS_AGENT`
 
-Preparing a Green/Amber/Red evidence scorecard and the recurring:
+Status: **Closed / completed**.
 
-`OWNER_DECISION_QUEUE`
+PR #72 merged the evidence-based scorecard and recurring Owner Decision Queue at commit `d4f53097ed960da075a2331eaabc61f6539dd0c3` after CI run #343 succeeded.
 
-Each decision must include recommendation, alternatives, risk, safe default, dependency, and impact of delay.
-
-### Issue #64 — Handoff synchronization
+### Issue #64 — Handoff synchronization after PR #52
 
 `DOCUMENTATION_HANDOFF_AGENT`
 
-Draft PR #65 is open with updates to `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md` only.
+Status: **Closed / completed**.
+
+PR #65 merged at `4fb7efdc02b3298b95ff157d693e4926b60a75c7`.
+
+### Issue #68 — Integrated 90-day digital growth strategy
+
+`DIGITAL_GROWTH_STRATEGY_AGENT`
+
+Active consolidated strategy task. Issue #67 is closed as superseded by #68.
+
+Required output includes the 0–30, 31–60, and 61–90 day roadmap for website conversion, SEO, Local SEO, content, social, measurement, lead follow-up, Organic Pilot, and later paid acquisition.
+
+### Issue #69 — Replit Operations Command Center
+
+`OPERATIONS_PRODUCT_ARCHITECT`
+
+Active consolidated product task. Issue #66 is closed as superseded by #69.
+
+The separate management application is named `Command Center Hub`. The owner reports that its build has started. GitHub and Vercel remain the production-site sources of truth; Replit is not a replacement for the Production website.
+
+The MVP remains read-only by default, with no Production database, booking, publishing, Ads, billing, credentials, PII, secrets in the browser, or automatic merge/deploy action.
+
+### Issue #70 — Delegated project-director authority
+
+Status: `DELEGATED_AUTHORITY_ACTIVE_WITH_PROTECTED_BOUNDARIES`.
+
+Routine reversible, evidence-backed work may proceed without repeated owner confirmation. Financial, legal, credential, PII, destructive Production, migration, customer-record, and automatic outbound-messaging actions remain protected.
+
+### Issue #71 — Integrated Quality Department
+
+`QUALITY_GOVERNANCE_AGENT`
+
+Active task to establish QA policy, severity model, checklists, evidence receipts, rework SLA, and approval/rejection states for design, video, content, website, and product.
+
+QA approval does not itself authorize publishing or Production deployment.
+
+### Issue #73 — Post-PR #65 Handoff correction
+
+`DOCUMENTATION_HANDOFF_AGENT`
+
+This isolated documentation task corrects the stale pre-merge PR #65 wording and current board references. It changes no application code or durable strategy.
 
 ## 6. Approved execution order
 
@@ -279,19 +345,26 @@ Approved parallel-track order:
 
 The Owner Decision Queue operates across all tracks.
 
+The 90-day strategy, Replit Command Center architecture, Quality Department, content planning, and read-only audits may proceed in parallel without crossing their protected gates.
+
 ## 7. Track status
 
 ### Batch A1
 
 Status: **Not closed**.
 
+Verified partial evidence:
+
+- 23/23 filenames and manifest entries recovered
+- automated records claim all 23 are 1080×1350 and pass RTL, glyph, contrast, safe-zone, and mobile checks
+- source/rights record recovered
+
 Blocking evidence:
 
-- 23/23 inventory not yet completed
-- Cairo and actual font-weight evidence pending
-- Arabic visual review pending
-- export review pending
-- Owner Approval Pack pending
+- individual PNG/contact-sheet evidence for 23/23 human Arabic visual review is not available in the recovered File Library results
+- Cairo Bold/SemiBold declarations conflict with available Cairo Regular / weight 400 binary evidence
+- final export review and finding log are not independently re-verified
+- Owner Approval Pack is not complete
 
 Batch A2 remains prohibited until Batch A1 closure unless the owner approves a specific exception.
 
@@ -340,6 +413,24 @@ Status: **Strategically approved; architecture/planning started; implementation 
 
 Privacy, Consent, security, human handoff, credential custody, and safe-stop gates remain mandatory.
 
+### Revenue Readiness Scorecard
+
+Status: **Completed and merged**.
+
+Source: `docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`.
+
+### Integrated 90-day growth strategy
+
+Status: **Active / planning** under Issue #68.
+
+### Replit Command Center
+
+Status: **Build reported started; authoritative build evidence and architecture review still required** under Issue #69.
+
+### Integrated Quality Department
+
+Status: **Active / operating-model design** under Issue #71.
+
 ### Organic Pilot
 
 Status: **Blocked** until Batch A1, content approval, minimum measurement/UTM, publishing readiness, account verification, success/stop rules, follow-up ownership, and explicit owner publishing approval are complete.
@@ -354,24 +445,30 @@ Status: **Later than Google Ads** and not approved to launch.
 
 ## 8. Open PRs and deferred backlog
 
+### PR #72 — Revenue Readiness Scorecard
+
+- Merged.
+- Merge commit: `d4f53097ed960da075a2331eaabc61f6539dd0c3`.
+- CI run #343 succeeded.
+- Documentation only.
+
 ### PR #65 — Handoff synchronization
 
-- Open Draft.
-- Exactly two documentation files changed.
-- Records PR #52 merge/Production evidence and the newly approved strategy decisions.
-- Do not merge automatically.
+- Merged.
+- Merge commit: `4fb7efdc02b3298b95ff157d693e4926b60a75c7`.
+- Issue #64 closed.
 
 ### PR #51 — earlier Handoff refresh
 
 - Open Draft.
-- Predates PR #52 final evidence, merge, Production verification, and the newly approved strategy decisions.
+- Predates PR #52 final evidence, merge, Production verification, PR #65, PR #72, and the current governance extensions.
 - Requires triage; do not merge in its current stale state without review.
 
 ### PR #49 — Production prohibited-claims regression
 
 - Open Draft.
 - Likely overlapping or superseded by the broader merged and Production-verified PR #52.
-- Requires formal comparison and owner-approved disposition.
+- Requires formal comparison and evidence-based disposition.
 
 ### PR #46 — Privacy and Consent copy pack
 
@@ -385,6 +482,13 @@ Status: **Later than Google Ads** and not approved to launch.
 - Must remain isolated from content, SEO, Analytics, chatbot, n8n, accessibility, publishing, and advertising work.
 - No Production migration or deployment.
 
+### PR #28 — AI media fallback canonical target
+
+- Open and technically relevant.
+- Current branch is stale and diverged: 65 commits behind current `main`, 1 commit ahead.
+- Do not merge as-is.
+- Recreate or refresh the one-line change from current `main`, rerun CI, and preserve the manual Production authorization boundary.
+
 ### Issue #43 — Accessibility/mobile backlog
 
 Isolated scope:
@@ -395,20 +499,25 @@ Isolated scope:
 
 Do not mix with marketing or Production migration work.
 
+### Closed duplicate administration
+
+- Issue #66 closed as superseded by Issue #69.
+- Issue #67 closed as superseded by Issue #68.
+
 ## 9. Current blockers
 
-- Handoff synchronization Draft PR #65 is pending CI/review and explicit merge approval.
-- Batch A1 closure evidence is incomplete.
+- Batch A1 23/23 human visual review and Cairo Bold/SemiBold proof are incomplete.
 - Local SEO factual decisions are incomplete.
 - Privacy/Consent and Analytics owner decisions remain open.
 - Publishing account and Live receipt evidence are incomplete.
 - Organic Pilot gates are not satisfied.
 - Conversion proof does not exist for paid advertising.
 - Lead Operations and Automation is planning-only; implementation gates remain closed.
+- Replit Command Center authoritative build/link/security evidence is incomplete.
 - International Phone Production rollout remains blocked and deferred.
 - Production migration history is not approved for `db push` or repair.
 
-PR #52 Production verification is complete and is no longer a blocker.
+PR #52 Production verification, PR #65 Handoff synchronization, and PR #72 Revenue Readiness Scorecard are complete and are no longer blockers.
 
 ## 10. Mandatory safety rules
 
@@ -418,21 +527,25 @@ PR #52 Production verification is complete and is no longer a blocker.
 - No manual editing of Production migration history.
 - No Production test booking without explicit approval.
 - No Production-writing workflow without explicit approval.
-- No automatic merge.
 - No automatic Production feature-flag activation.
 - No Batch A2 before Batch A1 closure unless explicitly approved.
-- No publishing or scheduling without explicit approval.
+- No publishing or scheduling without its explicit gate and evidence.
 - No automatic outbound chatbot, WhatsApp, email, or SMS messaging.
-- No Ads, billing connection, conversion import, or budget spend without separate approval.
+- No Ads, billing connection, conversion import, or budget spend without a real budget ceiling and separate approval.
 - No unapproved public claims or credentials.
 - No PII in Analytics or advertising systems.
 - No mixing unrelated workstreams in one PR.
 - Do not describe contract-tested integrations as Live without Live evidence.
 - Do not mark a phase complete without validation evidence.
+- Routine reversible work may proceed under Issue #70, but protected financial, legal, credential, PII, customer-record, destructive Production, and outbound-messaging actions may not.
 
 ## 11. Owner Decision Queue
 
 The owner approved a recurring decision package to reduce agent blocking.
+
+Current source:
+
+`docs/program/REVENUE_READINESS_SCORECARD_AND_OWNER_DECISION_QUEUE.md`
 
 Every queued decision must contain:
 
@@ -444,28 +557,35 @@ Every queued decision must contain:
 - dependency/deadline
 - impact of delay
 
-Silence does not authorize merge, Production, migration, credentials, Analytics activation, publishing, scheduling, messaging, Ads, or spend.
+Silence does not authorize Production, migration, credentials, Analytics activation, publishing, scheduling, messaging, Ads, billing, or spend.
 
 ## 12. Next approved actions
 
-1. Complete CI/review for documentation-only PR #65.
-2. Continue the parallel documentation/read-only tasks in Issues #56–#64.
-3. Produce the first Revenue Readiness Scorecard and Owner Decision Queue.
-4. Bring only consolidated owner decisions and evidence-backed approval packs to the owner.
-5. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
+1. Complete Issue #73 through exact-diff review, CI, and documentation-only merge.
+2. Recover/open the actual Batch A1 final-correction PNG package or contact sheet, inspect 23/23, and resolve the Cairo weight contradiction.
+3. Continue the 30-day content plan in Issue #57 without Batch A2 production or publishing.
+4. Continue read-only SEO, Local SEO, Privacy/Analytics, publishing-readiness, repository-hygiene, and Lead Operations work in Issues #58–#62.
+5. Continue the integrated 90-day strategy, Replit Command Center, and Quality Department work in Issues #68, #69, and #71.
+6. Bring only consolidated protected decisions and evidence-backed approval packs to the owner.
+7. Do not begin Organic Pilot, Production chatbot/n8n implementation, Analytics activation, publishing, or Ads until their documented gates are satisfied.
 
 ## 13. Exact references
 
 - PR #52: `https://github.com/aymanmahrous/swim-fluent-uae/pull/52`
 - PR #52 merge commit: `a0fbcbefcbe3c9dc2eff93b6c144576d411b1e90`
 - PR #65: `https://github.com/aymanmahrous/swim-fluent-uae/pull/65`
+- PR #65 merge commit: `4fb7efdc02b3298b95ff157d693e4926b60a75c7`
+- PR #72: `https://github.com/aymanmahrous/swim-fluent-uae/pull/72`
+- PR #72 merge commit: `d4f53097ed960da075a2331eaabc61f6539dd0c3`
 - PR #51: `https://github.com/aymanmahrous/swim-fluent-uae/pull/51`
 - PR #49: `https://github.com/aymanmahrous/swim-fluent-uae/pull/49`
 - PR #46: `https://github.com/aymanmahrous/swim-fluent-uae/pull/46`
 - PR #36: `https://github.com/aymanmahrous/swim-fluent-uae/pull/36`
+- PR #28: `https://github.com/aymanmahrous/swim-fluent-uae/pull/28`
 - Issue #43: `https://github.com/aymanmahrous/swim-fluent-uae/issues/43`
 - Program Board: Issue #54
-- Active agent tasks: Issues #55–#64
+- Active execution tasks: Issues #56–#62, #68–#71, and #73
+- Completed execution tasks: Issues #55, #63, and #64
 
 ## 14. Handoff maintenance
 
