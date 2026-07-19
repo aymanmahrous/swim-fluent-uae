@@ -26,12 +26,14 @@ function forbidText(source, needle, label) {
 const seo = await text("src/platform/public-seo.ts");
 for (const needle of [
   'SITE_URL = "https://www.relaxfixuae.com"',
+  'INSTAGRAM_URL = "https://www.instagram.com/relaxfixuae/"',
   'publicHomeHead(lang: PublicLanguage)',
   'rel: "canonical"',
   'hrefLang: "ar-AE"',
   'hrefLang: "en-AE"',
   'hrefLang: "x-default"',
   '"@type": "Organization"',
+  'sameAs: [INSTAGRAM_URL]',
   '"@type": "Person"',
   '"@type": "Service"',
   '"@type": "WebSite"',
@@ -45,7 +47,7 @@ for (const needle of [
   '"@type": "AggregateRating"',
   '"@type": "Review"',
   "streetAddress",
-  "sameAs",
+  "facebook.com/share/",
 ]) {
   forbidText(seo, needle, "truthful structured data");
 }
