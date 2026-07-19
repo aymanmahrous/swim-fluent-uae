@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { ConsentBanner } from "../components/consent-banner";
 import { Toaster } from "../components/ui/sonner";
 import { LangProvider, useLang, type Lang } from "../lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -253,6 +254,7 @@ function RootComponent() {
             <Outlet />
           </main>
           <Footer />
+          <ConsentBanner />
           <Toaster richColors position="top-center" />
         </div>
       </LangProvider>
