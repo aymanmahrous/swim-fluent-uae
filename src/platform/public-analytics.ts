@@ -20,19 +20,66 @@ declare global {
 const analyticsEnabled = import.meta.env.VITE_ENABLE_GA4 === "true";
 const measurementId = import.meta.env.VITE_GA4_MEASUREMENT_ID?.trim();
 let initialized = false;
+let consentConfigured = false;
 let consentGranted = false;
 
 function validMeasurementId(value: string | undefined): value is string {
   return Boolean(value && /^G-[A-Z0-9]+$/i.test(value));
 }
 
+function ensureGtag(): boolean {
+  if (typeof window === "undefined") return false;
+
+  window.dataLayer = window.dataLayer ?? [];
+  window.gtag =
+    window.gtag ??
+    ((...args: unknown[]) => {
+      window.dataLayer?.push(args);
+    });
+
+  return true;
+}
+
+function configureDefaultConsent(): boolean {
+  if (consentConfigured) return true;
+  if (!ensureGtag() || !window.gtag) return false;
+
+  window.gtag("consent", "default", {
+    analytics_storage: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+    wait_for_update: 500,
+  });
+
+  consentConfigured = true;
+  return true;
+}
+
 export function grantAnalyticsConsent(): boolean {
+  if (!configureDefaultConsent() || !window.gtag) return false;
+
   consentGranted = true;
+  window.gtag("consent", "update", {
+    analytics_storage: "granted",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+
   return initializeAnalytics();
 }
 
 export function denyAnalyticsConsent() {
+  if (!configureDefaultConsent() || !window.gtag) return;
+
   consentGranted = false;
+  window.gtag("consent", "update", {
+    analytics_storage: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
 }
 
 export function analyticsReady(): boolean {
@@ -42,11 +89,7 @@ export function analyticsReady(): boolean {
 function initializeAnalytics(): boolean {
   if (initialized) return true;
   if (!consentGranted || !analyticsEnabled || !validMeasurementId(measurementId)) return false;
-
-  window.dataLayer = window.dataLayer ?? [];
-  window.gtag = (...args: unknown[]) => {
-    window.dataLayer?.push(args);
-  };
+  if (!configureDefaultConsent() || !window.gtag || typeof document === "undefined") return false;
 
   window.gtag("js", new Date());
   window.gtag("config", measurementId, {
@@ -55,11 +98,17 @@ function initializeAnalytics(): boolean {
     allow_ad_personalization_signals: false,
   });
 
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-  script.dataset.relaxfixAnalytics = "gtag";
-  document.head.appendChild(script);
+  const existingScript = document.querySelector<HTMLScriptElement>(
+    'script[data-relaxfix-analytics="gtag"]',
+  );
+
+  if (!existingScript) {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+    script.dataset.relaxfixAnalytics = "gtag";
+    document.head.appendChild(script);
+  }
 
   initialized = true;
   return true;
@@ -78,3 +127,5 @@ export function trackPublicEvent(
   window.gtag("event", eventName, safeParameters);
   return true;
 }
+
+configureDefaultConsent();
