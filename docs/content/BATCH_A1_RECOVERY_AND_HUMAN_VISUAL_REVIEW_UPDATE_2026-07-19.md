@@ -36,7 +36,7 @@ Batch A1 is approved as a visual asset package only. This does not authorize Bat
 
 ## Required Handoff state
 
-The Issue #56 section of `PROJECT_HANDOFF.md` should record that:
+The Issue #56 section of `PROJECT_HANDOFF.md` now records that:
 
 - the canonical archive is `week1_batch_a1_approved_recovery_pipeline(2).zip`
 - its archive SHA-256 is `6ce142e1624469052f863662d6a962d6a19ece5eb76e7dfba4306b6a8b077c86`
