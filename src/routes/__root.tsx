@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { ChatbotPreview } from "../components/chatbot-preview";
 import { ConsentBanner } from "../components/consent-banner";
 import { Toaster } from "../components/ui/sonner";
 import { LangProvider, useLang, type Lang } from "../lib/i18n";
@@ -255,6 +256,7 @@ function RootComponent() {
           </main>
           <Footer />
           <ConsentBanner />
+          <ChatbotPreview />
           <Toaster richColors position="top-center" />
         </div>
       </LangProvider>
