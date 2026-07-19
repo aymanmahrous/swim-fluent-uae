@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { AnalyticsConsentBridge } from "../components/analytics-consent-bridge";
 import { ChatbotPreview } from "../components/chatbot-preview";
 import { ConsentBanner } from "../components/consent-banner";
 import { Toaster } from "../components/ui/sonner";
@@ -255,6 +256,7 @@ function RootComponent() {
             <Outlet />
           </main>
           <Footer />
+          <AnalyticsConsentBridge />
           <ConsentBanner />
           <ChatbotPreview />
           <Toaster richColors position="top-center" />
