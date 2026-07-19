@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-15 (Asia/Dubai)
+Last verified: 2026-07-19 (Asia/Dubai)
 
 This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
@@ -155,7 +155,7 @@ Current public services remain limited to:
 - Water Confidence / التغلب على خوف الماء
 - Technique & Performance / تطوير الأداء
 
-Do not restore or add free/complimentary wording, unverified years, founder relationships, credentials, Adaptive Swimming, People of Determation specialization, aquatic rehabilitation, therapy, treatment, diagnosis, medical claims, prices, testimonials, locations, hours, or guaranteed outcomes without separate evidence and approval.
+Do not restore or add free/complimentary wording, unverified years, founder relationships, credentials, Adaptive Swimming, People of Determination specialization, aquatic rehabilitation, therapy, treatment, diagnosis, medical claims, prices, testimonials, locations, hours, or guaranteed outcomes without separate evidence and approval.
 
 ## 4. Governance and protected boundaries
 
@@ -197,21 +197,34 @@ Missing protected facts must remain in the Owner Decision Queue and must not be 
 
 ### Issue #56 — Batch A1
 
-Status: `BATCH_A1_23_OF_23_MANIFEST_EVIDENCE_RECOVERED_VISUAL_AND_FONT_WEIGHT_PROOF_BLOCKED`
+Status: `BATCH_A1_OWNER_APPROVED_CANONICAL_PACKAGE_SELECTED`
 
-Verified partial evidence:
+Canonical package:
 
-- 23/23 filenames and manifest entries recovered
-- automated records report dimensions, RTL, glyph, contrast, mobile, safe-zone, and CTA checks
-- source/rights record recovered
+- `week1_batch_a1_approved_recovery_pipeline(2).zip`
+- Archive SHA-256: `6ce142e1624469052f863662d6a962d6a19ece5eb76e7dfba4306b6a8b077c86`
+- Canonical design direction: `APPROVED_RECOVERY_PIPELINE`
 
-Still blocked:
+Verified final evidence:
 
-- 23/23 actual PNGs or complete contact sheet for human Arabic review
-- Cairo Bold/SemiBold proof conflicts with recovered Cairo Regular/weight 400 evidence
-- final export review, finding log, and Owner Approval Pack are incomplete
+- 23/23 original PNG exports reviewed at `1080 × 1350`
+- 23/23 mobile 390 px exports reviewed
+- five contact sheets reviewed
+- Arabic shaping, glyph rendering, hierarchy, logo placement, slide numbering, CTA placement, Coach Ayman label, background integrity, and series consistency reviewed
+- final decision: `23 PASS / 0 REVISE`
+- owner explicitly approved continuing with the selected visual direction on 2026-07-19
+- final receipt: `docs/content/BATCH_A1_FINAL_HUMAN_VISUAL_REVIEW_AND_OWNER_APPROVAL_RECEIPT_2026-07-19.md`
 
-No Batch A2, scheduling, or publishing before closure unless an explicit exception is approved.
+Superseded variants:
+
+- `week1_batch_a1_final_correction(2).zip` — superseded after visible text/spacing defects were identified
+- `week1_batch_a1_clean_photoreal_approved(2).zip` — rejected from canonical use because of visible background artifacts/seams
+- `week1_batch_a1_direction3_master(2).zip` — valid older direction, not selected
+- `restored_approved_photoreal_aquatic_samples(3).zip` — reference samples only; incomplete batch
+
+Batch A1 is approved as a visual asset package only. This does not authorize Batch A2, adaptation, scheduling, publishing, release, Analytics, Ads, Production writes, credentials, billing, or spend.
+
+Before any release, exact asset/caption pairing, rights/source confirmation, publishing readiness, account verification, and separate human release approval remain required.
 
 ### Issue #57 — Content planning
 
@@ -367,7 +380,6 @@ Do not mix unrelated workstreams in one PR.
 
 ## 10. Current blockers
 
-- Batch A1 actual visual evidence and font-weight proof
 - Replit Phase 1 paused with no acceptance evidence
 - Replit Phase 2 security and reliability implementation gated
 - Search Console and GBP account evidence
@@ -384,10 +396,10 @@ Do not mix unrelated workstreams in one PR.
 
 ## 11. Approved next execution order
 
-1. **Batch A1 closure:** recover actual PNG/contact-sheet evidence, resolve Cairo weight contradiction, complete human review and Owner Approval Pack.
+1. **Batch A1 release preparation:** preserve the selected canonical package and complete exact asset/caption pairing, rights/source confirmation, publishing readiness, account verification, and separate human release approval before any scheduling or publishing.
 2. **Issue #58/#79 external evidence:** obtain read-only Search Console, GBP, mobile/field performance, and Preview form-friction/accessibility evidence; do not write externally.
 3. **Issue #59 owner decisions:** record exact owner/legal/provider answers in the merged decision pack; correct/review PR #46 without treating copy QA as legal approval.
-4. **Content owner review:** review the 30-day plan; keep Days 2–30 as drafts; do not create Batch A2 before the Batch A1 gate.
+4. **Content owner review:** review the 30-day plan; keep Days 2–30 as drafts; do not begin Batch A2 implicitly.
 5. **Post 3:** asset production only after a separate authorization using the canonical approved Visual Brief and approved source/rights evidence.
 6. **Quality adoption:** use the merged Quality model and version/hash receipts for every new artifact.
 7. **Replit #76:** accept only after the complete evidence bundle; while paused, continue independent safe repository work.
@@ -405,7 +417,7 @@ Do not mix unrelated workstreams in one PR.
 - No Production test booking/customer record without an approved test policy.
 - No Production-writing workflow without explicit approval.
 - No automatic feature-flag activation.
-- No Batch A2 before Batch A1 closure unless explicitly approved.
+- No Batch A2 before separate authorization.
 - No publishing/scheduling without explicit gate, human approval, and evidence.
 - No automatic outbound chatbot, WhatsApp, email, or SMS.
 - No Search Console/GBP write, indexing request, citation submission, review request, or appeal without authorization.
