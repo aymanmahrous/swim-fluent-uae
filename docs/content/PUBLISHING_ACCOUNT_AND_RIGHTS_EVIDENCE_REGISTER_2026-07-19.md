@@ -1,23 +1,34 @@
 # Publishing Account and Rights Evidence Register — 2026-07-19
 
-Status: `PUBLISHING_EVIDENCE_REGISTER_PARTIALLY_VERIFIED_RELEASE_BLOCKED`
+Status: `PUBLISHING_ACCOUNTS_OWNER_CONFIRMED_RIGHTS_AND_LIVE_ACCESS_GATES_PENDING`
 
 ## Account inventory
 
-| Platform | Candidate account | Evidence state | Release state |
+| Platform | Account / property | Evidence state | Release state |
 |---|---|---|---|
-| Instagram | `https://www.instagram.com/relaxfixuae/` | Documented official profile | Current login/account-role verification required |
-| Facebook | Unknown canonical Page URL | Post receipt is not canonical Page identity | Blocked |
+| Instagram | `https://www.instagram.com/relaxfixuae/` | Owner-confirmed official profile; normalized from the QR/share URL supplied on 2026-07-19 | Live login/account-role verification required before publishing |
+| Facebook | `https://www.facebook.com/share/18UUT9VqzS/?mibextid=wwXIfr` | Owner-confirmed page link supplied on 2026-07-19; this is a share-style URL rather than a stable username URL | Treat as official candidate; verify destination and page role in the live account before publishing |
 | Website | `https://www.relaxfixuae.com/` | Verified canonical Production URL | Governed by Production gates |
-| Google Business Profile | Unknown live state | Account evidence required | No write authorized |
-| Search Console | Unknown live property state | Account evidence required | No write authorized |
+| Google Business Profile | `Relax Fix UAE` | Owner states the profile exists; repository email audit did not directly verify the live Relax Fix UAE profile | Direct signed-in profile evidence required before any edit or publication |
+| Search Console | `relaxfixuae.com` or relevant URL-prefix property | Owner states the property exists; repository email audit did not directly verify the live property | Direct property and URL Inspection evidence required before indexing actions |
+
+## Approved public operating identity
+
+- public/operating name: `Relax Fix UAE`;
+- public coach identity: `Coach Ayman`;
+- website: `https://www.relaxfixuae.com/`;
+- Instagram: `https://www.instagram.com/relaxfixuae/`;
+- Facebook: owner-confirmed page destination through the supplied share URL;
+- primary service area: Abu Dhabi, United Arab Emirates.
+
+This establishes the public operating identity. It does not claim a registered-company form or replace legal review where a controller/legal entity name is required.
 
 ## Batch A1
 
 - canonical package: `week1_batch_a1_approved_recovery_pipeline(2).zip`;
 - SHA-256: `6ce142e1624469052f863662d6a962d6a19ece5eb76e7dfba4306b6a8b077c86`;
 - visual QA: `23 PASS / 0 REVISE`;
-- visual approval does not authorize release.
+- visual approval does not by itself authorize release.
 
 ## Required per-asset evidence
 
@@ -31,6 +42,15 @@ Status: `PUBLISHING_EVIDENCE_REGISTER_PARTIALLY_VERIFIED_RELEASE_BLOCKED`
 - final human release approver;
 - platform receipt after authorized publication.
 
+## Safe operating instructions
+
+1. Publish only from a live account where the owner or authorized operator role is visibly confirmed.
+2. Never reuse the historical Doha Sportive Center Google profile, reviews, photos, categories, or ownership history for Relax Fix UAE.
+3. Use the normalized Instagram profile URL in documentation and metadata; retain the supplied QR/share URL only as owner evidence.
+4. Treat the Facebook share URL as an owner-confirmed destination, but capture the stable Page username/ID from the signed-in Page before automated publishing or schema `sameAs` use.
+5. Do not mark any Batch A1 asset `RELEASE_READY` until its rights, consent, caption pairing, and destination-account rows are complete.
+6. Do not request indexing, edit GBP, schedule posts, or activate publishing solely from this documentation update.
+
 Current repository evidence does not establish a complete per-asset rights/consent register for all 23 assets. Therefore no asset is marked `RELEASE_READY` merely because visual QA passed.
 
-Final state: `VISUAL_APPROVED_RIGHTS_CONSENT_ACCOUNT_RELEASE_GATES_PENDING`.
+Final state: `ACCOUNTS_OWNER_CONFIRMED_VISUAL_APPROVED_RIGHTS_CONSENT_LIVE_ACCESS_GATES_PENDING`.
