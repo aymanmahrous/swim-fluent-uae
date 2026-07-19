@@ -1,0 +1,144 @@
+{
+  "name": "Relax Fix UAE - Lead Preview Internal Alert",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Preview Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "lead-id",
+              "name": "lead_id",
+              "type": "string",
+              "value": "preview-lead-001"
+            },
+            {
+              "id": "source",
+              "name": "source",
+              "type": "string",
+              "value": "website-preview"
+            },
+            {
+              "id": "language",
+              "name": "language",
+              "type": "string",
+              "value": "ar"
+            },
+            {
+              "id": "service",
+              "name": "service",
+              "type": "string",
+              "value": "initial-assessment"
+            },
+            {
+              "id": "consent",
+              "name": "contact_consent",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "id": "created-at",
+              "name": "created_at",
+              "type": "string",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      },
+      "id": "fictional-payload",
+      "name": "Create Fictional Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const allowed = new Set(['lead_id','source','language','service','contact_consent','created_at']);\nconst prohibited = ['name','phone','email','child_name','diagnosis','medical_notes','message'];\n\nreturn items.map((item) => {\n  const keys = Object.keys(item.json);\n  const unexpected = keys.filter((key) => !allowed.has(key));\n  const presentProhibited = prohibited.filter((key) => item.json[key] !== undefined);\n\n  if (unexpected.length || presentProhibited.length) {\n    throw new Error(`Preview payload rejected. Unexpected: ${unexpected.join(',')}; prohibited: ${presentProhibited.join(',')}`);\n  }\n\n  if (item.json.contact_consent !== true) {\n    throw new Error('Preview payload rejected: contact consent must be true.');\n  }\n\n  const idempotencyKey = `${item.json.source}:${item.json.lead_id}`;\n\n  return {\n    json: {\n      ...item.json,\n      idempotency_key: idempotencyKey,\n      preview_only: true,\n      contains_real_pii: false\n    }\n  };\n});"
+      },
+      "id": "validate-minimum-data",
+      "name": "Validate Minimum Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map((item) => ({\n  json: {\n    event_type: 'internal_new_lead_preview',\n    severity: 'info',\n    route_to: 'staff-preview-queue',\n    lead_reference: item.json.lead_id,\n    source: item.json.source,\n    language: item.json.language,\n    service: item.json.service,\n    idempotency_key: item.json.idempotency_key,\n    preview_only: true,\n    outbound_message_sent: false,\n    external_write_performed: false\n  }\n}));"
+      },
+      "id": "build-internal-alert",
+      "name": "Build Internal Preview Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Preview Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create Fictional Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Fictional Lead": {
+      "main": [
+        [
+          {
+            "node": "Validate Minimum Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Minimum Data": {
+      "main": [
+        [
+          {
+            "node": "Build Internal Preview Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "relaxFixMode": "preview-only-fictional-data"
+  },
+  "tags": []
+}
