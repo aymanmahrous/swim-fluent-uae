@@ -1,4 +1,5 @@
 export const SITE_URL = "https://www.relaxfixuae.com";
+export const INSTAGRAM_URL = "https://www.instagram.com/relaxfixuae/";
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const COACH_ID = `${SITE_URL}/#coach-ayman`;
@@ -40,6 +41,7 @@ function structuredData(lang: PublicLanguage) {
         "@id": ORGANIZATION_ID,
         name: "Relax Fix UAE",
         url: SITE_URL,
+        sameAs: [INSTAGRAM_URL],
         email: "swimmingayman@gmail.com",
         telephone: "+971551378660",
         contactPoint: {
