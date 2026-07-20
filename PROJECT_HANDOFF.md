@@ -454,3 +454,73 @@ At the end of every approved major phase:
 4. preserve protected gates and do not invent missing facts;
 5. ensure the next agent can continue without prior chat history;
 6. never use an open Issue as evidence that an agent is working or has delivered.
+
+## 15. Revenue/location/automation foundation update — 2026-07-20 10:46 Asia/Dubai
+
+### Source and isolation
+
+- Branch: `feat/revenue-locations-automation-foundation-20260720`
+- Base: `origin/main` at `49bc34932fc1910378947c5679782f741355d3ec`
+- Main CI at the base commit: PASS.
+- Open PR #46 is documentation-only and has no file overlap.
+- Open PR #36 is draft/conflicting and touches `src/components/public-home.tsx`; this phase deliberately restored that file to `HEAD` and integrates the new conversion sections through the localized route wrappers instead.
+- No Production, main, database, external account, environment variable or secret was changed.
+
+### Implemented
+
+- Added a central typed public-business configuration for:
+  - operational email `relaxfix2026@gmail.com`;
+  - WhatsApp `+971551378660`;
+  - approved prices and maximum group size;
+  - Asia/Dubai general availability;
+  - five Maps-linked locations.
+- Direct Google Maps verification established:
+  - link 4: `ICS Mushrif`;
+  - link 5: `ICS Al Danah`.
+- Added bilingual pricing, training-location cards, status, Maps, assessment, WhatsApp, hours, contact and non-medical safety copy.
+- Updated the chatbot’s fixed approved FAQ set with pricing, locations, hours and emergency/medical boundaries. It still requests no name/phone and retains no conversation.
+- Replaced the conflicting slot ranges with the approved general-hours source.
+- Added safe Local SEO structured data for verified location names/maps and general customer-service hours, without unverified street addresses.
+- Added a disabled/test-mode-first Calendar/email/n8n contract:
+  - location-calendar checks;
+  - double-booking prevention;
+  - idempotency;
+  - safe event titles;
+  - Arabic/English transactional templates;
+  - no external writes unless all flags are deliberately enabled and test mode is disabled.
+- Extended the existing inactive fictional n8n workflow; no parallel chatbot/workflow was created.
+- Carried forward the Preview-proven GA4 Consent Mode queue-protocol fix.
+
+### Verification evidence
+
+- `npm run verify:revenue-foundation`: PASS.
+- `npm run verify:public-seo`: PASS — 78 assertions.
+- `npm run verify:public-free-claims`: PASS.
+- `npm run lint`: PASS with 8 pre-existing Fast Refresh warnings and zero errors.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- Local Arabic/English browser inspection: central facts, five location cards, WhatsApp links, email and RTL/LTR language state rendered.
+- Vite development mode emitted a `data-tsd-source` hydration warning attributable to development instrumentation; the production build completed.
+- The repository’s existing `npm run preview` script looked for a missing `dist/server` path after the successful Nitro build, so production-mode local browser verification is not claimed.
+
+### Safety state
+
+- Calendar external write: OFF.
+- Booking email external send: OFF.
+- n8n booking workflow: inactive.
+- Booking automation test mode: ON by default.
+- GA4 Production activation: unchanged/unauthorized.
+- Real PII, customer records, bookings and outbound messages: none.
+
+### Remaining gates
+
+1. Review and approve the neutral public wording for AED 150 aquatic/land-based movement sessions, or provide qualifications/regulatory evidence before using rehabilitation wording.
+2. Provide Google Calendar ownership/resource model, location-specific availability, travel buffers and OAuth approval.
+3. Import the existing inactive n8n workflow into the authorized workspace and run a fictional manual test.
+4. Select and authorize the transactional email provider/sender configuration.
+5. Obtain Preview URL and complete responsive/mobile/accessibility validation.
+6. Review and merge the PR only after CI and Preview evidence; no automatic merge or Production deployment.
+
+### Next required action
+
+Commit the tested isolated foundation, push the feature branch, open a small review PR, then inspect CI and Vercel Preview without promoting it to Production.

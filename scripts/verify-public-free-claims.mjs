@@ -31,7 +31,10 @@ const forbiddenPublicClaimPatterns = [
 
 for (const [sourceName, source] of publicSources) {
   for (const pattern of forbiddenPublicClaimPatterns) {
-    assert.ok(!pattern.test(source), `Unapproved public claim remains in ${sourceName}: ${pattern}`);
+    assert.ok(
+      !pattern.test(source),
+      `Unapproved public claim remains in ${sourceName}: ${pattern}`,
+    );
   }
 }
 
@@ -53,7 +56,10 @@ for (const contract of [
   "\\bcomplimentary\\b(?:",
   "\\bno(?:-|\\s+)cost\\b",
 ]) {
-  assert.ok(businessSettings.includes(contract), `Business-settings public-claim guard is missing: ${contract}`);
+  assert.ok(
+    businessSettings.includes(contract),
+    `Business-settings public-claim guard is missing: ${contract}`,
+  );
 }
 
 function extractRequired(source, pattern, label) {
@@ -122,18 +128,30 @@ for (const value of [
 }
 
 for (const safeMetadata of [
-  "تدريب سباحة وثقة مائية في أبوظبي مع كوتش أيمن، يبدأ بتقييم واضح وتدرج يناسب نقطة بداية كل متدرب.",
-  "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman, with a clear assessment and step-by-step training based on each learner’s starting point.",
+  "تدريب سباحة وثقة مائية للأطفال في أبوظبي ضمن مجموعة صغيرة بحد أقصى 4 أطفال، مع مواقع متعددة وطلب تقييم أولي قبل تأكيد الموعد.",
+  "Children’s swimming and water-confidence coaching in Abu Dhabi in small groups of up to four, with multiple locations and an initial assessment request before confirmation.",
 ]) {
   assert.ok(publicSeo.includes(safeMetadata), `Approved safe metadata is missing: ${safeMetadata}`);
 }
 
-assert.ok(publicHome.includes("settings.openingOfferTextAr"), "Arabic public offer binding changed unexpectedly");
-assert.ok(publicHome.includes("settings.openingOfferTextEn"), "English public offer binding changed unexpectedly");
+assert.ok(
+  publicHome.includes("settings.openingOfferTextAr"),
+  "Arabic public offer binding changed unexpectedly",
+);
+assert.ok(
+  publicHome.includes("settings.openingOfferTextEn"),
+  "English public offer binding changed unexpectedly",
+);
 assert.ok(publicHome.includes('id="book"'), "Public booking section changed unexpectedly");
 assert.ok(publicHome.includes("submitBookingRequest"), "Booking flow changed unexpectedly");
-assert.ok(!publicHome.includes('["People of Determination"'), "Unapproved public category remains in the booking form");
+assert.ok(
+  !publicHome.includes('["People of Determination"'),
+  "Unapproved public category remains in the booking form",
+);
 assert.ok(!publicSeo.includes("founder:"), "Unverified founder claim remains in public schema");
-assert.ok(!publicSeo.includes('"Adaptive aquatic coaching"'), "Adaptive claim remains in Person knowsAbout");
+assert.ok(
+  !publicSeo.includes('"Adaptive aquatic coaching"'),
+  "Adaptive claim remains in Person knowsAbout",
+);
 
 console.log("Public claims safety and sanitizer boundary contracts passed.");

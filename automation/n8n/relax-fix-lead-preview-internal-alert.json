@@ -14,10 +14,7 @@
       "name": "Manual Preview Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [
-        -640,
-        0
-      ]
+      "position": [-640, 0]
     },
     {
       "parameters": {
@@ -45,7 +42,37 @@
               "id": "service",
               "name": "service",
               "type": "string",
-              "value": "initial-assessment"
+              "value": "children-small-group"
+            },
+            {
+              "id": "location-id",
+              "name": "location_id",
+              "type": "string",
+              "value": "ics-al-najda"
+            },
+            {
+              "id": "requested-date",
+              "name": "requested_date",
+              "type": "string",
+              "value": "2026-07-25"
+            },
+            {
+              "id": "requested-time",
+              "name": "requested_time",
+              "type": "string",
+              "value": "10:00"
+            },
+            {
+              "id": "duration-minutes",
+              "name": "duration_minutes",
+              "type": "number",
+              "value": 45
+            },
+            {
+              "id": "booking-reference",
+              "name": "booking_reference",
+              "type": "string",
+              "value": "RF-PREVIEW-001"
             },
             {
               "id": "consent",
@@ -68,36 +95,27 @@
       "name": "Create Fictional Lead",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        -400,
-        0
-      ]
+      "position": [-400, 0]
     },
     {
       "parameters": {
-        "jsCode": "const allowed = new Set(['lead_id','source','language','service','contact_consent','created_at']);\nconst prohibited = ['name','phone','email','child_name','diagnosis','medical_notes','message'];\n\nreturn items.map((item) => {\n  const keys = Object.keys(item.json);\n  const unexpected = keys.filter((key) => !allowed.has(key));\n  const presentProhibited = prohibited.filter((key) => item.json[key] !== undefined);\n\n  if (unexpected.length || presentProhibited.length) {\n    throw new Error(`Preview payload rejected. Unexpected: ${unexpected.join(',')}; prohibited: ${presentProhibited.join(',')}`);\n  }\n\n  if (item.json.contact_consent !== true) {\n    throw new Error('Preview payload rejected: contact consent must be true.');\n  }\n\n  const idempotencyKey = `${item.json.source}:${item.json.lead_id}`;\n\n  return {\n    json: {\n      ...item.json,\n      idempotency_key: idempotencyKey,\n      preview_only: true,\n      contains_real_pii: false\n    }\n  };\n});"
+        "jsCode": "const allowed = new Set(['lead_id','source','language','service','location_id','requested_date','requested_time','duration_minutes','booking_reference','contact_consent','created_at']);\nconst prohibited = ['name','phone','email','child_name','diagnosis','medical_notes','message'];\nconst locations = new Set(['ics-al-najda','ics-al-falah','ics-khalifa','ics-mushrif','ics-al-danah']);\nconst services = new Set(['children-small-group','aquatic-movement','land-movement']);\n\nreturn items.map((item) => {\n  const keys = Object.keys(item.json);\n  const unexpected = keys.filter((key) => !allowed.has(key));\n  const presentProhibited = prohibited.filter((key) => item.json[key] !== undefined);\n\n  if (unexpected.length || presentProhibited.length) {\n    throw new Error(`Preview payload rejected. Unexpected: ${unexpected.join(',')}; prohibited: ${presentProhibited.join(',')}`);\n  }\n  if (item.json.contact_consent !== true) throw new Error('Preview payload rejected: contact consent must be true.');\n  if (!locations.has(item.json.location_id)) throw new Error('Preview payload rejected: unknown location.');\n  if (!services.has(item.json.service)) throw new Error('Preview payload rejected: unknown service.');\n  if (!/^RF-[A-Z0-9-]{4,32}$/.test(item.json.booking_reference)) throw new Error('Preview payload rejected: invalid booking reference.');\n\n  const start = Number(item.json.requested_time.slice(0, 2)) * 60 + Number(item.json.requested_time.slice(3, 5));\n  const weekday = new Date(`${item.json.requested_date}T12:00:00Z`).getUTCDay();\n  const allowedStart = weekday === 0 || weekday === 6 ? 600 : 960;\n  const allowedEnd = weekday === 0 || weekday === 6 ? 1320 : 1260;\n  if (!Number.isFinite(start) || start < allowedStart || start + item.json.duration_minutes > allowedEnd) {\n    throw new Error('Preview payload rejected: outside general availability.');\n  }\n\n  return {\n    json: {\n      ...item.json,\n      idempotency_key: `${item.json.source}:${item.json.booking_reference}`,\n      calendar_conflict_check_required: true,\n      location_calendar_check_required: true,\n      appointment_confirmed: false,\n      preview_only: true,\n      contains_real_pii: false\n    }\n  };\n});"
       },
       "id": "validate-minimum-data",
       "name": "Validate Minimum Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        -160,
-        0
-      ]
+      "position": [-160, 0]
     },
     {
       "parameters": {
-        "jsCode": "return items.map((item) => ({\n  json: {\n    event_type: 'internal_new_lead_preview',\n    severity: 'info',\n    route_to: 'staff-preview-queue',\n    lead_reference: item.json.lead_id,\n    source: item.json.source,\n    language: item.json.language,\n    service: item.json.service,\n    idempotency_key: item.json.idempotency_key,\n    preview_only: true,\n    outbound_message_sent: false,\n    external_write_performed: false\n  }\n}));"
+        "jsCode": "return items.map((item) => ({\n  json: {\n    event_type: 'internal_new_lead_preview',\n    severity: 'info',\n    route_to: 'staff-preview-queue',\n    alert_recipient: 'relaxfix2026@gmail.com',\n    lead_reference: item.json.lead_id,\n    booking_reference: item.json.booking_reference,\n    source: item.json.source,\n    language: item.json.language,\n    service: item.json.service,\n    location_id: item.json.location_id,\n    requested_date: item.json.requested_date,\n    requested_time: item.json.requested_time,\n    idempotency_key: item.json.idempotency_key,\n    retry_policy: 'maximum-2-after-idempotency-check',\n    calendar_conflict_check_required: true,\n    appointment_confirmed: false,\n    preview_only: true,\n    outbound_message_sent: false,\n    external_write_performed: false\n  }\n}));"
       },
       "id": "build-internal-alert",
       "name": "Build Internal Preview Alert",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        80,
-        0
-      ]
+      "position": [80, 0]
     }
   ],
   "connections": {

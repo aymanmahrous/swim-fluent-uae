@@ -16,24 +16,18 @@ export interface Booking {
 }
 
 function slotsForDay(day: number, duration: number): string[] {
-  const ranges: [number, number][] = [];
-
-  if (day === 1) ranges.push([16, 21]);
-  else if (day === 0 || day === 6) ranges.push([18, 22]);
-  else if (day === 2 || day === 4 || day === 5) {
-    ranges.push([13, 15]);
-    ranges.push([19, 22]);
-  } else ranges.push([16, 21]);
+  const hours = generalHoursForWeekday(day);
+  const [startHour, startMinute] = hours.start.split(":").map(Number);
+  const [endHour, endMinute] = hours.end.split(":").map(Number);
 
   const slots: string[] = [];
-  for (const [start, end] of ranges) {
-    let minutes = start * 60;
-    while (minutes + duration <= end * 60) {
-      const hour = Math.floor(minutes / 60);
-      const minute = minutes % 60;
-      slots.push(`${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`);
-      minutes += duration;
-    }
+  let minutes = startHour * 60 + startMinute;
+  const endMinutes = endHour * 60 + endMinute;
+  while (minutes + duration <= endMinutes) {
+    const hour = Math.floor(minutes / 60);
+    const minute = minutes % 60;
+    slots.push(`${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`);
+    minutes += duration;
   }
 
   return slots;
@@ -69,3 +63,4 @@ export function buildWhatsAppMessage(booking: Booking): string {
       `Slot: ${booking.slot}\n`,
   );
 }
+import { generalHoursForWeekday } from "../platform/public-business-config";

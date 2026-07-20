@@ -10,7 +10,7 @@ const pageCopy = {
   ar: {
     title: "تعليم السباحة والثقة المائية في أبوظبي | كوتش أيمن | Relax Fix UAE",
     description:
-      "تدريب سباحة وثقة مائية في أبوظبي مع كوتش أيمن، يبدأ بتقييم واضح وتدرج يناسب نقطة بداية كل متدرب.",
+      "تدريب سباحة وثقة مائية للأطفال في أبوظبي ضمن مجموعة صغيرة بحد أقصى 4 أطفال، مع مواقع متعددة وطلب تقييم أولي قبل تأكيد الموعد.",
     url: `${SITE_URL}/`,
     locale: "ar_AE",
     alternateLocale: "en_AE",
@@ -20,7 +20,7 @@ const pageCopy = {
   en: {
     title: "Swimming & Water Confidence Coach Abu Dhabi | Coach Ayman | Relax Fix UAE",
     description:
-      "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman, with a clear assessment and step-by-step training based on each learner’s starting point.",
+      "Children’s swimming and water-confidence coaching in Abu Dhabi in small groups of up to four, with multiple locations and an initial assessment request before confirmation.",
     url: `${SITE_URL}/en`,
     locale: "en_AE",
     alternateLocale: "ar_AE",
@@ -42,15 +42,34 @@ function structuredData(lang: PublicLanguage) {
         name: "Relax Fix UAE",
         url: SITE_URL,
         sameAs: [INSTAGRAM_URL],
-        email: "swimmingayman@gmail.com",
-        telephone: "+971551378660",
+        email: OPERATIONAL_EMAIL,
+        telephone: WHATSAPP_DISPLAY,
+        location: TRAINING_LOCATIONS.map((location) => ({
+          "@type": "Place",
+          name: location.name,
+          hasMap: location.mapsUrl,
+        })),
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer service",
-          telephone: "+971551378660",
-          email: "swimmingayman@gmail.com",
+          telephone: WHATSAPP_DISPLAY,
+          email: OPERATIONAL_EMAIL,
           availableLanguage: ["Arabic", "English"],
           areaServed: "AE",
+          hoursAvailable: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Saturday", "Sunday"],
+              opens: "10:00",
+              closes: "22:00",
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "16:00",
+              closes: "21:00",
+            },
+          ],
         },
       },
       {
@@ -59,11 +78,7 @@ function structuredData(lang: PublicLanguage) {
         name: "Coach Ayman",
         jobTitle: "Swimming and Water Confidence Coach",
         worksFor: { "@id": ORGANIZATION_ID },
-        knowsAbout: [
-          "Swimming coaching",
-          "Water confidence",
-          "Swimming technique",
-        ],
+        knowsAbout: ["Swimming coaching", "Water confidence", "Swimming technique"],
         knowsLanguage: ["Arabic", "English"],
       },
       {
@@ -139,3 +154,4 @@ export function publicHomeHead(lang: PublicLanguage) {
     ],
   };
 }
+import { OPERATIONAL_EMAIL, TRAINING_LOCATIONS, WHATSAPP_DISPLAY } from "./public-business-config";
