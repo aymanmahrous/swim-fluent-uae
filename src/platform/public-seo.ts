@@ -8,12 +8,14 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const COACH_ID = `${SITE_URL}/#coach-ayman`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 const SERVICE_ID = `${SITE_URL}/#swimming-water-confidence`;
+const SOCIAL_IMAGE_URL = new URL(heroImg, `${SITE_URL}/`).toString();
 
 const pageCopy = {
   ar: {
     title: "تعليم السباحة والثقة المائية في أبوظبي | كوتش أيمن | Relax Fix UAE",
     description:
       "تدريب سباحة وثقة مائية للأطفال في أبوظبي ضمن مجموعة صغيرة بحد أقصى 4 أطفال، مع مواقع متعددة وطلب تقييم أولي قبل تأكيد الموعد.",
+    imageAlt: "تدريب السباحة والثقة المائية للأطفال في أبوظبي مع كوتش أيمن",
     url: `${SITE_URL}/`,
     locale: "ar_AE",
     alternateLocale: "en_AE",
@@ -24,6 +26,7 @@ const pageCopy = {
     title: "Swimming & Water Confidence Coach Abu Dhabi | Coach Ayman | Relax Fix UAE",
     description:
       "Children’s swimming and water-confidence coaching in Abu Dhabi in small groups of up to four, with multiple locations and an initial assessment request before confirmation.",
+    imageAlt: "Children’s swimming and water-confidence coaching in Abu Dhabi with Coach Ayman",
     url: `${SITE_URL}/en`,
     locale: "en_AE",
     alternateLocale: "ar_AE",
@@ -139,9 +142,14 @@ export function publicHomeHead(lang: PublicLanguage) {
       { property: "og:site_name", content: "Relax Fix UAE" },
       { property: "og:locale", content: copy.locale },
       { property: "og:locale:alternate", content: copy.alternateLocale },
+      { property: "og:image", content: SOCIAL_IMAGE_URL },
+      { property: "og:image:alt", content: copy.imageAlt },
+      { property: "og:image:type", content: "image/jpeg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: copy.title },
       { name: "twitter:description", content: copy.description },
+      { name: "twitter:image", content: SOCIAL_IMAGE_URL },
+      { name: "twitter:image:alt", content: copy.imageAlt },
     ],
     links: [
       { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" as const },
