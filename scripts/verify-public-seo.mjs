@@ -31,6 +31,11 @@ for (const needle of [
   'hrefLang: "ar-AE"',
   'hrefLang: "en-AE"',
   'hrefLang: "x-default"',
+  'property: "og:image"',
+  'property: "og:image:alt"',
+  'property: "og:image:type"',
+  'name: "twitter:image"',
+  'name: "twitter:image:alt"',
   '"@type": "Organization"',
   "sameAs: [INSTAGRAM_URL]",
   '"@type": "Person"',
@@ -157,6 +162,14 @@ for (const needle of ["/os", "/staff", "/admin", "/api/"]) {
 
 const vercel = await text("vercel.json");
 for (const needle of [
+  '"source": "/(.*)"',
+  '"key": "X-Content-Type-Options"',
+  '"value": "nosniff"',
+  '"key": "Referrer-Policy"',
+  '"value": "strict-origin-when-cross-origin"',
+  '"key": "Permissions-Policy"',
+  '"key": "X-Frame-Options"',
+  '"value": "DENY"',
   '"source": "/api/(.*)"',
   '"source": "/os/(.*)"',
   '"source": "/os"',
@@ -165,7 +178,7 @@ for (const needle of [
   '"key": "X-Robots-Tag"',
   '"value": "noindex, nofollow, noarchive"',
 ]) {
-  requireText(vercel, needle, "private route indexing headers");
+  requireText(vercel, needle, "security and private-route headers");
 }
 
 console.log(`Public SEO verification passed (${checks} assertions).`);
