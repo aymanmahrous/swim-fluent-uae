@@ -9,7 +9,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
-import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { AnalyticsConsentBridge } from "../components/analytics-consent-bridge";
 import { ConsentBanner } from "../components/consent-banner";
 import { Toaster } from "../components/ui/sonner";
@@ -25,31 +25,6 @@ import appCss from "../styles.css?url";
 
 const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
-const LazyChatbotPreview = lazy(() =>
-  import("../components/chatbot-preview").then((module) => ({
-    default: module.ChatbotPreview,
-  })),
-);
-
-function DeferredChatbotPreview() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(() => setReady(true), { timeout: 2_000 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = globalThis.setTimeout(() => setReady(true), 1_500);
-    return () => globalThis.clearTimeout(id);
-  }, []);
-
-  return ready ? (
-    <Suspense fallback={null}>
-      <LazyChatbotPreview />
-    </Suspense>
-  ) : null;
-}
-
 function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
 }
@@ -282,7 +257,6 @@ function RootComponent() {
           <Footer />
           <AnalyticsConsentBridge />
           <ConsentBanner />
-          <DeferredChatbotPreview />
           <Toaster richColors position="top-center" />
         </div>
       </LangProvider>
