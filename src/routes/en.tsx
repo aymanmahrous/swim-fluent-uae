@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { ConversionEventBridge } from "../components/conversion-event-bridge";
 import { Route as PublicHomeDefinition } from "../components/public-home";
 import { RevenueSections } from "../components/revenue-sections";
 import { publicHomeHead } from "../platform/public-seo";
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/en")({
 function EnglishPublicHome() {
   return (
     <>
+      <ConversionEventBridge />
       <PublicHomeComponent />
       <RevenueSections />
     </>
