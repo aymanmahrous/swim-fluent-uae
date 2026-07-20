@@ -9,8 +9,10 @@ assert.ok(
 const isLocalUncompressedPreview = baseUrl.startsWith("http://127.0.0.1");
 
 const browser = await chromium.launch({
-  executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   headless: true,
+  ...(process.env.CHROME_EXECUTABLE_PATH
+    ? { executablePath: process.env.CHROME_EXECUTABLE_PATH }
+    : {}),
 });
 
 const results = [];
