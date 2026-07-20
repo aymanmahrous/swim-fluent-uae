@@ -48,7 +48,7 @@
               "id": "location-id",
               "name": "location_id",
               "type": "string",
-              "value": "ics-al-najda"
+              "value": "najda-street"
             },
             {
               "id": "requested-date",
@@ -99,7 +99,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const allowed = new Set(['lead_id','source','language','service','location_id','requested_date','requested_time','duration_minutes','booking_reference','contact_consent','created_at']);\nconst prohibited = ['name','phone','email','child_name','diagnosis','medical_notes','message'];\nconst locations = new Set(['ics-al-najda','ics-al-falah','ics-khalifa','ics-mushrif','ics-al-danah']);\nconst services = new Set(['children-small-group','aquatic-movement','land-movement']);\n\nreturn items.map((item) => {\n  const keys = Object.keys(item.json);\n  const unexpected = keys.filter((key) => !allowed.has(key));\n  const presentProhibited = prohibited.filter((key) => item.json[key] !== undefined);\n\n  if (unexpected.length || presentProhibited.length) {\n    throw new Error(`Preview payload rejected. Unexpected: ${unexpected.join(',')}; prohibited: ${presentProhibited.join(',')}`);\n  }\n  if (item.json.contact_consent !== true) throw new Error('Preview payload rejected: contact consent must be true.');\n  if (!locations.has(item.json.location_id)) throw new Error('Preview payload rejected: unknown location.');\n  if (!services.has(item.json.service)) throw new Error('Preview payload rejected: unknown service.');\n  if (!/^RF-[A-Z0-9-]{4,32}$/.test(item.json.booking_reference)) throw new Error('Preview payload rejected: invalid booking reference.');\n\n  const start = Number(item.json.requested_time.slice(0, 2)) * 60 + Number(item.json.requested_time.slice(3, 5));\n  const weekday = new Date(`${item.json.requested_date}T12:00:00Z`).getUTCDay();\n  const allowedStart = weekday === 0 || weekday === 6 ? 600 : 960;\n  const allowedEnd = weekday === 0 || weekday === 6 ? 1320 : 1260;\n  if (!Number.isFinite(start) || start < allowedStart || start + item.json.duration_minutes > allowedEnd) {\n    throw new Error('Preview payload rejected: outside general availability.');\n  }\n\n  return {\n    json: {\n      ...item.json,\n      idempotency_key: `${item.json.source}:${item.json.booking_reference}`,\n      calendar_conflict_check_required: true,\n      location_calendar_check_required: true,\n      appointment_confirmed: false,\n      preview_only: true,\n      contains_real_pii: false\n    }\n  };\n});"
+        "jsCode": "const allowed = new Set(['lead_id','source','language','service','location_id','requested_date','requested_time','duration_minutes','booking_reference','contact_consent','created_at']);\nconst prohibited = ['name','phone','email','child_name','diagnosis','medical_notes','message'];\nconst locations = new Set(['najda-street','ics-al-falah','ics-khalifa','ics-mushrif']);\nconst services = new Set(['children-small-group','aquatic-movement','land-movement']);\n\nreturn items.map((item) => {\n  const keys = Object.keys(item.json);\n  const unexpected = keys.filter((key) => !allowed.has(key));\n  const presentProhibited = prohibited.filter((key) => item.json[key] !== undefined);\n\n  if (unexpected.length || presentProhibited.length) {\n    throw new Error(`Preview payload rejected. Unexpected: ${unexpected.join(',')}; prohibited: ${presentProhibited.join(',')}`);\n  }\n  if (item.json.contact_consent !== true) throw new Error('Preview payload rejected: contact consent must be true.');\n  if (!locations.has(item.json.location_id)) throw new Error('Preview payload rejected: unknown location.');\n  if (!services.has(item.json.service)) throw new Error('Preview payload rejected: unknown service.');\n  if (!/^RF-[A-Z0-9-]{4,32}$/.test(item.json.booking_reference)) throw new Error('Preview payload rejected: invalid booking reference.');\n\n  const start = Number(item.json.requested_time.slice(0, 2)) * 60 + Number(item.json.requested_time.slice(3, 5));\n  const weekday = new Date(`${item.json.requested_date}T12:00:00Z`).getUTCDay();\n  const allowedStart = weekday === 0 || weekday === 6 ? 600 : 960;\n  const allowedEnd = weekday === 0 || weekday === 6 ? 1320 : 1260;\n  if (!Number.isFinite(start) || start < allowedStart || start + item.json.duration_minutes > allowedEnd) {\n    throw new Error('Preview payload rejected: outside general availability.');\n  }\n\n  return {\n    json: {\n      ...item.json,\n      idempotency_key: `${item.json.source}:${item.json.booking_reference}`,\n      calendar_conflict_check_required: true,\n      location_calendar_check_required: true,\n      appointment_confirmed: false,\n      preview_only: true,\n      contains_real_pii: false\n    }\n  };\n});"
       },
       "id": "validate-minimum-data",
       "name": "Validate Minimum Data",
@@ -156,7 +156,29 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,
-    "relaxFixMode": "preview-only-fictional-data"
+    "relaxFixMode": "preview-only-fictional-data",
+    "testMode": true,
+    "externalWritesEnabled": false,
+    "reviewRequiredBeforePublish": true,
+    "technicalAccount": "swimmingayman@gmail.com",
+    "operationalAccount": "relaxfix2026@gmail.com",
+    "timezone": "Asia/Dubai",
+    "workflowSuite": [
+      "booking-request-intake",
+      "calendar-availability-check",
+      "booking-confirmation",
+      "booking-reschedule",
+      "booking-cancellation",
+      "internal-gmail-notification",
+      "customer-reminder",
+      "chatbot-human-handoff",
+      "automation-error-handler",
+      "daily-operations-digest",
+      "lead-follow-up-queue",
+      "content-scheduling-queue",
+      "google-business-post-preparation-queue",
+      "review-request-queue"
+    ]
   },
   "tags": []
 }

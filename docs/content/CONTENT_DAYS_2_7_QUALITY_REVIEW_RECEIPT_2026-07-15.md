@@ -1,5 +1,7 @@
 # Content Days 2–7 Quality Review Receipt
 
+> Location labels in this historical receipt were superseded on 2026-07-20. Current public output may use only Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif.
+
 Date: 2026-07-15 (Asia/Dubai)
 
 Source: `docs/content/CONTENT_30_DAY_BILINGUAL_OPERATING_PLAN.md`

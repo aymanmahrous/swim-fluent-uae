@@ -46,8 +46,8 @@ function structuredData(lang: PublicLanguage) {
         telephone: WHATSAPP_DISPLAY,
         location: TRAINING_LOCATIONS.map((location) => ({
           "@type": "Place",
-          name: location.name,
-          hasMap: location.mapsUrl,
+          name: location.displayName,
+          hasMap: location.shortUrl,
         })),
         contactPoint: {
           "@type": "ContactPoint",

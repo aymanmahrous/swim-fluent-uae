@@ -139,8 +139,8 @@ export function RevenueSections() {
           {TRAINING_LOCATIONS.map((location) => {
             const status = statusCopy[location.status];
             const message = isArabic
-              ? `مرحبًا، أريد طلب تقييم أولي في ${location.name}.`
-              : `Hello, I would like to request an initial assessment at ${location.name}.`;
+              ? `مرحبًا، أريد طلب تقييم أولي في ${location.displayName}.`
+              : `Hello, I would like to request an initial assessment at ${location.displayName}.`;
             return (
               <article
                 key={location.id}
@@ -154,7 +154,7 @@ export function RevenueSections() {
                     {isArabic ? status.ar : status.en}
                   </span>
                 </div>
-                <h3 className="mt-5 text-xl font-black">{location.name}</h3>
+                <h3 className="mt-5 text-xl font-black">{location.displayName}</h3>
                 <div className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
                   <p>
                     {isArabic ? GENERAL_AVAILABILITY.weekend.ar : GENERAL_AVAILABILITY.weekend.en}
@@ -165,7 +165,7 @@ export function RevenueSections() {
                 </div>
                 <div className="mt-6 grid gap-2">
                   <a
-                    href={location.mapsUrl}
+                    href={location.shortUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black hover:bg-muted"

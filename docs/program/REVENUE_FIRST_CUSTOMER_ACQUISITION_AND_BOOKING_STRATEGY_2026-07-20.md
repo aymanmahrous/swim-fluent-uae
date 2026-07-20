@@ -9,7 +9,7 @@ Generate qualified initial-assessment requests, then convert them into confirmed
 1. Parents seeking learn-to-swim, water confidence or calmer small-group coaching for children.
 2. Families with two or more children who benefit from the approved sibling rate.
 3. People interested in non-medical aquatic or land-based movement sessions.
-4. Searchers near Al Najda, Al Falah, Khalifa, Mushrif and Al Danah.
+4. Searchers near Najda Street, Al Falah, Khalifa and Mushrif.
 
 ## Value proposition
 
@@ -98,8 +98,8 @@ No metric may contain names, phone numbers, child data, health details or free-t
 ## Owner decision queue
 
 1. Approve neutral public wording for the AED 150 aquatic/land-based sessions, or provide regulatory evidence for rehabilitation wording.
-2. Choose the Calendar ownership/resource model for five locations and authorize OAuth for `relaxfix2026@gmail.com`.
+2. Map four logical Calendar resources to `relaxfix2026@gmail.com` and authorize OAuth only after the fictional sandbox test plan is approved.
 3. Confirm location-specific availability and travel buffers.
-4. Provide n8n workspace access and credential custody; keep the workflow inactive until test evidence passes.
+4. Use `swimmingayman@gmail.com` only for n8n login/credential administration; keep operational Calendar and notifications on `relaxfix2026@gmail.com`, and keep every workflow inactive until fictional test evidence passes.
 5. Approve the exact transactional sender/provider and reply-to policy.
 6. Approve a later Production release candidate after Preview, accessibility and end-to-end fictional tests pass.

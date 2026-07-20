@@ -11,7 +11,7 @@
 - GA4 Preview-only validation: default denied, update granted, `conversation_start` hit sent, HTTP 204. The verified queue-protocol fix is carried into this branch.
 - Google Maps direct verification:
   - Link 4 resolves to International Community Schools — ICS Mushrif.
-  - Link 5 resolves to ICS Al Danah — International Community School.
+  - The fifth supplied link resolves to the same Google Maps destination as the Najda link and is hidden from the public registry to prevent a duplicate location.
 
 ## Gap classification
 

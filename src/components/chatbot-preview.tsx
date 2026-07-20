@@ -14,7 +14,8 @@ import {
 
 const chatbotEnabled = import.meta.env.VITE_ENABLE_CHATBOT_PREVIEW === "true";
 
-type FaqId = "services" | "pricing" | "location" | "hours" | "assessment" | "children" | "human";
+type FaqId =
+  "services" | "pricing" | "location" | "hours" | "assessment" | "time" | "children" | "human";
 
 type Faq = {
   id: FaqId;
@@ -45,8 +46,8 @@ const approvedFaqs: Faq[] = [
     id: "location",
     questionAr: "أين يتم التدريب؟",
     questionEn: "Where is coaching available?",
-    answerAr: `مواقع التدريب الحالية: ${TRAINING_LOCATIONS.map((location) => location.name).join("، ")}. افتح قسم مواقع التدريب لاختيار الموقع ورابط Google Maps. يراجع الفريق توفر الموقع قبل التأكيد.`,
-    answerEn: `Current training locations: ${TRAINING_LOCATIONS.map((location) => location.name).join(", ")}. Open the Training Locations section to choose a location and its Google Maps link. The team checks location availability before confirmation.`,
+    answerAr: `مواقع التدريب الحالية: ${TRAINING_LOCATIONS.map((location) => location.displayName).join("، ")}. افتح قسم مواقع التدريب لاختيار الموقع ورابط Google Maps. يراجع الفريق توفر الموقع والتقويم قبل عرض الوقت، ولا يصبح الحجز مؤكدًا إلا بعد رسالة التأكيد.`,
+    answerEn: `Current training locations: ${TRAINING_LOCATIONS.map((location) => location.displayName).join(", ")}. Open the Training Locations section to choose a location and its Google Maps link. The team checks the location calendar before showing a time, and a booking is not confirmed until a confirmation message is sent.`,
   },
   {
     id: "hours",
@@ -63,6 +64,15 @@ const approvedFaqs: Faq[] = [
       "ابدأ بإرسال طلب التقييم من نموذج الموقع. يراجع الفريق مستواك وهدفك والوقت المناسب قبل تأكيد أي موعد.",
     answerEn:
       "Start with the website assessment request. The team reviews your starting level, goal, and suitable time before confirming an appointment.",
+  },
+  {
+    id: "time",
+    questionAr: "كيف أختار وقتًا مبدئيًا؟",
+    questionEn: "How do I choose a preliminary time?",
+    answerAr:
+      "اختر الخدمة والموقع واليوم والوقت المبدئي من نموذج التقييم. لا يعرض النظام الوقت كتأكيد قبل فحص تقويم الموقع والتعارضات، ثم يرسل الفريق رسالة تأكيد منفصلة.",
+    answerEn:
+      "Choose the service, location, day and preliminary time in the assessment form. The system does not treat it as confirmed until the location calendar and conflicts are checked and the team sends a separate confirmation.",
   },
   {
     id: "children",
@@ -150,7 +160,23 @@ export function ChatbotPreview() {
 
             {selected && (
               <div role="status" className="mt-4 rounded-2xl bg-muted/60 p-4 text-sm leading-7">
-                {isArabic ? selected.answerAr : selected.answerEn}
+                <p>{isArabic ? selected.answerAr : selected.answerEn}</p>
+                {selected.id === "location" && (
+                  <ul className="mt-3 grid gap-2">
+                    {TRAINING_LOCATIONS.map((location) => (
+                      <li key={location.id}>
+                        <a
+                          href={location.shortUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-black text-primary underline underline-offset-4"
+                        >
+                          {location.displayName} — Google Maps
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 

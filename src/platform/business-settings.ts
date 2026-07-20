@@ -74,7 +74,7 @@ export const fallbackBusinessSettings: BusinessSettings = {
   currency: "AED",
   sessionDurationMinutes: 45,
   timezone: "Asia/Dubai",
-  locations: TRAINING_LOCATIONS.map((location) => location.name),
+  locations: TRAINING_LOCATIONS.map((location) => location.displayName),
   bookingEnabled: false,
   openingOfferTextAr: approvedOpeningOffer.ar,
   openingOfferTextEn: approvedOpeningOffer.en,

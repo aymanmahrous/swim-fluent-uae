@@ -75,17 +75,27 @@ for (const needle of [
   "siblingChildPriceAED: 400",
   "aquaticSessionPriceAED: 150",
   "landSessionPriceAED: 150",
-  'name: "ICS Al Najda"',
-  'name: "ICS Al Falah"',
-  'name: "ICS Khalifa"',
-  'name: "ICS Mushrif"',
-  'name: "ICS Al Danah"',
+  'DISPLAY_NAME_OWNER_APPROVED = "Najda Street"',
+  'displayName: "ICS Al Falah"',
+  'displayName: "ICS Khalifa"',
+  'displayName: "ICS Mushrif"',
+  "isPublic: false",
   'start: "10:00"',
   'end: "22:00"',
   'start: "16:00"',
   'end: "21:00"',
 ]) {
   requireText(publicConfig, needle, "central public business configuration");
+}
+
+for (const publicSurface of [
+  await text("src/components/revenue-sections.tsx"),
+  await text("src/components/chatbot-preview.tsx"),
+  await text("src/platform/public-seo.ts"),
+  await text("src/platform/booking-automation.ts"),
+]) {
+  forbidText(publicSurface, "ICS Al Danah", "public Al Danah removal");
+  forbidText(publicSurface, "ics-al-danah", "public Al Danah removal");
 }
 
 const i18n = await text("src/lib/i18n.tsx");

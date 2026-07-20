@@ -11,6 +11,8 @@ const [
   analytics,
   envExample,
   n8nSource,
+  contentSchedule,
+  gbpAudit,
 ] = await Promise.all([
   read("src/platform/public-business-config.ts"),
   read("src/components/revenue-sections.tsx"),
@@ -20,6 +22,8 @@ const [
   read("src/platform/public-analytics.ts"),
   read(".env.example"),
   read("automation/n8n/relax-fix-lead-preview-internal-alert.json"),
+  read("docs/content/REVENUE_30_DAY_BILINGUAL_CONTENT_SCHEDULE_2026-07-20.md"),
+  read("docs/seo/GBP_AUDIT_AND_DECISION_PACK_2026-07-20.md"),
 ]);
 
 for (const value of [
@@ -30,13 +34,14 @@ for (const value of [
   "siblingChildPriceAED: 400",
   "aquaticSessionPriceAED: 150",
   "landSessionPriceAED: 150",
-  "ICS Al Najda",
+  "Najda Street",
   "ICS Al Falah",
   "ICS Khalifa",
   "ICS Mushrif",
-  "ICS Al Danah",
   "Rgu2vKH7JDigAQQx6",
-  "2ezLYdDSGLqeVkoNA",
+  "isPublic: false",
+  "bookingEnabled: false",
+  "localSeoEnabled: false",
   'start: "10:00"',
   'end: "22:00"',
   'start: "16:00"',
@@ -44,6 +49,44 @@ for (const value of [
 ]) {
   assert.ok(config.includes(value), `Missing central revenue fact: ${value}`);
 }
+
+const registryMatch = config.match(
+  /TRAINING_LOCATION_REGISTRY:[^=]+=[\s\S]*?\[([\s\S]*?)\]\s+as const;/,
+);
+assert.ok(registryMatch, "Training location registry could not be parsed");
+const registry = Function(
+  "DISPLAY_NAME_OWNER_APPROVED",
+  "GOOGLE_MAPS_NAME",
+  `return [${registryMatch[1]}]`,
+)("Najda Street", "ICS Al Danah - International Community School");
+const publicLocations = registry.filter((location) => location.isPublic);
+assert.equal(publicLocations.length, 4, "Exactly four locations must be public");
+assert.deepEqual(
+  publicLocations.map((location) => location.displayName),
+  ["Najda Street", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"],
+);
+assert.equal(
+  new Set(publicLocations.map((location) => location.shortUrl)).size,
+  publicLocations.length,
+  "A public Maps short URL cannot be reused by another public location",
+);
+assert.equal(
+  new Set(publicLocations.map((location) => location.resolvedUrl)).size,
+  publicLocations.length,
+  "A resolved Maps destination cannot be reused by another public location",
+);
+assert.ok(
+  publicLocations.every((location) => !location.displayName.includes("Al Danah")),
+  "Al Danah must not be a public display location",
+);
+const hiddenDanah = registry.find((location) => location.id === "ics-al-danah");
+assert.equal(hiddenDanah?.isPublic, false);
+assert.equal(hiddenDanah?.bookingEnabled, false);
+assert.equal(hiddenDanah?.localSeoEnabled, false);
+const najda = registry.find((location) => location.id === "najda-street");
+assert.equal(najda?.displayName, "Najda Street");
+assert.equal(najda?.googleMapsObservedName, "ICS Al Danah - International Community School");
+assert.equal(najda?.placeId, null, "Do not invent an unverified Google Place ID");
 
 for (const value of [
   'id="pricing"',
@@ -100,9 +143,35 @@ for (const flag of [
 const workflow = JSON.parse(n8nSource);
 assert.equal(workflow.active, false, "n8n workflow must remain inactive");
 assert.equal(workflow.meta.relaxFixMode, "preview-only-fictional-data");
+assert.equal(workflow.meta.testMode, true);
+assert.equal(workflow.meta.externalWritesEnabled, false);
+assert.equal(workflow.meta.technicalAccount, "swimmingayman@gmail.com");
+assert.equal(workflow.meta.operationalAccount, "relaxfix2026@gmail.com");
+assert.equal(workflow.meta.workflowSuite.length, 14);
+assert.ok(!n8nSource.includes("ics-al-danah"));
+assert.ok(n8nSource.includes("najda-street"));
 assert.ok(n8nSource.includes("external_write_performed: false"));
 assert.ok(n8nSource.includes("calendar_conflict_check_required"));
 assert.ok(n8nSource.includes("idempotency_key"));
 assert.ok(n8nSource.includes("maximum-2-after-idempotency-check"));
+
+assert.ok(contentSchedule.includes("REVIEW_REQUIRED_BEFORE_PUBLISH = true"));
+assert.ok(contentSchedule.includes("| 30 |"));
+assert.ok(contentSchedule.includes("Najda Street"));
+assert.ok(!contentSchedule.includes("ICS Al Danah"));
+assert.ok(gbpAudit.includes("GBP_LIVE_WRITE_AUTHORIZED = false"));
+assert.ok(gbpAudit.includes("Training locations"));
+assert.ok(!gbpAudit.includes("Branches"));
+
+for (const value of [
+  "GOOGLE_CALENDAR_OPERATIONAL_ACCOUNT=relaxfix2026@gmail.com",
+  "GOOGLE_CALENDAR_NAJDA_STREET_ID=server-config-only",
+  "GOOGLE_CALENDAR_ICS_AL_FALAH_ID=server-config-only",
+  "GOOGLE_CALENDAR_ICS_KHALIFA_ID=server-config-only",
+  "GOOGLE_CALENDAR_ICS_MUSHRIF_ID=server-config-only",
+  "N8N_TECHNICAL_ACCOUNT=swimmingayman@gmail.com",
+]) {
+  assert.ok(envExample.includes(value), `Missing account/resource separation: ${value}`);
+}
 
 console.log("Revenue, location, consent and automation foundation verification passed.");

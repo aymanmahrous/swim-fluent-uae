@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   BUSINESS_TIMEZONE,
+  N8N_TECHNICAL_ACCOUNT,
   OPERATIONAL_EMAIL,
   TRAINING_LOCATIONS,
   isWithinGeneralAvailability,
@@ -49,7 +50,14 @@ export function validateGeneralBookingWindow(input: {
 }
 
 export const calendarAvailabilityContract = {
+  operationalAccount: OPERATIONAL_EMAIL,
+  n8nTechnicalAccount: N8N_TECHNICAL_ACCOUNT,
   timezone: BUSINESS_TIMEZONE,
+  resources: TRAINING_LOCATIONS.map((location) => ({
+    id: location.id,
+    displayName: location.displayName,
+    bookingEnabled: location.bookingEnabled,
+  })),
   requireLocationCalendar: true,
   preventDoubleBooking: true,
   requireConflictCheckBeforeDisplay: true,
