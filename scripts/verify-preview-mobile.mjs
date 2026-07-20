@@ -99,11 +99,40 @@ try {
       /n8n|calendar\.google|googleapis\.com\/calendar/i.test(url),
     );
     const chatbotButton = page.getByRole("button", {
-      name: route === "/" ? "فتح المساعد" : "Open assistant",
+      name: route === "/" ? "افتح مساعد اختيار البرنامج" : "Open program selection assistant",
     });
     const chatbotPresent = (await chatbotButton.count()) === 1;
     if (chatbotPresent) {
       await chatbotButton.click();
+      const dialog = page.locator('section[role="dialog"]');
+      await dialog.waitFor({ state: "visible" });
+      await dialog
+        .getByRole("heading", {
+          name: route === "/" ? "مساعد اختيار البرنامج" : "Program selection assistant",
+        })
+        .waitFor({ state: "visible" });
+      await dialog.getByRole("button", { name: route === "/" ? "الأسعار" : "Pricing" }).click();
+      await dialog
+        .getByText(route === "/" ? "450 درهمًا" : "AED 450", { exact: false })
+        .waitFor({ state: "visible" });
+
+      const question = dialog.getByLabel(
+        route === "/" ? "أو اكتب سؤالك بالعربية أو الإنجليزية" : "Or ask in Arabic or English",
+      );
+      await question.fill(route === "/" ? "أين مواقع التدريب؟" : "Do you coach adults?");
+      await dialog
+        .getByRole("button", {
+          name: route === "/" ? "إرسال السؤال" : "Send question",
+        })
+        .click();
+      await dialog
+        .getByText(
+          route === "/"
+            ? "مواقع التدريب الحالية"
+            : "Adults can submit an initial assessment request",
+          { exact: false },
+        )
+        .waitFor({ state: "visible" });
       await page
         .getByRole("button", {
           name: route === "/" ? "إغلاق المساعد" : "Close assistant",

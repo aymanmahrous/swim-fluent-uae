@@ -72,9 +72,9 @@ const publicHomeText = await text("src/components/public-home.tsx");
 requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
 requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
 requireText(publicHomeText, 'id="book"', "preserved booking page");
-requireText(publicHomeText, 'src={heroImg}', "SSR hero image discovery");
-requireText(publicHomeText, 'width={1920}', "hero intrinsic dimensions");
-requireText(publicHomeText, 'height={1080}', "hero intrinsic dimensions");
+requireText(publicHomeText, "src={heroImg}", "SSR hero image discovery");
+requireText(publicHomeText, "width={1920}", "hero intrinsic dimensions");
+requireText(publicHomeText, "height={1080}", "hero intrinsic dimensions");
 
 const publicConfig = await text("src/platform/public-business-config.ts");
 for (const needle of [
@@ -128,11 +128,15 @@ for (const needle of [
   "initialLang={publicLang}",
   "persistPreference={!isLocalizedPublicPage}",
   'to="/en"',
-  "lazy(() =>",
-  "requestIdleCallback",
-  "<DeferredChatbotPreview />",
 ]) {
   requireText(rootRoute, needle, "localized document shell");
+}
+if (rootRoute.includes("DeferredChatbotPreview")) {
+  throw new Error("localized document shell: legacy duplicate chatbot must not be mounted");
+}
+for (const routePath of ["src/routes/index.tsx", "src/routes/en.tsx"]) {
+  const routeSource = await text(routePath);
+  requireText(routeSource, "<SalesAssistant />", `${routePath} assistant mount`);
 }
 
 const robots = await text("public/robots.txt");

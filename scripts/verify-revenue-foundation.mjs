@@ -5,7 +5,8 @@ const read = (path) => readFile(path, "utf8");
 const [
   config,
   revenueSections,
-  chatbot,
+  chatbotKnowledge,
+  salesAssistant,
   bookingAutomation,
   store,
   analytics,
@@ -16,7 +17,8 @@ const [
 ] = await Promise.all([
   read("src/platform/public-business-config.ts"),
   read("src/components/revenue-sections.tsx"),
-  read("src/components/chatbot-preview.tsx"),
+  read("src/platform/chatbot-knowledge.ts"),
+  read("src/components/sales-assistant.tsx"),
   read("src/platform/booking-automation.ts"),
   read("src/lib/store.ts"),
   read("src/platform/public-analytics.ts"),
@@ -103,10 +105,19 @@ for (const value of [
   "PUBLIC_PRICING",
   "TRAINING_LOCATIONS",
   "GENERAL_AVAILABILITY",
-  "لا أقدم تشخيصًا طبيًا ولا أتعامل مع حالات الطوارئ",
-  "I do not provide medical diagnosis or handle emergencies",
+  "إرسال الطلب لا يعني أن الموعد أصبح مؤكدًا",
+  "Submitting a request does not confirm an appointment",
 ]) {
-  assert.ok(chatbot.includes(value), `Missing chatbot contract: ${value}`);
+  assert.ok(chatbotKnowledge.includes(value), `Missing chatbot knowledge contract: ${value}`);
+}
+
+for (const value of [
+  "detectChatbotIntent",
+  "CHATBOT_QUICK_REPLY_INTENTS",
+  "businessWhatsAppUrl(settings)",
+  "relaxfix:conversation-start",
+]) {
+  assert.ok(salesAssistant.includes(value), `Missing chatbot UI contract: ${value}`);
 }
 
 for (const value of [

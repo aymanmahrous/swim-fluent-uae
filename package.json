@@ -15,6 +15,7 @@
     "verify:production-smoke": "node scripts/verify-production-smoke.mjs",
     "verify:public-free-claims": "node scripts/verify-public-free-claims.mjs",
     "verify:revenue-foundation": "node scripts/verify-revenue-foundation.mjs",
+    "verify:chatbot-phase1": "node scripts/verify-chatbot-phase1.mjs",
     "verify:preview-mobile": "node scripts/verify-preview-mobile.mjs",
     "verify:content-brain": "node scripts/verify-content-brain.mjs",
     "verify:meta-publishing": "node scripts/verify-meta-publishing.mjs",
