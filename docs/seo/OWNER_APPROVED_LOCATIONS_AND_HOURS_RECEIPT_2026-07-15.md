@@ -1,5 +1,7 @@
 # Owner-Approved Locations and Hours Receipt
 
+> Superseded for current public use on 2026-07-20. The active public list is Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif. This file remains only as a historical receipt and must not drive website, Chatbot, SEO, Calendar, n8n or content output.
+
 Date: 2026-07-15 (Asia/Dubai)
 
 Status: `OWNER_APPROVED_LOCAL_LOCATION_AND_HOURS_FACTS_RECORDED`

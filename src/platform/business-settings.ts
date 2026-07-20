@@ -1,5 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
+import {
+  OPERATIONAL_EMAIL,
+  TRAINING_LOCATIONS,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_NUMBER,
+} from "./public-business-config";
 
 const BusinessSettingsRowSchema = z.object({
   id: z.literal("primary"),
@@ -50,10 +56,7 @@ const approvedOpeningOffer = {
 const unapprovedFreeClaimPattern =
   /(?:مجاني|مجاناً|مجانًا|بدون\s+مقابل|\bfree\b(?:\s+(?:assessment|consultation|session|first assessment))?|\bcomplimentary\b(?:\s+(?:assessment|consultation|session|first assessment))?|\bno(?:-|\s+)cost\b)/iu;
 
-export function sanitizePublicOpeningOffer(
-  value: string | null,
-  language: "ar" | "en",
-): string {
+export function sanitizePublicOpeningOffer(value: string | null, language: "ar" | "en"): string {
   const trimmed = value?.trim();
   if (!trimmed || unapprovedFreeClaimPattern.test(trimmed)) {
     return approvedOpeningOffer[language];
@@ -64,14 +67,14 @@ export function sanitizePublicOpeningOffer(
 export const fallbackBusinessSettings: BusinessSettings = {
   businessName: "Relax Fix UAE",
   coachName: "Coach Ayman",
-  whatsappNumber: "",
-  publicPhone: "",
-  publicEmail: "",
+  whatsappNumber: WHATSAPP_NUMBER,
+  publicPhone: WHATSAPP_DISPLAY,
+  publicEmail: OPERATIONAL_EMAIL,
   bookingPrice: 0,
   currency: "AED",
   sessionDurationMinutes: 45,
   timezone: "Asia/Dubai",
-  locations: [],
+  locations: TRAINING_LOCATIONS.map((location) => location.displayName),
   bookingEnabled: false,
   openingOfferTextAr: approvedOpeningOffer.ar,
   openingOfferTextEn: approvedOpeningOffer.en,

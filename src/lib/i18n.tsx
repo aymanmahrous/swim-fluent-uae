@@ -33,7 +33,7 @@ export const t = {
   private: { ar: "خاص 1 على 1", en: "Private 1-on-1" },
   semi: { ar: "شبه خاص", en: "Semi-Private" },
   group: { ar: "جماعي صغير", en: "Small Group" },
-  slot: { ar: "اختر الموعد", en: "Choose Time Slot" },
+  slot: { ar: "الوقت المبدئي المفضل", en: "Preferred Preliminary Time" },
   disclaimer: { ar: "السلامة والالتزام", en: "Safety & Commitment" },
   disclaimerText: { ar: "أوافق على تعليمات السلامة والتنظيم الخاصة بالتدريب، وعدم دخول المسبح قبل توجيه المدرب، والالتزام بتعليمات التجهيز والمواعيد وسياسة إعادة الجدولة.", en: "I agree to the coaching safety and operating rules, including no pool entry before coach instruction, required preparation, attendance rules, and the rescheduling policy." },
   agree: { ar: "أوافق على سياسة السلامة والتنظيم", en: "I agree to the safety and operating policy" },

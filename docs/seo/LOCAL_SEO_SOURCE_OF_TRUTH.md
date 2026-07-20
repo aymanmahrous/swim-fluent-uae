@@ -28,13 +28,13 @@ This document defines the public Local SEO values that may be used in future rev
 
 The owner approved these four operating locations on 2026-07-15:
 
-1. **ICS Al Najda**
+1. **Najda Street**
    - https://maps.app.goo.gl/XL9weMpSJcpVDNCV6?g_st=ac
 2. **ICS Al Falah**
    - https://maps.app.goo.gl/b5LULVrArcD8BwhF9?g_st=ac
 3. **ICS Khalifa**
    - https://maps.app.goo.gl/cbWqzLqDSYXmEFyS9?g_st=ac
-4. **ICS Al Mushrif**
+4. **ICS Mushrif**
    - https://maps.app.goo.gl/Rgu2vKH7JDigAQQx6?g_st=ac
 
 Evidence receipt: `docs/seo/OWNER_APPROVED_LOCATIONS_AND_HOURS_RECEIPT_2026-07-15.md`.
@@ -55,11 +55,11 @@ Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman.
 
 ### Long — English
 
-Relax Fix UAE provides swimming and water-confidence coaching in Abu Dhabi with Coach Ayman. Coaching begins with a clear discussion of previous experience, current comfort in the water, and the learner’s goal. Current public service descriptions are limited to learn-to-swim foundations, water confidence, and technique or performance coaching. Coaching is available at the owner-approved ICS Al Najda, ICS Al Falah, ICS Khalifa, and ICS Al Mushrif locations. Exact street-address text and live Google Business Profile fields must remain evidence-gated.
+Relax Fix UAE provides swimming and water-confidence coaching in Abu Dhabi with Coach Ayman. Coaching begins with a clear discussion of previous experience, current comfort in the water, and the learner’s goal. Current public service descriptions are limited to learn-to-swim foundations, water confidence, and technique or performance coaching. Coaching is available at the owner-approved Training locations: Najda Street, ICS Al Falah, ICS Khalifa, and ICS Mushrif. Exact street-address text and live Google Business Profile fields must remain evidence-gated.
 
 ### Long — Arabic
 
-تقدم Relax Fix UAE تدريب السباحة والثقة المائية في أبوظبي مع كوتش أيمن. تبدأ مناقشة التدريب بفهم الخبرة السابقة، ومستوى الراحة الحالي داخل الماء، والهدف الذي يرغب المتدرب في العمل عليه. تقتصر أوصاف الخدمات العامة الحالية على تأسيس تعلم السباحة، وبناء الثقة داخل الماء، وتحسين التقنية أو الأداء. يتوفر التدريب في المواقع المعتمدة من المالك: ICS Al Najda وICS Al Falah وICS Khalifa وICS Al Mushrif. تظل صياغة عناوين الشوارع الدقيقة وحقول Google Business Profile الفعلية خاضعة لدليل الحساب والمراجعة.
+تقدم Relax Fix UAE تدريب السباحة والثقة المائية في أبوظبي مع كوتش أيمن. تبدأ مناقشة التدريب بفهم الخبرة السابقة، ومستوى الراحة الحالي داخل الماء، والهدف الذي يرغب المتدرب في العمل عليه. تقتصر أوصاف الخدمات العامة الحالية على تأسيس تعلم السباحة، وبناء الثقة داخل الماء، وتحسين التقنية أو الأداء. يتوفر التدريب في مواقع التدريب المعتمدة من المالك: Najda Street وICS Al Falah وICS Khalifa وICS Mushrif. تظل صياغة عناوين الشوارع الدقيقة وحقول Google Business Profile الفعلية خاضعة لدليل الحساب والمراجعة.
 
 ## Public-claims boundary
 

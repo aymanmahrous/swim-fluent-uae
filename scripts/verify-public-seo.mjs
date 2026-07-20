@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -27,13 +26,18 @@ const seo = await text("src/platform/public-seo.ts");
 for (const needle of [
   'SITE_URL = "https://www.relaxfixuae.com"',
   'INSTAGRAM_URL = "https://www.instagram.com/relaxfixuae/"',
-  'publicHomeHead(lang: PublicLanguage)',
+  "publicHomeHead(lang: PublicLanguage)",
   'rel: "canonical"',
   'hrefLang: "ar-AE"',
   'hrefLang: "en-AE"',
   'hrefLang: "x-default"',
+  'property: "og:image"',
+  'property: "og:image:alt"',
+  'property: "og:image:type"',
+  'name: "twitter:image"',
+  'name: "twitter:image:alt"',
   '"@type": "Organization"',
-  'sameAs: [INSTAGRAM_URL]',
+  "sameAs: [INSTAGRAM_URL]",
   '"@type": "Person"',
   '"@type": "Service"',
   '"@type": "WebSite"',
@@ -48,31 +52,61 @@ for (const needle of [
   '"@type": "Review"',
   "streetAddress",
   "facebook.com/share/",
+  'rel: "preload"',
+  'fetchPriority: "high"',
 ]) {
-  forbidText(seo, needle, "truthful structured data");
+  forbidText(seo, needle, "truthful and non-duplicated structured head data");
 }
 
 const arabicRoute = await text("src/routes/index.tsx");
 requireText(arabicRoute, 'publicHomeHead("ar")', "Arabic public route");
 requireText(arabicRoute, 'createFileRoute("/")', "Arabic public route");
+requireText(arabicRoute, "<RevenueSections />", "Arabic revenue-first public sections");
 
 const englishRoute = await text("src/routes/en.tsx");
 requireText(englishRoute, 'publicHomeHead("en")', "English public route");
 requireText(englishRoute, 'createFileRoute("/en")', "English public route");
+requireText(englishRoute, "<RevenueSections />", "English revenue-first public sections");
 
-const publicHome = await readFile(join(root, "src/components/public-home.tsx"));
-checks += 1;
-const publicHomeBlobHash = createHash("sha1")
-  .update(`blob ${publicHome.byteLength}\0`)
-  .update(publicHome)
-  .digest("hex");
-if (publicHomeBlobHash !== "6ee7463c4ee42d1946ea0dc7f7c66c314572ba55") {
-  throw new Error(`public home byte preservation: unexpected blob ${publicHomeBlobHash}`);
-}
-const publicHomeText = publicHome.toString("utf8");
+const publicHomeText = await text("src/components/public-home.tsx");
 requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
 requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
 requireText(publicHomeText, 'id="book"', "preserved booking page");
+requireText(publicHomeText, 'src={heroImg}', "SSR hero image discovery");
+requireText(publicHomeText, 'width={1920}', "hero intrinsic dimensions");
+requireText(publicHomeText, 'height={1080}', "hero intrinsic dimensions");
+
+const publicConfig = await text("src/platform/public-business-config.ts");
+for (const needle of [
+  'OPERATIONAL_EMAIL = "relaxfix2026@gmail.com"',
+  'WHATSAPP_NUMBER = "971551378660"',
+  "groupMaxSize: 4",
+  "groupChildPriceAED: 450",
+  "siblingChildPriceAED: 400",
+  "aquaticSessionPriceAED: 150",
+  "landSessionPriceAED: 150",
+  'DISPLAY_NAME_OWNER_APPROVED = "Najda Street"',
+  'displayName: "ICS Al Falah"',
+  'displayName: "ICS Khalifa"',
+  'displayName: "ICS Mushrif"',
+  "isPublic: false",
+  'start: "10:00"',
+  'end: "22:00"',
+  'start: "16:00"',
+  'end: "21:00"',
+]) {
+  requireText(publicConfig, needle, "central public business configuration");
+}
+
+for (const publicSurface of [
+  await text("src/components/revenue-sections.tsx"),
+  await text("src/components/chatbot-preview.tsx"),
+  await text("src/platform/public-seo.ts"),
+  await text("src/platform/booking-automation.ts"),
+]) {
+  forbidText(publicSurface, "ICS Al Danah", "public Al Danah removal");
+  forbidText(publicSurface, "ics-al-danah", "public Al Danah removal");
+}
 
 const i18n = await text("src/lib/i18n.tsx");
 for (const needle of [
@@ -94,6 +128,9 @@ for (const needle of [
   "initialLang={publicLang}",
   "persistPreference={!isLocalizedPublicPage}",
   'to="/en"',
+  "lazy(() =>",
+  "requestIdleCallback",
+  "<DeferredChatbotPreview />",
 ]) {
   requireText(rootRoute, needle, "localized document shell");
 }
@@ -126,6 +163,14 @@ for (const needle of ["/os", "/staff", "/admin", "/api/"]) {
 
 const vercel = await text("vercel.json");
 for (const needle of [
+  '"source": "/(.*)"',
+  '"key": "X-Content-Type-Options"',
+  '"value": "nosniff"',
+  '"key": "Referrer-Policy"',
+  '"value": "strict-origin-when-cross-origin"',
+  '"key": "Permissions-Policy"',
+  '"key": "X-Frame-Options"',
+  '"value": "DENY"',
   '"source": "/api/(.*)"',
   '"source": "/os/(.*)"',
   '"source": "/os"',
@@ -134,7 +179,7 @@ for (const needle of [
   '"key": "X-Robots-Tag"',
   '"value": "noindex, nofollow, noarchive"',
 ]) {
-  requireText(vercel, needle, "private route indexing headers");
+  requireText(vercel, needle, "security and private-route headers");
 }
 
 console.log(`Public SEO verification passed (${checks} assertions).`);

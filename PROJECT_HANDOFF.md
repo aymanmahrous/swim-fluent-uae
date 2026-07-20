@@ -454,3 +454,150 @@ At the end of every approved major phase:
 4. preserve protected gates and do not invent missing facts;
 5. ensure the next agent can continue without prior chat history;
 6. never use an open Issue as evidence that an agent is working or has delivered.
+
+## 15. Revenue/location/automation foundation update — 2026-07-20 10:46 Asia/Dubai
+
+### Source and isolation
+
+- Branch: `feat/revenue-locations-automation-foundation-20260720`
+- Base: `origin/main` at `49bc34932fc1910378947c5679782f741355d3ec`
+- Tested implementation commit: `21c157a`
+- Main CI at the base commit: PASS.
+- Open PR #46 is documentation-only and has no file overlap.
+- Open PR #36 is draft/conflicting and touches `src/components/public-home.tsx`; this phase deliberately restored that file to `HEAD` and integrates the new conversion sections through the localized route wrappers instead.
+- No Production, main, database, external account, environment variable or secret was changed.
+
+### Implemented
+
+- Added a central typed public-business configuration for:
+  - operational email `relaxfix2026@gmail.com`;
+  - WhatsApp `+971551378660`;
+  - approved prices and maximum group size;
+  - Asia/Dubai general availability;
+  - five Maps-linked locations.
+- Direct Google Maps verification established:
+  - link 4: `ICS Mushrif`;
+  - link 5: `ICS Al Danah`.
+- Added bilingual pricing, training-location cards, status, Maps, assessment, WhatsApp, hours, contact and non-medical safety copy.
+- Updated the chatbot’s fixed approved FAQ set with pricing, locations, hours and emergency/medical boundaries. It still requests no name/phone and retains no conversation.
+- Replaced the conflicting slot ranges with the approved general-hours source.
+- Added safe Local SEO structured data for verified location names/maps and general customer-service hours, without unverified street addresses.
+- Added a disabled/test-mode-first Calendar/email/n8n contract:
+  - location-calendar checks;
+  - double-booking prevention;
+  - idempotency;
+  - safe event titles;
+  - Arabic/English transactional templates;
+  - no external writes unless all flags are deliberately enabled and test mode is disabled.
+- Extended the existing inactive fictional n8n workflow; no parallel chatbot/workflow was created.
+- Carried forward the Preview-proven GA4 Consent Mode queue-protocol fix.
+
+### Verification evidence
+
+- `npm run verify:revenue-foundation`: PASS.
+- `npm run verify:public-seo`: PASS — 78 assertions.
+- `npm run verify:public-free-claims`: PASS.
+- `npm run lint`: PASS with 8 pre-existing Fast Refresh warnings and zero errors.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- Local Arabic/English browser inspection: central facts, five location cards, WhatsApp links, email and RTL/LTR language state rendered.
+- Vite development mode emitted a `data-tsd-source` hydration warning attributable to development instrumentation; the production build completed.
+- The repository’s existing `npm run preview` script looked for a missing `dist/server` path after the successful Nitro build, so production-mode local browser verification is not claimed.
+
+### Safety state
+
+- Calendar external write: OFF.
+- Booking email external send: OFF.
+- n8n booking workflow: inactive.
+- Booking automation test mode: ON by default.
+- GA4 Production activation: unchanged/unauthorized.
+- Real PII, customer records, bookings and outbound messages: none.
+
+### Remaining gates
+
+1. Review and approve the neutral public wording for AED 150 aquatic/land-based movement sessions, or provide qualifications/regulatory evidence before using rehabilitation wording.
+2. Provide Google Calendar ownership/resource model, location-specific availability, travel buffers and OAuth approval.
+3. Import the existing inactive n8n workflow into the authorized workspace and run a fictional manual test.
+4. Select and authorize the transactional email provider/sender configuration.
+5. Obtain Preview URL and complete responsive/mobile/accessibility validation.
+6. Review and merge the PR only after CI and Preview evidence; no automatic merge or Production deployment.
+
+### Next required action
+
+Commit the tested isolated foundation, push the feature branch, open a small review PR, then inspect CI and Vercel Preview without promoting it to Production.
+
+### PR and Preview receipt — 2026-07-20 11:02 Asia/Dubai
+
+- Draft PR: #131 — `https://github.com/aymanmahrous/swim-fluent-uae/pull/131`
+- PR head at evidence time: `95c9b42f250c4767fbb15c510bb6be384ab85107`
+- GitHub `validate`: PASS.
+- Vercel Preview deployment: READY.
+- Preview URL: `https://swim-fluent-uae-w532-8bo4pph7j-swimmingayman-8492s-projects.vercel.app`
+- Target: Preview, not Production.
+- Direct Arabic Preview evidence:
+  - `lang=ar`, `dir=rtl`;
+  - approved AED 450 pricing rendered;
+  - five location cards rendered;
+  - approved operational email and WhatsApp rendered;
+  - no horizontal overflow at the inspected desktop viewport;
+  - no browser console warnings/errors.
+- Direct English Preview evidence:
+  - `lang=en`, `dir=ltr`;
+  - approved pricing, five locations and hours rendered;
+  - approved operational email rendered;
+  - no horizontal overflow at the inspected desktop viewport;
+  - no browser console warnings/errors.
+- Chatbot Preview evidence:
+  - fixed FAQ includes prices, group maximum, locations and hours;
+  - no name/phone input exists;
+  - WhatsApp handoff points to the approved number;
+  - medical diagnosis/emergency boundary rendered.
+- Consent banner rendered and the GA4 script loaded after Accept. The earlier Tag Assistant/HTTP 204 receipt remains the conclusive hit evidence for the identical queue fix; this PR browser check did not independently re-capture Tag Assistant Hits Sent.
+- Mobile breakpoint-specific evidence remains required because the available browser viewport stayed at desktop width during this receipt.
+
+### Updated next required action
+
+Keep PR #131 Draft. Complete exact mobile/accessibility review, then obtain the protected Calendar/n8n/email access decisions. Do not merge or deploy Production.
+
+## 16. Owner decision implementation and validation — 2026-07-20 13:51 Asia/Dubai
+
+### Delivered on Draft PR #131
+
+- Commit `51fa88edcfe4a724d87d0320b2f3b540d9cbaeda` is pushed to `feat/revenue-locations-automation-foundation-20260720`.
+- Public location registry now exposes exactly: Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif.
+- The hidden Al Danah record is non-public, non-bookable and Local-SEO-disabled. Its observed Google Maps name is retained internally without presenting it as the owner display name.
+- Duplicate public short/resolved Maps URLs and invented Place IDs are rejected by tests.
+- Chatbot, Calendar contracts, inactive n8n test workflow, email templates, SEO, GBP audit pack and 30-day bilingual content schedule use the four approved locations and the approved account separation.
+- Existing Google Business Profile is treated as owner-evidenced but read-only; no live field was inferred or changed.
+- Hero image preload/high priority and deferred Chatbot chunk were added without a new dependency.
+
+### Verification evidence
+
+- GitHub `validate`: PASS at `51fa88e`.
+- Vercel Preview: READY at `https://swim-fluent-uae-w532-okz13990o-swimmingayman-8492s-projects.vercel.app`.
+- Signed-in Preview inspection: Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif present; ICS Al Danah absent; approved WhatsApp present.
+- Revenue foundation: PASS.
+- Public SEO: PASS, 92 assertions after performance regression guards.
+- Public claims: PASS.
+- Typecheck: PASS.
+- Production build: PASS; main client `442.09 kB / 133.43 kB gzip`; Chatbot lazy chunk `0.61 kB / 0.33 kB gzip`; no large library added.
+- Lint: PASS with zero errors and eight pre-existing Fast Refresh warnings.
+- Local 390×844 throttled Arabic/English audit: correct RTL/LTR, one H1, no overflow, unnamed visible control, missing alt, duplicate ID, duplicate request, application console/HTTP/page error, or eager n8n/Calendar request. CLS was `0.0087` Arabic and `0.001` English.
+- Exact compressed Preview Lighthouse/LCP remains blocked because fresh automation is redirected to Vercel Authentication. Local LCP is not accepted as the target measurement because the local Node server serves the main bundle uncompressed.
+
+### Safety state
+
+- PR remains Draft. No merge, Production deployment, real booking, real message, invitation, n8n activation, Calendar write, GBP write, post publication, secret or environment-variable change occurred.
+
+### Next required action
+
+Push the tested performance and handoff follow-up to the same Draft PR, re-check CI/Vercel, then complete protected OAuth/workspace steps only when the owner provides access. Keep all external writes disabled.
+
+### Final follow-up receipt — 2026-07-20 14:00 Asia/Dubai
+
+- Commit `93876b6e8ad133e0215ef455913bef7894a5a58a` was pushed to the same feature branch.
+- Draft PR #131 remains open, Draft and mergeable.
+- GitHub CI run `29733226382`, job `validate`: PASS.
+- Vercel Preview: READY at `https://swim-fluent-uae-w532-glibcfjns-swimmingayman-8492s-projects.vercel.app`.
+- Signed-in final Preview: the four approved public locations and WhatsApp are present; ICS Al Danah is absent; Consent UI appears; Chatbot loads after deferral and opens successfully with Najda Street, no Al Danah and the preliminary-time path.
+- Next protected work is OAuth/workspace-only fictional integration testing, read-only GBP field capture and authorized compressed Preview Lighthouse. No external live write is authorized.

@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Route as PublicHomeDefinition } from "../components/public-home";
+import { RevenueSections } from "../components/revenue-sections";
 import { publicHomeHead } from "../platform/public-seo";
 
 const PublicHomeComponent = PublicHomeDefinition.options.component as ComponentType;
@@ -11,5 +12,10 @@ export const Route = createFileRoute("/")({
 });
 
 function ArabicPublicHome() {
-  return <PublicHomeComponent />;
+  return (
+    <>
+      <PublicHomeComponent />
+      <RevenueSections />
+    </>
+  );
 }

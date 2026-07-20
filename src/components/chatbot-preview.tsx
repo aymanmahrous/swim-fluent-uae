@@ -6,10 +6,16 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
+import {
+  GENERAL_AVAILABILITY,
+  PUBLIC_PRICING,
+  TRAINING_LOCATIONS,
+} from "../platform/public-business-config";
 
 const chatbotEnabled = import.meta.env.VITE_ENABLE_CHATBOT_PREVIEW === "true";
 
-type FaqId = "services" | "location" | "assessment" | "children" | "human";
+type FaqId =
+  "services" | "pricing" | "location" | "hours" | "assessment" | "time" | "children" | "human";
 
 type Faq = {
   id: FaqId;
@@ -30,13 +36,25 @@ const approvedFaqs: Faq[] = [
       "Services include learn-to-swim coaching, water confidence, and technique and performance development based on an initial assessment.",
   },
   {
+    id: "pricing",
+    questionAr: "ما الأسعار وحجم المجموعة؟",
+    questionEn: "What are the prices and group size?",
+    answerAr: `المجموعة الصغيرة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. السعر ${PUBLIC_PRICING.groupChildPriceAED} درهمًا للطفل، وسعر الإخوة ${PUBLIC_PRICING.siblingChildPriceAED} درهم لكل طفل. جلسة الحركة المائية أو البرية ${PUBLIC_PRICING.aquaticSessionPriceAED} درهمًا. لا يحدد هذا السعر مدة أو عدد حصص أو باقة.`,
+    answerEn: `Small groups are limited to ${PUBLIC_PRICING.groupMaxSize} children. The price is AED ${PUBLIC_PRICING.groupChildPriceAED} per child and AED ${PUBLIC_PRICING.siblingChildPriceAED} per sibling child. An aquatic or land-based movement session is AED ${PUBLIC_PRICING.aquaticSessionPriceAED}. These prices do not state a duration, number of sessions or package.`,
+  },
+  {
     id: "location",
     questionAr: "أين يتم التدريب؟",
     questionEn: "Where is coaching available?",
-    answerAr:
-      "الخدمة متاحة في أبوظبي. يراجع الفريق الموقع المناسب والتوفر عند التواصل أو إرسال طلب التقييم.",
-    answerEn:
-      "Coaching is available in Abu Dhabi. The team confirms the suitable location and availability after contact or an assessment request.",
+    answerAr: `مواقع التدريب الحالية: ${TRAINING_LOCATIONS.map((location) => location.displayName).join("، ")}. افتح قسم مواقع التدريب لاختيار الموقع ورابط Google Maps. يراجع الفريق توفر الموقع والتقويم قبل عرض الوقت، ولا يصبح الحجز مؤكدًا إلا بعد رسالة التأكيد.`,
+    answerEn: `Current training locations: ${TRAINING_LOCATIONS.map((location) => location.displayName).join(", ")}. Open the Training Locations section to choose a location and its Google Maps link. The team checks the location calendar before showing a time, and a booking is not confirmed until a confirmation message is sent.`,
+  },
+  {
+    id: "hours",
+    questionAr: "ما مواعيد العمل؟",
+    questionEn: "What are the general hours?",
+    answerAr: `${GENERAL_AVAILABILITY.weekend.ar}. ${GENERAL_AVAILABILITY.weekdays.ar}. هذه ساعات عامة، ويجب فحص جدول الموقع والتعارضات قبل تأكيد الموعد.`,
+    answerEn: `${GENERAL_AVAILABILITY.weekend.en}. ${GENERAL_AVAILABILITY.weekdays.en}. These are general hours; the location calendar and conflicts must be checked before confirmation.`,
   },
   {
     id: "assessment",
@@ -46,6 +64,15 @@ const approvedFaqs: Faq[] = [
       "ابدأ بإرسال طلب التقييم من نموذج الموقع. يراجع الفريق مستواك وهدفك والوقت المناسب قبل تأكيد أي موعد.",
     answerEn:
       "Start with the website assessment request. The team reviews your starting level, goal, and suitable time before confirming an appointment.",
+  },
+  {
+    id: "time",
+    questionAr: "كيف أختار وقتًا مبدئيًا؟",
+    questionEn: "How do I choose a preliminary time?",
+    answerAr:
+      "اختر الخدمة والموقع واليوم والوقت المبدئي من نموذج التقييم. لا يعرض النظام الوقت كتأكيد قبل فحص تقويم الموقع والتعارضات، ثم يرسل الفريق رسالة تأكيد منفصلة.",
+    answerEn:
+      "Choose the service, location, day and preliminary time in the assessment form. The system does not treat it as confirmed until the location calendar and conflicts are checked and the team sends a separate confirmation.",
   },
   {
     id: "children",
@@ -114,8 +141,8 @@ export function ChatbotPreview() {
           <div className="max-h-[65vh] overflow-y-auto p-4">
             <p className="text-sm leading-6 text-muted-foreground">
               {isArabic
-                ? "اختر سؤالًا. لا يطلب هذا المساعد اسمك أو هاتفك ولا يحفظ محادثة."
-                : "Choose a question. This assistant does not ask for your name or phone number and does not retain a conversation."}
+                ? `مرحبًا بك في Relax Fix UAE. يمكنني شرح الخدمات والأسعار والمواقع وساعات العمل. المجموعة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. لا أطلب اسمك أو هاتفك ولا أحفظ محادثة. لا أقدم تشخيصًا طبيًا ولا أتعامل مع حالات الطوارئ.`
+                : `Welcome to Relax Fix UAE. I can explain services, prices, locations and general hours. Groups are limited to ${PUBLIC_PRICING.groupMaxSize} children. I do not ask for your name or phone number or retain a conversation. I do not provide medical diagnosis or handle emergencies.`}
             </p>
 
             <div className="mt-4 grid gap-2">
@@ -133,7 +160,23 @@ export function ChatbotPreview() {
 
             {selected && (
               <div role="status" className="mt-4 rounded-2xl bg-muted/60 p-4 text-sm leading-7">
-                {isArabic ? selected.answerAr : selected.answerEn}
+                <p>{isArabic ? selected.answerAr : selected.answerEn}</p>
+                {selected.id === "location" && (
+                  <ul className="mt-3 grid gap-2">
+                    {TRAINING_LOCATIONS.map((location) => (
+                      <li key={location.id}>
+                        <a
+                          href={location.shortUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-black text-primary underline underline-offset-4"
+                        >
+                          {location.displayName} — Google Maps
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 
@@ -142,6 +185,17 @@ export function ChatbotPreview() {
                 href={businessWhatsAppUrl(settings)}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  window.dispatchEvent(
+                    new CustomEvent("relaxfix:analytics-event", {
+                      detail: {
+                        eventName: "whatsapp_click",
+                        ctaId: "chatbot_handoff",
+                        source: "chatbot",
+                      },
+                    }),
+                  )
+                }
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-deep px-5 py-3 font-black text-white transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
               >
                 <MessageCircle className="h-5 w-5" />
