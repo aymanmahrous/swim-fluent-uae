@@ -1,5 +1,5 @@
 import { MessageCircle, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLang } from "../lib/i18n";
 import { businessWhatsAppUrl, fallbackBusinessSettings, useBusinessSettings } from "../platform/business-settings";
 
@@ -26,6 +26,8 @@ export function SalesAssistant() {
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<AssistantState>({});
+  const openerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const isArabic = lang === "ar";
   const copy = isArabic
@@ -76,9 +78,50 @@ export function SalesAssistant() {
     return { learner, goal, location: state.location };
   }, [copy.adult, copy.child, copy.confidence, copy.learn, copy.performance, state]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      track("sales_assistant_closed", { language: lang, method: "escape" });
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+      openerRef.current?.focus();
+    };
+  }, [lang, open]);
+
   function openAssistant() {
     setOpen(true);
     track("sales_assistant_opened", { language: lang });
+  }
+
+  function closeAssistant(method: "button" | "backdrop") {
+    setOpen(false);
+    track("sales_assistant_closed", { language: lang, method });
+  }
+
+  function chooseLearner(learner: Learner) {
+    setState((current) => ({ ...current, learner }));
+    track("sales_assistant_answered", { language: lang, question: "learner", answer: learner });
+  }
+
+  function chooseGoal(goal: Goal) {
+    setState((current) => ({ ...current, goal }));
+    track("sales_assistant_answered", { language: lang, question: "goal", answer: goal });
+  }
+
+  function chooseLocation(location: string) {
+    setState((current) => ({ ...current, location }));
+    track("sales_assistant_answered", { language: lang, question: "location", answer: location });
   }
 
   function goToBooking() {
@@ -89,7 +132,7 @@ export function SalesAssistant() {
       location: state.location ?? "unknown",
     });
     setOpen(false);
-    document.getElementById("book")?.scrollIntoView({ behavior: "smooth" });
+    window.setTimeout(() => document.getElementById("book")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
 
   function openWhatsApp() {
@@ -113,28 +156,38 @@ export function SalesAssistant() {
   return (
     <>
       <button
+        ref={openerRef}
         type="button"
         onClick={openAssistant}
         aria-label={copy.open}
+        aria-haspopup="dialog"
+        aria-expanded={open}
         className="fixed bottom-24 end-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-deep text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6"
       >
         <MessageCircle className="h-6 w-6" />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 sm:items-center" dir={dir}>
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 sm:items-center"
+          dir={dir}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeAssistant("backdrop");
+          }}
+        >
           <section
             role="dialog"
             aria-modal="true"
             aria-labelledby="sales-assistant-title"
+            aria-describedby="sales-assistant-description"
             className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-[2rem] border border-border bg-card p-5 shadow-elegant sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 id="sales-assistant-title" className="text-xl font-black">{copy.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.intro}</p>
+                <p id="sales-assistant-description" className="mt-2 text-sm leading-6 text-muted-foreground">{copy.intro}</p>
               </div>
-              <button type="button" onClick={() => setOpen(false)} aria-label={copy.close} className="rounded-full border border-border p-2">
+              <button ref={closeRef} type="button" onClick={() => closeAssistant("button")} aria-label={copy.close} className="rounded-full border border-border p-2">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -143,13 +196,13 @@ export function SalesAssistant() {
               <Choice title={copy.learner} options={[
                 ["child", copy.child],
                 ["adult", copy.adult],
-              ]} value={state.learner} onChange={(learner) => setState((current) => ({ ...current, learner: learner as Learner }))} />
+              ]} value={state.learner} onChange={(learner) => chooseLearner(learner as Learner)} />
 
               <Choice title={copy.goal} options={[
                 ["learn", copy.learn],
                 ["confidence", copy.confidence],
                 ["performance", copy.performance],
-              ]} value={state.goal} onChange={(goal) => setState((current) => ({ ...current, goal: goal as Goal }))} />
+              ]} value={state.goal} onChange={(goal) => chooseGoal(goal as Goal)} />
 
               <div>
                 <div className="mb-3 text-sm font-black">{copy.location}</div>
@@ -158,7 +211,8 @@ export function SalesAssistant() {
                     <button
                       key={location}
                       type="button"
-                      onClick={() => setState((current) => ({ ...current, location }))}
+                      onClick={() => chooseLocation(location)}
+                      aria-pressed={state.location === location}
                       className={`rounded-xl border px-4 py-3 text-sm font-bold ${state.location === location ? "border-primary bg-primary/10" : "border-border"}`}
                     >
                       {location}
@@ -168,7 +222,7 @@ export function SalesAssistant() {
               </div>
 
               {recommendation && (
-                <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+                <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4" aria-live="polite">
                   <div className="font-black">{copy.recommendation}</div>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.recommendationBody}</p>
                   <div className="mt-3 text-sm font-bold">
@@ -186,7 +240,14 @@ export function SalesAssistant() {
                 </button>
               </div>
 
-              <button type="button" onClick={() => setState({})} className="w-full text-sm font-bold text-muted-foreground">
+              <button
+                type="button"
+                onClick={() => {
+                  setState({});
+                  track("sales_assistant_reset", { language: lang });
+                }}
+                className="w-full text-sm font-bold text-muted-foreground"
+              >
                 {copy.reset}
               </button>
             </div>
@@ -217,6 +278,7 @@ function Choice({
             key={optionValue}
             type="button"
             onClick={() => onChange(optionValue)}
+            aria-pressed={value === optionValue}
             className={`rounded-xl border px-4 py-3 text-sm font-bold ${value === optionValue ? "border-primary bg-primary/10" : "border-border"}`}
           >
             {label}
