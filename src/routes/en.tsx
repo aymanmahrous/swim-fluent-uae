@@ -5,6 +5,7 @@ import { ConversionEventBridge } from "../components/conversion-event-bridge";
 import { MobileConversionBar } from "../components/mobile-conversion-bar";
 import { Route as PublicHomeDefinition } from "../components/public-home";
 import { RevenueSections } from "../components/revenue-sections";
+import { SalesAssistant } from "../components/sales-assistant";
 import { publicHomeHead } from "../platform/public-seo";
 
 const PublicHomeComponent = PublicHomeDefinition.options.component as ComponentType;
@@ -21,6 +22,7 @@ function EnglishPublicHome() {
       <ConversionEventBridge />
       <PublicHomeComponent />
       <RevenueSections />
+      <SalesAssistant />
       <MobileConversionBar />
     </>
   );
