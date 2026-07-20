@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ConversionEventBridge } from "../components/conversion-event-bridge";
+import { MobileConversionBar } from "../components/mobile-conversion-bar";
 import { Route as PublicHomeDefinition } from "../components/public-home";
 import { RevenueSections } from "../components/revenue-sections";
 import { publicHomeHead } from "../platform/public-seo";
@@ -18,6 +19,7 @@ function EnglishPublicHome() {
       <ConversionEventBridge />
       <PublicHomeComponent />
       <RevenueSections />
+      <MobileConversionBar />
     </>
   );
 }
