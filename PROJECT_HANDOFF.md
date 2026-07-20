@@ -444,6 +444,44 @@ Every protected decision entry must include:
 
 Silence does not authorize Production, migrations, credentials, real data, Analytics activation, publishing, scheduling, messaging, Ads, billing, spend, external writes, or merge.
 
+## 15. GA4 Consent Mode / `conversation_start` validation — 2026-07-20
+
+### Verified evidence
+
+- A clean Google Tag Assistant session connected to Preview
+  `https://swim-fluent-uae-w532-7hqnnbqzs-swimmingayman-8492s-projects.vercel.app`.
+- Tag Assistant detected GA4 destination `G-BN25VBJTY9`.
+- After consent was accepted and the chatbot was opened once, **Hits Sent** reported:
+  `No hits were sent by this tag`.
+- Therefore, chatbot opening alone is not success evidence, and GA4 Realtime `0` is not the decisive failure evidence; the Tag Assistant hit result is.
+
+### Code diagnosis and local fix
+
+- Target source commit inspected: `e5fd302826d8009d1bc9ac6c8f335dedcf82ec06` on
+  `preview/consent-chatbot-ga4-validation`.
+- `src/platform/public-analytics.ts` queued gtag commands by pushing a rest-parameter Array.
+- The Google tag queue protocol uses the function's `Arguments` object. A minimal local fix now pushes `arguments`.
+- The fix exists only in a detached local worktree. It has not been committed, pushed, deployed, merged, or applied to `main`.
+
+### Local verification
+
+- ESLint: passed with 0 errors (8 pre-existing Fast Refresh warnings).
+- TypeScript `--noEmit`: passed.
+- Development build: passed.
+- Production build: passed locally only; no deployment occurred.
+
+### NEXT_REQUIRED_ACTION
+
+Obtain explicit owner approval to commit and push the minimal fix to
+`preview/consent-chatbot-ga4-validation`, create a new Preview deployment, and repeat one clean Tag Assistant test. Success requires visible proof that consent updates to `analytics_storage: granted`, `conversation_start` appears, and a GA4 hit is listed under **Hits Sent**.
+
+### Prohibitions
+
+- No Production deployment.
+- No `main` change or merge.
+- No environment-variable or secret change.
+- No commit or push without explicit owner approval.
+
 ## 14. Handoff maintenance
 
 At the end of every approved major phase:

@@ -33,9 +33,11 @@ function ensureGtag(): boolean {
   window.dataLayer = window.dataLayer ?? [];
   window.gtag =
     window.gtag ??
-    ((...args: unknown[]) => {
-      window.dataLayer?.push(args);
-    });
+    function gtag(..._args: unknown[]) {
+      // Google Tag's queue protocol requires the function's Arguments object.
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
+    };
 
   return true;
 }
