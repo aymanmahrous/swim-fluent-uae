@@ -62,16 +62,17 @@
 
 ## Open PRs at the checkpoint
 
+- #131 — Draft revenue/location/automation foundation, CI PASS, Vercel Preview READY:
+  `https://swim-fluent-uae-w532-8bo4pph7j-swimmingayman-8492s-projects.vercel.app`
 - #46 — draft privacy copy, mergeable, documentation-only.
 - #36 — draft international phone booking, conflicting; `public-home.tsx` overlap was avoided.
 
 ## Remaining work
 
-1. Commit/push this isolated branch and open a review PR.
-2. Wait for and inspect CI plus Vercel Preview.
-3. Validate the exact Preview on responsive/mobile, RTL/LTR and accessibility.
-4. Obtain owner OAuth/access decisions for Calendar, email provider and n8n workspace.
-5. Run fictional end-to-end automation only; keep all external sends/writes disabled.
+1. Validate PR #131 on an exact mobile breakpoint and complete accessibility review.
+2. Obtain owner OAuth/access decisions for Calendar, email provider and n8n workspace.
+3. Run fictional end-to-end automation only; keep all external sends/writes disabled.
+4. Keep the PR Draft until protected review gates pass.
 
 ## Protected decisions
 
@@ -103,7 +104,7 @@
 
 ## First action next session
 
-Verify the feature-branch commit and PR CI/Preview evidence, then run exact Preview responsive/accessibility checks without Production promotion.
+Verify PR #131 and its Preview receipt, then run the missing exact mobile/accessibility checks without Production promotion.
 
 ## New-session text
 

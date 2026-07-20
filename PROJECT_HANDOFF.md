@@ -525,3 +525,36 @@ At the end of every approved major phase:
 ### Next required action
 
 Commit the tested isolated foundation, push the feature branch, open a small review PR, then inspect CI and Vercel Preview without promoting it to Production.
+
+### PR and Preview receipt — 2026-07-20 11:02 Asia/Dubai
+
+- Draft PR: #131 — `https://github.com/aymanmahrous/swim-fluent-uae/pull/131`
+- PR head at evidence time: `95c9b42f250c4767fbb15c510bb6be384ab85107`
+- GitHub `validate`: PASS.
+- Vercel Preview deployment: READY.
+- Preview URL: `https://swim-fluent-uae-w532-8bo4pph7j-swimmingayman-8492s-projects.vercel.app`
+- Target: Preview, not Production.
+- Direct Arabic Preview evidence:
+  - `lang=ar`, `dir=rtl`;
+  - approved AED 450 pricing rendered;
+  - five location cards rendered;
+  - approved operational email and WhatsApp rendered;
+  - no horizontal overflow at the inspected desktop viewport;
+  - no browser console warnings/errors.
+- Direct English Preview evidence:
+  - `lang=en`, `dir=ltr`;
+  - approved pricing, five locations and hours rendered;
+  - approved operational email rendered;
+  - no horizontal overflow at the inspected desktop viewport;
+  - no browser console warnings/errors.
+- Chatbot Preview evidence:
+  - fixed FAQ includes prices, group maximum, locations and hours;
+  - no name/phone input exists;
+  - WhatsApp handoff points to the approved number;
+  - medical diagnosis/emergency boundary rendered.
+- Consent banner rendered and the GA4 script loaded after Accept. The earlier Tag Assistant/HTTP 204 receipt remains the conclusive hit evidence for the identical queue fix; this PR browser check did not independently re-capture Tag Assistant Hits Sent.
+- Mobile breakpoint-specific evidence remains required because the available browser viewport stayed at desktop width during this receipt.
+
+### Updated next required action
+
+Keep PR #131 Draft. Complete exact mobile/accessibility review, then obtain the protected Calendar/n8n/email access decisions. Do not merge or deploy Production.
