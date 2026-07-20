@@ -52,7 +52,7 @@ No near-identical location pages are created. A dedicated page requires unique l
 - Arabic and English each produced one H1, correct `lang`/`dir`, no layout overflow, no duplicate network URL and no external Calendar/n8n request.
 - Local CLS passed the `<0.1` target. No interaction latency was observed in this non-interactive navigation run, so this is not field INP proof.
 - The Vercel Preview redirects a fresh automated browser to Vercel Authentication. That is protection behavior, not an application failure. Exact Lighthouse scores and compressed Preview LCP therefore remain unverified.
-- The signed-in browser did verify the deployed public content at commit `51fa88e`: all four approved display names appeared, `Najda Street` appeared, and `ICS Al Danah` did not.
+- The signed-in browser verified the deployed public content and opened the Chatbot at commit `93876b6`: all four approved display names and approved WhatsApp appeared, `Najda Street` appeared, `ICS Al Danah` did not, and the Chatbot opened with its preliminary-time path.
 
 ## Regression gates
 

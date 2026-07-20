@@ -8,8 +8,8 @@
 
 - Branch: `feat/revenue-locations-automation-foundation-20260720`
 - Base SHA: `49bc34932fc1910378947c5679782f741355d3ec`
-- Last pushed implementation commit: `51fa88edcfe4a724d87d0320b2f3b540d9cbaeda`
-- Current local state: tested performance/handoff follow-up pending its final commit and push
+- Last pushed/tested implementation commit: `93876b6e8ad133e0215ef455913bef7894a5a58a`
+- Current state: implementation, performance follow-up and evidence are pushed to Draft PR #131
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Worktree: `C:\Users\swimm\Documents\Codex\2026-07-20\agent-type-project-director-and-analytics\work\swim-fluent-uae-revenue`
 
@@ -75,16 +75,16 @@
 
 ## Open PRs at the checkpoint
 
-- #131 — Draft revenue/location/automation foundation, CI PASS at `51fa88e`, Vercel Preview READY:
-  `https://swim-fluent-uae-w532-okz13990o-swimmingayman-8492s-projects.vercel.app`
+- #131 — Draft revenue/location/automation foundation, CI PASS at `93876b6`, Vercel Preview READY:
+  `https://swim-fluent-uae-w532-glibcfjns-swimmingayman-8492s-projects.vercel.app`
 - #46 — draft privacy copy, mergeable, documentation-only.
 - #36 — draft international phone booking, conflicting; `public-home.tsx` overlap was avoided.
 
 ## Remaining work
 
-1. Commit/push the tested performance and handoff follow-up, then re-check PR #131 CI and Preview.
-2. Run an authorized compressed Preview Lighthouse and keyboard/screen-reader smoke test; deployment protection currently blocks fresh automated access.
-3. Obtain OAuth/workspace access for Calendar, email provider and n8n, then run fictional end-to-end automation only.
+1. Run an authorized compressed Preview Lighthouse and keyboard/screen-reader smoke test; deployment protection currently blocks fresh automated access.
+2. Obtain OAuth/workspace access for Calendar, email provider and n8n, then run fictional end-to-end automation only.
+3. Perform a read-only GBP field audit and owner review; do not write live fields.
 4. Keep the PR Draft and every external write disabled until protected review gates pass.
 
 ## Protected decisions
@@ -117,7 +117,7 @@
 
 ## First action next session
 
-Verify the follow-up commit, PR #131 CI and Vercel Preview receipt, then obtain authorized protected-Preview Lighthouse and fictional integration receipts without Production promotion.
+Obtain authorized protected-Preview Lighthouse and fictional Calendar/email/n8n receipts without Production promotion, real customer data or external writes.
 
 ## New-session text
 

@@ -592,3 +592,12 @@ Keep PR #131 Draft. Complete exact mobile/accessibility review, then obtain the 
 ### Next required action
 
 Push the tested performance and handoff follow-up to the same Draft PR, re-check CI/Vercel, then complete protected OAuth/workspace steps only when the owner provides access. Keep all external writes disabled.
+
+### Final follow-up receipt — 2026-07-20 14:00 Asia/Dubai
+
+- Commit `93876b6e8ad133e0215ef455913bef7894a5a58a` was pushed to the same feature branch.
+- Draft PR #131 remains open, Draft and mergeable.
+- GitHub CI run `29733226382`, job `validate`: PASS.
+- Vercel Preview: READY at `https://swim-fluent-uae-w532-glibcfjns-swimmingayman-8492s-projects.vercel.app`.
+- Signed-in final Preview: the four approved public locations and WhatsApp are present; ICS Al Danah is absent; Consent UI appears; Chatbot loads after deferral and opens successfully with Najda Street, no Al Danah and the preliminary-time path.
+- Next protected work is OAuth/workspace-only fictional integration testing, read-only GBP field capture and authorized compressed Preview Lighthouse. No external live write is authorized.
