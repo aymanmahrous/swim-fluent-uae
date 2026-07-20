@@ -558,3 +558,37 @@ Commit the tested isolated foundation, push the feature branch, open a small rev
 ### Updated next required action
 
 Keep PR #131 Draft. Complete exact mobile/accessibility review, then obtain the protected Calendar/n8n/email access decisions. Do not merge or deploy Production.
+
+## 16. Owner decision implementation and validation — 2026-07-20 13:51 Asia/Dubai
+
+### Delivered on Draft PR #131
+
+- Commit `51fa88edcfe4a724d87d0320b2f3b540d9cbaeda` is pushed to `feat/revenue-locations-automation-foundation-20260720`.
+- Public location registry now exposes exactly: Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif.
+- The hidden Al Danah record is non-public, non-bookable and Local-SEO-disabled. Its observed Google Maps name is retained internally without presenting it as the owner display name.
+- Duplicate public short/resolved Maps URLs and invented Place IDs are rejected by tests.
+- Chatbot, Calendar contracts, inactive n8n test workflow, email templates, SEO, GBP audit pack and 30-day bilingual content schedule use the four approved locations and the approved account separation.
+- Existing Google Business Profile is treated as owner-evidenced but read-only; no live field was inferred or changed.
+- Hero image preload/high priority and deferred Chatbot chunk were added without a new dependency.
+
+### Verification evidence
+
+- GitHub `validate`: PASS at `51fa88e`.
+- Vercel Preview: READY at `https://swim-fluent-uae-w532-okz13990o-swimmingayman-8492s-projects.vercel.app`.
+- Signed-in Preview inspection: Najda Street, ICS Al Falah, ICS Khalifa and ICS Mushrif present; ICS Al Danah absent; approved WhatsApp present.
+- Revenue foundation: PASS.
+- Public SEO: PASS, 92 assertions after performance regression guards.
+- Public claims: PASS.
+- Typecheck: PASS.
+- Production build: PASS; main client `442.09 kB / 133.43 kB gzip`; Chatbot lazy chunk `0.61 kB / 0.33 kB gzip`; no large library added.
+- Lint: PASS with zero errors and eight pre-existing Fast Refresh warnings.
+- Local 390×844 throttled Arabic/English audit: correct RTL/LTR, one H1, no overflow, unnamed visible control, missing alt, duplicate ID, duplicate request, application console/HTTP/page error, or eager n8n/Calendar request. CLS was `0.0087` Arabic and `0.001` English.
+- Exact compressed Preview Lighthouse/LCP remains blocked because fresh automation is redirected to Vercel Authentication. Local LCP is not accepted as the target measurement because the local Node server serves the main bundle uncompressed.
+
+### Safety state
+
+- PR remains Draft. No merge, Production deployment, real booking, real message, invitation, n8n activation, Calendar write, GBP write, post publication, secret or environment-variable change occurred.
+
+### Next required action
+
+Push the tested performance and handoff follow-up to the same Draft PR, re-check CI/Vercel, then complete protected OAuth/workspace steps only when the owner provides access. Keep all external writes disabled.

@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { chromium } from "@playwright/test";
 
 const baseUrl = process.env.PREVIEW_URL;
-assert.ok(baseUrl?.startsWith("https://"), "Set PREVIEW_URL to an HTTPS Preview deployment");
+assert.ok(
+  baseUrl?.startsWith("https://") || baseUrl?.startsWith("http://127.0.0.1"),
+  "Set PREVIEW_URL to an HTTPS Preview deployment or local 127.0.0.1 production preview",
+);
+const isLocalUncompressedPreview = baseUrl.startsWith("http://127.0.0.1");
 
 const browser = await chromium.launch({
   executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -33,10 +37,20 @@ try {
     await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
 
     await page.addInitScript(() => {
-      window.__rfVitals = { lcp: 0, cls: 0, maxInteraction: 0 };
+      window.__rfVitals = { lcp: 0, lcpElement: null, cls: 0, maxInteraction: 0 };
       new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        window.__rfVitals.lcp = entries.at(-1)?.startTime ?? window.__rfVitals.lcp;
+        const latest = entries.at(-1);
+        window.__rfVitals.lcp = latest?.startTime ?? window.__rfVitals.lcp;
+        if (latest?.element) {
+          window.__rfVitals.lcpElement = {
+            tag: latest.element.tagName,
+            id: latest.element.id,
+            className: String(latest.element.className).slice(0, 180),
+            text: latest.element.textContent?.trim().slice(0, 120) ?? "",
+            url: latest.url ?? "",
+          };
+        }
       }).observe({ type: "largest-contentful-paint", buffered: true });
       new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
@@ -60,12 +74,18 @@ try {
     const consoleErrors = [];
     const pageErrors = [];
     const failedRequests = [];
+    const httpErrors = [];
     const requests = [];
     page.on("console", (message) => {
-      if (message.type() === "error") consoleErrors.push(message.text());
+      if (message.type() === "error") {
+        consoleErrors.push({ text: message.text(), sourceUrl: message.location().url });
+      }
     });
     page.on("pageerror", (error) => pageErrors.push(error.message));
     page.on("request", (request) => requests.push(request.url()));
+    page.on("response", (response) => {
+      if (response.status() >= 400) httpErrors.push(`${response.status()} ${response.url()}`);
+    });
     page.on("requestfailed", (request) =>
       failedRequests.push(`${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`),
     );
@@ -104,9 +124,33 @@ try {
       const missingAlt = [...document.querySelectorAll("img")].filter(
         (image) => !image.hasAttribute("alt"),
       ).length;
-      const ids = [...document.querySelectorAll("[id]")].map((element) => element.id);
+      const ids = [...document.querySelectorAll("[id]")]
+        .map((element) => element.id)
+        .filter(Boolean);
       const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
+      const heroResource = performance
+        .getEntriesByType("resource")
+        .find((entry) => entry.name.includes("hero-pool"));
+      const navigation = performance.getEntriesByType("navigation")[0];
+      const slowResources = performance
+        .getEntriesByType("resource")
+        .map((entry) => ({
+          name: entry.name,
+          initiatorType: entry.initiatorType,
+          startTime: entry.startTime,
+          responseEnd: entry.responseEnd,
+          duration: entry.duration,
+          transferSize: entry.transferSize,
+        }))
+        .sort((a, b) => b.responseEnd - a.responseEnd)
+        .slice(0, 12);
+      const paints = Object.fromEntries(
+        performance.getEntriesByType("paint").map((entry) => [entry.name, entry.startTime]),
+      );
       return {
+        url: location.href,
+        title: document.title,
+        bodyTextStart: document.body.innerText.slice(0, 180),
         lang: document.documentElement.lang,
         dir: document.documentElement.dir,
         horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
@@ -115,9 +159,53 @@ try {
         missingAlt,
         duplicateIds,
         h1Count: document.querySelectorAll("h1").length,
+        paints,
+        navigation: navigation
+          ? {
+              responseStart: navigation.responseStart,
+              responseEnd: navigation.responseEnd,
+              domContentLoadedEventEnd: navigation.domContentLoadedEventEnd,
+              loadEventEnd: navigation.loadEventEnd,
+            }
+          : null,
+        heroResource: heroResource
+          ? {
+              startTime: heroResource.startTime,
+              responseStart: heroResource.responseStart,
+              responseEnd: heroResource.responseEnd,
+              duration: heroResource.duration,
+              transferSize: heroResource.transferSize,
+            }
+          : null,
+        slowResources,
         vitals: window.__rfVitals,
       };
     });
+
+    assert.equal(
+      new URL(audit.url).host,
+      new URL(baseUrl).host,
+      `${route}: navigation left the application host (deployment protection or redirect)`,
+    );
+
+    const appConsoleErrors = consoleErrors.filter(({ sourceUrl }) => sourceUrl.startsWith(baseUrl));
+    const appHttpErrors = httpErrors.filter((entry) => entry.includes(new URL(baseUrl).host));
+    if (
+      consoleErrors.length ||
+      pageErrors.length ||
+      failedRequests.length ||
+      httpErrors.length ||
+      (!isLocalUncompressedPreview && audit.vitals.lcp >= 2_500) ||
+      audit.vitals.cls >= 0.1
+    ) {
+      console.error(
+        JSON.stringify(
+          { route, audit, consoleErrors, appConsoleErrors, pageErrors, failedRequests, httpErrors },
+          null,
+          2,
+        ),
+      );
+    }
 
     assert.equal(audit.horizontalOverflow, false, `${route}: horizontal overflow`);
     assert.equal(audit.unnamedButtons, 0, `${route}: unnamed visible buttons`);
@@ -125,15 +213,22 @@ try {
     assert.equal(audit.missingAlt, 0, `${route}: images without alt`);
     assert.deepEqual(audit.duplicateIds, [], `${route}: duplicate IDs`);
     assert.equal(audit.h1Count, 1, `${route}: expected one h1`);
-    assert.equal(consoleErrors.length, 0, `${route}: console errors`);
+    assert.equal(appConsoleErrors.length, 0, `${route}: application console errors`);
     assert.equal(pageErrors.length, 0, `${route}: page errors`);
+    assert.equal(appHttpErrors.length, 0, `${route}: application HTTP errors`);
     assert.equal(
       initialExternalIntegrationRequests.length,
       0,
       `${route}: eager Calendar/n8n request`,
     );
-    assert.ok(audit.vitals.lcp < 2_500, `${route}: lab LCP exceeds 2.5s`);
+    if (!isLocalUncompressedPreview) {
+      assert.ok(audit.vitals.lcp < 2_500, `${route}: lab LCP exceeds 2.5s`);
+    }
     assert.ok(audit.vitals.cls < 0.1, `${route}: lab CLS exceeds 0.1`);
+    assert.ok(
+      !audit.vitals.maxInteraction || audit.vitals.maxInteraction < 200,
+      `${route}: observed interaction exceeds 200ms`,
+    );
 
     results.push({
       route,
@@ -142,11 +237,14 @@ try {
       chatbotPresent,
       audit,
       consoleErrors,
+      appConsoleErrors,
       pageErrors,
       failedRequests,
+      httpErrors,
       requestCount: requests.length,
       duplicateRequestUrls: [...new Set(requests.filter((url, i) => requests.indexOf(url) !== i))],
       initialExternalIntegrationRequests,
+      lcpThresholdEvaluated: !isLocalUncompressedPreview,
     });
     await context.close();
   }

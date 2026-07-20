@@ -1,3 +1,6 @@
+import heroImg from "../assets/hero-pool.jpg";
+import { OPERATIONAL_EMAIL, TRAINING_LOCATIONS, WHATSAPP_DISPLAY } from "./public-business-config";
+
 export const SITE_URL = "https://www.relaxfixuae.com";
 export const INSTAGRAM_URL = "https://www.instagram.com/relaxfixuae/";
 
@@ -141,6 +144,7 @@ export function publicHomeHead(lang: PublicLanguage) {
       { name: "twitter:description", content: copy.description },
     ],
     links: [
+      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" as const },
       { rel: "canonical", href: copy.url },
       { rel: "alternate", hrefLang: "ar-AE", href: `${SITE_URL}/` },
       { rel: "alternate", hrefLang: "en-AE", href: `${SITE_URL}/en` },
@@ -154,4 +158,3 @@ export function publicHomeHead(lang: PublicLanguage) {
     ],
   };
 }
-import { OPERATIONAL_EMAIL, TRAINING_LOCATIONS, WHATSAPP_DISPLAY } from "./public-business-config";

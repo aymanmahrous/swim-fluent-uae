@@ -118,8 +118,15 @@ for (const needle of [
   "initialLang={publicLang}",
   "persistPreference={!isLocalizedPublicPage}",
   'to="/en"',
+  "lazy(() =>",
+  "requestIdleCallback",
+  "<DeferredChatbotPreview />",
 ]) {
   requireText(rootRoute, needle, "localized document shell");
+}
+
+for (const needle of ['rel: "preload"', 'as: "image"', 'fetchPriority: "high"']) {
+  requireText(seo, needle, "hero image priority");
 }
 
 const robots = await text("public/robots.txt");

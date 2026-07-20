@@ -9,9 +9,8 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
-import { useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { AnalyticsConsentBridge } from "../components/analytics-consent-bridge";
-import { ChatbotPreview } from "../components/chatbot-preview";
 import { ConsentBanner } from "../components/consent-banner";
 import { Toaster } from "../components/ui/sonner";
 import { LangProvider, useLang, type Lang } from "../lib/i18n";
@@ -26,6 +25,30 @@ import appCss from "../styles.css?url";
 
 const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
+const LazyChatbotPreview = lazy(() =>
+  import("../components/chatbot-preview").then((module) => ({
+    default: module.ChatbotPreview,
+  })),
+);
+
+function DeferredChatbotPreview() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(() => setReady(true), { timeout: 2_000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = globalThis.setTimeout(() => setReady(true), 1_500);
+    return () => globalThis.clearTimeout(id);
+  }, []);
+
+  return ready ? (
+    <Suspense fallback={null}>
+      <LazyChatbotPreview />
+    </Suspense>
+  ) : null;
+}
 
 function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
@@ -78,8 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Relax Fix UAE — Coach Ayman | Swimming & Water Confidence Abu Dhabi" },
       {
         name: "description",
-        content:
-          "Premium swimming and water-confidence coaching in Abu Dhabi with Coach Ayman.",
+        content: "Premium swimming and water-confidence coaching in Abu Dhabi with Coach Ayman.",
       },
       { property: "og:title", content: "Relax Fix UAE — Coach Ayman" },
       {
@@ -140,7 +162,9 @@ function Nav() {
           </div>
           <div className="min-w-0 leading-tight">
             <div className="truncate text-sm font-black sm:text-base">{settings.businessName}</div>
-            <div className="truncate text-[10px] text-muted-foreground sm:text-xs">{settings.coachName}</div>
+            <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
+              {settings.coachName}
+            </div>
           </div>
         </Link>
 
@@ -258,7 +282,7 @@ function RootComponent() {
           <Footer />
           <AnalyticsConsentBridge />
           <ConsentBanner />
-          <ChatbotPreview />
+          <DeferredChatbotPreview />
           <Toaster richColors position="top-center" />
         </div>
       </LangProvider>

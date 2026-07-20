@@ -276,3 +276,13 @@ Expanded delegated-authority rule:
 The Main Project Director may proceed with routine, reversible, evidence-backed architecture, research, internal prototypes, mock data, schemas, templates, QA systems, documentation, issues, and isolated PRs. The director must challenge or reject owner/agent proposals that create safety, clinical-scope, privacy, security, legal, rights, financial, duplicated-system, premature-complexity, or Production risk, and must provide a safer alternative.
 
 Protected approvals remain required for budgets and paid spend, credentials and external writes, legal facts and publication acceptance, real customer/child/health data, Production migrations or writes, real bookings, outbound messages, public medical/therapy/rehabilitation/qualification claims, and clinician-supervised decisions.
+
+## 17. Durable owner decisions — 2026-07-20
+
+- The only public Training locations are `Najda Street`, `ICS Al Falah`, `ICS Khalifa` and `ICS Mushrif`.
+- `Najda Street` is the owner-approved display name. The observed Google Maps destination remains `ICS Al Danah - International Community School`; the system must not claim that Google calls it Najda Street.
+- `ICS Al Danah` is hidden as a public location and cannot be duplicated across public Maps, booking, Chatbot, SEO, Calendar or automation choices.
+- `swimmingayman@gmail.com` is the n8n technical-management account only. `relaxfix2026@gmail.com` remains the operational Calendar, booking and notification account.
+- The existing Google Business Profile evidence is limited to visible profile existence/name/region/verification. All internal fields remain read-only-unverified until an authorized audit, and live writes require separate approval.
+- Use **Training locations / مواقع تدريب**, not branches, unless future legal and operational evidence supports separate eligible listings.
+- Automation and content remain test-mode, fictional-data and review-required. No real booking, invitation, message, workflow activation, GBP edit or post publication is authorized.
