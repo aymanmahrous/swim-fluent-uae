@@ -152,7 +152,6 @@ export function publicHomeHead(lang: PublicLanguage) {
       { name: "twitter:image:alt", content: copy.imageAlt },
     ],
     links: [
-      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" as const },
       { rel: "canonical", href: copy.url },
       { rel: "alternate", hrefLang: "ar-AE", href: `${SITE_URL}/` },
       { rel: "alternate", hrefLang: "en-AE", href: `${SITE_URL}/en` },
