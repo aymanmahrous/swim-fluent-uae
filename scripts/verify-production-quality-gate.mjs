@@ -51,13 +51,15 @@ for (const forbidden of [
 
 for (const required of [
   "https://www.relaxfixuae.com",
-  'method: "GET"',
+  "return await fetch(url",
   "robots.txt",
   "sitemap.xml",
   "canonical",
   "og:",
   "twitter:",
-  "content-security-policy",
+  "x-content-type-options",
+  "x-frame-options",
+  "referrer-policy",
 ]) {
   requireText(smoke, required, "Production smoke script");
 }
