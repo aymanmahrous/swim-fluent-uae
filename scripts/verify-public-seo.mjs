@@ -52,8 +52,10 @@ for (const needle of [
   '"@type": "Review"',
   "streetAddress",
   "facebook.com/share/",
+  'rel: "preload"',
+  'fetchPriority: "high"',
 ]) {
-  forbidText(seo, needle, "truthful structured data");
+  forbidText(seo, needle, "truthful and non-duplicated structured head data");
 }
 
 const arabicRoute = await text("src/routes/index.tsx");
@@ -70,6 +72,9 @@ const publicHomeText = await text("src/components/public-home.tsx");
 requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
 requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
 requireText(publicHomeText, 'id="book"', "preserved booking page");
+requireText(publicHomeText, 'src={heroImg}', "SSR hero image discovery");
+requireText(publicHomeText, 'width={1920}', "hero intrinsic dimensions");
+requireText(publicHomeText, 'height={1080}', "hero intrinsic dimensions");
 
 const publicConfig = await text("src/platform/public-business-config.ts");
 for (const needle of [
@@ -128,10 +133,6 @@ for (const needle of [
   "<DeferredChatbotPreview />",
 ]) {
   requireText(rootRoute, needle, "localized document shell");
-}
-
-for (const needle of ['rel: "preload"', 'as: "image"', 'fetchPriority: "high"']) {
-  requireText(seo, needle, "hero image priority");
 }
 
 const robots = await text("public/robots.txt");
