@@ -461,6 +461,7 @@ At the end of every approved major phase:
 
 - Branch: `feat/revenue-locations-automation-foundation-20260720`
 - Base: `origin/main` at `49bc34932fc1910378947c5679782f741355d3ec`
+- Tested implementation commit: `21c157a`
 - Main CI at the base commit: PASS.
 - Open PR #46 is documentation-only and has no file overlap.
 - Open PR #36 is draft/conflicting and touches `src/components/public-home.tsx`; this phase deliberately restored that file to `HEAD` and integrates the new conversion sections through the localized route wrappers instead.
