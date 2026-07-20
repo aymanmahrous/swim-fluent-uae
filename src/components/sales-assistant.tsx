@@ -28,6 +28,7 @@ export function SalesAssistant() {
   const [state, setState] = useState<AssistantState>({});
   const openerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
   const isArabic = lang === "ar";
   const copy = isArabic
@@ -49,6 +50,7 @@ export function SalesAssistant() {
         reset: "ابدأ من جديد",
         open: "افتح مساعد اختيار البرنامج",
         close: "إغلاق المساعد",
+        progress: "اكتمل",
       }
     : {
         title: "Program selection assistant",
@@ -68,6 +70,7 @@ export function SalesAssistant() {
         reset: "Start again",
         open: "Open program selection assistant",
         close: "Close assistant",
+        progress: "complete",
       };
 
   const recommendation = useMemo(() => {
@@ -78,6 +81,9 @@ export function SalesAssistant() {
     return { learner, goal, location: state.location };
   }, [copy.adult, copy.child, copy.confidence, copy.learn, copy.performance, state]);
 
+  const completedAnswers = Number(Boolean(state.learner)) + Number(Boolean(state.goal)) + Number(Boolean(state.location));
+  const progressPercent = Math.round((completedAnswers / 3) * 100);
+
   useEffect(() => {
     if (!open) return;
 
@@ -86,9 +92,32 @@ export function SalesAssistant() {
     closeRef.current?.focus();
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setOpen(false);
-      track("sales_assistant_closed", { language: lang, method: "escape" });
+      if (event.key === "Escape") {
+        setOpen(false);
+        track("sales_assistant_closed", { language: lang, method: "escape" });
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
 
     window.addEventListener("keydown", onKeyDown);
@@ -176,6 +205,7 @@ export function SalesAssistant() {
           }}
         >
           <section
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="sales-assistant-title"
@@ -192,17 +222,19 @@ export function SalesAssistant() {
               </button>
             </div>
 
-            <div className="mt-6 space-y-6">
-              <Choice title={copy.learner} options={[
-                ["child", copy.child],
-                ["adult", copy.adult],
-              ]} value={state.learner} onChange={(learner) => chooseLearner(learner as Learner)} />
+            <div className="mt-5" aria-label={`${progressPercent}% ${copy.progress}`}>
+              <div className="mb-2 flex items-center justify-between text-xs font-bold text-muted-foreground">
+                <span>{completedAnswers}/3</span>
+                <span>{progressPercent}% {copy.progress}</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <div className="h-full rounded-full bg-primary transition-[width] duration-300" style={{ width: `${progressPercent}%` }} />
+              </div>
+            </div>
 
-              <Choice title={copy.goal} options={[
-                ["learn", copy.learn],
-                ["confidence", copy.confidence],
-                ["performance", copy.performance],
-              ]} value={state.goal} onChange={(goal) => chooseGoal(goal as Goal)} />
+            <div className="mt-6 space-y-6">
+              <Choice title={copy.learner} options={[["child", copy.child], ["adult", copy.adult]]} value={state.learner} onChange={(learner) => chooseLearner(learner as Learner)} />
+              <Choice title={copy.goal} options={[["learn", copy.learn], ["confidence", copy.confidence], ["performance", copy.performance]]} value={state.goal} onChange={(goal) => chooseGoal(goal as Goal)} />
 
               <div>
                 <div className="mb-3 text-sm font-black">{copy.location}</div>
@@ -225,19 +257,13 @@ export function SalesAssistant() {
                 <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4" aria-live="polite">
                   <div className="font-black">{copy.recommendation}</div>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.recommendationBody}</p>
-                  <div className="mt-3 text-sm font-bold">
-                    {recommendation.learner} · {recommendation.goal} · {recommendation.location}
-                  </div>
+                  <div className="mt-3 text-sm font-bold">{recommendation.learner} · {recommendation.goal} · {recommendation.location}</div>
                 </div>
               )}
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <button type="button" disabled={!recommendation} onClick={goToBooking} className="rounded-xl bg-deep px-5 py-3 font-black text-white disabled:opacity-40">
-                  {copy.book}
-                </button>
-                <button type="button" onClick={openWhatsApp} className="rounded-xl border border-border px-5 py-3 font-black">
-                  {copy.whatsapp}
-                </button>
+                <button type="button" disabled={!recommendation} onClick={goToBooking} className="rounded-xl bg-deep px-5 py-3 font-black text-white disabled:opacity-40">{copy.book}</button>
+                <button type="button" onClick={openWhatsApp} className="rounded-xl border border-border px-5 py-3 font-black">{copy.whatsapp}</button>
               </div>
 
               <button
