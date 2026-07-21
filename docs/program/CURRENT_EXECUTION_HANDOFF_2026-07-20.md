@@ -105,3 +105,47 @@ The centralized policy preserves the previous role boundaries and does not broad
 - No database migration or production write has been executed.
 - No cron, worker, publishing, Preview, or booking submission has been triggered.
 - All current changes remain reviewable and reversible inside Draft PR #152.
+
+---
+
+## Security execution continuation — 2026-07-21
+
+### Verified merged security phases
+
+- PR #156 merged authentication-domain separation for AI OS, Cron, internal workers, and GitHub Actions OIDC routes.
+- Merge commit: `6b9a7d36f70ff2864babf215c946f3e20f6ba8e1`.
+- PR #157 merged centralized RBAC enforcement for mutating AI OS routes.
+- Added `conversation.mode.update` and protected `PATCH /api/os-inbox`.
+- Merge commit: `b178a0b4928c3bdb9af4637ea4105aebfa7fea25`.
+
+### Current phase — API mutation input contracts
+
+- Working branch: `agent/api-mutation-input-contract`.
+- Review boundary: PR #158.
+- Added `scripts/verify-api-mutation-input-contracts.mjs` as a read-only source verifier.
+- CI now discovers POST, PUT, PATCH, and DELETE API handlers that read JSON bodies.
+- These routes must handle malformed JSON, perform runtime schema validation, and preserve an explicit invalid-input contract.
+- `src/routes/api.staff-password-request.ts` now uses a bounded Zod email schema.
+- `src/routes/api.staff-password-reset.ts` now uses a bounded Zod password schema.
+- `src/routes/api.password-recovery.ts` preserves account-enumeration resistance through the documented `ENUMERATION_SAFE_INVALID_INPUT` exception and generic response.
+- Mutation-input failure diagnostics are uploaded as a CI artifact when this contract fails.
+
+### Current verification state
+
+- CI run `29860767997` passed Typecheck, Staff RBAC, architecture boundaries, privileged authentication boundaries, mutation RBAC, mutation input contracts, Lint, Build, and all existing read-only contract checks.
+- Final CI must be reconfirmed after this Handoff update before PR #158 is merged.
+
+### Next security phase after merge
+
+1. Audit rate limiting and abuse controls for public authentication, password recovery, booking, and AI/provider endpoints.
+2. Add a read-only CI contract for endpoints that require rate limiting.
+3. Do not call endpoints or use Production secrets while implementing the contract.
+
+### Persistent safety constraints
+
+- Work only in `aymanmahrous/swim-fluent-uae`.
+- Do not run Preview or deployments.
+- Do not run migrations, seeds, Cron jobs, Workers, publishing, or external provider actions.
+- Do not use Production secrets.
+- Do not perform database or Production writes.
+- Update this Handoff after every completed phase so continuation never starts from zero.
