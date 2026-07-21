@@ -72,7 +72,7 @@ No browser, Preview, Lighthouse, or live accessibility scanner was run under thi
 
 - `vercel.json` is restricted to schema, ignore policy, the existing recovery Cron declaration, and security headers.
 - Agent branches remain ignored by the Vercel build policy.
-- No custom install or build command can insert migrations or runtime tasks.
+- The Vercel install command is explicitly locked to `npm ci --ignore-scripts --no-audit --no-fund --loglevel=error`; no custom build command can insert migrations or runtime tasks.
 - The existing Cron declaration was inspected only; it was not executed.
 - Supabase automatic CI remains read-only, and Production-writing workflows remain manual-only with explicit confirmations.
 - No Supabase request, migration, seed, RPC write, storage write, or database write was performed.
@@ -91,6 +91,10 @@ No browser, Preview, Lighthouse, or live accessibility scanner was run under thi
 - Vercel source policy and non-implicit runtime commands.
 
 It runs automatically inside the main read-only CI workflow.
+
+## Post-audit Vercel package-manager correction
+
+A live Production build attempt exposed that Vercel preferred the retained `bun.lock` and ran `bun install`, while GitHub CI and the canonical lock use npm. The repository now overrides only Vercel dependency installation with the reviewed deterministic npm command. This does not run Preview/Deploy and does not change runtime code, domains, secrets, data, or provider behavior.
 
 ## Closed software blockers
 
