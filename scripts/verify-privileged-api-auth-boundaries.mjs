@@ -11,20 +11,24 @@ const groups = [
   {
     name: "AI OS staff APIs",
     matches: (file) => /^api\.os(?:[.-]|$)/.test(file),
-    required: ["resolveStaffSession"],
-    forbidden: ["verifyInternalWorkerRequest", "authenticateContentAutomationRequest"],
+    requiredAny: ["resolveStaffSession"],
+    forbidden: [
+      "verifyInternalWorkerRequest",
+      "verifyGithubActionsOidc",
+      "authenticateContentAutomationRequest",
+    ],
   },
   {
-    name: "internal worker APIs",
+    name: "internal APIs",
     matches: (file) => /^api\.internal\./.test(file),
-    required: ["verifyInternalWorkerRequest"],
+    requiredAny: ["verifyInternalWorkerRequest", "verifyGithubActionsOidc"],
     forbidden: ["resolveStaffSession", "authenticateContentAutomationRequest"],
   },
   {
     name: "cron APIs",
     matches: (file) => /^api\.cron\./.test(file),
-    required: ["authenticateContentAutomationRequest"],
-    forbidden: ["resolveStaffSession", "verifyInternalWorkerRequest"],
+    requiredAny: ["authenticateContentAutomationRequest"],
+    forbidden: ["resolveStaffSession", "verifyInternalWorkerRequest", "verifyGithubActionsOidc"],
   },
 ];
 
@@ -46,9 +50,10 @@ for (const group of groups) {
       `${file} must remain a server route with explicit handlers`,
     );
 
-    for (const needle of group.required) {
-      assert.ok(source.includes(needle), `${file} is missing required authentication boundary ${needle}`);
-    }
+    assert.ok(
+      group.requiredAny.some((needle) => source.includes(needle)),
+      `${file} is missing an approved authentication boundary: ${group.requiredAny.join(" or ")}`,
+    );
 
     for (const needle of group.forbidden) {
       assert.ok(!source.includes(needle), `${file} crosses authentication domains through ${needle}`);
