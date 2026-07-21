@@ -33,6 +33,8 @@ jobs:
           if-no-files-found: error
       - name: Verify audited staff RBAC matrix
         run: npm run test:rbac
+      - name: Verify public and internal route boundary
+        run: node scripts/verify-public-internal-boundary.mjs
       - run: npm run lint
       - run: npm run build
       - name: Parse Production workflow YAML
