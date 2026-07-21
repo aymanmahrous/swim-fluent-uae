@@ -76,10 +76,11 @@ export const Route = createFileRoute("/api/os-media-generate-image")({
             prompt: parsed.data.prompt,
             aspectRatio: parsed.data.aspectRatio,
           });
-          const persisted = generation.assetBase64
+          const assetBase64 = generation.assetBase64;
+          const persisted = assetBase64
             ? await (async () => {
                 const contentType = generation.contentType ?? "image/png";
-                const bytes = new Uint8Array(Buffer.from(generation.assetBase64, "base64"));
+                const bytes = new Uint8Array(Buffer.from(assetBase64, "base64"));
                 assertMediaSignature(bytes, contentType, "image");
                 return persistProviderAssetBytes({
                   bytes,
