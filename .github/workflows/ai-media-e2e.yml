@@ -62,12 +62,12 @@ jobs:
             exit 1
           fi
           echo "Manual Production AI Media E2E authorization validated."
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       - name: Publish pending AI Media E2E status
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             await github.rest.repos.createCommitStatus({
@@ -79,7 +79,7 @@ jobs:
               description: "Real AI media browser E2E is running",
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
-      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
       - name: Wait for exact production deployment SHA
         run: node scripts/ai-media-e2e-admin.mjs wait
       - run: npx playwright install --with-deps chromium
@@ -92,7 +92,7 @@ jobs:
         run: node scripts/ai-media-e2e-admin.mjs cleanup
       - name: Upload browser diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ai-media-e2e-diagnostics
           path: |
@@ -101,7 +101,7 @@ jobs:
           if-no-files-found: ignore
       - name: Publish final AI Media E2E status
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
           JOB_STATUS: ${{ job.status }}
         with:
