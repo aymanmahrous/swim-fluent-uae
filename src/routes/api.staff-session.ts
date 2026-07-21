@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { abuseControlAllowed, rateLimitedResponse } from "../platform/abuse-control.server";
 import {
   clearSessionCookieHeaders,
   resolveStaffSession,
@@ -31,6 +32,14 @@ export const Route = createFileRoute("/api/staff-session")({
         const parsed = LoginSchema.safeParse(body);
         if (!parsed.success) {
           return Response.json({ success: false, code: "INVALID_INPUT" }, { status: 400 });
+        }
+        if (!abuseControlAllowed(request, {
+          scope: "staff-login",
+          subject: parsed.data.email,
+          windowMs: 15 * 60 * 1000,
+          maxAttempts: 8,
+        })) {
+          return rateLimitedResponse(900);
         }
 
         const session = await signInStaff(parsed.data.email, parsed.data.password);
