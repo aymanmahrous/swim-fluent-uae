@@ -27,7 +27,7 @@ for (const file of routeFiles) {
     continue;
   }
   if (file.startsWith("api.internal.") || file.startsWith("api.cron.")) {
-    assert.ok(/(authorization|Authorization|INTERNAL_|CRON_|secret|Secret|timingSafeEqual|verify)/.test(source), `${file} must retain an explicit machine-authentication boundary`);
+    assert.ok(/(authorization|Authorization|authenticate|INTERNAL_|CRON_|secret|Secret|timingSafeEqual|verify)/.test(source), `${file} must retain an explicit machine-authentication boundary`);
     continue;
   }
   assert.fail(`${file} is not classified in the public API inventory`);
