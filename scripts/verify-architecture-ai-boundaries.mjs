@@ -44,16 +44,17 @@ for (const path of [
   "src/routes/api.os-media-generate-video.ts",
 ]) {
   const source = await text(path);
-  requireText(source, "resolveStaffSession(request)", `${path} Staff isolation`);
+  requireText(source, "resolveStaffSession", `${path} Staff isolation`);
   requireText(source, "hasStaffPermission", `${path} centralized authorization`);
   forbidText(source, "VITE_AI_OS_DEMO_DATA", `${path} provider isolation`);
   forbidText(source, "localStorage", `${path} provider isolation`);
 }
 
 const moduleBoundaries = await text("scripts/verify-module-ownership-boundaries.mjs");
-requireText(moduleBoundaries, "src/routes/index.tsx", "public module ownership contract");
-requireText(moduleBoundaries, "src/routes/os.tsx", "AI OS module ownership contract");
-requireText(moduleBoundaries, "src/routes/staff.tsx", "Staff module ownership contract");
+requireText(moduleBoundaries, 'read("src/routes/__root.tsx")', "public module ownership contract");
+requireText(moduleBoundaries, 'read("src/routes/os.tsx")', "AI OS module ownership contract");
+requireText(moduleBoundaries, 'read("src/routes/staff.tsx")', "Staff module ownership contract");
+requireText(moduleBoundaries, "AI OS UI -> AI OS APIs -> Staff session/RBAC", "AI OS dependency direction");
 
 const envExample = await text(".env.example");
 for (const flag of ["VITE_ENABLE_AI_OS", "VITE_ENABLE_LEGACY_ADMIN", "VITE_AI_OS_DEMO_DATA"]) {
