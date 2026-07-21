@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { LeadStageSchema } from "../platform/os-crm-data";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -22,12 +23,7 @@ export const Route = createFileRoute("/api/os-crm-update")({
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-        if (
-          session.profile.role !== "super_admin" &&
-          session.profile.role !== "admin" &&
-          session.profile.role !== "reception" &&
-          session.profile.role !== "coach"
-        ) {
+        if (!hasStaffPermission(session.profile.role, "crm.workflow.update")) {
           return Response.json({ error: "FORBIDDEN" }, { status: 403 });
         }
 
