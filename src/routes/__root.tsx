@@ -25,18 +25,31 @@ import appCss from "../styles.css?url";
 
 const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
+
 function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
 }
 
+function localizedPublicHome(language: Lang): "/" | "/en" {
+  return language === "en" ? "/en" : "/";
+}
+
+function localizedLanguageSwitchTarget(pathname: string): string | null {
+  if (pathname === "/") return "/en";
+  if (pathname === "/en") return "/";
+  if (pathname === "/privacy") return "/en/privacy";
+  if (pathname === "/en/privacy") return "/privacy";
+  return null;
+}
+
 function NotFoundComponent() {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="text-center">
         <div className="text-7xl font-black text-deep">404</div>
         <Link
-          to="/"
+          to={localizedPublicHome(lang)}
           className="mt-6 inline-flex rounded-xl bg-deep px-5 py-3 text-sm font-black text-white"
         >
           {tr("home")}
@@ -123,15 +136,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function Nav() {
   const { lang, setLang, tr } = useLang();
-  const pathname = useLocation({ select: (location) => location.pathname });
+  const location = useLocation();
+  const pathname = location.pathname;
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const isPublicHome = pathname === "/" || pathname === "/en";
+  const publicHome = localizedPublicHome(lang);
+  const languageSwitchTarget = localizedLanguageSwitchTarget(pathname);
+  const languageSwitchHref = languageSwitchTarget
+    ? `${languageSwitchTarget}${location.searchStr}${location.hash}`
+    : null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Link to="/" className="group flex min-w-0 items-center gap-3">
+        <Link to={publicHome} className="group flex min-w-0 items-center gap-3">
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl gradient-aqua shadow-glow transition group-hover:scale-105">
             <Waves className="h-5 w-5 text-white" />
           </div>
@@ -145,13 +164,13 @@ function Nav() {
 
         <nav className="flex items-center gap-1.5 sm:gap-2">
           <a
-            href={isPublicHome ? "#programs" : "/#programs"}
+            href={isPublicHome ? "#programs" : `${publicHome}#programs`}
             className="hidden rounded-xl px-3 py-2 text-sm font-bold transition hover:bg-muted md:inline-flex"
           >
             {tr("viewPrograms")}
           </a>
           <a
-            href={isPublicHome ? "#book" : "/#book"}
+            href={isPublicHome ? "#book" : `${publicHome}#book`}
             className="inline-flex items-center gap-2 rounded-xl bg-deep px-3 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 sm:px-4 sm:text-sm"
           >
             <Waves className="h-4 w-4" /> {tr("book")}
@@ -166,26 +185,15 @@ function Nav() {
               {tr("admin")}
             </Link>
           )}
-          {isPublicHome ? (
-            lang === "ar" ? (
-              <Link
-                to="/en"
-                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
-                aria-label="View English version"
-              >
-                <Languages className="h-4 w-4" />
-                <span className="text-xs font-black">EN</span>
-              </Link>
-            ) : (
-              <Link
-                to="/"
-                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
-                aria-label="عرض النسخة العربية"
-              >
-                <Languages className="h-4 w-4" />
-                <span className="text-xs font-black">ع</span>
-              </Link>
-            )
+          {languageSwitchHref ? (
+            <a
+              href={languageSwitchHref}
+              className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+              aria-label={lang === "ar" ? "View English version" : "عرض النسخة العربية"}
+            >
+              <Languages className="h-4 w-4" />
+              <span className="text-xs font-black">{lang === "ar" ? "EN" : "ع"}</span>
+            </a>
           ) : (
             <button
               onClick={() => setLang(lang === "ar" ? "en" : "ar")}
@@ -244,7 +252,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useLocation({ select: (location) => location.pathname });
   const publicLang = localizedPublicLanguage(pathname);
-  const isLocalizedPublicPage = pathname === "/" || pathname === "/en";
+  const isLocalizedPublicPage = localizedLanguageSwitchTarget(pathname) !== null;
 
   return (
     <QueryClientProvider client={queryClient}>

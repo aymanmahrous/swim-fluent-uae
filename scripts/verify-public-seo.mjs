@@ -123,11 +123,23 @@ const rootRoute = await text("src/routes/__root.tsx");
 for (const needle of [
   "useLocation",
   "localizedPublicLanguage(pathname: string)",
+  "localizedPublicHome(language: Lang)",
+  "localizedLanguageSwitchTarget(pathname: string)",
   'pathname === "/en"',
+  'if (pathname === "/") return "/en"',
+  'if (pathname === "/en") return "/"',
+  'if (pathname === "/privacy") return "/en/privacy"',
+  'if (pathname === "/en/privacy") return "/privacy"',
+  "const publicHome = localizedPublicHome(lang)",
+  'const languageSwitchTarget = localizedLanguageSwitchTarget(pathname)',
+  "const languageSwitchHref = languageSwitchTarget",
+  "to={publicHome}",
+  'href={isPublicHome ? "#programs" : `${publicHome}#programs`}',
+  'href={isPublicHome ? "#book" : `${publicHome}#book`}',
+  "href={languageSwitchHref}",
   "<html lang={pageLang}",
   "initialLang={publicLang}",
   "persistPreference={!isLocalizedPublicPage}",
-  'to="/en"',
 ]) {
   requireText(rootRoute, needle, "localized document shell");
 }
