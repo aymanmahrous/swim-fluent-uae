@@ -50,6 +50,8 @@ jobs:
           if-no-files-found: ignore
       - name: Verify dependency and workflow supply-chain boundaries
         run: node scripts/verify-dependency-supply-chain.mjs
+      - name: Verify final Production readiness source boundaries
+        run: node scripts/verify-production-readiness.mjs
       - name: Verify privileged API authentication boundaries
         run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify Staff mutation RBAC boundaries
