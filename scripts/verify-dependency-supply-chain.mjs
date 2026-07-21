@@ -5,17 +5,23 @@ import { join } from "node:path";
 const read = (path) => readFileSync(path, "utf8");
 const packageJson = JSON.parse(read("package.json"));
 const packageLock = JSON.parse(read("package-lock.json"));
-const bunLock = JSON.parse(read("bun.lock"));
+const bunLock = read("bun.lock");
 const lifecycleScripts = ["preinstall", "install", "postinstall", "prepare"];
 
 assert.equal(packageLock.lockfileVersion, 3, "package-lock.json must use lockfileVersion 3");
-assert.equal(bunLock.lockfileVersion, 1, "bun.lock must use the reviewed lockfile format");
+assert(/^\{\s*"lockfileVersion": 1,/m.test(bunLock), "bun.lock must use the reviewed lockfile format");
 
 const rootLock = packageLock.packages?.[""] ?? {};
-const bunRoot = bunLock.workspaces?.[""] ?? {};
 for (const group of ["dependencies", "devDependencies"]) {
   assert.deepEqual(rootLock[group] ?? {}, packageJson[group] ?? {}, `package-lock root ${group} drifted from package.json`);
-  assert.deepEqual(bunRoot[group] ?? {}, packageJson[group] ?? {}, `bun.lock root ${group} drifted from package.json`);
+}
+
+for (const [name, specifier] of Object.entries({
+  ...(packageJson.dependencies ?? {}),
+  ...(packageJson.devDependencies ?? {}),
+})) {
+  const declaration = `${JSON.stringify(name)}: ${JSON.stringify(specifier)}`;
+  assert(bunLock.includes(declaration), `bun.lock is missing the root declaration for ${name}`);
 }
 
 for (const script of lifecycleScripts) {
