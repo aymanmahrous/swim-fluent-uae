@@ -37,6 +37,8 @@ jobs:
         run: node scripts/verify-public-internal-boundary.mjs
       - name: Verify module ownership boundaries
         run: node scripts/verify-module-ownership-boundaries.mjs
+      - name: Verify Architecture and AI data boundaries
+        run: node scripts/verify-architecture-ai-boundaries.mjs
       - name: Verify privileged API authentication boundaries
         run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify Staff mutation RBAC boundaries

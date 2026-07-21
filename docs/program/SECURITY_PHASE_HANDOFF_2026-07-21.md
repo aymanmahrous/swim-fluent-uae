@@ -14,41 +14,41 @@
 - PR #158 — API mutation input validation contracts; merge `8980cd34ebd9f10da3063d05918da4d3cba8bcb3`.
 - PR #159 — abuse-control boundaries; merge `f6586df036076b1b6b0139be79986d01507fee32`.
 - PR #160 — Strategic Security Hardening Wave 1; merge `9240e1cb489679bb649e2339a1aba2781d34bd26`.
+- PR #162 — Attack Surface Reduction; merge `bdcc05c9efba6554da7261a3e2570bae53cbb0a7`.
 
 ## Completed phase
 
-- Strategic wave 2: Attack Surface Reduction.
-- Branch: `agent/security-wave-2-rebased`.
-- PR: #162.
-- Verified head before the Handoff commit: `6455f60d09474972301c91b4ce6abc8fe42ecd75`.
-- Added a mandatory inventory for every API route, classifying intentionally public, Staff-session protected, and machine-authenticated internal/Cron routes.
-- Staff routes remain protected by Staff session resolution and centralized RBAC; machine routes retain explicit authentication boundaries.
-- Remote provider assets remain HTTPS-only, reject literal IPs and non-allowlisted hosts, use manual redirect validation, bound response sizes, restrict MIME types and download headers, encode storage paths, and prohibit overwrite.
-- Added and locked magic-byte validation for PNG, JPEG, WebP, and MP4.
-- Provider base64 image bytes are decoded and signature-validated before persistence.
-- Image-generation public errors are restricted to an explicit allowlist.
-- Provider logging retains structured sanitized details and redacts URLs, bearer tokens, query secrets, and credentials.
-- SSR failures retain generic public error responses without serialized stack traces.
-- Added `scripts/verify-attack-surface-wave-2.mjs` and made it mandatory in `.github/workflows/ci.yml`.
-- Updated the pre-existing AI media hardening contract to verify base64 decoding, magic-byte validation, and validation-before-persistence ordering.
+- Architecture & AI Verification.
+- Branch: `agent/architecture-ai-verification`.
+- PR: #163.
+- Verified implementation head before this Handoff update: `bf68d2d641b270d1f84ab2455496f127ff2b9800`.
+- Added `scripts/verify-architecture-ai-boundaries.mjs` as a read-only architecture contract.
+- Locked AI OS behind `VITE_ENABLE_AI_OS`, gated Staff-session queries, runtime session validation, and centralized RBAC.
+- Locked the retired legacy Admin route behind `VITE_ENABLE_LEGACY_ADMIN`, disabled redirect behavior, and noindex metadata.
+- Verified provider routes remain isolated from browser demo data and `localStorage`.
+- Verified Production and demo snapshots remain separated by `VITE_AI_OS_DEMO_DATA`.
+- Verified browser persistence remains demo-only and executes after the demo-data gate.
+- Verified the three architecture feature flags remain documented without exposing configured values.
+- Made the architecture verification mandatory in `.github/workflows/ci.yml`.
 
 ## Verification
 
-- CI run `29871634350` / run number 569 completed successfully on head `6455f60d09474972301c91b4ce6abc8fe42ecd75`.
-- Passed Typecheck, RBAC, authentication boundaries, mutation RBAC, input contracts, abuse controls, Security Hardening Wave 1, Attack Surface Wave 2, Lint, Build, and all existing read-only contracts.
-- No unresolved review threads or submitted reviews were present before the final Handoff update.
-- No Preview, deployment, external API execution, migrations, seeds, Cron jobs, Workers, Production secrets, database writes, or Production writes were used.
+- Initial CI run `29873064010` / run number 576 failed only because the new verifier expected outdated literal ownership markers.
+- The verifier was aligned with the actual module-ownership contract without weakening the boundary.
+- CI run `29873223181` / run number 577 completed successfully on head `bf68d2d641b270d1f84ab2455496f127ff2b9800`.
+- Passed Typecheck, RBAC, public/internal boundaries, module ownership, Architecture & AI boundaries, privileged authentication, mutation RBAC, input contracts, abuse controls, Security Waves 1 and 2, Lint, Build, SEO, sitemap, AI OS, media, workflow, and all existing read-only checks.
+- No Preview, deployment, provider call, migration, seed, Cron job, Worker, Production secret, database write, or Production write was used.
 
-## Next strategic wave
+## Next strategic phase
 
-Architecture & AI Verification:
+Quality, dependency, and bundle-boundary verification:
 
-1. Re-audit AI OS authorization and provider isolation after unified security.
-2. Verify Production, demo, mock, and static data separation.
-3. Audit `VITE_ENABLE_AI_OS`, `VITE_ENABLE_LEGACY_ADMIN`, and `VITE_AI_OS_DEMO_DATA` usage without exposing values.
-4. Verify module ownership, dependency direction, route isolation, performance-sensitive imports, and bundle boundaries from source only.
-5. Add read-only CI contracts preventing architectural regression.
+1. Audit performance-sensitive imports and browser/server dependency separation from source only.
+2. Verify public routes cannot import Staff, AI OS, worker, Cron, or secret-bearing server modules.
+3. Verify AI OS and Staff browser bundles cannot import worker or Cron processors.
+4. Add a read-only bundle and dependency regression contract.
+5. Preserve all security, data-separation, and no-Production-write constraints.
 
 ## Resume instruction
 
-After PR #162 is merged, start from its merge commit and continue directly with Architecture & AI Verification on a clean branch from current `main`. Do not create a parallel authorization or provider system, and preserve all locked safety constraints.
+After PR #163 is merged, start from its merge commit on a clean branch and continue directly with quality, dependency, and bundle-boundary verification. Do not create parallel authorization, provider, data, or routing systems.
