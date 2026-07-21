@@ -29,3 +29,51 @@
 ## Resume instruction
 
 Read this file, `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and Issue #138. Verify current `main` before changing code. Do not start from zero and do not create parallel systems.
+
+---
+
+## Architecture audit continuation — 2026-07-21
+
+### Locked scope
+
+- Audit and implementation are restricted to `aymanmahrous/swim-fluent-uae`.
+- Working branch: `agent/relaxfix-architecture-consolidation`.
+- Draft review boundary: PR #152.
+- `main` must remain unchanged until the complete audit and required checks are reviewed.
+- No repository consolidation, rename, archive, deletion, or cross-project merge is authorized in this lane.
+
+### Verified completed work on PR #152
+
+- Added non-destructive execution and rollback baseline documentation.
+- Added current-state inventory for public routes, Staff Portal, AI OS, APIs, cron, and workers.
+- Added legacy repository parity documentation without taking destructive action.
+- Added route-level `VITE_ENABLE_AI_OS` gating for `/os`.
+- Added centralized staff RBAC policy in `src/platform/staff-rbac.ts`.
+- Migrated booking status, CRM workflow, content update, content transition, and image generation authorization to centralized permissions.
+- Closed the API-level authorization gap in booking status mutation before the RPC call.
+
+### Current verified RBAC permissions
+
+- `booking.status.update`
+- `crm.workflow.update`
+- `content.item.update`
+- `content.item.transition`
+- `content.generate`
+- `media.generate`
+
+The centralized policy preserves the previous role boundaries and does not broaden access.
+
+### Immediate implementation queue
+
+1. Migrate `src/routes/api.os-media-generate-video.ts` from its local role helper to `media.generate`.
+2. Migrate `src/routes/api.os-content-generate.ts` from inline role comparisons to `content.generate`.
+3. Search all remaining protected write routes for duplicated role checks or missing explicit API authorization.
+4. Verify the resulting head commit status and Vercel checks.
+5. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
+
+### Safety state
+
+- No merge to `main` has occurred.
+- No database migration or production write has been executed.
+- No cron, worker, publishing, or booking submission has been triggered.
+- All current changes remain reviewable and reversible inside Draft PR #152.
