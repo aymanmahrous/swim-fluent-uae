@@ -39,6 +39,15 @@ jobs:
         run: node scripts/verify-module-ownership-boundaries.mjs
       - name: Verify Architecture and AI data boundaries
         run: node scripts/verify-architecture-ai-boundaries.mjs
+      - name: Verify browser, server, and bundle boundaries
+        run: node scripts/verify-quality-bundle-boundaries.mjs > quality-bundle-boundaries.log 2>&1 || { cat quality-bundle-boundaries.log; exit 1; }
+      - name: Upload quality and bundle diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-bundle-boundary-diagnostics
+          path: quality-bundle-boundaries.log
+          if-no-files-found: ignore
       - name: Verify privileged API authentication boundaries
         run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify Staff mutation RBAC boundaries
