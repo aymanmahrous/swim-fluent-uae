@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { abuseControlAllowed, rateLimitedResponse } from "../platform/abuse-control.server";
 import {
   supabaseProjectUrl,
   supabasePublicHeaders,
@@ -8,6 +9,14 @@ export const Route = createFileRoute("/api/booking-request")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!abuseControlAllowed(request, {
+          scope: "public-booking",
+          windowMs: 15 * 60 * 1000,
+          maxAttempts: 8,
+        })) {
+          return rateLimitedResponse(900);
+        }
+
         try {
           const payload = await request.text();
           const response = await fetch(
