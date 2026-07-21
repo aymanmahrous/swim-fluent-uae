@@ -39,15 +39,14 @@ for (const rule of [
   assert.ok(ownership.includes(rule), `Missing dependency direction: ${rule}`);
 }
 
-const publicForbidden = [
+for (const needle of [
   "staff-session.server",
   "staff-rbac",
   "supabase-secret.server",
   "content-automation.server",
   "publish-worker.server",
   "content-media-worker.server",
-];
-for (const needle of publicForbidden) {
+]) {
   assert.ok(!publicRoot.includes(needle), `Public root crosses ownership boundary: ${needle}`);
 }
 
@@ -55,12 +54,20 @@ assert.ok(staffRoute.includes('to="/os"'), "Staff Portal must own authenticated 
 assert.ok(osRoute.includes("fetchStaffSession"), "AI OS must verify Staff session");
 assert.ok(osRoute.includes("enabled: aiOsEnabled"), "AI OS must remain feature gated");
 
-for (const forbidden of ["cron-auth.server", "content-automation.server", "publish-worker.server", "content-media-worker.server"]) {
+for (const forbidden of [
+  "cron-auth.server",
+  "content-automation.server",
+  "publish-worker.server",
+  "content-media-worker.server",
+]) {
   assert.ok(!staffRoute.includes(forbidden), `Staff route crosses background ownership boundary: ${forbidden}`);
   assert.ok(!osRoute.includes(forbidden), `AI OS route crosses background ownership boundary: ${forbidden}`);
 }
 
-assert.ok(cronRoute.includes("authorizeCronRequest"), "Cron route must use cron authentication");
+assert.ok(
+  cronRoute.includes("authenticateContentAutomationRequest"),
+  "Cron route must use cron authentication",
+);
 assert.ok(!cronRoute.includes("resolveStaffSession"), "Cron route must not use Staff session authentication");
 
 for (const [name, source] of [
@@ -68,7 +75,7 @@ for (const [name, source] of [
   ["publish worker", publishWorkerRoute],
 ]) {
   assert.ok(!source.includes("resolveStaffSession"), `${name} must not use Staff session authentication`);
-  assert.ok(source.includes("authorizeInternalWorkerRequest"), `${name} must use internal worker authentication`);
+  assert.ok(source.includes("verifyInternalWorkerRequest"), `${name} must use internal worker authentication`);
 }
 
 console.log("Module ownership boundary verification passed.");
