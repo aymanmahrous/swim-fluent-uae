@@ -4,8 +4,8 @@ import {
   PUBLIC_PRICING,
   TRAINING_LOCATIONS,
   WHATSAPP_DISPLAY,
-} from "./public-business-config";
-import type { ChatbotIntent, ChatbotLanguage } from "./chatbot-engine";
+} from "./public-business-config.ts";
+import type { ChatbotIntent, ChatbotLanguage } from "./chatbot-engine.ts";
 
 export type ChatbotCta = "pricing" | "booking" | "locations" | "contact" | "whatsapp";
 
