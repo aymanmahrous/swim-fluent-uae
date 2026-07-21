@@ -39,7 +39,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     quickReply: { ar: "الأسعار", en: "Pricing" },
     questions: {
       ar: ["ما الأسعار؟", "ما أسعار تدريب الأطفال؟", "كم تكلفة التدريب؟", "كم سعر تدريب السباحة؟", "ما تكلفة الحصة بالدرهم؟", "هل يوجد سعر خاص للإخوة؟", "كم سعر الطفل في المجموعة؟", "أريد معرفة الأسعار بالدرهم"],
-      en: ["What are your prices?", "How much do lessons cost in AED?", "How much is the coaching?", "What is the swimming price?", "What is the session cost in dirhams?", "Is there a sibling price?", "What is the group price per child?", "I want to know the prices in AED"],
+      en: ["What are your prices?", "How much do lessons cost in AED?", "How much is the coaching?", "What is the lesson price?", "What is the session cost in dirhams?", "Is there a sibling price?", "What is the group price per child?", "I want to know the prices in AED"],
     },
     answer: {
       ar: `المجموعة الصغيرة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. السعر ${PUBLIC_PRICING.groupChildPriceAED} درهمًا للطفل، وسعر الإخوة ${PUBLIC_PRICING.siblingChildPriceAED} درهم لكل طفل. جلسة الحركة المائية أو البرية ${PUBLIC_PRICING.aquaticSessionPriceAED} درهمًا. لا تحدد هذه الأسعار مدة أو عدد حصص أو باقة.`,
