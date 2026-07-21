@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
+// Read-only CI contract: this script never imports or executes application routes.
 const routesDirectory = join(process.cwd(), "src/routes");
 const routeFiles = (await readdir(routesDirectory))
   .filter((name) => /^api\.os(?:[.-]|$).+\.(?:ts|tsx)$/.test(name))
