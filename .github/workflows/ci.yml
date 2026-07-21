@@ -37,6 +37,8 @@ jobs:
         run: node scripts/verify-public-internal-boundary.mjs
       - name: Verify module ownership boundaries
         run: node scripts/verify-module-ownership-boundaries.mjs
+      - name: Verify privileged API authentication boundaries
+        run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify legacy repository and deployment parity hold gate
         run: node scripts/verify-legacy-repository-parity-gate.mjs
       - run: npm run lint
