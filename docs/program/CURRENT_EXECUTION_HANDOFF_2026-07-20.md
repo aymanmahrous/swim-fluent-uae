@@ -52,6 +52,8 @@ Read this file, `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and Issue #
 - Migrated booking status, CRM workflow, content update, content transition, content generation, image generation, video generation, media-copy generation, and video-job listing authorization to centralized permissions.
 - Closed the API-level authorization gap in booking status mutation before the RPC call.
 - Preserved the previous role sets exactly: `super_admin`, `admin`, and `content_manager` retain content/media generation access; no other role gained access.
+- Added `tests/staff-rbac.test.ts` to lock the complete five-role, six-permission matrix.
+- Added the safe `test:rbac` package command and made it a required CI step.
 
 ### Current verified RBAC permissions
 
@@ -75,17 +77,21 @@ The centralized policy preserves the previous role boundaries and does not broad
 
 ### Verification state
 
-- Safe package scripts present: `typecheck`, `lint`, and `build`.
-- No generic `test` script exists. The only test script is `test:e2e:ai-media`, which can invoke external/provider and persistence behavior and was not run under the no-production-write/no-external-action boundary.
-- Local command execution was unavailable in the connected environment because no repository checkout or GitHub CLI was available; validation must therefore be completed by the branch CI/Vercel checks before review.
+- GitHub Actions CI run `29839908940` completed successfully on the RBAC-test head.
+- `typecheck`: passed.
+- `test:rbac`: passed.
+- `lint`: passed.
+- `build`: passed.
+- All existing read-only contract verification steps in CI also passed.
+- `test:e2e:ai-media` was not run because it can invoke external/provider and persistence behavior and remains outside the no-production-write/no-external-action boundary.
 - No migration, seed, cron, worker, preview, publishing action, production secret access, or database write was performed.
 
 ### Immediate implementation queue
 
-1. Confirm branch CI status for TypeScript, ESLint, and Vite build after the latest RBAC commits.
-2. Inspect any remaining direct role checks that are intentionally route-specific before adding new permissions.
-3. Add focused unit coverage for the centralized role matrix when a safe non-network test harness is available.
-4. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
+1. Inspect remaining route-specific direct role checks and document why they must remain specific before introducing any new centralized permission.
+2. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
+3. Review Vercel status separately; Vercel build-rate-limit failures are not code-validation failures.
+4. Keep PR #152 as Draft until the full architecture review is complete.
 
 ### Safety state
 
