@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { getTextProvider } from "../platform/provider-registry.server";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -21,10 +22,6 @@ const CopySchema = z.object({
   hashtags: z.array(z.string().trim().min(1).max(100)).max(30),
 });
 
-function allowedRole(role: string): boolean {
-  return ["super_admin", "admin", "content_manager"].includes(role);
-}
-
 function parseProviderJson(text: string): unknown {
   const normalized = text
     .trim()
@@ -40,7 +37,7 @@ export const Route = createFileRoute("/api/os-media-copy")({
       POST: async ({ request }) => {
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
-        if (!allowedRole(session.profile.role)) {
+        if (!hasStaffPermission(session.profile.role, "media.generate")) {
           return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
         }
 
