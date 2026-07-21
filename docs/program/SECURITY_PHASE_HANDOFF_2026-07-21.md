@@ -27,7 +27,7 @@
 ## Verification
 
 - CI run `29861760295` / run number 559 passed Typecheck, RBAC, authentication boundaries, mutation RBAC, mutation input contracts, abuse-control boundaries, Lint, Build, and all existing read-only contracts.
-- A final CI run is required after this Handoff commit before merging PR #159.
+- The final Handoff-only head must pass the same CI suite before PR #159 is merged.
 
 ## Next security phase
 
