@@ -40,8 +40,8 @@ const trustedActions = new Map([
   ["actions/github-script", "f28e40c7f34bde8b3046d885e986cb6290c5673b"],
 ]);
 const migrationWorkflowExceptions = new Map([
-  ["booking-phone-foundation.yml", new Set(["actions/checkout@v4", "actions/setup-node@v4", "supabase/setup-cli@v3"])],
-  ["fresh-supabase-migration-compatibility.yml", new Set(["actions/checkout@v4", "actions/setup-node@v4", "supabase/setup-cli@v3"])],
+  ["booking-phone-foundation.yml", new Set(["actions/checkout@v4", "supabase/setup-cli@v3", "actions/upload-artifact@v4"])],
+  ["fresh-supabase-migration-compatibility.yml", new Set(["actions/checkout@v4", "actions/setup-node@v4", "supabase/setup-cli@v3", "actions/upload-artifact@v4"])],
 ]);
 const workflowDir = ".github/workflows";
 const workflowNames = readdirSync(workflowDir).filter((name) => /\.ya?ml$/.test(name)).sort();
