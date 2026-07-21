@@ -5,6 +5,7 @@ export type StaffRole = StaffProfile["role"];
 export type StaffPermission =
   | "booking.status.update"
   | "crm.workflow.update"
+  | "conversation.mode.update"
   | "content.item.update"
   | "content.item.transition"
   | "content.generate"
@@ -15,6 +16,7 @@ const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>
   super_admin: new Set([
     "booking.status.update",
     "crm.workflow.update",
+    "conversation.mode.update",
     "content.item.update",
     "content.item.transition",
     "content.generate",
@@ -24,13 +26,18 @@ const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>
   admin: new Set([
     "booking.status.update",
     "crm.workflow.update",
+    "conversation.mode.update",
     "content.item.update",
     "content.item.transition",
     "content.generate",
     "media.generate",
     "automation.status.read",
   ]),
-  reception: new Set(["booking.status.update", "crm.workflow.update"]),
+  reception: new Set([
+    "booking.status.update",
+    "crm.workflow.update",
+    "conversation.mode.update",
+  ]),
   coach: new Set(["crm.workflow.update"]),
   content_manager: new Set([
     "content.item.update",
