@@ -64,6 +64,14 @@ No review or unresolved thread may remain at merge time.
 6. Separately approve any database migration/seed after backup and change review.
 7. Separately approve controlled provider connectivity or publishing tests.
 
+## Post-completion hotfix
+
+- A subsequent Vercel Production attempt exposed package-manager auto-detection selecting `bun install` from the legacy Bun lock.
+- Hotfix branch: `fix/vercel-npm-install`.
+- Vercel is now locked to `npm ci --ignore-scripts --no-audit --no-fund --loglevel=error`, matching the canonical npm lock and successful GitHub CI environment.
+- The Production readiness and Vercel policy contracts enforce the exact command.
+- No deployment, Preview, domain change, secret access, data write, migration, Cron/Worker, or provider execution is part of this hotfix.
+
 ## Resume instruction
 
 After PR #166 merges, do not open another strategic implementation phase. Resume only for an explicitly authorized manual Production release or a newly reported software defect. Preserve every merged security, architecture, media, bundle, dependency, workflow, and no-Production-write boundary.
