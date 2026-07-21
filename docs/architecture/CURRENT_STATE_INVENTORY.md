@@ -4,7 +4,7 @@ Status: implementation inventory for PR #152
 
 ## Safety boundary
 
-This inventory was produced without running Preview, build, tests, migrations, seeds, cron routes, background workers, publishing actions, booking submissions, or production writes.
+This inventory was produced without running Preview, migrations, seeds, cron routes, background workers, publishing actions, booking submissions, production secrets, or production writes. Safe GitHub CI validation was used for TypeScript, RBAC tests, lint, build, and read-only contract checks.
 
 ## Repository identity
 
@@ -56,7 +56,7 @@ The OS layout verifies `/api/staff-session` before rendering its navigation or c
 - `coach`
 - `content_manager`
 
-PR #152 now also enforces `VITE_ENABLE_AI_OS` at the `/os` route boundary. When the feature is disabled, the session endpoint is not queried and the internal workspace remains closed.
+PR #152 also enforces `VITE_ENABLE_AI_OS` at the `/os` route boundary. When the feature is disabled, the session endpoint is not queried and the internal workspace remains closed.
 
 ## Authentication and authorization
 
@@ -72,14 +72,19 @@ PR #152 now also enforces `VITE_ENABLE_AI_OS` at the `/os` route boundary. When 
 
 AI OS pages are client-gated by the verified Staff session. AI OS APIs independently call `resolveStaffSession(request)`.
 
-The initial centralized permission map is implemented in `src/platform/staff-rbac.ts`. The following permissions have been migrated without broadening access:
+The centralized permission map is implemented in `src/platform/staff-rbac.ts`. The following permissions have been migrated without broadening access:
 
 - `booking.status.update`
 - `crm.workflow.update`
 - `content.item.update`
 - `content.item.transition`
+- `content.generate`
+- `media.generate`
+- `automation.status.read`
 
-The booking update API previously depended on the UI disabling the control for unauthorized roles plus downstream RPC enforcement. It now also rejects unauthorized roles directly at the server API boundary.
+The complete five-role matrix is covered by `tests/staff-rbac.test.ts` and the required `test:rbac` CI step.
+
+The booking update API previously depended on the UI disabling the control for unauthorized roles plus downstream RPC enforcement. It now also rejects unauthorized roles directly at the server API boundary. The remaining role-based disabled state in `src/routes/staff.tsx` is only a user-experience aid and is not treated as an authorization boundary.
 
 ## Feature flags
 
@@ -149,6 +154,7 @@ Confirmed scripts include:
 - `build:dev`: `vite build --mode development`
 - `preview`: `vite preview`
 - `typecheck`: development Vite build followed by `tsc --noEmit`
+- `test:rbac`: Node test runner with TypeScript stripping enabled
 - `lint`: `eslint .`
 
 There is no `start` script and no generic `test` script. Specialized Playwright and verification scripts exist. The ordinary dev/build/preview scripts do not declare migrations, seeds, cron execution, worker execution, database writes, publishing, or outbound sends.
@@ -157,27 +163,31 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 
 1. The public root shell knows about AI OS and legacy admin feature flags and can expose links to internal surfaces.
 2. Staff, AI OS, public site, cron, workers, and publishing concerns coexist in one route tree.
-3. Several remaining role policies are still repeated in individual API handlers and must be migrated incrementally.
-4. The repository name does not represent the production platform.
-5. Legacy repository removal is unsafe until feature and deployment parity is documented.
+3. UI permission hints can drift from the authoritative server RBAC policy if not reviewed together.
+4. `media.generate` intentionally remains broad to preserve existing behavior and combines several media capabilities.
+5. The repository name does not represent the production platform.
+6. Legacy repository removal is unsafe until feature and deployment parity is documented.
+
+See `docs/architecture/PHASE_1_ARCHITECTURE_FINDINGS.md` for the detailed risk register and remediation priorities.
 
 ## Safe implementation order
 
 1. Keep the public URLs unchanged.
 2. Make Staff Portal the only discoverable entry point to AI OS.
 3. Enforce the AI OS feature gate in addition to staff-session verification. **Completed in PR #152.**
-4. Continue migrating RBAC policy incrementally while preserving existing allowed roles.
+4. Continue migrating RBAC policy incrementally while preserving existing allowed roles. **Audited Phase 1 routes completed in PR #152.**
 5. Keep the retired `/admin` compatibility route until external bookmarks and deployment references are checked, then remove it separately.
 6. Compare legacy repositories and deployments before archival; do not delete first.
 7. Rename the production repository only after Vercel, Actions, webhooks, documentation, and local remotes are verified.
 
 ## Current execution status
 
-- Safe branch created: `agent/relaxfix-architecture-consolidation`.
-- Draft PR created: #152.
-- Current architecture inventory committed.
+- Safe branch: `agent/relaxfix-architecture-consolidation`.
+- Draft PR: #152.
 - Route-level AI OS feature gate committed.
-- Initial centralized RBAC policy committed and applied to four write permissions.
-- Both Vercel deployment statuses succeeded for the latest RBAC batch.
+- Centralized seven-permission RBAC policy and focused matrix tests committed.
+- Typecheck, RBAC tests, lint, build, and all existing read-only contract checks passed on CI run `29839908940`.
+- Phase 1 architecture findings recorded.
+- Latest documentation and automation-status RBAC head requires its own final CI result before review.
 - No production merge performed.
 - No repository renamed, archived, or deleted.
