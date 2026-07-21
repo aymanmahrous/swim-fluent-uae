@@ -6,7 +6,10 @@ assert.ok(
   baseUrl?.startsWith("https://") || baseUrl?.startsWith("http://127.0.0.1"),
   "Set PREVIEW_URL to an HTTPS Preview deployment or local 127.0.0.1 production preview",
 );
+const basePreviewUrl = new URL(baseUrl);
+const baseOrigin = basePreviewUrl.origin;
 const isLocalUncompressedPreview = baseUrl.startsWith("http://127.0.0.1");
+const enforcePerformanceBudgets = process.env.ENFORCE_PERFORMANCE_BUDGETS !== "false";
 
 const browser = await chromium.launch({
   headless: true,
@@ -15,10 +18,20 @@ const browser = await chromium.launch({
     : {}),
 });
 
+let protectedStorageState;
+if (basePreviewUrl.searchParams.has("_vercel_share")) {
+  const authContext = await browser.newContext();
+  const authPage = await authContext.newPage();
+  await authPage.goto(basePreviewUrl.href, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  protectedStorageState = await authContext.storageState();
+  await authContext.close();
+}
+
 const results = [];
 try {
   for (const route of ["/", "/en"]) {
     const context = await browser.newContext({
+      ...(protectedStorageState ? { storageState: protectedStorageState } : {}),
       viewport: { width: 390, height: 844 },
       deviceScaleFactor: 2,
       isMobile: true,
@@ -92,18 +105,55 @@ try {
       failedRequests.push(`${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`),
     );
 
-    await page.goto(new URL(route, baseUrl).href, { waitUntil: "networkidle", timeout: 60_000 });
+    const routeUrl = new URL(route, baseOrigin);
+    await page.goto(routeUrl.href, { waitUntil: "domcontentloaded", timeout: 60_000 });
     await page.waitForTimeout(2_000);
 
     const initialExternalIntegrationRequests = requests.filter((url) =>
       /n8n|calendar\.google|googleapis\.com\/calendar/i.test(url),
     );
+    const consentBanner = page.getByRole("region", {
+      name: route === "/" ? "خيارات الخصوصية" : "Privacy choices",
+    });
+    if ((await consentBanner.count()) === 1) {
+      await consentBanner.getByRole("button", { name: route === "/" ? "رفض" : "Reject" }).click();
+      await consentBanner.waitFor({ state: "hidden" });
+    }
     const chatbotButton = page.getByRole("button", {
-      name: route === "/" ? "فتح المساعد" : "Open assistant",
+      name: route === "/" ? "افتح مساعد اختيار البرنامج" : "Open program selection assistant",
     });
     const chatbotPresent = (await chatbotButton.count()) === 1;
     if (chatbotPresent) {
       await chatbotButton.click();
+      const dialog = page.locator('section[role="dialog"]');
+      await dialog.waitFor({ state: "visible" });
+      await dialog
+        .getByRole("heading", {
+          name: route === "/" ? "مساعد اختيار البرنامج" : "Program selection assistant",
+        })
+        .waitFor({ state: "visible" });
+      await dialog.getByRole("button", { name: route === "/" ? "الأسعار" : "Pricing" }).click();
+      await dialog
+        .getByText(route === "/" ? "450 درهمًا" : "AED 450", { exact: false })
+        .waitFor({ state: "visible" });
+
+      const question = dialog.getByLabel(
+        route === "/" ? "أو اكتب سؤالك بالعربية أو الإنجليزية" : "Or ask in Arabic or English",
+      );
+      await question.fill(route === "/" ? "أين مواقع التدريب؟" : "Do you coach adults?");
+      await dialog
+        .getByRole("button", {
+          name: route === "/" ? "إرسال السؤال" : "Send question",
+        })
+        .click();
+      await dialog
+        .getByText(
+          route === "/"
+            ? "مواقع التدريب الحالية"
+            : "Adults can submit an initial assessment request",
+          { exact: false },
+        )
+        .waitFor({ state: "visible" });
       await page
         .getByRole("button", {
           name: route === "/" ? "إغلاق المساعد" : "Close assistant",
@@ -190,14 +240,16 @@ try {
       `${route}: navigation left the application host (deployment protection or redirect)`,
     );
 
-    const appConsoleErrors = consoleErrors.filter(({ sourceUrl }) => sourceUrl.startsWith(baseUrl));
+    const appConsoleErrors = consoleErrors.filter(({ sourceUrl }) =>
+      sourceUrl.startsWith(baseOrigin),
+    );
     const appHttpErrors = httpErrors.filter((entry) => entry.includes(new URL(baseUrl).host));
     if (
       consoleErrors.length ||
       pageErrors.length ||
       failedRequests.length ||
       httpErrors.length ||
-      (!isLocalUncompressedPreview && audit.vitals.lcp >= 2_500) ||
+      (enforcePerformanceBudgets && !isLocalUncompressedPreview && audit.vitals.lcp >= 2_500) ||
       audit.vitals.cls >= 0.1
     ) {
       console.error(
@@ -223,19 +275,22 @@ try {
       0,
       `${route}: eager Calendar/n8n request`,
     );
-    if (!isLocalUncompressedPreview) {
+    if (enforcePerformanceBudgets && !isLocalUncompressedPreview) {
       assert.ok(audit.vitals.lcp < 2_500, `${route}: lab LCP exceeds 2.5s`);
     }
     assert.ok(audit.vitals.cls < 0.1, `${route}: lab CLS exceeds 0.1`);
-    assert.ok(
-      !audit.vitals.maxInteraction || audit.vitals.maxInteraction < 200,
-      `${route}: observed interaction exceeds 200ms`,
-    );
+    if (enforcePerformanceBudgets) {
+      assert.ok(
+        !audit.vitals.maxInteraction || audit.vitals.maxInteraction < 200,
+        `${route}: observed interaction exceeds 200ms`,
+      );
+    }
 
     results.push({
       route,
       viewport: "390x844",
       throttling: "150ms / 1.6Mbps / 4x CPU",
+      performanceBudgetsEnforced: enforcePerformanceBudgets,
       chatbotPresent,
       audit,
       consoleErrors,

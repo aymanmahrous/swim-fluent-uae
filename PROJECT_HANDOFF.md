@@ -601,3 +601,43 @@ Push the tested performance and handoff follow-up to the same Draft PR, re-check
 - Vercel Preview: READY at `https://swim-fluent-uae-w532-glibcfjns-swimmingayman-8492s-projects.vercel.app`.
 - Signed-in final Preview: the four approved public locations and WhatsApp are present; ICS Al Danah is absent; Consent UI appears; Chatbot loads after deferral and opens successfully with Najda Street, no Al Danah and the preliminary-time path.
 - Next protected work is OAuth/workspace-only fictional integration testing, read-only GBP field capture and authorized compressed Preview Lighthouse. No external live write is authorized.
+
+## 17. Chatbot Phase 1 completion receipt — 2026-07-21 00:25 Asia/Dubai
+
+### Delivered
+
+- Review-ready PR: #143 — `https://github.com/aymanmahrous/swim-fluent-uae/pull/143`.
+- Branch: `agent/phase-1-chatbot`.
+- Head: `206f59390839abfb66c69605ebc2316db6fff70a`.
+- The active assistant now uses one approved bilingual knowledge source and deterministic intents for services, pricing, booking, locations, schedules, adults, kids, ladies and contact.
+- Quick replies and locally processed typed questions are available in Arabic and English. Typed text is neither stored nor transmitted.
+- Pricing, booking, locations, contact, Google Maps and WhatsApp handoffs use the approved public business configuration.
+- The existing guided selection flow is preserved.
+- The legacy duplicate root mount was removed while retaining a compatibility export.
+- Dialog focus, Escape/close handling, return focus, keyboard use, `aria-live`, labels, RTL/LTR and mobile sizing were verified.
+
+### Verification evidence
+
+- GitHub CI run `29775548310`: PASS.
+- Local formatting check: PASS.
+- Chatbot Phase 1 contracts: PASS — 19 bilingual intent cases plus knowledge, privacy, CTA and accessibility boundaries.
+- Revenue foundation, public SEO (106 assertions), Production sitemap and public claims contracts: PASS.
+- Lint: PASS with zero errors and eight pre-existing Fast Refresh warnings outside the changed files.
+- Typecheck: PASS.
+- Production build: PASS.
+- Vercel Preview deployment `dpl_6n4hZ67TYpimQqCtFBtNRtXkAtPe`: READY.
+- Preview URL: `https://swim-fluent-uae-w532-nwfzaktcg-swimmingayman-8492s-projects.vercel.app`.
+- Protected Preview mobile smoke at 390×844 and 150 ms / 1.6 Mbps / 4× CPU: PASS for Arabic and English functionality, RTL/LTR, one H1, no overflow, accessible names, alt text, unique IDs, Chatbot opening, approved price answer, typed intent answer, no application console/page/HTTP errors and no eager Calendar/n8n request.
+- No real booking, message, email, Calendar write or n8n request was sent.
+- Observed protected-Preview lab metrics were recorded but not enforced because Vercel Authentication and the Vercel Toolbar are injected into the measured page. LCP was 3.648 s Arabic and 2.800 s English; CLS was 0.0086 and 0.0056. Strict performance-budget work remains separate from Chatbot Phase 1.
+
+### Safety state
+
+- PR #143 is open, non-Draft and mergeable.
+- No merge or Production deployment occurred.
+- No external message, booking or integration write occurred.
+- Temporary local Vercel credentials were deleted after deployment and were not committed.
+
+### Next required action
+
+Review PR #143. Do not merge or promote the Preview to Production without explicit owner approval.

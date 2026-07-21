@@ -49,6 +49,8 @@ jobs:
         run: node scripts/verify-production-quality-gate.mjs
       - name: Verify public Arabic and English free-claim removal
         run: npm run verify:public-free-claims
+      - name: Verify bilingual Chatbot Phase 1
+        run: npm run verify:chatbot-phase1
       - name: Verify Content Brain cadence and fatigue boundaries
         run: npm run verify:content-brain
       - name: Verify Meta publishing receipts and Planner schedule suggestions
