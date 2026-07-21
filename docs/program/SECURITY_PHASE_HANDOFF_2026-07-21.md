@@ -19,6 +19,7 @@
 
 - Strategic wave 2: Attack Surface Reduction.
 - Branch: `agent/security-wave-2-attack-surface`.
+- PR: #161.
 - Added an explicit CI-enforced API route inventory. Routes must be classified as intentionally public, Staff-session protected, or machine-authenticated internal/Cron endpoints.
 - Existing remote media boundaries remain locked: HTTPS-only allowlisted provider hosts, literal-IP rejection, manual redirect validation, bounded declared size, MIME allowlist, encoded storage paths, and no overwrite uploads.
 - Added media magic-byte validation for PNG, JPEG, WebP, and MP4 signatures.
@@ -35,6 +36,7 @@
 - Lint and Build.
 - All existing read-only CI contracts.
 - No Preview, deployment, provider execution, or Production write is permitted.
+- GitHub Actions must report a completed successful run for the current PR head before merge.
 
 ## External non-code constraint
 
