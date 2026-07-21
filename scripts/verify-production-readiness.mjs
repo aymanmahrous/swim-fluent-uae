@@ -121,7 +121,11 @@ for (const path of ["src/server.ts", "src/start.ts"]) {
 
 const vercel = JSON.parse(read("vercel.json"));
 assert.equal(vercel.buildCommand, undefined, "Vercel must not introduce a side-effectful custom build command");
-assert.equal(\n  vercel.installCommand,\n  "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error",\n  "Vercel must use the canonical npm lock without lifecycle scripts",\n);
+assert.equal(
+  vercel.installCommand,
+  "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error",
+  "Vercel must use the canonical npm lock without lifecycle scripts",
+);
 assert.deepEqual(vercel.crons, [{ path: "/api/cron/content-automation", schedule: "15 0 * * *" }]);
 assert(vercel.ignoreCommand.includes("ref.startsWith('agent/')"), "agent branches must remain excluded from Vercel builds");
 
