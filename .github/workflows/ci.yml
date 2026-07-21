@@ -17,16 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
       - name: Typecheck
         run: npm run typecheck > typecheck.log 2>&1 || { cat typecheck.log; exit 1; }
       - name: Upload TypeScript diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: typecheck-diagnostics
           path: typecheck.log
@@ -43,11 +43,13 @@ jobs:
         run: node scripts/verify-quality-bundle-boundaries.mjs > quality-bundle-boundaries.log 2>&1 || { cat quality-bundle-boundaries.log; exit 1; }
       - name: Upload quality and bundle diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: quality-bundle-boundary-diagnostics
           path: quality-bundle-boundaries.log
           if-no-files-found: ignore
+      - name: Verify dependency and workflow supply-chain boundaries
+        run: node scripts/verify-dependency-supply-chain.mjs
       - name: Verify privileged API authentication boundaries
         run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify Staff mutation RBAC boundaries
@@ -56,7 +58,7 @@ jobs:
         run: node scripts/verify-api-mutation-input-contracts.mjs > mutation-input-contract.log 2>&1 || { cat mutation-input-contract.log; exit 1; }
       - name: Upload mutation input diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: mutation-input-contract-diagnostics
           path: mutation-input-contract.log

@@ -1,4 +1,4 @@
-# Security Phase Handoff — 2026-07-21
+# Security Phase Handoff — 2026-07-22
 
 ## Locked scope
 
@@ -6,6 +6,7 @@
 - No Preview or deployment.
 - No migrations, seeds, Cron jobs, Workers, publishing, or external provider execution.
 - No Production secrets, database writes, or Production writes.
+- Vercel `build-rate-limit` is external and must not be retried.
 
 ## Verified merged baseline
 
@@ -16,42 +17,45 @@
 - PR #160 — Strategic Security Hardening Wave 1; merge `9240e1cb489679bb649e2339a1aba2781d34bd26`.
 - PR #162 — Attack Surface Reduction; merge `bdcc05c9efba6554da7261a3e2570bae53cbb0a7`.
 - PR #163 — Architecture & AI Verification; merge `7b6e7d754ca50921b8764e0185488b49364884e0`.
+- PR #164 — Quality and bundle boundaries; merge `cd3eb33a6bc7460a969f301295c052ca4228a03f`.
 
 ## Completed phase
 
-- Quality, dependency, and bundle-boundary verification.
-- Branch: `agent/quality-bundle-boundaries`.
-- PR: #164.
-- Verified implementation head before this Handoff update: `03e0f5a0eafa0cbb44592164baa7f734bc49af14`.
-- Added `scripts/verify-quality-bundle-boundaries.mjs` as a read-only source contract.
-- Browser route modules are inventoried directly from `src/routes` and cannot import `.server` modules, Node built-ins, secret-bearing modules, Cron authentication, Workers, or provider registries.
-- Public routes cannot cross into Staff, AI OS, legacy Admin, internal Worker, or Cron modules.
-- The public root cannot eagerly import Staff, AI OS, or Admin route modules.
-- Staff and AI OS browser routes cannot import background processors, provider adapters, or server-secret modules.
-- The TanStack Start integration and dedicated SSR server entry remain locked.
-- Quality and bundle diagnostics are uploaded as a CI artifact when the contract fails.
-- Made the quality and bundle-boundary verification mandatory in `.github/workflows/ci.yml`.
+- Dependency & Supply-Chain Assurance.
+- Branch: `agent/dependency-supply-chain-assurance`.
+- PR: #165.
+- Verified implementation head before this Handoff update: `bd7b36cceb36bc652d5310ccbb8de51c11f7b197`.
+- Added canonical npm lockfile version 3, generated with the CI npm version and lifecycle scripts disabled.
+- Inventoried 53 runtime and 18 development dependencies.
+- Confirmed no package lifecycle installation hooks and no direct Git, HTTP(S), GitHub shorthand, or local-file dependency specifiers.
+- Added `scripts/verify-dependency-supply-chain.mjs` to enforce manifest/lock integrity, npm registry origin, SHA-512 package integrity, explicit workflow permissions, trusted action references, and install-script suppression.
+- Pinned trusted third-party actions to reviewed full commit SHAs in six non-migration workflows.
+- Replaced non-deterministic workflow installation with `npm ci --ignore-scripts --no-audit --no-fund`.
+- Recorded the audit and residual constraints in `docs/architecture/DEPENDENCY_SUPPLY_CHAIN_AUDIT_2026-07-22.md`.
+- Left the two migration workflow files unchanged because changing them would activate prohibited PR migration jobs. Their exact current action references and Supabase CLI binary `2.84.2` are bounded by a filename-scoped CI exception.
+- No broad dependency upgrades or removals were performed without reliable source-reachability proof.
 
 ## Verification
 
-- CI run `29873990753` / run number 580 found that the first contract expected the wrong server bootstrap marker.
-- CI run `29874157862` / run number 581 confirmed the server marker fix and exposed an incorrect English privacy-route inventory path.
-- CI run `29874304509` / run number 582 produced a focused diagnostics artifact confirming the exact path mismatch.
-- The route inventory was corrected from `src/routes/en.privacy.tsx` to the actual `src/routes/en/privacy.tsx` without weakening any boundary.
-- CI run `29874428185` / run number 583 completed successfully on head `03e0f5a0eafa0cbb44592164baa7f734bc49af14`.
-- Passed Typecheck, RBAC, public/internal boundaries, module ownership, Architecture & AI boundaries, browser/server/bundle boundaries, privileged authentication, mutation RBAC, input contracts, abuse controls, Security Waves 1 and 2, Lint, Build, SEO, sitemap, AI OS, media, workflows, and all existing read-only checks.
+- CI run `29876197487` / run number 586 exposed npm 11 platform metadata incompatible with the runner’s npm 10.
+- The npm lock was regenerated with npm `10.9.8`; CI run `29876280121` / run number 587 confirmed deterministic installation, Typecheck, RBAC, architecture, and bundle checks before finding the Bun lock is JSONC rather than strict JSON.
+- CI runs `29876350061` / #588 and `29876440168` / #589 refined the read-only lock/workflow inventory without weakening action, permission, or install boundaries.
+- CI run `29876535535` / run number 590 completed successfully on head `bd7b36cceb36bc652d5310ccbb8de51c11f7b197`.
+- Passed deterministic install, Typecheck, RBAC, public/internal boundaries, module ownership, Architecture & AI boundaries, browser/server/bundle boundaries, the new dependency/workflow contract, privileged authentication, mutation validation, abuse controls, Security Waves 1 and 2, Lint, Build, SEO, sitemap, AI OS, media, and all existing read-only checks.
+- No migration workflow was triggered.
 - No Preview, deployment, provider call, migration, seed, Cron job, Worker, Production secret, database write, or Production write was used.
 
 ## Next strategic phase
 
-Dependency & Supply-Chain Assurance:
+Production Readiness Audit:
 
-1. Audit direct and transitive dependency declarations, lockfile integrity, install-script exposure, and runtime/tooling separation from source only.
-2. Verify GitHub Actions remain pinned to approved major versions and retain least-privilege permissions.
-3. Prevent browser dependencies from introducing server-only or secret-bearing packages.
-4. Add read-only CI contracts for dependency and workflow regression.
-5. Preserve all security, data-separation, bundle, and no-Production-write constraints.
+1. Audit `dev`, `build`, `start`, and `test` commands from source and verify they cannot implicitly run migrations, seeds, Cron, Workers, writes, publishing, or external sending.
+2. Inventory Admin, Dashboard, and AI OS page data sources as Supabase, API, Demo, Mock, or Static.
+3. Review environment separation, secret use, error handling, and observability for leakage.
+4. Review public SEO/localization, source-level accessibility/performance, Vercel configuration, and Supabase usage without deployment or database writes.
+5. Fix only safe software blockers, add final read-only CI contracts where needed, and produce the final Production Readiness report.
+6. Preserve every merged authentication, RBAC, media, architecture, bundle, dependency, and workflow boundary.
 
 ## Resume instruction
 
-After PR #164 is merged, start from its merge commit on a clean branch and continue directly with Dependency & Supply-Chain Assurance. Do not create parallel authorization, provider, data, routing, or build systems.
+After PR #165 is merged, start from its merge commit on a clean branch and continue directly with the Production Readiness Audit. Do not run Preview, Deploy, migrations, seeds, Cron, Workers, publishing, external providers, Production secrets, database writes, or Production writes.
