@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "typecheck": "vite build --mode development --logLevel error && tsc --noEmit",
+    "test:rbac": "node --test tests/staff-rbac.test.ts",
     "test:e2e:ai-media": "playwright test tests/e2e/ai-media.spec.ts",
     "verify:public-seo": "node scripts/verify-public-seo.mjs",
     "verify:production-sitemap": "node scripts/verify-production-sitemap.mjs",
