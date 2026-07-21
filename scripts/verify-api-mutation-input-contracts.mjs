@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
+// This is a read-only source contract. It never imports or executes application routes.
 const routesDirectory = join(process.cwd(), "src/routes");
 const routeFiles = (await readdir(routesDirectory))
   .filter((name) => /^api\..+\.(?:ts|tsx)$/.test(name))
