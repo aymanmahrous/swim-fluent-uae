@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "test": "node --test tests/staff-rbac.test.ts",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "typecheck": "vite build --mode development --logLevel error && tsc --noEmit",
