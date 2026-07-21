@@ -99,7 +99,8 @@ assert.ok(viteConfig.includes("@lovable.dev/vite-tanstack-config"), "Vite must r
 assert.ok(viteConfig.includes('server: { entry: "server" }'), "SSR must retain the dedicated server entry");
 
 const serverEntry = await read("src/server.ts");
-assert.ok(serverEntry.includes("createStartHandler"), "Server entry must remain explicit");
-assert.ok(!rootRoute.includes("createStartHandler"), "Browser root must not import server bootstrap code");
+assert.ok(serverEntry.includes('import("@tanstack/react-start/server-entry")'), "Server entry must load TanStack Start only on the server boundary");
+assert.ok(serverEntry.includes("export default"), "Server entry must remain explicit");
+assert.ok(!rootRoute.includes("@tanstack/react-start/server-entry"), "Browser root must not import server bootstrap code");
 
 console.log(`Quality and bundle boundary verification passed for ${routeFiles.length} browser routes`);
