@@ -28,9 +28,14 @@ for (const file of routeFiles) {
     /(?:safeParse|parse)\(/.test(source),
     `${file} reads a mutation JSON body without schema validation`,
   );
+
+  const explicitInvalidInput =
+    source.includes("INVALID_INPUT") ||
+    /status:\s*400/.test(source) ||
+    source.includes("ENUMERATION_SAFE_INVALID_INPUT");
   assert.ok(
-    source.includes("INVALID_INPUT") || /status:\s*400/.test(source),
-    `${file} must preserve an explicit 400 invalid-input response`,
+    explicitInvalidInput,
+    `${file} must preserve an explicit invalid-input response or documented enumeration-safe behavior`,
   );
 }
 
