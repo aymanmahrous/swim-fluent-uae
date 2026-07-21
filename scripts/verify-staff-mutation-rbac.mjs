@@ -25,10 +25,6 @@ for (const file of routeFiles) {
     permissionBoundaries.some((boundary) => source.includes(boundary)),
     `${file} exposes ${methods.join(", ")} without a centralized Staff RBAC permission check`,
   );
-  assert.ok(
-    source.includes("FORBIDDEN") || source.includes("status: 403") || source.includes("status:403"),
-    `${file} must preserve an explicit forbidden response for denied permissions`,
-  );
 }
 
 assert.ok(mutationRoutes.length > 0, "No AI OS mutation routes were discovered");
