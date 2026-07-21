@@ -5,6 +5,7 @@ import {
   persistRemoteProviderAsset,
 } from "../platform/media-storage.server";
 import { getImageProvider } from "../platform/provider-registry.server";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -25,10 +26,6 @@ const AssetRecordSchema = z.object({
   createdAt: z.string(),
 });
 
-function allowedRole(role: string): boolean {
-  return ["super_admin", "admin", "content_manager"].includes(role);
-}
-
 function safeCode(error: unknown): string {
   const message = error instanceof Error ? error.message : "IMAGE_GENERATION_FAILED";
   return message.split(":")[0].replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "IMAGE_GENERATION_FAILED";
@@ -40,7 +37,7 @@ export const Route = createFileRoute("/api/os-media-generate-image")({
       POST: async ({ request }) => {
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
-        if (!allowedRole(session.profile.role)) {
+        if (!hasStaffPermission(session.profile.role, "media.generate")) {
           return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
         }
 
