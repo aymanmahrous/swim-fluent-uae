@@ -35,6 +35,8 @@ jobs:
         run: npm run test:rbac
       - name: Verify public and internal route boundary
         run: node scripts/verify-public-internal-boundary.mjs
+      - name: Verify module ownership boundaries
+        run: node scripts/verify-module-ownership-boundaries.mjs
       - run: npm run lint
       - run: npm run build
       - name: Parse Production workflow YAML
