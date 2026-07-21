@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -23,11 +24,7 @@ export const Route = createFileRoute("/api/os-content-update")({
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-        if (
-          session.profile.role !== "super_admin" &&
-          session.profile.role !== "admin" &&
-          session.profile.role !== "content_manager"
-        ) {
+        if (!hasStaffPermission(session.profile.role, "content.item.update")) {
           return Response.json({ error: "FORBIDDEN" }, { status: 403 });
         }
 

@@ -181,11 +181,17 @@ for (const needle of ["process.env", "SUPABASE_SECRET_KEY", "CRON_SECRET"]) {
 const statusRoute = await text("src/routes/api.os-automation-status.ts");
 for (const needle of [
   "resolveStaffSession(request)",
-  '["super_admin", "admin", "content_manager"]',
+  "hasStaffPermission",
+  '"automation.status.read"',
   '"get_staff_content_automation_status"',
 ]) {
   requireText(statusRoute, needle, "automation staff status route");
 }
+forbidText(
+  statusRoute,
+  '["super_admin", "admin", "content_manager"]',
+  "automation status route centralized RBAC",
+);
 
 const readModel = await text("src/platform/os-operations-data.ts");
 for (const needle of [

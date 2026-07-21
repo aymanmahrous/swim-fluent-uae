@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -28,6 +29,10 @@ export const Route = createFileRoute("/api/staff-bookings")({
       PATCH: async ({ request }) => {
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
+
+        if (!hasStaffPermission(session.profile.role, "booking.status.update")) {
+          return Response.json({ error: "FORBIDDEN" }, { status: 403 });
+        }
 
         const body: unknown = await request.json().catch(() => null);
         const parsed = UpdateSchema.safeParse(body);

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { generateOpenAiStructuredText } from "../platform/openai-text.server";
 import { getTextProvider } from "../platform/provider-registry.server";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -256,11 +257,7 @@ export const Route = createFileRoute("/api/os-content-generate")({
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-        if (
-          session.profile.role !== "super_admin" &&
-          session.profile.role !== "admin" &&
-          session.profile.role !== "content_manager"
-        ) {
+        if (!hasStaffPermission(session.profile.role, "content.generate")) {
           return Response.json({ error: "FORBIDDEN" }, { status: 403 });
         }
 

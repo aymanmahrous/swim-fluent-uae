@@ -8,6 +8,7 @@ import {
   getVideoProvider,
   getVideoProviderById,
 } from "../platform/provider-registry.server";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
@@ -59,10 +60,6 @@ const UpdatedJobSchema = z.object({
 });
 
 type PostStage = "auth" | "validation" | "job_creation" | "provider_call" | "persistence";
-
-function allowedRole(role: string): boolean {
-  return ["super_admin", "admin", "content_manager"].includes(role);
-}
 
 function sanitizeProviderDetail(value: string): string {
   return value
@@ -127,7 +124,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
           const session = await resolveStaffSession(request);
           if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
           responseHeaders = sessionCookieHeaders(session);
-          if (!allowedRole(session.profile.role)) {
+          if (!hasStaffPermission(session.profile.role, "media.generate")) {
             return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
           }
 
@@ -202,7 +199,7 @@ export const Route = createFileRoute("/api/os-media-generate-video")({
       GET: async ({ request }) => {
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
-        if (!allowedRole(session.profile.role)) {
+        if (!hasStaffPermission(session.profile.role, "media.generate")) {
           return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
         }
 

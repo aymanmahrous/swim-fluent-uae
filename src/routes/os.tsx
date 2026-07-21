@@ -16,6 +16,8 @@ import {
 import { z } from "zod";
 import { useLang } from "../lib/i18n";
 
+const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
+
 const StaffSessionSchema = z.object({
   authenticated: z.literal(true),
   profile: z.object({
@@ -54,8 +56,26 @@ function OperatingSystemLayout() {
   const sessionQuery = useQuery({
     queryKey: ["staff-session"],
     queryFn: fetchStaffSession,
+    enabled: aiOsEnabled,
     retry: false,
   });
+
+  if (!aiOsEnabled) {
+    return (
+      <div className="grid min-h-[70vh] place-items-center bg-muted/20 px-6">
+        <div className="max-w-md rounded-2xl border border-border bg-card p-7 text-center shadow-elegant">
+          <ShieldAlert className="mx-auto h-8 w-8 text-muted-foreground" />
+          <h1 className="mt-4 text-2xl font-black">AI OS is not enabled</h1>
+          <p className="mt-3 text-sm leading-7 text-muted-foreground">
+            This internal workspace is closed by configuration. Staff access remains available through the secure staff portal.
+          </p>
+          <Link to="/staff" className="mt-6 inline-flex rounded-xl bg-deep px-5 py-3 text-sm font-black text-white">
+            Go to secure staff portal
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (sessionQuery.isLoading) {
     return (
