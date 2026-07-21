@@ -1,12 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+
+const RequestSchema = z.object({
+  email: z.string().trim().email().max(320),
+});
 
 export const Route = createFileRoute("/api/staff-password-request")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = await request.json().catch(() => null) as { email?: string } | null;
-        if (!body?.email) {
-          return Response.json({ success: false, code: "EMAIL_REQUIRED" }, { status: 400 });
+        const parsed = RequestSchema.safeParse(await request.json().catch(() => null));
+        if (!parsed.success) {
+          return Response.json({ success: false, code: "INVALID_INPUT" }, { status: 400 });
         }
 
         // The frontend sends the request here. The server keeps provider credentials private.
