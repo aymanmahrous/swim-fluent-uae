@@ -8,7 +8,8 @@ export type StaffPermission =
   | "content.item.update"
   | "content.item.transition"
   | "content.generate"
-  | "media.generate";
+  | "media.generate"
+  | "automation.status.read";
 
 const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>>> = {
   super_admin: new Set([
@@ -18,6 +19,7 @@ const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>
     "content.item.transition",
     "content.generate",
     "media.generate",
+    "automation.status.read",
   ]),
   admin: new Set([
     "booking.status.update",
@@ -26,6 +28,7 @@ const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>
     "content.item.transition",
     "content.generate",
     "media.generate",
+    "automation.status.read",
   ]),
   reception: new Set(["booking.status.update", "crm.workflow.update"]),
   coach: new Set(["crm.workflow.update"]),
@@ -34,6 +37,7 @@ const permissionsByRole: Readonly<Record<StaffRole, ReadonlySet<StaffPermission>
     "content.item.transition",
     "content.generate",
     "media.generate",
+    "automation.status.read",
   ]),
 };
 
