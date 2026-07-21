@@ -70,7 +70,16 @@ PR #152 now also enforces `VITE_ENABLE_AI_OS` at the `/os` route boundary. When 
 
 `src/routes/api.staff-session.ts` exposes session verification, login, and logout.
 
-AI OS pages are client-gated by the verified Staff session. AI OS APIs independently call `resolveStaffSession(request)`. Write endpoints inspected also enforce role checks before invoking protected RPCs.
+AI OS pages are client-gated by the verified Staff session. AI OS APIs independently call `resolveStaffSession(request)`.
+
+The initial centralized permission map is implemented in `src/platform/staff-rbac.ts`. The following permissions have been migrated without broadening access:
+
+- `booking.status.update`
+- `crm.workflow.update`
+- `content.item.update`
+- `content.item.transition`
+
+The booking update API previously depended on the UI disabling the control for unauthorized roles plus downstream RPC enforcement. It now also rejects unauthorized roles directly at the server API boundary.
 
 ## Feature flags
 
@@ -148,7 +157,7 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 
 1. The public root shell knows about AI OS and legacy admin feature flags and can expose links to internal surfaces.
 2. Staff, AI OS, public site, cron, workers, and publishing concerns coexist in one route tree.
-3. Role policies are repeated in individual API handlers rather than expressed through one auditable permission map.
+3. Several remaining role policies are still repeated in individual API handlers and must be migrated incrementally.
 4. The repository name does not represent the production platform.
 5. Legacy repository removal is unsafe until feature and deployment parity is documented.
 
@@ -157,7 +166,7 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 1. Keep the public URLs unchanged.
 2. Make Staff Portal the only discoverable entry point to AI OS.
 3. Enforce the AI OS feature gate in addition to staff-session verification. **Completed in PR #152.**
-4. Centralize RBAC policy and migrate APIs incrementally while preserving their existing allowed roles.
+4. Continue migrating RBAC policy incrementally while preserving existing allowed roles.
 5. Keep the retired `/admin` compatibility route until external bookmarks and deployment references are checked, then remove it separately.
 6. Compare legacy repositories and deployments before archival; do not delete first.
 7. Rename the production repository only after Vercel, Actions, webhooks, documentation, and local remotes are verified.
@@ -168,6 +177,7 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 - Draft PR created: #152.
 - Current architecture inventory committed.
 - Route-level AI OS feature gate committed.
-- One Vercel status succeeded after the route-gate commit; another deployment status was still pending when checked.
+- Initial centralized RBAC policy committed and applied to four write permissions.
+- Both Vercel deployment statuses succeeded for the latest RBAC batch.
 - No production merge performed.
 - No repository renamed, archived, or deleted.
