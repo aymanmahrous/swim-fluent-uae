@@ -17,32 +17,38 @@
 
 ## Completed phase
 
-- Strategic wave 1: Security Hardening.
-- Branch: `agent/security-hardening-wave-1`.
-- PR: #160.
-- Merge commit: `9240e1cb489679bb649e2339a1aba2781d34bd26`.
-- Central browser security headers are applied in `src/server.ts`, including CSP, frame protection, MIME sniffing protection, referrer policy, permissions policy, and cross-origin isolation boundaries.
-- Sensitive `/api`, `/admin`, `/staff`, `/os`, and password-related routes are forced to `Cache-Control: no-store, max-age=0` with `Pragma: no-cache`.
-- Unsafe cross-site requests are rejected before application handlers using Fetch Metadata and same-origin `Origin` validation while requests without browser-origin headers remain available for deliberate server-to-server integrations.
-- Existing Staff cookies retain `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/`, bounded `Max-Age`, non-cacheable auth responses, and refresh-token exchange through the auth provider.
-- Added `scripts/verify-security-hardening-wave-1.mjs` to lock header, session, CSRF, cache, and committed-secret boundaries.
-- Made the new verification mandatory in `.github/workflows/ci.yml`.
+- Strategic wave 2: Attack Surface Reduction.
+- Branch: `agent/security-wave-2-rebased`.
+- PR: #162.
+- Verified head before the Handoff commit: `6455f60d09474972301c91b4ce6abc8fe42ecd75`.
+- Added a mandatory inventory for every API route, classifying intentionally public, Staff-session protected, and machine-authenticated internal/Cron routes.
+- Staff routes remain protected by Staff session resolution and centralized RBAC; machine routes retain explicit authentication boundaries.
+- Remote provider assets remain HTTPS-only, reject literal IPs and non-allowlisted hosts, use manual redirect validation, bound response sizes, restrict MIME types and download headers, encode storage paths, and prohibit overwrite.
+- Added and locked magic-byte validation for PNG, JPEG, WebP, and MP4.
+- Provider base64 image bytes are decoded and signature-validated before persistence.
+- Image-generation public errors are restricted to an explicit allowlist.
+- Provider logging retains structured sanitized details and redacts URLs, bearer tokens, query secrets, and credentials.
+- SSR failures retain generic public error responses without serialized stack traces.
+- Added `scripts/verify-attack-surface-wave-2.mjs` and made it mandatory in `.github/workflows/ci.yml`.
+- Updated the pre-existing AI media hardening contract to verify base64 decoding, magic-byte validation, and validation-before-persistence ordering.
 
 ## Verification
 
-- CI run `29866631612` / run number 563 completed successfully.
-- Passed Typecheck, RBAC, authentication boundaries, mutation RBAC, input contracts, abuse controls, Security Hardening Wave 1, Lint, Build, and all existing read-only contracts.
+- CI run `29871634350` / run number 569 completed successfully on head `6455f60d09474972301c91b4ce6abc8fe42ecd75`.
+- Passed Typecheck, RBAC, authentication boundaries, mutation RBAC, input contracts, abuse controls, Security Hardening Wave 1, Attack Surface Wave 2, Lint, Build, and all existing read-only contracts.
+- No unresolved review threads or submitted reviews were present before the final Handoff update.
 - No Preview, deployment, external API execution, migrations, seeds, Cron jobs, Workers, Production secrets, database writes, or Production writes were used.
 
 ## Next strategic wave
 
-Attack Surface Reduction:
+Architecture & AI Verification:
 
-1. Public API surface inventory and unnecessary endpoint closure.
-2. File upload MIME, size, filename, and ownership hardening.
-3. Error response and logging sanitization.
-4. Read-only CI contracts preventing regression.
+1. Re-audit AI OS authorization and provider isolation after unified security.
+2. Verify Production, demo, mock, and static data separation.
+3. Audit `VITE_ENABLE_AI_OS`, `VITE_ENABLE_LEGACY_ADMIN`, and `VITE_AI_OS_DEMO_DATA` usage without exposing values.
+4. Verify module ownership, dependency direction, route isolation, performance-sensitive imports, and bundle boundaries from source only.
+5. Add read-only CI contracts preventing architectural regression.
 
 ## Resume instruction
 
-Start from merge `9240e1cb489679bb649e2339a1aba2781d34bd26` and continue directly with Attack Surface Reduction. Do not create a parallel security system and preserve all locked safety constraints.
+After PR #162 is merged, start from its merge commit and continue directly with Architecture & AI Verification on a clean branch from current `main`. Do not create a parallel authorization or provider system, and preserve all locked safety constraints.

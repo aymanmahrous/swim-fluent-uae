@@ -122,11 +122,19 @@ forbidText(storage, "SUPABASE_SERVICE_ROLE_KEY", "private media storage");
 const imageRoute = await text("src/routes/api.os-media-generate-image.ts");
 for (const needle of [
   "persistProviderAssetBytes",
-  'Buffer.from(generation.assetBase64, "base64")',
+  'Buffer.from(assetBase64, "base64")',
+  'assertMediaSignature(bytes, contentType, "image")',
   "generation.assetUrl",
   'throw new Error("IMAGE_PROVIDER_ASSET_MISSING")',
 ]) {
   requireText(imageRoute, needle, "image provider persistence route");
+}
+checks += 1;
+if (
+  imageRoute.indexOf('assertMediaSignature(bytes, contentType, "image")') >
+  imageRoute.indexOf("persistProviderAssetBytes({")
+) {
+  throw new Error("image provider persistence route: media signature validation must precede persistence");
 }
 forbidText(imageRoute, "OPENAI_API_KEY", "image route secret isolation");
 forbidText(imageRoute, "GEMINI_API_KEY", "image route secret isolation");

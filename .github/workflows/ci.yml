@@ -54,6 +54,8 @@ jobs:
         run: node scripts/verify-abuse-control-boundaries.mjs
       - name: Verify browser headers, sessions, CSRF, and secret boundaries
         run: node scripts/verify-security-hardening-wave-1.mjs
+      - name: Verify API inventory, media, errors, and logging boundaries
+        run: node scripts/verify-attack-surface-wave-2.mjs
       - name: Verify legacy repository and deployment parity hold gate
         run: node scripts/verify-legacy-repository-parity-gate.mjs
       - run: npm run lint

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { assertMediaSignature } from "../platform/media-security.server";
 import {
   persistProviderAssetBytes,
   persistRemoteProviderAsset,
@@ -26,9 +27,25 @@ const AssetRecordSchema = z.object({
   createdAt: z.string(),
 });
 
+const PUBLIC_ERROR_CODES = new Set([
+  "IMAGE_GENERATION_FAILED",
+  "IMAGE_PROVIDER_ASSET_MISSING",
+  "IMAGE_SIGNATURE_INVALID",
+  "PROVIDER_ASSET_EMPTY",
+  "PROVIDER_ASSET_TOO_LARGE",
+  "PROVIDER_ASSET_URL_INVALID",
+  "PROVIDER_ASSET_URL_REJECTED",
+  "PROVIDER_ASSET_HOST_REJECTED",
+  "PROVIDER_ASSET_HOST_NOT_ALLOWLISTED",
+  "PROVIDER_ASSET_REDIRECT_REJECTED",
+  "PROVIDER_ASSET_DOWNLOAD_HEADER_REJECTED",
+  "UNSUPPORTED_PROVIDER_ASSET_TYPE",
+]);
+
 function safeCode(error: unknown): string {
   const message = error instanceof Error ? error.message : "IMAGE_GENERATION_FAILED";
-  return message.split(":")[0].replace(/[^A-Z0-9_]/gi, "_").slice(0, 100) || "IMAGE_GENERATION_FAILED";
+  const candidate = message.split(":")[0].replace(/[^A-Z0-9_]/gi, "_").slice(0, 100);
+  return PUBLIC_ERROR_CODES.has(candidate) ? candidate : "IMAGE_GENERATION_FAILED";
 }
 
 export const Route = createFileRoute("/api/os-media-generate-image")({
@@ -59,14 +76,20 @@ export const Route = createFileRoute("/api/os-media-generate-image")({
             prompt: parsed.data.prompt,
             aspectRatio: parsed.data.aspectRatio,
           });
-          const persisted = generation.assetBase64
-            ? await persistProviderAssetBytes({
-                bytes: new Uint8Array(Buffer.from(generation.assetBase64, "base64")),
-                contentType: generation.contentType ?? "image/png",
-                accessToken: session.accessToken,
-                staffId: session.profile.id,
-                contentItemId: parsed.data.contentItemId ?? null,
-              })
+          const assetBase64 = generation.assetBase64;
+          const persisted = assetBase64
+            ? await (async () => {
+                const contentType = generation.contentType ?? "image/png";
+                const bytes = new Uint8Array(Buffer.from(assetBase64, "base64"));
+                assertMediaSignature(bytes, contentType, "image");
+                return persistProviderAssetBytes({
+                  bytes,
+                  contentType,
+                  accessToken: session.accessToken,
+                  staffId: session.profile.id,
+                  contentItemId: parsed.data.contentItemId ?? null,
+                });
+              })()
             : generation.assetUrl
               ? await persistRemoteProviderAsset({
                   providerId: provider.id,
