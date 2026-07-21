@@ -12,29 +12,37 @@
 - PR #156 — authentication-domain separation; merge `6b9a7d36f70ff2864babf215c946f3e20f6ba8e1`.
 - PR #157 — centralized RBAC for AI OS mutations; merge `b178a0b4928c3bdb9af4637ea4105aebfa7fea25`.
 - PR #158 — API mutation input validation contracts; merge `8980cd34ebd9f10da3063d05918da4d3cba8bcb3`.
+- PR #159 — abuse-control boundaries; merge `f6586df036076b1b6b0139be79986d01507fee32`.
 
-## Current completed phase
+## Current phase
 
-- Branch: `agent/abuse-control-boundaries`.
-- PR: #159.
-- Added `src/platform/abuse-control.server.ts` with hashed IP/subject keys, bounded in-memory cleanup, standardized `429 RATE_LIMITED`, `Cache-Control: no-store`, and `Retry-After`.
-- Staff login is limited to 8 attempts per IP + normalized email in 15 minutes.
-- Public booking ingress is limited to 8 attempts per IP in 15 minutes before the Supabase booking RPC is contacted.
-- Existing password recovery protection remains 3 attempts per IP + normalized email in 15 minutes and keeps enumeration-safe responses.
-- AI provider routes remain protected by Staff Session, centralized RBAC, runtime schemas, and explicit input-size ceilings before provider invocation.
-- Added `scripts/verify-abuse-control-boundaries.mjs` and made it a mandatory CI step.
+- Strategic wave 1: Security Hardening.
+- Branch: `agent/security-hardening-wave-1`.
+- Central browser security headers are applied in `src/server.ts`, including CSP, frame protection, MIME sniffing protection, referrer policy, permissions policy, and cross-origin isolation boundaries.
+- Sensitive `/api`, `/admin`, `/staff`, `/os`, and password-related routes are forced to `Cache-Control: no-store, max-age=0` with `Pragma: no-cache`.
+- Unsafe cross-site requests are rejected before application handlers using Fetch Metadata and same-origin `Origin` validation while requests without browser-origin headers remain available for deliberate server-to-server integrations.
+- Existing Staff cookies retain `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/`, bounded `Max-Age`, non-cacheable auth responses, and refresh-token exchange through the auth provider.
+- Added `scripts/verify-security-hardening-wave-1.mjs` to lock header, session, CSRF, cache, and committed-secret boundaries.
+- Made the new verification mandatory in `.github/workflows/ci.yml`.
 
-## Verification
+## Verification required before completion
 
-- CI run `29861760295` / run number 559 passed Typecheck, RBAC, authentication boundaries, mutation RBAC, mutation input contracts, abuse-control boundaries, Lint, Build, and all existing read-only contracts.
-- The final Handoff-only head must pass the same CI suite before PR #159 is merged.
+- Typecheck.
+- Existing RBAC, authentication, input-contract, and abuse-control checks.
+- New Security Hardening Wave 1 contract.
+- Lint and Build.
+- All existing read-only CI contracts.
+- No Preview, deployment, external API execution, or Production write is permitted.
 
-## Next security phase
+## Next strategic wave
 
-1. Audit security response headers and browser boundaries: CSP, frame protection, MIME sniffing, referrer policy, and sensitive-route cache controls.
-2. Add a read-only CI contract that prevents weakening those headers.
-3. Preserve the same no-Preview, no-write, no-secret restrictions.
+Attack Surface Reduction:
+
+1. Public API surface inventory and unnecessary endpoint closure.
+2. File upload MIME, size, filename, and ownership hardening.
+3. Error response and logging sanitization.
+4. Read-only CI contracts preventing regression.
 
 ## Resume instruction
 
-Read this file and `docs/program/CURRENT_EXECUTION_HANDOFF_2026-07-20.md`, verify current `main`, then continue from the next security phase. Do not start from zero and do not create a parallel security system.
+Verify the current PR and CI status. The wave is complete only after successful CI, merge, and this Handoff being updated with the final PR and merge commit. Then continue directly to Attack Surface Reduction without creating a parallel security system.
