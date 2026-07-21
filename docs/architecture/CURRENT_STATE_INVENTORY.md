@@ -1,0 +1,166 @@
+# Relax Fix UAE — Current State Inventory
+
+Status: implementation inventory for PR #152
+
+## Safety boundary
+
+This inventory was produced without running Preview, build, tests, migrations, seeds, cron routes, background workers, publishing actions, booking submissions, or production writes.
+
+## Repository identity
+
+The repository is a mixed production platform rather than a standalone Command Center. It currently contains:
+
+- the Arabic and English Relax Fix UAE public website;
+- public privacy and password-recovery routes;
+- a secure Staff portal;
+- the Relax Fix AI OS / Command Center;
+- staff and AI OS server APIs;
+- content generation, media generation, CRM, analytics, integration, automation, cron, and worker routes.
+
+## Public routes confirmed
+
+- `/`
+- `/en`
+- `/privacy`
+- `/en/privacy`
+- `/forgot-password`
+- `/reset-password`
+
+The public home is implemented through `src/components/public-home.tsx` and the localized route files.
+
+## Staff and legacy routes confirmed
+
+- `/staff` — Supabase Auth-backed staff portal and booking operations.
+- `/staff/reset` — staff password-reset completion.
+- `/admin` — legacy admin route, controlled by `VITE_ENABLE_LEGACY_ADMIN` in navigation and by route-level logic.
+
+## AI OS routes confirmed
+
+- `/os` — Command Center layout and dashboard.
+- `/os/inbox` — AI Inbox.
+- `/os/crm` — CRM.
+- `/os/automations` — Automations.
+- `/os/content` — AI Content Studio.
+- `/os/planner` — 30-Day Planner.
+- `/os/media` — Media Library.
+- `/os/analytics` — Analytics.
+- `/os/integrations` — Integrations.
+
+The OS layout verifies `/api/staff-session` before rendering its navigation or child routes. Active staff roles currently recognized are:
+
+- `super_admin`
+- `admin`
+- `reception`
+- `coach`
+- `content_manager`
+
+## Authentication and authorization
+
+`src/platform/staff-session.server.ts`:
+
+- signs in through Supabase Auth;
+- stores access and refresh tokens in Secure, HttpOnly, SameSite=Lax cookies;
+- checks for an active row in `staff_profiles`;
+- resolves and refreshes sessions server-side;
+- forwards the staff JWT to protected Supabase RPCs.
+
+`src/routes/api.staff-session.ts` exposes session verification, login, and logout.
+
+AI OS pages are client-gated by the verified Staff session. AI OS APIs independently call `resolveStaffSession(request)`. Write endpoints inspected also enforce role checks before invoking protected RPCs.
+
+## Feature flags
+
+- `VITE_ENABLE_AI_OS` — controls the AI OS link in the global navigation.
+- `VITE_ENABLE_LEGACY_ADMIN` — controls the legacy admin link and legacy route availability.
+- `VITE_AI_OS_DEMO_DATA` — selects demo/fallback data in the platform data layer.
+
+All three are disabled in `.env.example`.
+
+## Data sources
+
+The platform is not purely demo/static. Confirmed sources include:
+
+- Supabase Auth for staff identity;
+- `staff_profiles` through Supabase REST/RLS;
+- protected Supabase RPCs for staff and OS operations;
+- API routes under `src/routes/api.*`;
+- optional demo/fallback data selected by `VITE_AI_OS_DEMO_DATA`;
+- static/localized public content and UI configuration.
+
+## Server/API surface confirmed
+
+### Staff
+
+- `/api/staff-session`
+- `/api/staff-bookings`
+- `/api/staff-password-request`
+- `/api/staff-password-reset`
+
+### AI OS reads and operations
+
+- `/api/os-command-center`
+- `/api/os-inbox`
+- `/api/os-crm`
+- `/api/os-operations`
+- `/api/os-analytics`
+- `/api/os-integrations`
+- `/api/os-automation-status`
+
+### AI OS content and media
+
+- `/api/os-content-items`
+- `/api/os-content-generate`
+- `/api/os-content-update`
+- `/api/os-content-transition`
+- `/api/os-media`
+- `/api/os-media-copy`
+- `/api/os-media-generate-image`
+- `/api/os-media-generate-video`
+- `/api/os-media-video-jobs`
+
+### Internal, cron, and worker routes
+
+- `/api/internal/content-media-worker`
+- `/api/internal/publish-worker`
+- `/api/internal/ai-media-e2e`
+- `/api/cron/content-automation`
+
+These routes must remain excluded from local Preview and manual testing unless a separate disposable environment and explicit non-production credentials are provided.
+
+## Package scripts
+
+Confirmed scripts include:
+
+- `dev`: `vite dev`
+- `build`: `vite build`
+- `build:dev`: `vite build --mode development`
+- `preview`: `vite preview`
+- `typecheck`: development Vite build followed by `tsc --noEmit`
+- `lint`: `eslint .`
+
+There is no `start` script and no generic `test` script. Specialized Playwright and verification scripts exist. The ordinary dev/build/preview scripts do not declare migrations, seeds, cron execution, worker execution, database writes, publishing, or outbound sends.
+
+## Current architectural risks
+
+1. The public root shell knows about AI OS and legacy admin feature flags and can expose links to internal surfaces.
+2. Staff, AI OS, public site, cron, workers, and publishing concerns coexist in one route tree.
+3. Role policies are repeated in individual API handlers rather than expressed through one auditable permission map.
+4. The repository name does not represent the production platform.
+5. Legacy repository removal is unsafe until feature and deployment parity is documented.
+
+## Safe implementation order
+
+1. Keep the public URLs unchanged.
+2. Make Staff Portal the only discoverable entry point to AI OS.
+3. Add an explicit route-level AI OS feature gate in addition to staff-session verification.
+4. Centralize RBAC policy and migrate APIs incrementally while preserving their existing allowed roles.
+5. Inventory Legacy Admin functions and map each to Staff or AI OS before disabling/removing it.
+6. Compare legacy repositories and deployments before archival; do not delete first.
+7. Rename the production repository only after Vercel, Actions, webhooks, documentation, and local remotes are verified.
+
+## Current execution status
+
+- Safe branch created: `agent/relaxfix-architecture-consolidation`.
+- Draft PR created: #152.
+- No production deployment or merge performed.
+- No repository renamed, archived, or deleted.
