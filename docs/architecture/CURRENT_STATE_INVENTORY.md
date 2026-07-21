@@ -32,7 +32,9 @@ The public home is implemented through `src/components/public-home.tsx` and the 
 
 - `/staff` — Supabase Auth-backed staff portal and booking operations.
 - `/staff/reset` — staff password-reset completion.
-- `/admin` — legacy admin route, controlled by `VITE_ENABLE_LEGACY_ADMIN` in navigation and by route-level logic.
+- `/admin` — legacy route controlled by `VITE_ENABLE_LEGACY_ADMIN`.
+
+The `/admin` implementation no longer contains the former browser-password dashboard. When enabled, it displays a retirement notice; when disabled, it redirects to the public home. The actual operational replacement is `/staff` plus `/os`.
 
 ## AI OS routes confirmed
 
@@ -54,6 +56,8 @@ The OS layout verifies `/api/staff-session` before rendering its navigation or c
 - `coach`
 - `content_manager`
 
+PR #152 now also enforces `VITE_ENABLE_AI_OS` at the `/os` route boundary. When the feature is disabled, the session endpoint is not queried and the internal workspace remains closed.
+
 ## Authentication and authorization
 
 `src/platform/staff-session.server.ts`:
@@ -70,8 +74,8 @@ AI OS pages are client-gated by the verified Staff session. AI OS APIs independe
 
 ## Feature flags
 
-- `VITE_ENABLE_AI_OS` — controls the AI OS link in the global navigation.
-- `VITE_ENABLE_LEGACY_ADMIN` — controls the legacy admin link and legacy route availability.
+- `VITE_ENABLE_AI_OS` — controls AI OS availability and navigation exposure.
+- `VITE_ENABLE_LEGACY_ADMIN` — controls the retired legacy route and link.
 - `VITE_AI_OS_DEMO_DATA` — selects demo/fallback data in the platform data layer.
 
 All three are disabled in `.env.example`.
@@ -152,9 +156,9 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 
 1. Keep the public URLs unchanged.
 2. Make Staff Portal the only discoverable entry point to AI OS.
-3. Add an explicit route-level AI OS feature gate in addition to staff-session verification.
+3. Enforce the AI OS feature gate in addition to staff-session verification. **Completed in PR #152.**
 4. Centralize RBAC policy and migrate APIs incrementally while preserving their existing allowed roles.
-5. Inventory Legacy Admin functions and map each to Staff or AI OS before disabling/removing it.
+5. Keep the retired `/admin` compatibility route until external bookmarks and deployment references are checked, then remove it separately.
 6. Compare legacy repositories and deployments before archival; do not delete first.
 7. Rename the production repository only after Vercel, Actions, webhooks, documentation, and local remotes are verified.
 
@@ -162,5 +166,8 @@ There is no `start` script and no generic `test` script. Specialized Playwright 
 
 - Safe branch created: `agent/relaxfix-architecture-consolidation`.
 - Draft PR created: #152.
-- No production deployment or merge performed.
+- Current architecture inventory committed.
+- Route-level AI OS feature gate committed.
+- One Vercel status succeeded after the route-gate commit; another deployment status was still pending when checked.
+- No production merge performed.
 - No repository renamed, archived, or deleted.
