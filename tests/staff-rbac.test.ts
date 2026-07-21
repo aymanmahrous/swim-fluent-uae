@@ -9,6 +9,7 @@ import {
 const permissions: StaffPermission[] = [
   "booking.status.update",
   "crm.workflow.update",
+  "conversation.mode.update",
   "content.item.update",
   "content.item.transition",
   "content.generate",
@@ -19,7 +20,11 @@ const permissions: StaffPermission[] = [
 const expectedByRole: Record<StaffRole, StaffPermission[]> = {
   super_admin: permissions,
   admin: permissions,
-  reception: ["booking.status.update", "crm.workflow.update"],
+  reception: [
+    "booking.status.update",
+    "crm.workflow.update",
+    "conversation.mode.update",
+  ],
   coach: ["crm.workflow.update"],
   content_manager: [
     "content.item.update",
