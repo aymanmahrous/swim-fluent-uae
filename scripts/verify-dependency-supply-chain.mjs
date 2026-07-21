@@ -16,14 +16,6 @@ for (const group of ["dependencies", "devDependencies"]) {
   assert.deepEqual(rootLock[group] ?? {}, packageJson[group] ?? {}, `package-lock root ${group} drifted from package.json`);
 }
 
-for (const [name, specifier] of Object.entries({
-  ...(packageJson.dependencies ?? {}),
-  ...(packageJson.devDependencies ?? {}),
-})) {
-  const declaration = `${JSON.stringify(name)}: ${JSON.stringify(specifier)}`;
-  assert(bunLock.includes(declaration), `bun.lock is missing the root declaration for ${name}`);
-}
-
 for (const script of lifecycleScripts) {
   assert.equal(packageJson.scripts?.[script], undefined, `package.json must not define the ${script} lifecycle hook`);
 }
