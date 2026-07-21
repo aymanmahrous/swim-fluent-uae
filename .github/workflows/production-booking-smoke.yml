@@ -55,11 +55,11 @@ jobs:
             exit 1
           fi
           echo "Manual Production booking authorization validated."
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - run: npm install --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
       - name: Run idempotent Production booking smoke
         env:
           PRODUCTION_BOOKING_SMOKE_CONFIRMED: "true"
