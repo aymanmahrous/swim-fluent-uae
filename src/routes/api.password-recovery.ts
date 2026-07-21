@@ -7,6 +7,8 @@ import {
 
 const RequestSchema = z.object({ email: z.string().email().max(320) });
 const genericMessage = "إذا كان الحساب موجودًا، ستصلك رسالة لاستعادة كلمة المرور.";
+// ENUMERATION_SAFE_INVALID_INPUT: invalid recovery input intentionally receives the same
+// generic 200 response as an unknown account so the endpoint does not disclose account state.
 
 export const Route = createFileRoute("/api/password-recovery")({
   server: {
