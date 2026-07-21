@@ -59,7 +59,7 @@ const publicRoutes = [
   "src/routes/index.tsx",
   "src/routes/en.tsx",
   "src/routes/privacy.tsx",
-  "src/routes/en.privacy.tsx",
+  "src/routes/en/privacy.tsx",
 ];
 
 for (const path of publicRoutes) {
