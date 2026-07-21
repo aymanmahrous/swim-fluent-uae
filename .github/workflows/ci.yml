@@ -41,6 +41,8 @@ jobs:
         run: node scripts/verify-privileged-api-auth-boundaries.mjs
       - name: Verify Staff mutation RBAC boundaries
         run: node scripts/verify-staff-mutation-rbac.mjs
+      - name: Verify API mutation input contracts
+        run: node scripts/verify-api-mutation-input-contracts.mjs
       - name: Verify legacy repository and deployment parity hold gate
         run: node scripts/verify-legacy-repository-parity-gate.mjs
       - run: npm run lint
