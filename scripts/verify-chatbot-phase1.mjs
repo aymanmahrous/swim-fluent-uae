@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { detectChatbotIntent, detectMessageLanguage } from "../src/platform/chatbot-engine.ts";
+import {
+  CHATBOT_APPROVED_QUESTIONS,
+  CHATBOT_KNOWLEDGE,
+} from "../src/platform/chatbot-knowledge.ts";
 
 const [engineSource, knowledgeSource, assistantSource, rootSource, arRoute, enRoute] =
   await Promise.all([
@@ -60,6 +64,22 @@ for (const intent of [
     knowledgeSource.includes(`intent: "${intent}"`),
     `Missing centralized knowledge for ${intent}`,
   );
+
+  const entry = CHATBOT_KNOWLEDGE.find((item) => item.intent === intent);
+  assert.ok(entry, `Missing runtime knowledge entry for ${intent}`);
+  assert.ok(entry.questions.ar.length > 0, `Missing Arabic questions for ${intent}`);
+  assert.ok(entry.questions.en.length > 0, `Missing English questions for ${intent}`);
+}
+
+assert.ok(CHATBOT_APPROVED_QUESTIONS.length >= 36, "Approved question bank is incomplete");
+for (const item of CHATBOT_APPROVED_QUESTIONS) {
+  assert.ok(item.question.trim().length > 0, "Approved chatbot question must not be empty");
+  assert.ok(item.answer.trim().length > 0, "Approved chatbot answer must not be empty");
+  assert.equal(
+    detectChatbotIntent(item.question),
+    item.intent,
+    `Approved question does not resolve to ${item.intent}: ${item.question}`,
+  );
 }
 
 for (const contract of [
@@ -68,6 +88,8 @@ for (const contract of [
   "TRAINING_LOCATIONS",
   "WHATSAPP_DISPLAY",
   "OPERATIONAL_EMAIL",
+  "CHATBOT_APPROVED_QUESTIONS",
+  "questions:",
   "إرسال الطلب لا يعني أن الموعد أصبح مؤكدًا",
   "Submitting a request does not confirm an appointment",
   "لا ترسل معلومات طبية أو تشخيصية",
@@ -115,5 +137,5 @@ assert.equal(
 );
 
 console.log(
-  `Chatbot Phase 1 verification passed (${intentCases.length} bilingual intent cases + knowledge, privacy, CTA and accessibility contracts).`,
+  `Chatbot Phase 1 verification passed (${intentCases.length} bilingual intent cases + ${CHATBOT_APPROVED_QUESTIONS.length} preserved approved questions + knowledge, privacy, CTA and accessibility contracts).`,
 );
