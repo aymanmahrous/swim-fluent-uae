@@ -29,6 +29,14 @@ function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
 }
 
+function localizedLanguageSwitchTarget(pathname: string): string | null {
+  if (pathname === "/") return "/en";
+  if (pathname === "/en") return "/";
+  if (pathname === "/privacy") return "/en/privacy";
+  if (pathname === "/en/privacy") return "/privacy";
+  return null;
+}
+
 function NotFoundComponent() {
   const { tr } = useLang();
   return (
@@ -127,6 +135,7 @@ function Nav() {
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const isPublicHome = pathname === "/" || pathname === "/en";
+  const languageSwitchTarget = localizedLanguageSwitchTarget(pathname);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
@@ -166,26 +175,15 @@ function Nav() {
               {tr("admin")}
             </Link>
           )}
-          {isPublicHome ? (
-            lang === "ar" ? (
-              <Link
-                to="/en"
-                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
-                aria-label="View English version"
-              >
-                <Languages className="h-4 w-4" />
-                <span className="text-xs font-black">EN</span>
-              </Link>
-            ) : (
-              <Link
-                to="/"
-                className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
-                aria-label="عرض النسخة العربية"
-              >
-                <Languages className="h-4 w-4" />
-                <span className="text-xs font-black">ع</span>
-              </Link>
-            )
+          {languageSwitchTarget ? (
+            <Link
+              to={languageSwitchTarget}
+              className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+              aria-label={lang === "ar" ? "View English version" : "عرض النسخة العربية"}
+            >
+              <Languages className="h-4 w-4" />
+              <span className="text-xs font-black">{lang === "ar" ? "EN" : "ع"}</span>
+            </Link>
           ) : (
             <button
               onClick={() => setLang(lang === "ar" ? "en" : "ar")}
@@ -244,7 +242,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useLocation({ select: (location) => location.pathname });
   const publicLang = localizedPublicLanguage(pathname);
-  const isLocalizedPublicPage = pathname === "/" || pathname === "/en";
+  const isLocalizedPublicPage = localizedLanguageSwitchTarget(pathname) !== null;
 
   return (
     <QueryClientProvider client={queryClient}>
