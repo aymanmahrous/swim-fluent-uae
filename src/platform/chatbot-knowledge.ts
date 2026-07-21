@@ -25,7 +25,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "services",
     quickReply: { ar: "الخدمات المتاحة", en: "Services" },
     questions: {
-      ar: ["ما الخدمات المتاحة؟", "ما الخدمات التي تقدمونها؟", "ما نوع خدمات السباحة لديكم؟", "هل تساعدون على تعلم السباحة؟", "هل يوجد تدريب لتحسين تقنية السباحة؟", "أريد بناء الثقة في الماء", "ما برامج السباحة المتوفرة؟", "هل تقدمون تدريبًا لتحسين الأداء؟"],
+      ar: ["ما الخدمات المتاحة؟", "ما الخدمات التي تقدمونها؟", "ما نوع خدمات السباحة لديكم؟", "هل تساعدون على تعلم السباحة؟", "هل يوجد تدريب لتحسين تقنية السباحة؟", "أريد بناء ثقة في الماء", "ما برامج السباحة المتوفرة؟", "هل تقدمون تدريبًا لتحسين الأداء؟"],
       en: ["What services do you offer?", "Which services are available?", "What swimming services do you provide?", "Do you help people learn swimming?", "Do you offer swimming technique coaching?", "I want to build confidence in the water", "What swimming programmes are available?", "Do you provide performance coaching?"],
     },
     answer: {
@@ -39,7 +39,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     quickReply: { ar: "الأسعار", en: "Pricing" },
     questions: {
       ar: ["ما الأسعار؟", "ما أسعار تدريب الأطفال؟", "كم تكلفة التدريب؟", "كم سعر الحصة؟", "ما تكلفة الحصة بالدرهم؟", "هل يوجد سعر خاص للإخوة؟", "كم سعر الطفل في المجموعة؟", "أريد معرفة الأسعار بالدرهم"],
-      en: ["What are your prices?", "How much do lessons cost in AED?", "How much is the coaching?", "What is the lesson price?", "What is the session cost in dirhams?", "Is there a sibling price?", "What is the group price per child?", "I want to know the prices in AED"],
+      en: ["What are your prices?", "How much do lessons cost in AED?", "What is the coaching cost?", "What is the lesson price?", "What is the session cost in dirhams?", "Is there a sibling price?", "What is the group price per child?", "I want to know the prices in AED"],
     },
     answer: {
       ar: `المجموعة الصغيرة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. السعر ${PUBLIC_PRICING.groupChildPriceAED} درهمًا للطفل، وسعر الإخوة ${PUBLIC_PRICING.siblingChildPriceAED} درهم لكل طفل. جلسة الحركة المائية أو البرية ${PUBLIC_PRICING.aquaticSessionPriceAED} درهمًا. لا تحدد هذه الأسعار مدة أو عدد حصص أو باقة.`,
@@ -51,7 +51,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "booking",
     quickReply: { ar: "طلب تقييم أو حجز", en: "Assessment or booking" },
     questions: {
-      ar: ["أريد حجز موعد تقييم", "كيف أحجز موعدًا؟", "أريد طلب تقييم أولي", "كيف أبدأ الحجز؟", "هل يمكنني حجز تقييم؟", "أريد اختيار موعد للحجز", "هل الطلب يؤكد الموعد؟", "أريد بدء طلب الحجز"],
+      ar: ["أريد حجز موعد تقييم", "كيف أطلب حجز موعد؟", "أريد طلب تقييم أولي", "كيف أبدأ الحجز؟", "هل يمكنني حجز تقييم؟", "أريد اختيار موعد للحجز", "هل طلب الحجز يؤكد الموعد؟", "أريد بدء طلب الحجز"],
       en: ["I want to book an assessment appointment", "How do I book?", "I want to request an initial assessment", "How do I start a booking?", "Can I book an assessment?", "I want to choose an appointment for booking", "Does submitting a booking confirm the appointment?", "I want to start a booking request"],
     },
     answer: {
@@ -90,7 +90,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "adults",
     quickReply: { ar: "تدريب البالغين", en: "Adult coaching" },
     questions: {
-      ar: ["هل يوجد تدريب للكبار؟", "أريد تدريب بالغين", "تدريب للكبار", "أنا بالغ ومبتدئ", "هل تقبلون بالغين مبتدئين؟", "أريد تدريبًا مخصصًا للكبار", "هل توجد جلسات بالغين؟", "كيف يبدأ بالغ التدريب؟"],
+      ar: ["هل يوجد تدريب للكبار؟", "أريد تدريبًا لفئة بالغين", "تدريب للكبار", "أنا بالغ ومبتدئ", "هل تقبلون بالغين مبتدئين؟", "أريد تدريبًا مخصصًا للكبار", "هل توجد جلسات لفئة بالغين؟", "كيف يبدأ بالغ التدريب؟"],
       en: ["Do you offer adult coaching?", "I want adult coaching", "Adult coaching", "I am an adult beginner", "Do you accept adult beginners?", "I need coaching for adults", "Are adult sessions offered?", "How does an adult begin?"],
     },
     answer: {
@@ -103,7 +103,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "kids",
     quickReply: { ar: "تدريب الأطفال", en: "Kids coaching" },
     questions: {
-      ar: ["هل يوجد تدريب أطفال؟", "أريد تدريب أطفالي", "ما تفاصيل تدريب الأطفال؟", "ابني يحتاج تدريبًا", "هل يقبل ولي الأمر تقديم طلب عن طفل؟", "هل يمكن للأم تقديم طلب عن أطفال؟", "كم عدد الأطفال في المجموعة؟", "ابنتي تحتاج تدريبًا"],
+      ar: ["هل يوجد تدريب لفئة أطفال؟", "أريد تدريب أطفالي", "ما تفاصيل تدريب الأطفال؟", "ابني يحتاج تدريبًا", "هل يقبل ولي الأمر طلب تدريب طفل؟", "هل يمكن للأم تقديم طلب تدريب أطفال؟", "كم عدد الأطفال في المجموعة؟", "ابنتي تحتاج تدريبًا"],
       en: ["Do you offer kids coaching?", "I want coaching for my children", "Kids coaching", "My son needs coaching", "Can a parent submit for a child?", "Can a mother submit a request for children?", "How many children are in the group?", "My daughter needs coaching"],
     },
     answer: {
@@ -116,8 +116,8 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "ladies",
     quickReply: { ar: "استفسار السيدات", en: "Ladies enquiry" },
     questions: {
-      ar: ["هل يوجد تدريب للسيدات؟", "أريد تدريبًا للسيدات", "هل توجد حصة مخصصة للسيدات؟", "هل يوجد خيار نسائي للسيدات؟", "أريد خيارًا مناسبًا للسيدات", "هل تقدمون تدريب نساء؟", "كيف يبدأ تدريب للسيدات؟", "هل يمكن تأكيد حصة سيدات؟"],
-      en: ["Do you offer ladies coaching?", "I want ladies coaching", "Is a ladies-only session available?", "Do you provide coaching for women?", "I need a suitable option for ladies", "Is there an option for women?", "How does ladies coaching begin?", "Can you confirm a ladies session?"],
+      ar: ["هل يوجد تدريب للسيدات؟", "أريد تدريبًا للسيدات", "هل توجد حصة مخصصة للسيدات؟", "هل يوجد خيار لفئة نساء؟", "أريد خيارًا مناسبًا للسيدات", "هل تقدمون تدريبًا لفئة نساء؟", "كيف تبدأ سيدة التدريب؟", "هل يمكن تأكيد حصة سيدات؟"],
+      en: ["Do you offer ladies coaching?", "I want ladies coaching", "Is a ladies session offered?", "Do you provide coaching for women?", "I need a suitable option for ladies", "Is there an option for women?", "How does ladies coaching begin?", "Can you confirm a ladies session?"],
     },
     answer: {
       ar: "يمكنك إرسال طلب تقييم أولي، وسيؤكد الفريق ما إذا كان خيار التدريب المناسب للسيدات متاحًا حسب الخدمة والموقع والموعد. لا يفترض المساعد توفر حصة مخصصة قبل المراجعة.",
@@ -129,7 +129,7 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
     intent: "contact",
     quickReply: { ar: "التواصل مع الفريق", en: "Contact the team" },
     questions: {
-      ar: ["كيف أتواصل مع الفريق؟", "أريد التواصل مع الفريق", "ما رقم الواتساب؟", "أريد التحدث مع شخص", "هل يمكنني الاتصال بالفريق؟", "أعطني وسيلة التواصل", "أريد رقم هاتف أو واتساب", "كيف أتحدث مع موظف؟"],
+      ar: ["كيف أتواصل مع الفريق؟", "أريد التواصل مع الفريق", "ما رقم واتساب؟", "أريد التحدث مع شخص", "هل يمكنني إجراء اتصال مع الفريق؟", "أعطني تفاصيل تواصل", "أريد رقم هاتف أو واتساب", "كيف أتحدث مع موظف؟"],
       en: ["How can I contact the team?", "I need to speak to a person on WhatsApp", "What is your WhatsApp number?", "I want to speak to a person", "Can I call the team?", "Please give me the contact details", "I need a phone or WhatsApp number", "How do I speak to a staff member?"],
     },
     answer: {
