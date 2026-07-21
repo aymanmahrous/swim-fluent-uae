@@ -1,13 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { hasStaffPermission } from "../platform/staff-rbac";
 import {
   resolveStaffSession,
   sessionCookieHeaders,
   staffRpc,
 } from "../platform/staff-session.server";
-
-function allowedRole(role: string): boolean {
-  return ["super_admin", "admin", "content_manager"].includes(role);
-}
 
 export const Route = createFileRoute("/api/os-media-video-jobs")({
   server: {
@@ -15,7 +12,7 @@ export const Route = createFileRoute("/api/os-media-video-jobs")({
       GET: async ({ request }) => {
         const session = await resolveStaffSession(request);
         if (!session) return Response.json({ success: false, code: "UNAUTHORIZED" }, { status: 401 });
-        if (!allowedRole(session.profile.role)) {
+        if (!hasStaffPermission(session.profile.role, "media.generate")) {
           return Response.json({ success: false, code: "FORBIDDEN" }, { status: 403 });
         }
 
