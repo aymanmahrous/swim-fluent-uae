@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 const config = JSON.parse(await readFile("vercel.json", "utf8"));
 const command = config.ignoreCommand;
 const canonicalProjectId = "prj_4wRrALwNzlU0msHb9pGOsExmNID0";
-const allowedTopLevelKeys = new Set(["$schema", "ignoreCommand", "crons", "headers"]);
+const allowedTopLevelKeys = new Set(["$schema", "ignoreCommand", "installCommand", "crons", "headers"]);
 
 for (const key of Object.keys(config)) {
   if (!allowedTopLevelKeys.has(key)) {
@@ -12,7 +12,7 @@ for (const key of Object.keys(config)) {
   }
 }
 
-if (typeof command !== "string" || command.length < 1) {
+if (config.installCommand !== "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error") {\n  throw new Error("VERCEL_INSTALL_COMMAND_MUST_USE_CANONICAL_NPM_LOCK");\n}\n\nif (typeof command !== "string" || command.length < 1) {
   throw new Error("VERCEL_IGNORE_COMMAND_MISSING");
 }
 
