@@ -5,7 +5,7 @@ function sanitizeMessage(value: string): string {
     .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
     .replace(/\b(?:https?|wss):\/\/[^\s"'<>]+/gi, "[REDACTED_URL]")
     .replace(/([?&](?:access_token|api[_-]?key|key|secret|signature|sig|token)=)[^&\s]+/gi, "$1[REDACTED_QUERY]")
-    .replace(/\b(?:password|passwd|credential|client_secret|refresh_token)\s*[:=]\s*[^\s,;]+/gi, "$1=[REDACTED]")
+    .replace(/\b(password|passwd|credential|client_secret|refresh_token)\s*[:=]\s*[^\s,;]+/gi, "$1=[REDACTED]")
     .slice(0, 500);
 }
 
