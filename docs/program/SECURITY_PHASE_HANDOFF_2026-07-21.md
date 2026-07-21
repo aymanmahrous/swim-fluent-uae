@@ -1,61 +1,69 @@
-# Security Phase Handoff — 2026-07-22
+# Final Security & Production Readiness Handoff — 2026-07-22
 
-## Locked scope
+## Locked safety boundary
 
 - Repository: `aymanmahrous/swim-fluent-uae` only.
-- No Preview or deployment.
-- No migrations, seeds, Cron jobs, Workers, publishing, or external provider execution.
-- No Production secrets, database writes, or Production writes.
-- Vercel `build-rate-limit` is external and must not be retried.
+- No Preview, Deploy, Production writes, database writes, migrations, seeds, Cron/Worker execution, publishing, external-provider execution, or Production secrets.
+- Vercel `build-rate-limit` is an external constraint and was not retried or bypassed.
 
-## Verified merged baseline
+## Merged strategic baseline
 
-- PR #156 — authentication-domain separation; merge `6b9a7d36f70ff2864babf215c946f3e20f6ba8e1`.
-- PR #157 — centralized RBAC for AI OS mutations; merge `b178a0b4928c3bdb9af4637ea4105aebfa7fea25`.
-- PR #158 — API mutation input validation contracts; merge `8980cd34ebd9f10da3063d05918da4d3cba8bcb3`.
-- PR #159 — abuse-control boundaries; merge `f6586df036076b1b6b0139be79986d01507fee32`.
-- PR #160 — Strategic Security Hardening Wave 1; merge `9240e1cb489679bb649e2339a1aba2781d34bd26`.
-- PR #162 — Attack Surface Reduction; merge `bdcc05c9efba6554da7261a3e2570bae53cbb0a7`.
-- PR #163 — Architecture & AI Verification; merge `7b6e7d754ca50921b8764e0185488b49364884e0`.
-- PR #164 — Quality and bundle boundaries; merge `cd3eb33a6bc7460a969f301295c052ca4228a03f`.
+| PR | Phase | Merge commit | Latest successful GitHub Actions |
+|---|---|---|---|
+| #156 | Authentication Domain Separation | `6b9a7d36f70ff2864babf215c946f3e20f6ba8e1` | CI `29857691571` / #541 |
+| #157 | Centralized RBAC | `b178a0b4928c3bdb9af4637ea4105aebfa7fea25` | CI `29859491182` / #548 |
+| #158 | API Mutation Validation | `8980cd34ebd9f10da3063d05918da4d3cba8bcb3` | CI `29860958398` / #557 |
+| #159 | Abuse-Control Boundaries | `f6586df036076b1b6b0139be79986d01507fee32` | CI `29862048042` / #561 |
+| #160 | Strategic Security Hardening Wave 1 | `9240e1cb489679bb649e2339a1aba2781d34bd26` | CI `29866631612` / #563 |
+| #162 | Attack Surface Reduction | `bdcc05c9efba6554da7261a3e2570bae53cbb0a7` | CI `29871794902` / #570 |
+| #163 | Architecture & AI Verification | `7b6e7d754ca50921b8764e0185488b49364884e0` | CI `29873342934` / #578 |
+| #164 | Quality & Bundle Boundaries | `cd3eb33a6bc7460a969f301295c052ca4228a03f` | CI `29874542971` / #584 |
+| #165 | Dependency & Supply-Chain Assurance | `55e900ada08c8bd50daa882e7bb8a161512069ef` | CI `29876625194` / #591 |
 
-## Completed phase
+## Final phase
 
-- Dependency & Supply-Chain Assurance.
-- Branch: `agent/dependency-supply-chain-assurance`.
-- PR: #165.
-- Verified implementation head before this Handoff update: `bd7b36cceb36bc652d5310ccbb8de51c11f7b197`.
-- Added canonical npm lockfile version 3, generated with the CI npm version and lifecycle scripts disabled.
-- Inventoried 53 runtime and 18 development dependencies.
-- Confirmed no package lifecycle installation hooks and no direct Git, HTTP(S), GitHub shorthand, or local-file dependency specifiers.
-- Added `scripts/verify-dependency-supply-chain.mjs` to enforce manifest/lock integrity, npm registry origin, SHA-512 package integrity, explicit workflow permissions, trusted action references, and install-script suppression.
-- Pinned trusted third-party actions to reviewed full commit SHAs in six non-migration workflows.
-- Replaced non-deterministic workflow installation with `npm ci --ignore-scripts --no-audit --no-fund`.
-- Recorded the audit and residual constraints in `docs/architecture/DEPENDENCY_SUPPLY_CHAIN_AUDIT_2026-07-22.md`.
-- Left the two migration workflow files unchanged because changing them would activate prohibited PR migration jobs. Their exact current action references and Supabase CLI binary `2.84.2` are bounded by a filename-scoped CI exception.
-- No broad dependency upgrades or removals were performed without reliable source-reachability proof.
+- Production Readiness Audit.
+- Branch: `agent/production-readiness-audit`.
+- PR: #166.
+- Verified implementation head before this Handoff update: `e533ae5fad6d7a025078141dac0c14a25e20b1bb`.
+- Successful pre-Handoff CI: `29876988894` / run #593.
+- Final report: `docs/program/PRODUCTION_READINESS_REPORT_2026-07-22.md`.
 
-## Verification
+## Completed implementation
 
-- CI run `29876197487` / run number 586 exposed npm 11 platform metadata incompatible with the runner’s npm 10.
-- The npm lock was regenerated with npm `10.9.8`; CI run `29876280121` / run number 587 confirmed deterministic installation, Typecheck, RBAC, architecture, and bundle checks before finding the Bun lock is JSONC rather than strict JSON.
-- CI runs `29876350061` / #588 and `29876440168` / #589 refined the read-only lock/workflow inventory without weakening action, permission, or install boundaries.
-- CI run `29876535535` / run number 590 completed successfully on head `bd7b36cceb36bc652d5310ccbb8de51c11f7b197`.
-- Passed deterministic install, Typecheck, RBAC, public/internal boundaries, module ownership, Architecture & AI boundaries, browser/server/bundle boundaries, the new dependency/workflow contract, privileged authentication, mutation validation, abuse controls, Security Waves 1 and 2, Lint, Build, SEO, sitemap, AI OS, media, and all existing read-only checks.
-- No migration workflow was triggered.
-- No Preview, deployment, provider call, migration, seed, Cron job, Worker, Production secret, database write, or Production write was used.
+- Added explicit side-effect-free `start` and `test` commands alongside reviewed `dev` and `build` commands.
+- Confirmed these commands contain no migrations, seeds, Cron, Workers, publishing, deployment, Supabase CLI, or external sending.
+- Inventoried public, legacy Admin, Dashboard, and every AI OS page by data source.
+- Confirmed AI OS uses protected APIs/Supabase read models and imports no Demo, Mock, or fixture data.
+- Preserved fail-closed feature-flag defaults and server/browser secret separation.
+- Replaced raw SSR error-object logging with bounded structured logging that redacts URLs, Bearer tokens, query credentials, and credential fields.
+- Reverified source-level SEO, localization, accessibility, bundle isolation, Vercel policy, Supabase read-only CI, and manual-only Production workflows.
+- Added `scripts/verify-production-readiness.mjs` as the final mandatory read-only CI contract.
+- No live browser, Preview, deployment, Cron, Worker, provider, Supabase write, or Production secret was used.
 
-## Next strategic phase
+## Final verification gate
 
-Production Readiness Audit:
+The latest Handoff commit must pass the complete CI workflow before PR #166 merges. Required checks include deterministic install, Typecheck, RBAC, public/internal routing, module ownership, Architecture & AI, browser/server/bundle, dependency supply chain, Production readiness, authentication, mutation validation, abuse controls, Security Waves 1 and 2, Lint, Build, SEO/localization, sitemap, AI OS, media, workflow safety, and Supabase read-only contracts.
 
-1. Audit `dev`, `build`, `start`, and `test` commands from source and verify they cannot implicitly run migrations, seeds, Cron, Workers, writes, publishing, or external sending.
-2. Inventory Admin, Dashboard, and AI OS page data sources as Supabase, API, Demo, Mock, or Static.
-3. Review environment separation, secret use, error handling, and observability for leakage.
-4. Review public SEO/localization, source-level accessibility/performance, Vercel configuration, and Supabase usage without deployment or database writes.
-5. Fix only safe software blockers, add final read-only CI contracts where needed, and produce the final Production Readiness report.
-6. Preserve every merged authentication, RBAC, media, architecture, bundle, dependency, and workflow boundary.
+No review or unresolved thread may remain at merge time.
+
+## Readiness decision
+
+- Source and GitHub CI readiness: **ready**, contingent only on the latest Handoff commit passing and PR #166 merging.
+- Production runtime certification: **not executed** under the fixed safety constraints.
+- Open strategic software phase after merge: **none**.
+- External constraint: Vercel `build-rate-limit`.
+
+## Manual Production steps remaining
+
+1. The Vercel account/plan owner resolves `build-rate-limit`.
+2. An authorized operator reviews and sets Production environment values without exposing secrets.
+3. Product/security owners choose feature flags; defaults stay off.
+4. An authorized operator performs the Production deployment.
+5. After deployment, run read-only smoke, browser accessibility/performance, and localization checks.
+6. Separately approve any database migration/seed after backup and change review.
+7. Separately approve controlled provider connectivity or publishing tests.
 
 ## Resume instruction
 
-After PR #165 is merged, start from its merge commit on a clean branch and continue directly with the Production Readiness Audit. Do not run Preview, Deploy, migrations, seeds, Cron, Workers, publishing, external providers, Production secrets, database writes, or Production writes.
+After PR #166 merges, do not open another strategic implementation phase. Resume only for an explicitly authorized manual Production release or a newly reported software defect. Preserve every merged security, architecture, media, bundle, dependency, workflow, and no-Production-write boundary.
