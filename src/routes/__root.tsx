@@ -8,7 +8,7 @@ import {
   useLocation,
   useRouter,
 } from "@tanstack/react-router";
-import { Languages, MessageCircle, Sparkles, Waves } from "lucide-react";
+import { Languages, MessageCircle, Waves } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { AnalyticsConsentBridge } from "../components/analytics-consent-bridge";
 import { ConsentBanner } from "../components/consent-banner";
@@ -22,9 +22,6 @@ import {
 } from "../platform/business-settings";
 import premiumCss from "../premium.css?url";
 import appCss from "../styles.css?url";
-
-const aiOsEnabled = import.meta.env.VITE_ENABLE_AI_OS === "true";
-const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
 
 function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
@@ -175,16 +172,6 @@ function Nav() {
           >
             <Waves className="h-4 w-4" /> {tr("book")}
           </a>
-          {aiOsEnabled && (
-            <Link to="/os" className="rounded-xl px-3 py-2 text-sm transition hover:bg-muted">
-              <Sparkles className="me-1 inline h-4 w-4" /> AI OS
-            </Link>
-          )}
-          {legacyAdminEnabled && (
-            <Link to="/admin" className="rounded-xl px-3 py-2 text-sm transition hover:bg-muted">
-              {tr("admin")}
-            </Link>
-          )}
           {languageSwitchHref ? (
             <a
               href={languageSwitchHref}
