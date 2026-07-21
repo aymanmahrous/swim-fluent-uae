@@ -12,7 +12,11 @@ for (const key of Object.keys(config)) {
   }
 }
 
-if (config.installCommand !== "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error") {\n  throw new Error("VERCEL_INSTALL_COMMAND_MUST_USE_CANONICAL_NPM_LOCK");\n}\n\nif (typeof command !== "string" || command.length < 1) {
+if (config.installCommand !== "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error") {
+  throw new Error("VERCEL_INSTALL_COMMAND_MUST_USE_CANONICAL_NPM_LOCK");
+}
+
+if (typeof command !== "string" || command.length < 1) {
   throw new Error("VERCEL_IGNORE_COMMAND_MISSING");
 }
 
