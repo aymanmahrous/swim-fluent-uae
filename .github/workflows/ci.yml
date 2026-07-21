@@ -50,6 +50,8 @@ jobs:
           name: mutation-input-contract-diagnostics
           path: mutation-input-contract.log
           if-no-files-found: ignore
+      - name: Verify authentication, booking, recovery, and AI abuse-control boundaries
+        run: node scripts/verify-abuse-control-boundaries.mjs
       - name: Verify legacy repository and deployment parity hold gate
         run: node scripts/verify-legacy-repository-parity-gate.mjs
       - run: npm run lint
