@@ -13,6 +13,7 @@ const permissions: StaffPermission[] = [
   "content.item.transition",
   "content.generate",
   "media.generate",
+  "automation.status.read",
 ];
 
 const expectedByRole: Record<StaffRole, StaffPermission[]> = {
@@ -25,6 +26,7 @@ const expectedByRole: Record<StaffRole, StaffPermission[]> = {
     "content.item.transition",
     "content.generate",
     "media.generate",
+    "automation.status.read",
   ],
 };
 
