@@ -13,7 +13,7 @@ This audit is source-only and read-only with respect to runtime systems. It did 
 - Lifecycle installation hooks: none (`preinstall`, `install`, `postinstall`, and `prepare` are absent).
 - Direct dependency specifiers: registry version ranges only; no Git, HTTP(S), GitHub shorthand, or local-file specifiers.
 - The npm lock is lockfile version 3 and records registry resolution plus SHA-512 integrity for resolved packages.
-- The Bun lock remains present and its root dependency declarations must match `package.json`.
+- The Bun lock remains as a reviewed legacy manifest, while `package-lock.json` is the canonical CI dependency graph because every active Node workflow uses npm.
 
 ## Unused and high-risk review
 
