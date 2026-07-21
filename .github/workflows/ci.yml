@@ -42,7 +42,14 @@ jobs:
       - name: Verify Staff mutation RBAC boundaries
         run: node scripts/verify-staff-mutation-rbac.mjs
       - name: Verify API mutation input contracts
-        run: node scripts/verify-api-mutation-input-contracts.mjs
+        run: node scripts/verify-api-mutation-input-contracts.mjs > mutation-input-contract.log 2>&1 || { cat mutation-input-contract.log; exit 1; }
+      - name: Upload mutation input diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-input-contract-diagnostics
+          path: mutation-input-contract.log
+          if-no-files-found: ignore
       - name: Verify legacy repository and deployment parity hold gate
         run: node scripts/verify-legacy-repository-parity-gate.mjs
       - run: npm run lint
