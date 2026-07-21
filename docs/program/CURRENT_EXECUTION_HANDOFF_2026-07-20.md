@@ -48,12 +48,15 @@ Read this file, `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and Issue #
 - Added current-state inventory for public routes, Staff Portal, AI OS, APIs, cron, and workers.
 - Added legacy repository parity documentation without taking destructive action.
 - Added route-level `VITE_ENABLE_AI_OS` gating for `/os`.
+- Removed public navigation links to `/os` and `/admin` while retaining authenticated Staff Portal navigation to AI OS.
 - Added centralized staff RBAC policy in `src/platform/staff-rbac.ts`.
 - Migrated booking status, CRM workflow, content update, content transition, content generation, image generation, video generation, media-copy generation, video-job listing, and automation-status authorization to centralized permissions.
 - Closed the API-level authorization gap in booking status mutation before the RPC call.
 - Preserved the previous role sets exactly: `super_admin`, `admin`, and `content_manager` retain content/media/automation access; no other role gained access.
 - Added `tests/staff-rbac.test.ts` to lock the complete five-role, seven-permission matrix.
 - Added the safe `test:rbac` package command and made it a required CI step.
+- Added `docs/architecture/PHASE_1_ARCHITECTURE_FINDINGS.md` with strengths, weaknesses, risks, and remediation priorities.
+- Added `docs/architecture/MODULE_OWNERSHIP_BOUNDARIES.md` defining public, Staff, AI OS, shared server, worker, cron, and database ownership rules.
 
 ### Current verified RBAC permissions
 
@@ -81,21 +84,20 @@ The centralized policy preserves the previous role boundaries and does not broad
 ### Verification state
 
 - GitHub Actions CI run `29839908940` completed successfully on the initial RBAC-test head.
-- `typecheck`: passed.
-- `test:rbac`: passed.
-- `lint`: passed.
-- `build`: passed.
-- All existing read-only contract verification steps in CI also passed.
-- A new CI run is required after the `automation.status.read` addition.
+- On the public-discoverability head, Typecheck, RBAC tests, Lint, Build, SEO, sitemap, and the earlier contract checks passed.
+- CI run `29840796412` failed only because `verify-content-automation-scheduler.mjs` still expected the removed local role array.
+- The contract verifier was updated to require `hasStaffPermission` and `automation.status.read`, and to forbid reintroducing the local role array.
+- A fresh CI run is required on the current documentation-and-contract head.
 - `test:e2e:ai-media` was not run because it can invoke external/provider and persistence behavior and remains outside the no-production-write/no-external-action boundary.
 - No migration, seed, cron, worker, preview, publishing action, production secret access, or database write was performed.
 
 ### Immediate implementation queue
 
-1. Confirm CI for the seven-permission RBAC matrix and automation-status migration.
-2. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
-3. Review Vercel status separately; Vercel build-rate-limit failures are not code-validation failures.
-4. Keep PR #152 as Draft until the full architecture review is complete.
+1. Confirm CI on the current head after the scheduler-contract alignment.
+2. Add a read-only architecture boundary verification that prevents public-shell links/imports from reappearing.
+3. Complete legacy repository and deployment parity before any archive/delete decision.
+4. Review Vercel status separately; Vercel build-rate-limit failures are not code-validation failures.
+5. Keep PR #152 as Draft until the full architecture review is complete.
 
 ### Safety state
 
