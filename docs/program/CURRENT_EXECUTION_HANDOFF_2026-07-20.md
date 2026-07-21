@@ -49,8 +49,9 @@ Read this file, `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and Issue #
 - Added legacy repository parity documentation without taking destructive action.
 - Added route-level `VITE_ENABLE_AI_OS` gating for `/os`.
 - Added centralized staff RBAC policy in `src/platform/staff-rbac.ts`.
-- Migrated booking status, CRM workflow, content update, content transition, and image generation authorization to centralized permissions.
+- Migrated booking status, CRM workflow, content update, content transition, content generation, image generation, video generation, media-copy generation, and video-job listing authorization to centralized permissions.
 - Closed the API-level authorization gap in booking status mutation before the RPC call.
+- Preserved the previous role sets exactly: `super_admin`, `admin`, and `content_manager` retain content/media generation access; no other role gained access.
 
 ### Current verified RBAC permissions
 
@@ -63,17 +64,32 @@ Read this file, `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and Issue #
 
 The centralized policy preserves the previous role boundaries and does not broaden access.
 
+### RBAC consolidation audit result
+
+- `src/platform/staff-rbac.ts` remains the single auditable role-to-permission map.
+- `src/routes/api.os-media-generate-video.ts` uses `media.generate` for both POST and GET authorization.
+- `src/routes/api.os-content-generate.ts` now uses `content.generate` instead of three duplicated direct role comparisons.
+- `src/routes/api.os-media-copy.ts` now uses `media.generate` instead of a local `allowedRole` helper.
+- `src/routes/api.os-media-video-jobs.ts` now uses `media.generate` instead of a local `allowedRole` helper.
+- Existing centralized checks in booking, CRM, content update/transition, and image generation were retained unchanged.
+
+### Verification state
+
+- Safe package scripts present: `typecheck`, `lint`, and `build`.
+- No generic `test` script exists. The only test script is `test:e2e:ai-media`, which can invoke external/provider and persistence behavior and was not run under the no-production-write/no-external-action boundary.
+- Local command execution was unavailable in the connected environment because no repository checkout or GitHub CLI was available; validation must therefore be completed by the branch CI/Vercel checks before review.
+- No migration, seed, cron, worker, preview, publishing action, production secret access, or database write was performed.
+
 ### Immediate implementation queue
 
-1. Migrate `src/routes/api.os-media-generate-video.ts` from its local role helper to `media.generate`.
-2. Migrate `src/routes/api.os-content-generate.ts` from inline role comparisons to `content.generate`.
-3. Search all remaining protected write routes for duplicated role checks or missing explicit API authorization.
-4. Verify the resulting head commit status and Vercel checks.
-5. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
+1. Confirm branch CI status for TypeScript, ESLint, and Vite build after the latest RBAC commits.
+2. Inspect any remaining direct role checks that are intentionally route-specific before adding new permissions.
+3. Add focused unit coverage for the centralized role matrix when a safe non-network test harness is available.
+4. Record the complete Phase 1 architecture findings, strengths, weaknesses, risks, and remediation priorities.
 
 ### Safety state
 
 - No merge to `main` has occurred.
 - No database migration or production write has been executed.
-- No cron, worker, publishing, or booking submission has been triggered.
+- No cron, worker, publishing, Preview, or booking submission has been triggered.
 - All current changes remain reviewable and reversible inside Draft PR #152.
