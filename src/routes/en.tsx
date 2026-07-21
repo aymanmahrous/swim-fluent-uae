@@ -21,7 +21,9 @@ function EnglishPublicHome() {
       <BookingAccessibilityBridge />
       <ConversionEventBridge />
       <PublicHomeComponent />
-      <RevenueSections />
+      <div className="[content-visibility:auto] [contain-intrinsic-size:auto_1200px]">
+        <RevenueSections />
+      </div>
       <SalesAssistant />
       <MobileConversionBar />
     </>
