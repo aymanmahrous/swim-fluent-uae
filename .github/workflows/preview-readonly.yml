@@ -1,0 +1,49 @@
+name: Preview Verification — Read Only
+
+on:
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: Exact HTTPS Preview URL to verify
+        required: true
+        type: string
+      target_sha:
+        description: Exact 40-character commit SHA represented by the Preview
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-readonly-${{ inputs.target_sha }}
+  cancel-in-progress: true
+
+jobs:
+  preview-e2e:
+    name: test:e2e:preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: preview-readonly
+    steps:
+      - name: Validate read-only Preview inputs
+        env:
+          PREVIEW_URL: ${{ inputs.preview_url }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$PREVIEW_URL" =~ ^https:// ]]
+          [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.target_sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npx playwright install --with-deps chromium
+      - name: Run mobile Preview verification without writes
+        env:
+          PREVIEW_URL: ${{ inputs.preview_url }}
+        run: npm run verify:preview-mobile
