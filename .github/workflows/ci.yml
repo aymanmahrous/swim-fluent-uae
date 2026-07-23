@@ -1,4 +1,4 @@
-name: CI
+name: Normalized CI
 
 on:
   pull_request:
@@ -13,107 +13,148 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  supply-chain:
+    name: supply-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Install from lockfile without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - name: Verify lockfile integrity
+        run: npm ci --ignore-scripts --package-lock-only --dry-run
+      - name: Audit runtime dependencies
+        run: npm audit --omit=dev
+      - name: Check unused packages
+        run: npx --yes depcheck@1.4.7
+      - name: Check licenses
+        run: npx --yes license-checker-rseidelsohn@4.4.2 --production --summary
+      - name: Generate CycloneDX SBOM
+        run: npm sbom --sbom-format cyclonedx > sbom.cdx.json
+      - name: Verify dependency and workflow supply-chain boundaries
+        run: node scripts/verify-dependency-supply-chain.mjs
+      - name: Verify Actions are SHA pinned
+        run: |
+          if grep -RInE 'uses:[[:space:]]+[^[:space:]]+@(v[0-9]+|main|master)([[:space:]#]|$)' .github/workflows; then
+            echo 'Floating GitHub Action reference found.' >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: swim-fluent-sbom
+          path: sbom.cdx.json
+          if-no-files-found: error
+
+  verify-source:
+    name: verify:source
+    needs: supply-chain
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
-      - name: Typecheck
-        run: npm run typecheck > typecheck.log 2>&1 || { cat typecheck.log; exit 1; }
-      - name: Upload TypeScript diagnostics
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: typecheck-diagnostics
-          path: typecheck.log
-          if-no-files-found: error
-      - name: Verify audited staff RBAC matrix
-        run: npm run test:rbac
-      - name: Verify public and internal route boundary
-        run: node scripts/verify-public-internal-boundary.mjs
-      - name: Verify module ownership boundaries
-        run: node scripts/verify-module-ownership-boundaries.mjs
-      - name: Verify Architecture and AI data boundaries
-        run: node scripts/verify-architecture-ai-boundaries.mjs
-      - name: Verify browser, server, and bundle boundaries
-        run: node scripts/verify-quality-bundle-boundaries.mjs > quality-bundle-boundaries.log 2>&1 || { cat quality-bundle-boundaries.log; exit 1; }
-      - name: Upload quality and bundle diagnostics
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: quality-bundle-boundary-diagnostics
-          path: quality-bundle-boundaries.log
-          if-no-files-found: ignore
-      - name: Verify dependency and workflow supply-chain boundaries
-        run: node scripts/verify-dependency-supply-chain.mjs
-      - name: Verify final Production readiness source boundaries
-        run: node scripts/verify-production-readiness.mjs
-      - name: Verify privileged API authentication boundaries
-        run: node scripts/verify-privileged-api-auth-boundaries.mjs
-      - name: Verify Staff mutation RBAC boundaries
-        run: node scripts/verify-staff-mutation-rbac.mjs
-      - name: Verify API mutation input contracts
-        run: node scripts/verify-api-mutation-input-contracts.mjs > mutation-input-contract.log 2>&1 || { cat mutation-input-contract.log; exit 1; }
-      - name: Upload mutation input diagnostics
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: mutation-input-contract-diagnostics
-          path: mutation-input-contract.log
-          if-no-files-found: ignore
-      - name: Verify authentication, booking, recovery, and AI abuse-control boundaries
-        run: node scripts/verify-abuse-control-boundaries.mjs
-      - name: Verify browser headers, sessions, CSRF, and secret boundaries
-        run: node scripts/verify-security-hardening-wave-1.mjs
-      - name: Verify API inventory, media, errors, and logging boundaries
-        run: node scripts/verify-attack-surface-wave-2.mjs
-      - name: Verify legacy repository and deployment parity hold gate
-        run: node scripts/verify-legacy-repository-parity-gate.mjs
+      - run: npm run typecheck
       - run: npm run lint
+
+  test-unit:
+    name: test:unit
+    needs: supply-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm run test:unit
+
+  test-security:
+    name: test:security
+    needs: supply-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm run test:security
+
+  test-contracts:
+    name: test:contracts
+    needs: supply-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm run test:contracts
+      - run: node scripts/verify-production-readiness.mjs
+      - run: node scripts/verify-legacy-repository-parity-gate.mjs
+      - run: node scripts/verify-ai-os-contracts.mjs
+      - run: node scripts/verify-ai-media-hardening.mjs
+      - run: node scripts/verify-ai-media-e2e-admin-contracts.mjs
+      - run: node scripts/verify-production-workflows-manual-only.mjs
+      - run: node scripts/verify-supabase-booking-readonly.mjs
+
+  verify-ci:
+    name: verify:ci
+    needs: [verify-source, test-unit, test-security, test-contracts]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm run build:dev
       - run: npm run build
-      - name: Parse Production workflow YAML
-        run: |
-          ruby -e 'require "yaml"; ARGV.each { |file| YAML.parse_file(file); puts "parsed #{file}" }' \
-            .github/workflows/ai-media-e2e.yml \
-            .github/workflows/ai-media-current-production-e2e.yml \
-            .github/workflows/ai-media-live-fallback.yml \
-            .github/workflows/production-booking-smoke.yml \
-            .github/workflows/production-smoke-readonly.yml
-      - name: Verify public SEO, localization, and indexing boundaries
-        run: npm run verify:public-seo
-      - name: Verify production sitemap route and canonical URL set
-        run: npm run verify:production-sitemap
-      - name: Verify Production Quality Gate remains scheduled and read-only
-        run: node scripts/verify-production-quality-gate.mjs
-      - name: Verify public Arabic and English free-claim removal
-        run: npm run verify:public-free-claims
-      - name: Verify bilingual Chatbot Phase 1
-        run: npm run verify:chatbot-phase1
-      - name: Verify Content Brain cadence and fatigue boundaries
-        run: npm run verify:content-brain
-      - name: Verify Meta publishing receipts and Planner schedule suggestions
-        run: npm run verify:meta-publishing
-      - name: Verify autonomous content media worker contracts
-        run: npm run verify:content-media-worker
-      - name: Verify server-side content automation scheduler
-        run: npm run verify:content-automation-scheduler
-      - name: Verify modern and legacy Supabase server-key compatibility
-        run: npm run verify:supabase-server-key
-      - name: Verify password recovery flow contracts
-        run: npm run verify:password-recovery
-      - name: Verify Vercel automated preview build policy
-        run: node scripts/verify-vercel-build-policy.mjs
-      - name: Verify AI OS security and real-data contracts
-        run: node scripts/verify-ai-os-contracts.mjs
-      - name: Verify AI media ownership and private storage contracts
-        run: node scripts/verify-ai-media-hardening.mjs
-      - name: Verify AI media E2E admin contracts
-        run: node scripts/verify-ai-media-e2e-admin-contracts.mjs
-      - name: Verify Production-writing workflows remain manual-only
-        run: node scripts/verify-production-workflows-manual-only.mjs
-      - name: Verify Supabase booking settings without writes
-        run: node scripts/verify-supabase-booking-readonly.mjs
+
+  verify-release:
+    name: verify:release
+    needs: verify-ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund --loglevel=error
+      - run: npm run verify:public-seo
+      - run: npm run verify:production-sitemap
+      - run: npm run verify:public-free-claims
+      - run: npm run verify:chatbot-phase1
+      - run: npm run verify:content-brain
+      - run: npm run verify:meta-publishing
+      - run: npm run verify:content-media-worker
+      - run: npm run verify:content-automation-scheduler
+      - run: npm run verify:supabase-server-key
+      - run: npm run verify:password-recovery
+      - run: node scripts/verify-vercel-build-policy.mjs
