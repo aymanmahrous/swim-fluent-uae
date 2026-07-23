@@ -8,62 +8,77 @@ Owner: Repository Owner
 
 ## Current stage
 
-`STAGE-06-CHATBOT-SCRIPTED-EVALUATION: COMPLETED — STOPPED BEFORE STAGE 07`
+`STAGE-07-SINGLE-CHANNEL-PILOT (MULTI-SURFACE EXTENSION): BLOCKED — LIVE PILOT NOT AUTHORIZED`
+
+`DESIGN PACKAGE: COMPLETED — NO CHANNEL ACTIVATED`
 
 `STAGE-05-N8N-SHADOW-MODE: BLOCKED — NO AUTHORIZED SHADOW RUNNER`
 
 `SAFE-GROWTH-10-STAGE-PROGRAM: APPROVED — SEQUENTIAL EXECUTION ONLY`
 
-Stage 06 was completed as a repository-only documentation exception. It does not mark Stage 05 complete and does not authorize any runtime.
-
 ## Authorization
 
 - Owner / Operator: `AYMAN`
 - Independent approver: `pixelreel2026`
-- Stage 06 Target SHA: `77b7227d13841dbea5425130a71a83ee47d04bd8`
-- Allowed Environment: `DESIGN-ONLY / REPOSITORY-READ-ONLY`
+- Stage 07 Target SHA: `83efa1e05fb7edf7082df966568e3fb70395eba0`
+- Requested Environment: `WEBSITE + FACEBOOK + INSTAGRAM + WHATSAPP ONLY`
 - FREE-SAFE-MODE: `ACTIVE`
+- external API calls ceiling: `0`
+- CRM and Booking writes ceiling: `0`
+- publishing, scheduling and webhooks ceiling: `0`
 - paid AI cost ceiling: `0`
-- generated images ceiling: `0`
-- generated videos ceiling: `0`
+- generated images/videos ceiling: `0`
+- user-message storage/transmission ceiling: `0`
 
-## Completed Stage 06 design
+## Stage 07 finding
 
-The scripted evaluation defines safe Arabic/English scenarios for services, pricing, locations, schedules, Booking Requests, human handoff, complaints, safety-sensitive requests, child-data minimization, low confidence, duplicates and cancellation/change.
+The request covered four surfaces, so it did not satisfy the Single Channel stage contract. Facebook, Instagram and WhatsApp activation would also require remote account configuration or message handling, which was prohibited by the zero-call and zero-transmission boundary.
 
-It requires approved facts only, minimum data, no medical claims, no invented price or availability, no automatic booking confirmation and mandatory staff confirmation.
+A repository-only design package now defines:
 
-The deterministic chatbot code was not run. No provider, CRM, Booking, Calendar, WhatsApp, email, database or n8n integration was connected.
+- scripted intent families and response rules;
+- website, Facebook, Instagram and WhatsApp surface boundaries;
+- staff handoff and no-auto-booking controls;
+- text-only Facebook/Instagram draft cadence;
+- future one-channel rollout order;
+- independent Gate, credential, kill-switch, volume, Privacy and receipt requirements.
 
-## Preserved Stage 05 state
-
-Stage 05 remains blocked. The inactive synthetic n8n artifact was not imported, activated or executed, and no Shadow Receipt exists.
+The deterministic website chatbot was not run. No Facebook Page, Instagram or WhatsApp account was accessed. No Auto-Reply, Quick Reply, message, post, schedule or publish job was created.
 
 ## Authoritative documents
 
 - `docs/governance/SAFE_GROWTH_10_STAGE_PROGRAM.md`
+- `docs/governance/STAGE_07_CHATBOT_PILOT_REPORT.md`
 - `docs/governance/STAGE_06_CHATBOT_SCRIPTED_EVALUATION.md`
 - `docs/governance/STAGE_05_N8N_SHADOW_MODE_REPORT.md`
-- `docs/governance/STAGE_03_CONVERSION_OPERATING_MODEL.md`
+- `docs/governance/STAGE_04_CONTENT_CALENDAR_DRAFT.md`
+
+## Preserved dependencies
+
+- Stage 05 remains blocked and has no Shadow Receipt.
+- Stage 06 remains documentation-only completed.
+- Stage 07 has no live Pilot PASS receipt.
+- Stage 08 remains blocked.
+- PR #170 and archived Production-write/AI workflows remain frozen.
 
 ## Safety receipt
 
-- chatbot runtime executions: `0`;
+- website chatbot runtime executions: `0`;
+- Facebook connections/replies: `0`;
+- Instagram connections/replies: `0`;
+- WhatsApp connections/messages: `0`;
 - external/API calls: `0`;
-- n8n executions: `0`;
+- user messages stored/transmitted: `0`;
 - CRM writes: `0`;
 - Booking writes: `0`;
-- Calendar connections/writes: `0`;
 - publishing/scheduling/webhooks: `0`;
 - paid AI calls: `0`;
 - generated images/videos: `0`;
 - Production/Supabase/Storage connections: `0`;
 - `main` modifications: `0`.
 
-PR #170 and archived Production-write/AI workflows remain frozen.
-
 ## Current safety state
 
-`FAIL-CLOSED / NOT AUTHORIZED FOR STAGE 07`
+`FAIL-CLOSED / NOT AUTHORIZED FOR STAGE 08`
 
-Stage 07 requires a separate explicit instruction, a new target SHA and an operation-specific Gate. Do not represent Stage 05 as completed.
+A Stage 07 retry must select exactly one channel, use a new exact Target SHA and provide an operation-specific Gate. Multi-surface activation is not authorized.
