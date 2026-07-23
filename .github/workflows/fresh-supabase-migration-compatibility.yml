@@ -23,24 +23,30 @@ concurrency:
 
 jobs:
   migration-history-audit:
+    name: test:contracts / migration-history
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       - name: Audit exact historical filenames and parsed versions
         run: node scripts/audit-supabase-migration-history.mjs
 
   campaigns-compatibility:
+    name: test:integration:disposable / campaigns
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       SUPABASE_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v3
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
         with:
           version: 2.84.2
       - name: Initialize disposable Supabase configuration
@@ -51,24 +57,27 @@ jobs:
         run: bash scripts/test-campaigns-migration-compatibility.sh > campaigns-compatibility.log 2>&1 || { cat campaigns-compatibility.log; exit 1; }
       - name: Upload campaigns diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: campaigns-compatibility-diagnostics
           path: campaigns-compatibility.log
           if-no-files-found: error
 
   full-history-execution:
+    name: test:integration:disposable / full-history
     needs: migration-history-audit
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       SUPABASE_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - uses: supabase/setup-cli@v3
+      - uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
         with:
           version: 2.84.2
       - name: Initialize disposable Supabase configuration
@@ -79,28 +88,28 @@ jobs:
         run: bash scripts/test-fresh-supabase-history.sh > fresh-history.log 2>&1 || { cat fresh-history.log; exit 1; }
       - name: Upload fresh history diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: fresh-supabase-history-diagnostics
           path: fresh-history.log
           if-no-files-found: error
 
   stacked-phase-a:
-    needs:
-      - campaigns-compatibility
-      - full-history-execution
+    name: test:integration:disposable / stacked-phase-a
+    needs: [campaigns-compatibility, full-history-execution]
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       SUPABASE_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
+          persist-credentials: false
           fetch-depth: 1
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - uses: supabase/setup-cli@v3
+      - uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
         with:
           version: 2.84.2
       - name: Initialize disposable Supabase configuration
@@ -111,7 +120,7 @@ jobs:
         run: bash scripts/test-stacked-phase-a.sh > stacked-phase-a.log 2>&1 || { cat stacked-phase-a.log; exit 1; }
       - name: Upload stacked Phase A diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: stacked-phase-a-diagnostics
           path: stacked-phase-a.log
