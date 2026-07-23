@@ -7,125 +7,72 @@ Last verified: 2026-07-23 (Asia/Dubai)
 Owner: Repository Owner
 Historical evidence: `docs/history/PROJECT_HANDOFF_PRE_C7C0F118_FULL.md`
 
-## Purpose
-
-This is the current operational continuation source. Historical evidence remains immutable and non-executable. No governance stage authorizes runtime, database, provider, deployment or Production action without separate explicit approval.
-
-## Source-of-truth order
-
-1. `AGENT_CONSTITUTION.md`.
-2. `docs/governance/PHASE_NAMESPACE.md`.
-3. This Handoff.
-4. `docs/governance/GOV_E_READINESS_REPORT.md`.
-5. Normalized Workflow files under `.github/workflows/`.
-6. `docs/governance/GITHUB_RULESETS_DESIGN.md` and `GITHUB_ENVIRONMENTS_DESIGN.md`.
-7. `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md` and `RISK_OWNERSHIP_MATRIX.md`.
-8. `docs/governance/PR_REGISTRY.md`.
-9. Historical and superseded evidence only.
-
 ## Current governance stage
 
-`GOV-E: COMPLETED — READY FOR GOV-F`
+`GOV-F: COMPLETED — READY FOR GOV-G`
 
-GOV-A restored source truth, GOV-B organized PR risk, GOV-C inventoried writes and ownership, GOV-D designed GitHub enforcement, and GOV-E normalized branch-only CI. No Workflow or verification command was run.
+GOV-A through GOV-E established source truth, PR classification, operation ownership, GitHub enforcement design and normalized CI. GOV-F reduced the active risk surface on this governance branch only. No Workflow, script, test, build, audit, browser, migration, deployment or external system was run.
 
-## Stable check names
+## GOV-F improvements
 
-- `verify:source`;
-- `verify:ci`;
-- `verify:release`;
-- `test:unit`;
-- `test:security`;
-- `test:contracts`;
-- `test:integration:disposable`;
-- `test:e2e:preview`.
+- Reviewed all dependencies and devDependencies statically; no package or lockfile was changed without executed evidence.
+- Added `docs/governance/DEPENDENCY_REVIEW_GOV_F.md`.
+- Archived four active Production-write/AI-spend Workflow definitions and removed them from `.github/workflows/` on this branch.
+- Preserved their exact blob SHAs and recovery requirements in `docs/history/GOV_F_ARCHIVED_PRODUCTION_WRITE_WORKFLOWS.md`.
+- Added deny-by-default browser runtime write rules to `WRITE_AND_WORKFLOW_REGISTRY.md`.
+- Added `PRODUCTION_HOST_ALLOWLIST.md` and `SECRETS_SCOPE_MAP.md`.
+- Kept migrations, AI, media generation, Storage mutation, publishing, scheduling and Production writes frozen or blocked.
 
-Production read-only is intentionally separate as `verify:production-readonly` and must not be confused with source CI or release checks.
+## Archived active Workflows
 
-## Typecheck and build separation
+- `production-booking-smoke.yml`;
+- `ai-media-e2e.yml`;
+- `ai-media-current-production-e2e.yml`;
+- `ai-media-live-fallback.yml`.
 
-`package.json` now defines:
+They created Production records, temporary staff/media, provider jobs or commit statuses and therefore did not satisfy GOV-F's active Production read-only requirement. Historical evidence remains recoverable from Git and recorded blob SHAs. Reintroduction requires a new isolated protected PR and separate explicit authorization.
 
-- `typecheck`: `tsc --noEmit`;
-- `build:dev`: `vite build --mode development`;
-- `build`: `vite build`.
+## Active Production workflow boundary
 
-Type checking no longer performs a Vite build implicitly.
+`production-smoke-readonly.yml` is the only active Production verification definition retained. It is limited to public page/header reads, is bound to `production-readonly`, and declares no Production write credential. It was not dispatched.
 
-## Main CI normalization
+Disposable migration and Preview workflows remain isolated and were not run. Production-write and AI-spend paths have no active Workflow definition on this branch.
 
-`.github/workflows/ci.yml` now separates:
+## Browser runtime prohibited paths
 
-- `supply-chain`;
-- `verify:source`;
-- `test:unit`;
-- `test:security`;
-- `test:contracts`;
-- `verify:ci`;
-- `verify:release`.
+Browser/client code may not perform direct table POST/PATCH/PUT/DELETE, hold service-role/database/provider/publishing/webhook secrets, administer migrations/RLS/grants/cron/workers, mutate elevated Storage, call AI using protected credentials, publish, schedule, send messages, or invoke an unregistered RPC.
 
-The workflow remains limited to PRs and pushes to `main` and contains no Production-write credentials.
+Named server-mediated booking and staff RPC paths remain classified but are not authorized for execution by GOV-F.
 
-## Supply-chain job
+## Production host allowlist
 
-The independent job defines:
+Only the following hosts are approved for HTTPS GET/HEAD verification:
 
-- `npm ci --ignore-scripts`;
-- lockfile dry-run integrity;
-- `npm audit --omit=dev`;
-- version-pinned unused-package and license checks;
-- the existing supply-chain contract verifier;
-- CycloneDX SBOM generation and pinned artifact upload;
-- rejection of `@v*`, `@main`, and `@master` Action references.
+- `www.relaxfixuae.com`;
+- `relaxfixuae.com`.
 
-These commands were not executed during GOV-E.
+The former Vercel deployment URL, Supabase hosts/Edge Functions/Storage, AI providers, Meta/publishing providers, webhooks and admin endpoints are excluded. No host is approved for a write method.
 
-## Action pinning
+## Secrets scope map
 
-- The main CI was already using full SHAs and remains pinned.
-- `booking-phone-foundation.yml` and `fresh-supabase-migration-compatibility.yml` were changed from floating tags to full SHAs.
-- `supabase/setup-cli` is pinned to `3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf` (`v2.1.1`).
-- Checkout, Setup Node, Upload Artifact and other modified Action references use full SHAs.
-
-## Verification-level separation
-
-### Source
-
-PR and push-to-main CI. Static source, tests, contracts, development build, production build and release-source verification only.
-
-### Disposable environment
-
-Migration compatibility remains in dedicated Workflows with job names under `test:integration:disposable`. These use local/disposable Supabase only and were not dispatched.
-
-### Preview
-
-`.github/workflows/preview-readonly.yml` is manual-only, requires an exact HTTPS Preview URL and target SHA, is bound to `preview-readonly`, uses no write credentials and exposes `test:e2e:preview` through the existing mobile browser verifier.
-
-### Production-readonly
-
-`production-smoke-readonly.yml` exposes `verify:production-readonly`, is bound to `production-readonly`, and verifies pages and headers without writes. It was not run by GOV-E.
-
-### Production-write and AI-spend
-
-Remain isolated from normal CI, manual/protected and frozen. Existing AI media or Production-writing definitions were not dispatched.
+- `preview-readonly` and `production-readonly` may not contain service-role, database, AI, Storage-write, publishing or webhook credentials.
+- Disposable credentials are limited to isolated/local migration tests and remain blocked from execution.
+- Write-capable database credentials belong only to a future protected `production-write` environment.
+- AI provider keys belong only to `production-ai-spend` and remain frozen.
+- No secret value is recorded in governance files; actual GitHub secret inventories were not queried.
 
 ## PR and risk state
 
-- PR #168 remains blocked and overlapping.
-- PR #169 remains evidence only.
-- PR #170 remains frozen and non-merge-ready.
-- PR #46 remains blocked by privacy/legal/owner decisions.
-- PR #36 remains blocked by database-foundation dependency.
-- AI, migrations, media generation, publishing, scheduling, Storage mutation, secrets and Production writes remain frozen or blocked.
+PR #170 remains frozen, PR #36 remains blocked by database foundation, PR #46 remains blocked by privacy/legal decisions, and PR #169 remains evidence only. No PR metadata was changed.
 
-## Enforcement limitation
+## Verification limitation
 
-Rulesets, Branch Protection, Required Checks, Code Owner enforcement and GitHub Environments are not active on `main` merely because files exist on this branch. Required checks must not be activated until a separately authorized run observes successful contexts with the exact stable names.
+Dependency usage, secret absence and Workflow behavior were reviewed statically. The normalized supply-chain job and checks were not run. Rulesets, required checks, CODEOWNERS enforcement and Environments are not active on `main`.
 
-## Safety receipt
+## Safety boundary
 
-No Workflow, script, test, audit, build, Preview, deployment, Migration, Supabase/provider connection, generation, publishing, scheduling, Production action, PR metadata change, secret change or `main` modification occurred.
+Do not modify `main`, change PR metadata/settings/secrets, run Workflows/scripts/tests/builds, deploy, connect to Production/Supabase/providers, execute migrations, generate, publish, schedule, message or spend.
 
 ## Transition gate
 
-GOV-E is complete as a branch-only CI-normalization stage. GOV-F may begin only under a separate explicit instruction.
+GOV-F is complete on this branch. GOV-G may begin only after a separate explicit instruction.
