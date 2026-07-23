@@ -641,3 +641,8 @@ Push the tested performance and handoff follow-up to the same Draft PR, re-check
 ### Next required action
 
 Review PR #143. Do not merge or promote the Preview to Production without explicit owner approval.
+## Phase 1 - Vercel Production and Preview
+- Vercel project: swim-fluent-uae-w532
+- Production: dpl_iWLWWSucJ READY from main 1a9b946
+- Preview: dpl_FZa3QxxKK4YN5JSD READY from feat/phase1-vercel
+- Draft PR: #169
