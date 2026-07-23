@@ -7,13 +7,22 @@ Last verified: 2026-07-23 (Asia/Dubai)
 
 ## Governing rules
 
-Browser code is deny-by-default for writes. No direct table write, protected credential, Storage mutation, publication, messaging, Migration or deployment action may originate in the browser. Only named server-enforced operations may be considered, and GOV-G authorizes no execution.
+Browser code is deny-by-default for writes. No direct table write, protected credential, Storage mutation, publication, messaging, Migration or deployment action may originate in the browser. Only named server-enforced operations may be considered. `PHASE-3-PREP` authorizes no execution.
 
 No step may enter `PHASE-3-SAFE-EXECUTION` unless listed here with owner, approver, environment, idempotency, concurrency, audit, kill switch and rollback.
 
+## Phase 3 safe-operation registry
+
+| Repository | Operation name | Classification | Allowed environment | Required approvals | Required checks | Required secrets scope | Kill switch | Rollback | Audit receipt | Idempotency | Concurrency lock | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `aymanmahrous/swim-fluent-uae` | `source-only-verification` | Read-only source/test/build verification; no external write | Isolated runner or GitHub Actions on exact branch SHA; no Preview or Production access | Repository Owner; named Operator; independent reviewer distinct from author/operator; Security approval if runner/environment scope changes | `verify:source`, `verify:ci`, `verify:release`, `test:unit`, `test:security`, `test:contracts` on exact target SHA | Repository read token only; no database/Supabase service role, AI, Storage-write, publishing, webhook, messaging or Production secret | Cancel run and disable dispatch/runner access; preserve logs and check receipts | No state rollback expected; revert governance/configuration only through a new auditable branch commit | Repository, branch, target SHA, operator, approver, start/end/expiry, exact check contexts and run IDs, input/config hashes, final PASS/FAIL and unresolved effects | Operation identity = repository + exact target SHA + check set; replay references the same receipt or uses a separately identified rerun without external side effect | One active verification set per repository + target SHA; workflow/runner concurrency cancels or rejects duplicate in-flight attempts | `ALLOWED-FOR-PHASE-3` |
+| `aymanmahrous/swim-fluent-uae` | `preview-readonly-verification` | Read-only HTTP/browser verification; GET/HEAD only; no mutation | `preview-readonly` against one exact approved HTTPS Preview URL and exact target SHA | Repository Owner; named Operator; independent reviewer distinct from author/operator; Security/Release approval of URL and secret inventory | All `source-only-verification` checks successful on exact SHA plus `test:e2e:preview` | No secrets preferred; otherwise only verified read-only access token. No database/service-role, AI, Storage-write, publishing, webhook, messaging or Production-write credential | Cancel run; disable `preview-readonly` approval; revoke scoped read token; block URL if scope mismatch appears | Stop verification and discard transient browser state/artifacts as allowed; no remote state change is permitted; Git changes revert by new auditable commit only | Repository, branch, target SHA, exact URL/host, environment, operator/approver, check/run IDs, request methods, response summary, console/network failures, secret-scope attestation, start/end/expiry and final PASS/FAIL | Operation identity = target SHA + normalized Preview URL + verifier version; exact replay is read-only and receives a distinct run ID linked to the prior receipt | One active Preview verification per repository + target SHA + normalized URL; cancel/reject overlapping runs | `ALLOWED-FOR-PHASE-3` |
+
+`ALLOWED-FOR-PHASE-3` means eligible for a future activation review only. It does not authorize automatic dispatch or execution. A separate explicit order and complete PASS under `PHASE_3_ACTIVATION_GATE.md` remain mandatory.
+
 ## Migration separation rule
 
-- Every future Migration must be a database-only PR.
+- Every future Migration must use a database-only PR.
 - A Feature PR may not contain `supabase/migrations/**`, DDL, RLS, grants, policies, cron, workers, schema changes or migration runners.
 - A Migration PR may not contain UI, Feature, AI/provider, media, publishing, Storage or unrelated application changes.
 - PR #170 remains frozen because it combines Migration and AI/application scope.
@@ -24,7 +33,7 @@ No step may enter `PHASE-3-SAFE-EXECUTION` unless listed here with owner, approv
 
 | Path | Target | Status | Idempotency requirement | Concurrency lock |
 |---|---|---|---|---|
-| Public booking ingress / `submit_booking_request` | Database | Current product path; no GOV-G call | client/server idempotency key + normalized booking fingerprint | one accepted request per key/fingerprint window |
+| Public booking ingress / `submit_booking_request` | Database | Current product path; no PHASE-3-PREP call | client/server idempotency key + normalized booking fingerprint | one accepted request per key/fingerprint window |
 | `update_booking_request_status` | Database | BLOCKED | booking + intended status + request identity | one transition per booking |
 | `update_staff_lead_workflow` | Database | BLOCKED | lead + intended workflow state + request identity | one mutation per lead |
 | `set_staff_conversation_mode` | Database | BLOCKED | conversation + intended mode + request identity | one mutation per conversation |
@@ -43,11 +52,11 @@ No step may enter `PHASE-3-SAFE-EXECUTION` unless listed here with owner, approv
 
 ## Idempotency verification design
 
-Demonstrate: first request creates one effect; exact replay returns the original receipt; conflicting payload using the same key is rejected; timeout retry reconciles the first operation; daily limits count unique accepted identities only; audit data contains one durable operation ID. No test was run.
+Demonstrate: first request creates one effect; exact replay returns the original receipt; conflicting payload using the same key is rejected; timeout retry reconciles the first operation; daily limits count unique accepted identities only; audit data contains one durable operation ID. No test was run by PHASE-3-PREP.
 
 ## Concurrency verification design
 
-Demonstrate: two simultaneous requests in the same scope produce at most one accepted mutation/job; the loser receives bounded conflict/in-progress status; lease expiry is recoverable; owner/run ID, lock key and timestamps are auditable; unrelated scopes remain independent. No test was run.
+Demonstrate: two simultaneous requests in the same scope produce at most one accepted mutation/job; the loser receives bounded conflict/in-progress status; lease expiry is recoverable; owner/run ID, lock key and timestamps are auditable; unrelated scopes remain independent. No test was run by PHASE-3-PREP.
 
 ## Browser runtime blocklist
 
