@@ -2,7 +2,8 @@ import { z } from "zod";
 import type { TextGenerationProvider } from "./provider-registry.server";
 
 const OPENAI_RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses";
-const DEFAULT_TEXT_MODEL = "gpt-5.6-luna";
+const MAX_RESPONSE_BYTES = 1_000_000;
+const REQUEST_TIMEOUT_MS = 45_000;
 
 const OpenAiResponseSchema = z.object({
   id: z.string().optional(),
@@ -54,11 +55,9 @@ function value(name: string): string | null {
 
 function config(): { apiKey: string; model: string } {
   const apiKey = value("OPENAI_API_KEY");
-  if (!apiKey) throw new Error("OPENAI_TEXT_NOT_CONFIGURED");
-  return {
-    apiKey,
-    model: value("AI_TEXT_MODEL") ?? DEFAULT_TEXT_MODEL,
-  };
+  const model = value("AI_TEXT_MODEL");
+  if (!apiKey || !model) throw new Error("OPENAI_TEXT_NOT_CONFIGURED");
+  return { apiKey, model };
 }
 
 function responseText(payload: z.infer<typeof OpenAiResponseSchema>): string {
@@ -77,7 +76,7 @@ function responseText(payload: z.infer<typeof OpenAiResponseSchema>): string {
 }
 
 export function isOpenAiTextConfigured(): boolean {
-  return Boolean(value("OPENAI_API_KEY"));
+  return Boolean(value("OPENAI_API_KEY") && value("AI_TEXT_MODEL"));
 }
 
 async function requestOpenAiText(input: OpenAiTextInput) {
@@ -89,12 +88,13 @@ async function requestOpenAiText(input: OpenAiTextInput) {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     body: JSON.stringify({
       model,
       instructions: input.system,
       input: input.prompt,
       store: false,
-      max_output_tokens: input.maxOutputTokens ?? 20_000,
+      max_output_tokens: input.maxOutputTokens ?? 8_000,
       text: input.jsonSchema
         ? {
             format: {
@@ -112,7 +112,18 @@ async function requestOpenAiText(input: OpenAiTextInput) {
     }),
   });
 
-  const payload: unknown = await response.json().catch(() => null);
+  const raw = await response.text();
+  if (Buffer.byteLength(raw, "utf8") > MAX_RESPONSE_BYTES) {
+    throw new Error("OPENAI_TEXT_RESPONSE_TOO_LARGE");
+  }
+
+  let payload: unknown = null;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    payload = null;
+  }
+
   if (!response.ok) {
     const parsedError = OpenAiErrorSchema.safeParse(payload);
     const detail = parsedError.success

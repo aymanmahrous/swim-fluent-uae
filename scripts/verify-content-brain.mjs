@@ -25,99 +25,90 @@ function forbidText(source, needle, label) {
 const openAiText = await text("src/platform/openai-text.server.ts");
 for (const needle of [
   'OPENAI_RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses"',
-  'DEFAULT_TEXT_MODEL = "gpt-5.6-luna"',
-  'value("OPENAI_API_KEY")',
+  'value("OPENAI_API_KEY") && value("AI_TEXT_MODEL")',
+  'const model = value("AI_TEXT_MODEL")',
+  'signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)',
+  'MAX_RESPONSE_BYTES = 1_000_000',
   'type: "json_schema"',
   "strict: true",
   "schema: input.jsonSchema.schema",
-  "output: z",
-  'item.type === "message"',
-  'content.type === "output_text"',
-  "responseText(parsed.data)",
-  "instructions: input.system",
-  "input: input.prompt",
   "store: false",
   'id: "openai-responses-text"',
 ]) {
   requireText(openAiText, needle, "OpenAI Responses text provider");
 }
-forbidText(openAiText, "output_text: z.string().min(1)", "SDK-only Responses convenience property");
+forbidText(openAiText, "gpt-5.6-luna", "unverified default model");
 forbidText(openAiText, "json_object", "OpenAI structured output mode");
-
-const registry = await text("src/platform/provider-registry.server.ts");
-for (const needle of [
-  "openAiResponsesTextProvider",
-  '[openAiResponsesTextProvider.id, openAiResponsesTextProvider]',
-  '? "openai-responses-text"',
-  'providerId === "openai-responses-text"',
-  "OpenAI Responses requires OPENAI_API_KEY",
-]) {
-  requireText(registry, needle, "text provider registry");
-}
 
 const route = await text("src/routes/api.os-content-generate.ts");
 for (const needle of [
-  '"trust_morning"',
-  '"education_midday"',
-  '"conversion_evening"',
-  "dubaiHour: 8",
-  "dubaiHour: 14",
-  "dubaiHour: 20",
-  "parsed.data.days * SLOT_PLAN.length",
-  "generateOpenAiStructuredText",
-  'name: "relax_fix_content_brain_batch"',
-  "structuredBatchSchema(requestedItems)",
-  "validateCadence",
-  "contentFingerprint",
+  "days: z.literal(1)",
+  'PHASE3_MAX_OUTPUT_TOKENS = 8_000',
+  'PHASE3_GENERATION_MODE = "text_only_validation"',
+  'request.headers.get("idempotency-key")',
+  '"reserve_staff_content_generation"',
+  '"create_staff_generated_content_batch_guarded"',
+  '"fail_staff_content_generation"',
+  '"DAILY_GENERATION_LIMIT"',
+  '"Retry-After": "86400"',
+  'name: "relax_fix_content_brain_phase3_batch"',
+  "structuredBatchSchema()",
+  "containsRestrictedClaim",
   'timeZone: "Asia/Dubai"',
-  "base.day + 1 + dayIndex",
-  '"get_staff_content_brain_context"',
-  "recentContentToAvoidRepeating: context.data",
-  "Every item is going to needs_review",
-  "plannedFor: plannedFor(item.dayIndex, item.contentSlot)",
+  "targetDubaiDate()",
+  'generationMode: PHASE3_GENERATION_MODE',
+  '"Every item is going to needs_review."',
 ]) {
-  requireText(route, needle, "three-daily Content Brain route");
+  requireText(route, needle, "guarded Content Brain route");
 }
-forbidText(route, "Return one item per requested day", "legacy one-per-day generation");
-forbidText(route, "generated.items.length !== parsed.data.days", "legacy batch cardinality");
+for (const forbidden of [
+  "maxOutputTokens: 40_000",
+  "adaptive aquatic coaching for People of Determination",
+  'days: z.number().int().min(1).max(30)',
+  '"create_staff_generated_content_batch"',
+]) {
+  forbidText(route, forbidden, "unsafe Content Brain route contract");
+}
 
-const migration = await text(
+const baseMigration = await text(
   "supabase/migrations/20260710_000025_content_brain_three_daily.sql",
 );
 for (const needle of [
-  "add column if not exists planned_for timestamptz",
-  "add column if not exists language text not null default 'ar'",
-  "add column if not exists content_pillar text",
-  "add column if not exists content_slot text",
-  "add column if not exists content_fingerprint text",
   "content_items_planned_for_unique_idx",
   "content_items_content_fingerprint_created_idx",
   "now() - interval '90 days'",
   "CONTENT_FATIGUE_DUPLICATE",
   "CONTENT_SLOT_ALREADY_PLANNED",
-  "v_count > 90",
   "'needs_review'",
-  "content_brain_batch_saved_for_review",
-  "'dailyCadence', 3",
-  "get_staff_content_brain_context",
-  "'plannedFor', c.planned_for",
-  "'contentPillar', c.content_pillar",
-  "'contentSlot', c.content_slot",
-  "'contentFingerprint', c.content_fingerprint",
 ]) {
-  requireText(migration, needle, "Content Brain database contract");
+  requireText(baseMigration, needle, "base Content Brain database contract");
 }
-forbidText(migration, "insert into public.background_jobs", "approval-before-scheduling boundary");
 
-const readModels = await text("src/platform/os-read-models.ts");
+const safetyMigration = await text(
+  "supabase/migrations/20260723_000030_content_brain_safety_gates.sql",
+);
 for (const needle of [
-  "plannedFor: z.string().nullable()",
-  'language: z.enum(["ar", "en"])',
-  "contentPillar: z.string().nullable()",
-  "contentSlot: z.string().nullable()",
-  "contentFingerprint: z.string().nullable()",
+  "content_generation_requests",
+  "generation_run_id uuid",
+  "generation_mode text not null default 'standard'",
+  "text_only_validation",
+  "reserve_staff_content_generation",
+  "pg_advisory_xact_lock",
+  "DAILY_GENERATION_LIMIT",
+  "content_generation_requests_active_hash_unique_idx",
+  "fail_staff_content_generation",
+  "create_staff_generated_content_batch_guarded",
+  "jsonb_array_length(p_items) <> 3",
+  "generation_run_id, generation_mode",
+  "new.generation_mode <> 'text_only_validation'",
+  "content_brain_guarded_batch_saved_for_review",
 ]) {
-  requireText(readModels, needle, "planner Content Brain read model");
+  requireText(safetyMigration, needle, "Phase 3 database safety contract");
 }
+forbidText(
+  safetyMigration,
+  "delete from public.audit_logs",
+  "audit history rollback boundary",
+);
 
-console.log(`Content Brain verification passed (${checks} assertions).`);
+console.log(`Content Brain safety verification passed (${checks} assertions).`);
