@@ -703,3 +703,22 @@ Review PR #143. Do not merge or promote the Preview to Production without explic
 +- Evidence: `docs/program/PHASE_2_FIVE_MINUTE_PULSE_EVIDENCE_2026-07-23.md`.
 +- No media generation, publishing, real message, booking, email, Calendar write, Ads, billing, spend, secret exposure, or Phase 3 work occurred.
 *** End Patch
+*** Begin Patch
+*** Update File: PROJECT_HANDOFF.md
+@@
++## Phase 2 - Five-Minute Automation Pulse — 2026-07-23
++
++- Supabase project: `nmzxrjdxvmmzzmajrskm` (`swim-fluent-uae-app`).
++- Vercel Production prerequisite confirmed READY: `dpl_iWLWWSucJ` from `main` commit `1a9b946`.
++- Vault contains the scheduler token secret `relax_fix_content_automation_scheduler_token`; no secret value was exposed.
++- pg_cron job `relax-fix-content-automation-pulse` is enabled on schedule `*/5 * * * *`.
++- Scheduler authorization record `content_automation_scheduler_auth.primary` changed from `active=false` to `active=true` at `2026-07-23 09:26:52.764674+00`, after Production readiness confirmation.
++- First live scheduled pulse after activation ran at `2026-07-23 09:30:00+00`: pg_cron `succeeded`, HTTP `200`, code `CONTENT_AUTOMATION_COMPLETED`, media `0/0`, publishing `0/0`, human approval still required.
++- Second normal scheduled pulse at `2026-07-23 09:35:00+00` also completed because the lease is released after a short successful run.
++- Concurrency verification used two simultaneous dispatches through the same scheduler function:
++  - Request `14`: HTTP `200`, `CONTENT_AUTOMATION_COMPLETED`.
++  - Request `15`: HTTP `200`, `AUTOMATION_LEASE_HELD`.
++- `background_jobs`: total `0`, non-terminal `0`, no oldest waiting job; no queue buildup.
++- Evidence: `docs/program/PHASE_2_FIVE_MINUTE_PULSE_EVIDENCE_2026-07-23.md`.
++- No media generation, publishing, real message, booking, email, Calendar write, Ads, billing, spend, secret exposure, or Phase 3 work occurred.
+*** End Patch
