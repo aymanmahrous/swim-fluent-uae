@@ -641,3 +641,56 @@ Push the tested performance and handoff follow-up to the same Draft PR, re-check
 ### Next required action
 
 Review PR #143. Do not merge or promote the Preview to Production without explicit owner approval.
+
+## 18. Phase 0 constitution and governance evidence — 2026-07-23
+
+Status: PHASE_0_IMPLEMENTED_DRAFT_PR_CI_AND_PREVIEW_VERIFIED
+
+### Scope
+
+- Added AGENT_CONSTITUTION.md.
+- Updated PROJECT_HANDOFF.md with Phase 0 evidence.
+- No files outside these two Phase 0 files are included in the final diff.
+
+### Repository baseline
+
+- Repository: ymanmahrous/swim-fluent-uae
+- Phase branch: eat/phase0-constitution
+- Base main: 493289513970042475828358ffcfe31afa1a694e
+- Verified Vercel Production deployment: dpl_6Pn4tWxULisrvAgfbV9gSHbMBFCN
+- Verified Vercel Production state: READY
+- Verified Production Git commit: 3d713190f0e995a3142f2f14385d312cb984b334
+- main was verified as 8 commits ahead of Production and Production was 0 commits ahead of main.
+- main protection was verified as protected=false.
+- No GitHub Rulesets were verified.
+
+### Phase 0 evidence
+
+- Initial constitution commit: 32901d008c3cb3cd9b2f470c5bd0f3e3b8da8cc3
+- Draft PR: #168
+- Initial GitHub CI run: 29968180290 / run #601 — PASS
+- 
+pm run verify:public-seo: PASS through CI.
+- 
+pm run verify:public-free-claims: PASS through CI.
+- Initial Vercel Preview deployment: dpl_3QChmyfAthrtSmEisFSWZd96X2MY
+- Initial Vercel Preview state: READY
+- Initial Preview URL: https://swim-fluent-uae-w532-2prm8z3dv-swimmingayman-8492s-projects.vercel.app
+- Final Handoff commit, final CI run and latest Preview receipt must be recorded after this update is pushed and verified.
+
+### Protected actions not performed
+
+- No push to main.
+- No merge.
+- No Production deployment or promotion.
+- No Supabase migration, repair, seed, write or pulse activation.
+- No Secrets or Environment Variable changes.
+- No real booking, customer, learner or sensitive data.
+- No outbound WhatsApp, email, SMS or automated message.
+- No scheduling, publishing, Ads, billing or spend.
+- No Batch A1 regeneration or Batch A2 execution.
+- No Phase 1 work.
+
+### Next action
+
+Keep PR #168 as Draft, push this Handoff update to the same Phase 0 branch, wait for GitHub CI and Vercel Preview to become green/READY, record the final receipts, then stop. Do not begin Phase 1 and do not merge PR #168.
