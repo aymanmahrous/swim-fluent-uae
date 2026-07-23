@@ -10,150 +10,129 @@ Historical evidence: `docs/history/PROJECT_HANDOFF_PRE_C7C0F118_FULL.md`
 
 ## Purpose
 
-This is the current operational continuation source. The complete pre-incident Handoff remains immutable historical evidence at the path above. Current governance records do not delete, rewrite or revalidate that evidence and authorize no runtime or external action.
+This is the current operational continuation source. Historical evidence remains immutable and non-executable. No governance stage authorizes runtime, external, database, provider or Production action without a later explicit approval.
 
 ## Source-of-truth order
 
-1. `AGENT_CONSTITUTION.md` — governance candidate.
-2. `docs/governance/PHASE_NAMESPACE.md` — canonical GOV and PRODUCT naming.
-3. This Handoff — current operational state.
-4. `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md` — write/read paths, environments, approvals, kill switches and rollback.
-5. `docs/governance/RISK_OWNERSHIP_MATRIX.md` — accountable role separation.
-6. `docs/governance/PR_REGISTRY.md` — PR classifications and dependencies.
-7. `docs/governance/DOCUMENT_REGISTRY.md` — document authority.
-8. Historical and superseded sources — evidence only; no executable instruction.
-
-When sources conflict, the stricter safety boundary applies.
+1. `AGENT_CONSTITUTION.md`.
+2. `docs/governance/PHASE_NAMESPACE.md`.
+3. This Handoff.
+4. `docs/governance/GITHUB_RULESETS_DESIGN.md`.
+5. `docs/governance/GITHUB_ENVIRONMENTS_DESIGN.md`.
+6. `.github/CODEOWNERS`.
+7. `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md`.
+8. `docs/governance/RISK_OWNERSHIP_MATRIX.md`.
+9. `docs/governance/PR_REGISTRY.md`.
+10. Historical and superseded sources — evidence only.
 
 ## Current governance stage
 
-`GOV-C: COMPLETED — READY FOR GOV-D`
+`GOV-D: COMPLETED — READY FOR GOV-E`
 
-GOV-A restored the source of truth. GOV-B classified and organized PR risk. GOV-C inventoried writes and Workflows and documented owners, independent approvers, kill switches and rollback. No merge, product execution, deployment, database/provider connection or Production action is authorized.
+GOV-A restored the source of truth, GOV-B organized PR risk, GOV-C inventoried sensitive operations and ownership, and GOV-D prepared branch-only GitHub enforcement designs. Rulesets, Branch Protection, Code Owner enforcement and Environments are not claimed as active on `main`.
 
-## Repository state
+## Repository and PR state
 
-- Default branch remains `main`; GOV-C did not modify it.
+- `main` was not modified.
 - Governance branch: `agent/phase-a-source-of-truth`.
 - Historical Handoff remains preserved at `docs/history/PROJECT_HANDOFF_PRE_C7C0F118_FULL.md`.
-- No historical evidence was deleted.
-- No tests, scripts, Workflows, builds, Preview, deployment or external verification ran during GOV-A, GOV-B or GOV-C.
+- PR #168 remains blocked/overlapping.
+- PR #169 remains evidence only.
+- PR #170 remains frozen and non-merge-ready.
+- PR #46 remains blocked by privacy/legal/owner decisions.
+- PR #36 remains blocked by its database-foundation dependency.
+- No tests, scripts, Workflows, builds, Preview, deployment or external verification ran during GOV-A through GOV-D.
 
-## GOV-B PR organization
+## GOV-C operation boundary
 
-The authoritative classification remains in `docs/governance/PR_REGISTRY.md`.
+The authoritative inventory remains `WRITE_AND_WORKFLOW_REGISTRY.md`. Public booking, staff booking, CRM, inbox, content, worker, AI, migration, Storage, publishing, Production Workflow and governance paths are classified there. AI, migrations, media generation, publishing, scheduling, Storage mutation, secrets and Production writes remain frozen or blocked.
 
-- PR #168: `BLOCKED / OVERLAPPING / SUPERSEDED-CANDIDATE`.
-- PR #169: `OVERLAPPING / HISTORICAL-CANDIDATE`; evidence only.
-- PR #170: `FROZEN / NON-MERGE-READY`; proposed AI/database scope remains frozen.
-- PR #46: blocked by owner, legal, privacy, retention and provider decisions.
-- PR #36: blocked by database-foundation dependency and must not merge as-is.
-- Historical and superseded PR evidence authorizes no execution.
+## GOV-D CODEOWNERS design
 
-## GOV-C Write and Workflow Registry
+`.github/CODEOWNERS` covers:
 
-The authoritative registry is `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md`.
+- `.github/workflows/**`;
+- `supabase/migrations/**`;
+- auth, AI and booking source paths;
+- `scripts/verify-*`;
+- `docs/privacy/**`;
+- `AGENT_CONSTITUTION.md`;
+- `PROJECT_HANDOFF.md`;
+- governance files.
 
-Registered domains include:
+`@aymanmahrous` is the Responsible candidate and `@pixelreel2026` is the known independent-review candidate. Their access and Code Owner eligibility must be verified before merge or activation. This branch file does not enforce review on `main`.
 
-- public booking ingress and database writes;
-- staff booking status operations;
-- CRM workflow writes;
-- inbox conversation-mode writes;
-- content editing and review/schedule transitions;
-- Content/media worker queues and `background_jobs` paths;
-- Content Brain and AI-provider writes, frozen;
-- database migrations, RLS, grants, RPCs, cron and scheduler schema, frozen;
-- disposable migration verification definitions, not executed;
-- Production write and read-only smoke Workflow definitions, not dispatched;
-- AI media workflows, frozen;
-- Storage mutation, publishing, scheduling and Meta/provider writes, frozen;
-- governance branch commits and GitHub PR metadata operations.
+## GOV-D Rulesets design
 
-For every operation the registry records Repository, Workflow/API/RPC, read/write classification, target, trigger, allowed environment, role, secret scope, approval, idempotency, audit receipt, rollback, owner, independent approver and status.
+The proposed `main` ruleset requires:
 
-## GOV-C Risk Ownership Matrix
+- PR-only changes;
+- independent approvals, with two approvals for the highest-risk domains;
+- Code Owner review;
+- stale-approval dismissal;
+- approval after the last push;
+- conversation resolution;
+- stable required checks;
+- blocked force-push and branch deletion;
+- tightly restricted emergency bypass;
+- merge commits preserving PR and audit history.
 
-The authoritative matrix is `docs/governance/RISK_OWNERSHIP_MATRIX.md`.
+GOV-E must normalize CI and establish stable required-check names before actual settings enforcement.
 
-Each risk domain has accountable role names for:
+## GOV-D Environments design
 
-- Responsible;
-- Independent approver;
-- Kill switch owner;
-- Rollback owner.
+Four isolated designs are documented:
 
-Role names are governance placeholders, not claims that a named individual has accepted responsibility. Protected activation remains blocked until named assignments and enforceable separation of duties are recorded. The author/operator cannot be the sole independent approver.
+- `preview-readonly`;
+- `production-readonly`;
+- `production-write`;
+- `production-ai-spend`.
 
-## Kill switches
+Each specifies secret scope, triggers, independent approvals, kill switch and rollback. Read-only environments cannot contain write-capable credentials. Production write and AI spend cannot use PR, push or schedule triggers and remain inactive.
 
-- Public booking: disable the affected route/release through an approved deployment or server gate; preserve existing booking records and fail closed for new requests.
-- Staff booking/CRM/inbox: disable mutation routes/UI or affected write permissions while retaining safe read access.
-- Content editing/transitions: disable mutation and scheduling controls; leave items in the last confirmed state.
-- AI Content Brain: keep PR #170 frozen and disable the dedicated AI environment/model secret/feature gate.
-- Database migrations: do not dispatch/apply; lock the protected environment or operator access and perform read-only review.
-- Media worker/generation: disable worker/cron/environment secret and stop claiming new jobs.
-- Publishing/scheduler: disable worker/scheduler and revoke the scoped provider token; reconcile ambiguous receipts.
-- Storage: disable the storage write credential or worker and quarantine suspect objects using hashes.
-- Production Workflow: disable protected-environment approvals/dispatch access; preserve run history.
-- Governance: stop branch commits and revert only through a new auditable commit.
+## Kill switches and rollback
 
-## Rollback procedures
+GOV-C remains authoritative for operation-level kill switches. GOV-D adds settings-level stops: disable Environment approval, revoke narrowly scoped credentials, block dispatch, disable worker/scheduler/provider gates, cancel pending deployment and preserve settings/run receipts. Database recovery uses forward fixes or approved restoration; Git history is never rewritten.
 
-Rollback must be a new auditable action and may not rewrite history or use undocumented direct database correction.
+## Frozen-path decisions
 
-Required evidence includes repository/path, actor, independent approval, environment, target SHA/release, before-state, after-state, request/job/migration/publication IDs, timestamps, logs/receipts, verification and unresolved side effects.
-
-- Booking and staff operations use approved compensating RPC/state transitions and preserve the original receipt.
-- Content restoration uses preserved before-state and an approved RPC.
-- AI/media rollback stops new requests first, cancels or reconciles provider jobs, then quarantines/removes output only through an approved process.
-- Database recovery uses an approved forward-fix/compensating migration or backup/PITR restoration; historical migrations are never edited.
-- Publishing rollback stops new publications, resolves remote status, then corrects/unpublishes only with approval.
-- Storage rollback uses object hashes/version evidence and approved restore/quarantine actions.
-- Governance rollback uses a new commit on the governance branch; no force push, amend or direct `main` change.
-
-## GOV-C frozen-path decisions
-
-### Content Brain / PR #170
-
-PR #170 remains frozen. No migration, AI call, generation, media, publishing, scheduling or Production write is authorized. Later work must separate database and application/AI changes and restart from then-current `main` after GOV-D/E.
-
-### Database migrations
-
-All Production migration activity remains frozen. Future migration-chain testing requires a separate explicit authorization and a disposable environment. Production application requires protected environment approval, target SHA, independent database/security approval, audit receipt and read-only post-check.
-
-### Publishing and media
-
-Publishing, external messaging, AI media, Storage mutation and schedulers remain frozen. Source definitions or historical receipts do not establish live readiness.
+- PR #170 remains frozen; no AI provider call, generation, Migration, media, publishing, scheduling or Production write is authorized.
+- Database migration application remains frozen. Disposable testing requires separate authorization.
+- Publishing, Meta/provider writes, Storage mutation and schedulers remain frozen.
+- Existing workflow definitions were not dispatched or changed.
 
 ## Governance completion evidence
 
 ### GOV-A
 
-- Historical Handoff restored; phase naming, Constitution candidate, Document Registry and no-execution receipt established.
+- Historical Handoff restored and source-of-truth governance established.
 
 ### GOV-B
 
-- Open PR surface classified; PR #170 frozen; evidence and functional scopes separated; dependency order recorded.
+- PR surface classified; PR #170 frozen; dependency order recorded.
 
 ### GOV-C
 
-- `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md` created.
-- `docs/governance/RISK_OWNERSHIP_MATRIX.md` created.
-- Booking, CRM, content, staff, AI, migration, Storage, publishing, Production Workflow and governance paths registered.
-- Kill switches, rollback procedures, owners and independent approvers documented.
-- `docs/governance/GOV_C_READINESS_REPORT.md` records `GOV-C: COMPLETED — READY FOR GOV-D`.
-- No PR metadata, `main`, code, Workflow, Supabase, provider, deployment or external account was changed.
+- Write/workflow registry, ownership matrix, kill switches and rollback requirements completed.
+
+### GOV-D
+
+- `.github/CODEOWNERS` added on the governance branch.
+- `GITHUB_RULESETS_DESIGN.md` created.
+- `GITHUB_ENVIRONMENTS_DESIGN.md` created.
+- `GOV_D_READINESS_REPORT.md` records `GOV-D: COMPLETED — READY FOR GOV-E`.
+- No repository settings, PR metadata, `main`, Workflow, deployment, secret, database, provider or external account was changed.
 
 ## Prohibited actions
 
 - No direct push or modification to `main`.
-- No merge, revert, close, relabel, retarget or PR comment action under GOV-C.
+- No repository-settings activation under this branch-only stage.
+- No merge, revert, PR state or metadata changes.
 - No scripts, Workflows, tests, builds, Preview or deployment.
-- No migration, Supabase access, database/Storage write or Production connection.
-- No AI-provider access, generation, media, publishing, scheduling, outbound messaging, Ads, billing or spend.
+- No Migration, Supabase access, database/Storage write or Production connection.
+- No AI provider, generation, media, publishing, scheduling, messaging, Ads, billing or spend.
 - No secrets, environment variables, external account or domain changes.
 
 ## Transition gate
 
-GOV-C is complete on this branch. GOV-D may begin only after a separate explicit instruction and must remain within the newly authorized scope.
+GOV-D is complete as an enforcement design stage. GOV-E may begin only after a separate explicit instruction. Actual Ruleset, Branch Protection, CODEOWNERS enforcement and Environment activation require a separate settings authorization and evidence receipt.
