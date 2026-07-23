@@ -9,58 +9,69 @@ Historical evidence: `docs/history/PROJECT_HANDOFF_PRE_C7C0F118_FULL.md`
 
 ## Current governance stage
 
-`GOV-G: COMPLETED — READY FOR GOV-H`
+`GOV-H: COMPLETED — GOVERNANCE FULLY ESTABLISHED`
 
-GOV-A through GOV-F restored source truth, organized PR risk, assigned operation ownership, designed enforcement, normalized CI and reduced the active risk surface. GOV-G prepared the safe Phase 3 contract only. No execution or external connection occurred.
+GOV-A through GOV-H are complete on `agent/phase-a-source-of-truth`. This certifies governance documentation and branch preparation only. It does not authorize execution, modify `main`, activate GitHub settings, unfreeze PR #170 or start `PHASE-3-SAFE-EXECUTION`.
 
-## Canonical Phase 3
+## Final authoritative documents
 
-The only authoritative identifier is `PHASE-3-SAFE-EXECUTION`.
+- `docs/governance/GOV_H_READINESS_REPORT.md` — final governance decision.
+- `docs/governance/GOVERNANCE_COMPLETION_CERTIFICATE.md` — completion certificate.
+- `docs/governance/PHASE_3_ACTIVATION_GATE.md` — mandatory post-governance execution gate.
+- `docs/governance/POST_GOVERNANCE_ROADMAP.md` — non-executable next-step order.
+- `docs/governance/PHASE_NAMESPACE.md` — canonical phase definition.
+- `docs/governance/WRITE_AND_WORKFLOW_REGISTRY.md` — registered operations, idempotency and concurrency.
+- `docs/governance/AI_ENVIRONMENT_FOUNDATION.md` — blocked AI design.
 
-It is a separately authorized, limited and time-bound operation with no Production write, uncontrolled AI, publishing, Storage write, Migration or unregistered action. It requires exact target SHA, registered operation, owner, independent approver, idempotency, concurrency lock, audit receipt, kill switch and rollback. Missing controls fail closed.
+## Permanently blocked unless separately re-authorized
 
-GOV-G does not start Phase 3 or unfreeze PR #170.
+- direct browser table writes and protected credentials;
+- all Production writes;
+- Migrations, DDL, RLS, grants, policies, cron and workers;
+- AI text/media generation and provider spend;
+- Storage writes;
+- publishing, scheduling, Meta/provider writes, webhooks and messaging;
+- the four Production-write/AI Workflows archived by GOV-F;
+- unregistered operations;
+- mutable or unspecified target refs;
+- self-approved sensitive actions;
+- history rewriting or undocumented database correction.
 
-## Migration and Feature separation
+PR #170 remains frozen because it combines Migration and application/AI scope. PR #36 remains blocked by database foundation. PR #46 remains blocked by owner/legal/privacy decisions. PR #169 remains evidence only.
 
-- Every Migration must be a database-only PR.
-- A Feature PR may not contain `supabase/migrations/**`, DDL, RLS, grants, policies, cron, workers or schema changes.
-- A Migration PR may not contain UI, Feature, AI/provider, media, publishing, Storage or unrelated application behavior.
-- PR #170 remains frozen because it combines Migration with application/AI preparation.
-- Disposable verification and independent database/security approval are prerequisites; Production application remains separately blocked.
+## Future candidates inside PHASE-3-SAFE-EXECUTION
 
-## AI Environment foundation
+Only after a separate explicit post-GOV-H order and a complete PASS gate:
 
-`docs/governance/AI_ENVIRONMENT_FOUNDATION.md` is `BLOCKED — DESIGN ONLY`.
+1. source-only verification on an exact SHA;
+2. manual `preview-readonly` verification against an exact approved Preview URL and SHA;
+3. separately approved `production-readonly` page/header verification;
+4. a specifically registered, time-limited server-mediated operation only after successful checks, named independent approval and verified environment controls.
 
-- Model allowlist is empty by default.
-- Token ceilings require approved numeric per-request, per-run and daily values.
-- Cost ceiling is zero until approved.
-- The first possible candidate is text-only, draft-only and non-publishing.
-- No Migration, Production database write, Storage write, media, publishing, scheduling or messaging is allowed.
-- AI Operations Owner owns the kill switch; independent AI Risk and Security approvals are required.
-- Audit receipt includes model, ceilings/actuals, run/idempotency/lock IDs, content fingerprint, hashes and provider receipt.
+Disposable Migration-chain verification is a separate database-only authorization and is not part of Phase 3. No current AI, media, Migration, Storage, publishing or Production-write operation is eligible.
 
-## Idempotency
+## Safe operating boundary
 
-Public booking, staff/CRM/inbox/content mutations, worker jobs, Content Brain, migrations, Storage and publishing candidates now have documented durable identities. Exact replay must produce no second side effect; conflicting key reuse fails; timeout retry reconciles the original receipt. AI and worker retries retain run/job identity.
+Every candidate must be Registry-listed, time-bounded, exact-SHA pinned, independently approved, idempotent where applicable, concurrency-controlled, auditable, reversible and equipped with a named kill-switch owner. Read-only Environments may contain no write-capable secret. Hosts are deny-by-default except the documented GET/HEAD allowlist. Any missing or stale control causes fail closed.
 
-## Concurrency locks
+## Experimental activation conditions
 
-Documented scopes include booking, conversation, lead, content item, worker job/lease, AI tenant/day/purpose/fingerprint, migration environment, Storage object and publishing target. Same-scope concurrency accepts at most one mutation; conflicts, lease expiry and recovery must be bounded and auditable.
+Before any experimental run:
 
-## Disposable Migration-chain verification plan
+- issue a new explicit instruction after GOV-H;
+- complete `PHASE_3_ACTIVATION_GATE.md`;
+- verify named owners and independent approvers;
+- observe all applicable stable checks successful on the exact target SHA;
+- verify host allowlist and Environment secret scope;
+- record expiry, kill switch, rollback and audit receipt location;
+- issue a separate time-bounded GO decision.
 
-A future database-only PR must use an empty isolated Supabase/Postgres instance with no Production secrets or data. Pinned Supabase CLI, PostgreSQL client, Node/npm, shell/container tools and migration hashes are recorded. The plan covers empty, legacy, mixed-history, upgrade, repeat and concurrency scenarios, then inspects schema, functions, RLS, grants, cron/workers and migration history, captures artifacts and destroys the instance. No step was run.
+A NO-GO or incomplete gate permits no partial execution, fallback or automatic retry.
 
-## Archived and blocked paths
+## Final safety receipt
 
-The four Production-write/AI workflows archived by GOV-F remain outside `.github/workflows/`. PR #170, migrations, AI/media, Storage mutation, publishing, scheduling, Production writes, PR #36 and privacy-dependent PR #46 remain frozen or blocked. `production-smoke-readonly.yml` remains read-only and was not dispatched.
+No Workflow, script, test, build, audit, Preview, deployment, Migration, Supabase/provider/Production connection, generation, media, write, Storage mutation, publishing, scheduling, messaging, settings, secrets, PR metadata or `main` change occurred during GOV-H.
 
-## Safety receipt
+## Post-governance transition
 
-No Workflow, script, test, build, audit, Preview, deployment, Migration, Supabase/provider/Production connection, generation, media, publishing, Storage write, message, PR metadata, setting, secret or `main` change occurred.
-
-## Transition gate
-
-GOV-H may begin only under a separate explicit instruction. It must issue a final go/no-go decision; until then `PHASE-3-SAFE-EXECUTION` and PR #170 remain blocked.
+Governance is complete. `PHASE-3-SAFE-EXECUTION` does not begin automatically and remains blocked until a separate explicit order passes the activation gate.
