@@ -4,32 +4,53 @@ Document status: CURRENT
 Authority: EXECUTION RECEIPT
 Applies to: swim-fluent-uae
 Date: 2026-07-23 (Asia/Dubai)
+Attempt: #2
 
 ## Final result
 
-`PHASE-3-SAFE-EXECUTION: FAIL-CLOSED — NO CHECKS OR PREVIEW EXECUTED`
+`PHASE-3-SAFE-EXECUTION: FAIL-CLOSED — REQUIRED CHECKS NOT OBSERVED`
 
-This report records an attempted activation review only. No Workflow, script, test, build, Preview, deployment, Migration, Supabase/provider connection, write, generation, publishing, Storage mutation, scheduling, webhook, messaging or Production action was executed.
+This attempt selected one registered read-only operation and evaluated the exact branch SHA. No Workflow, script, test, build, Preview, deployment, Migration, Supabase/provider connection, write, generation, publishing, Storage mutation, scheduling, webhook, messaging or Production action was executed.
 
-## Target SHA
+## Target and authorization
 
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Branch: `agent/phase-a-source-of-truth`
-- Evaluated target SHA: `c214c7e7d617db3f9b5203862c479514ced82f89`
+- Target SHA: `f1b29be9af3817ebe2c2bcf80872c68d816ca927`
+- Operation: `source-only-verification`
+- Operator: `AYMAN`
+- Independent approver: `pixelreel2026`
+- Preview operation selected: no
 
 ## Registry gate
 
-Requested operation: source-only verification plus manual `preview-readonly` verification.
+`source-only-verification` is registered literally in `WRITE_AND_WORKFLOW_REGISTRY.md` with status `ALLOWED-FOR-PHASE-3`.
 
-The current `WRITE_AND_WORKFLOW_REGISTRY.md` does not register those two operations as literal operation rows. It registers product mutation paths, Disposable workflows, Production-readonly smoke, governance commits and blocked/frozen risk paths. Under `PHASE_3_ACTIVATION_GATE.md`, an absent literal operation fails closed. The Registry was not changed during this attempt to avoid self-authorizing execution.
+Its declared classification is read-only source/test/build verification. Its declared secret scope is repository read only and excludes Database, Supabase, AI, Storage, publishing, webhook and Production credentials.
 
-## No-write review
+Registry gate: PASS.
 
-The intended source checks and `preview-readonly` design do not declare database-write, Storage-write, AI, publishing, scheduling, webhook or outbound-messaging credentials. Production-write and AI-spend workflows remain archived outside the active workflow directory. This static finding does not override the failed Registry gate.
+## No-write gate
 
-## Check execution
+Static review confirmed that the selected operation does not authorize:
 
-The following requested checks were not executed:
+- Database or Supabase writes;
+- Storage writes;
+- AI text/media generation or provider calls;
+- publishing or Meta/provider writes;
+- scheduling;
+- webhooks;
+- outbound messaging;
+- Migration or Disposable database actions;
+- Production access.
+
+The four GOV-F archived Production-write/AI workflows remain outside `.github/workflows/`, and PR #170 remains frozen.
+
+No-write gate: PASS.
+
+## Required checks
+
+The exact target SHA required successful observed contexts for:
 
 - `verify:source`
 - `verify:ci`
@@ -38,43 +59,44 @@ The following requested checks were not executed:
 - `test:security`
 - `test:contracts`
 
-Reasons:
+No GitHub Actions workflow run was found for the target SHA. The connected interface did not expose a workflow-dispatch action, and no approved isolated runner was available in this session.
 
-1. The connected GitHub interface available for this session has no `workflow_dispatch` operation.
-2. No workflow run exists for the evaluated SHA.
-3. A local isolated fallback could not fetch the repository because the execution environment had no GitHub network resolution.
-4. Running through another unregistered mechanism would violate the activation gate.
+The only observed commit statuses were:
+
+- `Vercel – swim-fluent-uae-w532: failure`
+- `Vercel – swim-fluent-uae: failure`
+
+Both point to a build-rate-limit upgrade page. They are not required checks and cannot substitute for them.
+
+Checks gate: FAIL.
 
 ## Preview gate
 
-`test:e2e:preview` was not dispatched because no exact approved Preview URL was supplied. Historical Vercel URLs are not approved substitutes, and the Production host allowlist authorizes only GET/HEAD Production verification, not Preview inference.
+Not applicable. The selected operation was `source-only-verification`, not `preview-readonly-verification`. No Preview URL was requested or accessed and `test:e2e:preview` was not run.
 
-Required but missing:
+## Idempotency and concurrency
 
-- exact HTTPS Preview URL;
-- named operator;
-- independent approval;
-- authorized dispatch mechanism;
-- environment evidence showing no write-capable secrets.
+- Idempotency identity: repository + exact target SHA + required check set.
+- Concurrency scope: one active verification set per repository + target SHA.
 
-## Workflow evidence
+No run was started, so no duplicate or concurrent execution occurred.
 
-No pull-request-triggered workflow run was found for the evaluated SHA at review time.
+## Kill switch and rollback
 
-## Safety confirmation
+- Kill switch: cancel the verification run and disable further dispatch.
+- Rollback: none required for repository state because the selected operation is read-only; preserve receipts and return to blocked state.
 
-Confirmed no execution of:
+The kill switch was not needed because no run began.
 
-- Database or Supabase writes;
-- Storage writes;
-- AI text/media generation or provider calls;
-- publishing, scheduling, Meta/provider writes;
-- webhooks or outbound messaging;
-- migrations or Disposable database actions;
-- Production access;
-- Preview access.
+## Audit evidence
 
-PR #170 and all AI/Migration scope remain frozen. The four GOV-F archived Production-write/AI workflows remain outside `.github/workflows/`.
+- Target commit exists and is the PHASE-3-PREP readiness-report commit.
+- Registry operation is present.
+- Named Operator and Independent approver were recorded.
+- GitHub Actions runs observed for target SHA: none.
+- Required check receipts observed: none.
+- Preview or Production access: none.
+- External side effects: none.
 
 ## Return to safe state
 
@@ -82,11 +104,4 @@ The repository returned immediately to:
 
 `FAIL-CLOSED / NOT AUTHORIZED`
 
-A future attempt requires all of the following before dispatch:
-
-1. literal Registry entries for source-only verification and `preview-readonly`;
-2. an exact approved Preview URL;
-3. a usable authorized workflow-dispatch mechanism or approved isolated runner;
-4. named operator and independent approver;
-5. verified `preview-readonly` secret inventory;
-6. observed check receipts tied to the exact target SHA.
+A later attempt requires an authorized dispatch mechanism or approved isolated runner and successful receipts for all six required contexts on a new exact target SHA. No automatic retry is authorized.
