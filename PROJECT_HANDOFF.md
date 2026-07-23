@@ -5,46 +5,40 @@ Authority: OPERATIONAL
 Applies to: swim-fluent-uae
 Last verified: 2026-07-23 (Asia/Dubai)
 Owner: Repository Owner
-Historical evidence: `docs/history/PROJECT_HANDOFF_PRE_C7C0F118_FULL.md`
 
 ## Current stage
 
-`PHASE-3-PREP: COMPLETED — READY FOR SAFE EXECUTION`
+`PHASE-3-DISPATCH-SETUP: COMPLETED — READY FOR EXECUTION`
 
-Equivalent activation wording: `PHASE-3-PREP: COMPLETED — READY FOR EXECUTION`.
+This certifies dispatch preparation only. No Check, Workflow, script, test, build, Preview, deployment, Migration, Supabase/provider or Production connection was run.
 
-This certifies preparation only. No Check, Workflow, script, test, build, Preview, deployment, Migration, Supabase/provider or Production connection was run. `PHASE-3-SAFE-EXECUTION` still requires a new explicit order and a complete PASS gate.
+## Authorized source-only dispatch
 
-## Registered Phase 3 operations
+`.github/workflows/phase-3-source-only-dispatch.yml` defines manual `workflow_dispatch` for `source-only-verification` only.
 
-`WRITE_AND_WORKFLOW_REGISTRY.md` now contains the literal operations:
+It requires an exact 40-character SHA equal to the selected `agent/phase-a-source-of-truth` commit, uses `contents: read`, disables persisted checkout credentials, references no secret or Environment and exposes only:
 
-1. `source-only-verification` — read-only source/test/build verification on an exact SHA.
-2. `preview-readonly-verification` — read-only GET/HEAD browser verification against one approved HTTPS Preview URL and exact SHA.
+- `verify:source`;
+- `verify:ci`;
+- `verify:release`;
+- `test:unit`;
+- `test:security`;
+- `test:contracts`.
 
-Both rows include Repository, classification, environment, approvals, checks, secrets scope, kill switch, rollback, audit receipt, idempotency, concurrency and status `ALLOWED-FOR-PHASE-3`.
+Concurrency is limited to one run per target SHA. Cancellation is the kill switch.
 
-`ALLOWED-FOR-PHASE-3` is eligibility for a future activation review only; it does not dispatch or authorize execution.
+## Safety boundary
+
+The dispatch definition contains no Production, Supabase/database, AI, Storage-write, publishing, scheduling, webhook or messaging credential or step. `preview-readonly-verification`, `verify:production-readonly` and disposable migration checks remain outside this mechanism.
 
 ## Activation gate
 
-`PHASE_3_ACTIVATION_GATE.md` now recognizes only those two operations for the first safe-execution attempt.
-
-- `source-only-verification` requires successful `verify:source`, `verify:ci`, `verify:release`, `test:unit`, `test:security` and `test:contracts` on the exact target SHA.
-- `preview-readonly-verification` additionally requires `test:e2e:preview`, an exact approved HTTPS Preview URL and verified `preview-readonly` secret inventory.
-- Named Operator and independent approver are mandatory.
-- A usable authorized dispatch mechanism or isolated runner is mandatory.
-- `verify:production-readonly` and `test:integration:disposable` remain outside these two operations and need separate authorization.
-- Any missing control returns `FAIL-CLOSED`.
+`PHASE_3_ACTIVATION_GATE.md` now names the Workflow as the authorized dispatch mechanism. A future execution still requires a new target SHA, named Operator and independent approver, time limit, successful exact-SHA receipts and a separate explicit order. If branch dispatch is unavailable, use only an independently approved isolated runner with identical commands; otherwise fail closed.
 
 ## Continuing prohibitions
 
-PR #170 remains frozen. PR #36 and PR #46 remain blocked. Production/database writes, Migrations, AI/media, Storage mutation, publishing, scheduling, Meta/provider writes, webhooks, messaging, protected browser credentials, archived Production-write/AI Workflows, repository settings and PR metadata changes remain blocked.
-
-## Safety receipt
-
-PHASE-3-PREP changed governance Markdown only on `agent/phase-a-source-of-truth`. It did not touch `main`, run checks or Workflows, create a Preview, deploy, connect to Supabase/Production/providers, generate, publish, schedule, migrate or mutate external state.
+PR #170 remains frozen. PR #36 and PR #46 remain blocked. Production/database writes, Migrations, AI/media, Storage mutation, publishing, scheduling, Meta/provider writes, webhooks, messaging, archived Production-write/AI Workflows, settings and PR metadata changes remain blocked.
 
 ## Next transition
 
-Do not begin `PHASE-3-SAFE-EXECUTION` automatically. A new explicit instruction must select one literal operation, provide an exact new target SHA and satisfy every Activation Gate control.
+Do not start `PHASE-3-SAFE-EXECUTION` automatically. A separate explicit instruction must select one registered operation and satisfy every Activation Gate control.
