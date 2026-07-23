@@ -7,6 +7,7 @@ Verified: 2026-07-23 (Asia/Dubai)
 - Repository: `aymanmahrous/swim-fluent-uae`
 - Branch: `feat/phase1-vercel`
 - Base: `main`
+- Draft PR: `#169`
 - Vercel project: `swim-fluent-uae-w532`
 - Vercel project ID: `prj_4wRrALwNzlU0msHb9pGOsExmNID0`
 
@@ -22,7 +23,13 @@ Verified: 2026-07-23 (Asia/Dubai)
 
 ## Preview
 
-A Preview deployment for `feat/phase1-vercel` must be generated from this evidence commit and verified as `READY` before Phase 1 is declared complete.
+- Deployment ID: `dpl_FZa3QxxKK4YN5jSD7zzssfKHLw46`
+- State: `READY`
+- Target: Preview (`target: null`), not Production
+- Git ref: `feat/phase1-vercel`
+- Git commit: `2c0308d70b5ac79ab750eedc1dbee087069da0a7`
+- Preview URL: `https://swim-fluent-uae-w532-p6bfm1ceh-swimmingayman-8492s-projects.vercel.app`
+- Branch alias: `https://swim-fluent-uae-w532-git-fe-467cb4-swimmingayman-8492s-projects.vercel.app`
 
 ## Safety
 
