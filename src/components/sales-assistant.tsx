@@ -18,6 +18,7 @@ import {
   type ChatbotCta,
 } from "../platform/chatbot-knowledge";
 import { TRAINING_LOCATIONS } from "../platform/public-business-config";
+import { ChatModeContainer } from "./chat/ChatModeContainer";
 
 type Goal = "learn" | "confidence" | "performance";
 type Learner = "child" | "adult";
@@ -28,7 +29,7 @@ type AssistantState = {
   location?: string;
 };
 
-type AssistantMode = "answers" | "guided";
+type AssistantMode = "answers" | "guided" | "chat";
 
 type AssistantAnswer = {
   intent: ChatbotIntent | null;
@@ -64,6 +65,7 @@ export function SalesAssistant() {
           "إجابات معتمدة عن الخدمات والأسعار والمواقع والمواعيد، مع مسار سريع للحجز أو واتساب. لا يتم إرسال أو حفظ ما تكتبه.",
         answersMode: "إجابات سريعة",
         guidedMode: "ساعدني في الاختيار",
+        chatMode: "وضع المحادثة",
         quickReplies: "اختر سؤالًا شائعًا",
         askLabel: "أو اكتب سؤالك بالعربية أو الإنجليزية",
         askPlaceholder: "مثال: ما أسعار تدريب الأطفال؟",
@@ -103,6 +105,7 @@ export function SalesAssistant() {
           "Approved answers about services, pricing, locations, and schedules, with a direct path to booking or WhatsApp. Nothing you type is sent or stored.",
         answersMode: "Quick answers",
         guidedMode: "Help me choose",
+        chatMode: "Chat Mode",
         quickReplies: "Choose a common question",
         askLabel: "Or ask in Arabic or English",
         askPlaceholder: "Example: What are the kids coaching prices?",
@@ -310,6 +313,37 @@ export function SalesAssistant() {
     });
   }
 
+  // Chat Mode handlers
+  function handleChatModeClose() {
+    setOpen(false);
+    setMode("answers");
+  }
+
+  function handleChatModeExit() {
+    setMode("answers");
+    track("chat_mode_exited", { language: lang });
+  }
+
+  // If Chat Mode is active, render ChatModeContainer instead
+  if (open && mode === "chat") {
+    return (
+      <>
+        <button
+          ref={openerRef}
+          type="button"
+          onClick={openAssistant}
+          aria-label={copy.open}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          className="fixed bottom-24 end-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-deep text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+        <ChatModeContainer onClose={handleChatModeClose} onExit={handleChatModeExit} />
+      </>
+    );
+  }
+
   return (
     <>
       <button
@@ -364,7 +398,7 @@ export function SalesAssistant() {
             </div>
 
             <div
-              className="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-muted p-1"
+              className="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-muted p-1"
               aria-label={isArabic ? "طريقة استخدام المساعد" : "Assistant mode"}
             >
               <button
@@ -386,6 +420,16 @@ export function SalesAssistant() {
                 }`}
               >
                 {copy.guidedMode}
+              </button>
+              <button
+                type="button"
+                aria-pressed={mode === "chat"}
+                onClick={() => selectMode("chat")}
+                className={`rounded-xl px-3 py-2.5 text-sm font-black transition ${
+                  mode === "chat" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                {copy.chatMode}
               </button>
             </div>
 
