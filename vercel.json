@@ -30,16 +30,6 @@
       "permanent": true
     }
   ],
-  "rewrites": [
-    {
-      "source": "/tools/:path*",
-      "destination": "/gone"
-    },
-    {
-      "source": "/en/tools/:path*",
-      "destination": "/gone"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
