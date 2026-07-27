@@ -128,8 +128,8 @@ for (const value of [
 }
 
 for (const safeMetadata of [
-  "تدريب سباحة وثقة مائية للأطفال في أبوظبي ضمن مجموعة صغيرة بحد أقصى 4 أطفال، مع مواقع متعددة وطلب تقييم أولي قبل تأكيد الموعد.",
-  "Children’s swimming and water-confidence coaching in Abu Dhabi in small groups of up to four, with multiple locations and an initial assessment request before confirmation.",
+  "تعليم السباحة والثقة المائية للأطفال في أبوظبي مع كوتش أيمن، ضمن مجموعات صغيرة بحد أقصى 4 أطفال وفي مواقع تدريب موثقة داخل أبوظبي.",
+  "Kids swimming lessons and water-confidence coaching in Abu Dhabi with Coach Ayman, in small groups of up to four across verified Abu Dhabi training locations.",
 ]) {
   assert.ok(publicSeo.includes(safeMetadata), `Approved safe metadata is missing: ${safeMetadata}`);
 }
