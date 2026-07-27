@@ -5,6 +5,10 @@ const root = process.cwd();
 const expectedUrls = [
   "https://www.relaxfixuae.com/",
   "https://www.relaxfixuae.com/en",
+  "https://www.relaxfixuae.com/locations/najda-street",
+  "https://www.relaxfixuae.com/locations/ics-al-falah",
+  "https://www.relaxfixuae.com/locations/ics-khalifa",
+  "https://www.relaxfixuae.com/locations/ics-mushrif",
 ];
 const prohibitedPathPrefixes = [
   "/contact",
@@ -31,7 +35,7 @@ assert(staticSitemap.trimEnd() === routeXml, "public sitemap and server route si
 
 assert(staticSitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>'), "sitemap XML declaration missing");
 assert(/<urlset\b[^>]*xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9"/.test(staticSitemap), "valid sitemap urlset namespace missing");
-assert((staticSitemap.match(/<url>/g) ?? []).length === 2, "sitemap must contain exactly two <url> entries");
+assert((staticSitemap.match(/<url>/g) ?? []).length === expectedUrls.length, `sitemap must contain exactly ${expectedUrls.length} <url> entries`);
 assert(!staticSitemap.includes("<lastmod>"), "unverified lastmod values must not be published");
 
 const locs = [...staticSitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
@@ -52,4 +56,4 @@ assert(routeSource.includes("status: 200"), "HTTP 200 response missing");
 assert(robots.split(/\r?\n/).filter((line) => line.startsWith("Sitemap:")).length === 1, "robots.txt must contain exactly one Sitemap line");
 assert(robots.includes("Sitemap: https://www.relaxfixuae.com/sitemap.xml"), "robots.txt sitemap reference is incorrect");
 
-console.log("Production sitemap verification passed (exact source parity, 2 canonical public URLs, XML route, robots reference, no unverified lastmod).");
+console.log(`Production sitemap verification passed (exact source parity, ${expectedUrls.length} canonical public URLs, XML route, robots reference, no unverified lastmod).`);
