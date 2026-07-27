@@ -4,7 +4,15 @@ import { spawnSync } from "node:child_process";
 const config = JSON.parse(await readFile("vercel.json", "utf8"));
 const command = config.ignoreCommand;
 const canonicalProjectId = "prj_4wRrALwNzlU0msHb9pGOsExmNID0";
-const allowedTopLevelKeys = new Set(["$schema", "ignoreCommand", "installCommand", "crons", "headers"]);
+const allowedTopLevelKeys = new Set([
+  "$schema",
+  "ignoreCommand",
+  "installCommand",
+  "crons",
+  "headers",
+  "redirects",
+  "rewrites",
+]);
 
 for (const key of Object.keys(config)) {
   if (!allowedTopLevelKeys.has(key)) {
@@ -32,6 +40,18 @@ if (
 const cronText = JSON.stringify(config.crons);
 if (cronText.includes("*/5 * * * *") || cronText.includes("* * * * *")) {
   throw new Error("VERCEL_HOBBY_HIGH_FREQUENCY_CRON_FORBIDDEN");
+}
+
+for (const redirect of config.redirects ?? []) {
+  if (redirect?.permanent !== true || typeof redirect?.source !== "string" || typeof redirect?.destination !== "string") {
+    throw new Error("VERCEL_SEO_REDIRECT_POLICY_INVALID");
+  }
+}
+
+for (const rewrite of config.rewrites ?? []) {
+  if (typeof rewrite?.source !== "string" || rewrite?.destination !== "/gone") {
+    throw new Error("VERCEL_REMOVED_URL_REWRITE_POLICY_INVALID");
+  }
 }
 
 function exitStatus(ref, projectId = canonicalProjectId) {
@@ -67,4 +87,4 @@ if (exitStatus("main", "") !== 1) {
   throw new Error("MISSING_PROJECT_ID_MUST_FAIL_OPEN_TO_BUILD");
 }
 
-console.log("Vercel build policy verification passed (6 project/branch cases + strict recovery cron policy).");
+console.log("Vercel build policy verification passed (6 project/branch cases + strict recovery cron + SEO URL cleanup policy).");
