@@ -11,7 +11,6 @@ const allowedTopLevelKeys = new Set([
   "crons",
   "headers",
   "redirects",
-  "rewrites",
 ]);
 
 for (const key of Object.keys(config)) {
@@ -43,14 +42,34 @@ if (cronText.includes("*/5 * * * *") || cronText.includes("* * * * *")) {
 }
 
 for (const redirect of config.redirects ?? []) {
-  if (redirect?.permanent !== true || typeof redirect?.source !== "string" || typeof redirect?.destination !== "string") {
+  if (
+    redirect?.permanent !== true ||
+    typeof redirect?.source !== "string" ||
+    typeof redirect?.destination !== "string"
+  ) {
     throw new Error("VERCEL_SEO_REDIRECT_POLICY_INVALID");
   }
 }
 
-for (const rewrite of config.rewrites ?? []) {
-  if (typeof rewrite?.source !== "string" || rewrite?.destination !== "/gone") {
-    throw new Error("VERCEL_REMOVED_URL_REWRITE_POLICY_INVALID");
+if ("rewrites" in config) {
+  throw new Error("VERCEL_GONE_REWRITES_MUST_NOT_MASK_ROUTE_STATUS");
+}
+
+const goneRoutePaths = [
+  "src/routes/tools/index.ts",
+  "src/routes/tools/$.ts",
+  "src/routes/en/tools/index.ts",
+  "src/routes/en/tools/$.ts",
+];
+
+for (const routePath of goneRoutePaths) {
+  const routeSource = await readFile(routePath, "utf8");
+  if (
+    !routeSource.includes("createGoneResponse") ||
+    !routeSource.includes("server:") ||
+    !routeSource.includes("handlers:")
+  ) {
+    throw new Error(`ROUTE_BACKED_GONE_RESPONSE_MISSING:${routePath}`);
   }
 }
 
@@ -87,4 +106,6 @@ if (exitStatus("main", "") !== 1) {
   throw new Error("MISSING_PROJECT_ID_MUST_FAIL_OPEN_TO_BUILD");
 }
 
-console.log("Vercel build policy verification passed (6 project/branch cases + strict recovery cron + SEO URL cleanup policy).");
+console.log(
+  "Vercel build policy verification passed (6 project/branch cases + strict recovery cron + route-backed SEO cleanup policy).",
+);
