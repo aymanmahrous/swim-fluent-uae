@@ -12,26 +12,26 @@ const SOCIAL_IMAGE_URL = new URL(heroImg, `${SITE_URL}/`).toString();
 
 const pageCopy = {
   ar: {
-    title: "تعليم السباحة والثقة المائية في أبوظبي | كوتش أيمن | Relax Fix UAE",
+    title: "تعليم السباحة للأطفال في أبوظبي | كوتش أيمن | Relax Fix UAE",
     description:
-      "تدريب سباحة وثقة مائية للأطفال في أبوظبي ضمن مجموعة صغيرة بحد أقصى 4 أطفال، مع مواقع متعددة وطلب تقييم أولي قبل تأكيد الموعد.",
-    imageAlt: "تدريب السباحة والثقة المائية للأطفال في أبوظبي مع كوتش أيمن",
+      "تعليم السباحة والثقة المائية للأطفال في أبوظبي مع كوتش أيمن، ضمن مجموعات صغيرة بحد أقصى 4 أطفال وفي مواقع تدريب موثقة داخل أبوظبي.",
+    imageAlt: "تعليم السباحة للأطفال في أبوظبي مع كوتش أيمن",
     url: `${SITE_URL}/`,
     locale: "ar_AE",
     alternateLocale: "en_AE",
     language: "ar-AE",
-    serviceName: "تدريب السباحة والثقة المائية في أبوظبي",
+    serviceName: "تعليم السباحة والثقة المائية للأطفال في أبوظبي",
   },
   en: {
-    title: "Swimming & Water Confidence Coach Abu Dhabi | Coach Ayman | Relax Fix UAE",
+    title: "Kids Swimming Lessons Abu Dhabi | Coach Ayman | Relax Fix UAE",
     description:
-      "Children’s swimming and water-confidence coaching in Abu Dhabi in small groups of up to four, with multiple locations and an initial assessment request before confirmation.",
-    imageAlt: "Children’s swimming and water-confidence coaching in Abu Dhabi with Coach Ayman",
+      "Kids swimming lessons and water-confidence coaching in Abu Dhabi with Coach Ayman, in small groups of up to four across verified Abu Dhabi training locations.",
+    imageAlt: "Kids swimming lessons in Abu Dhabi with Coach Ayman",
     url: `${SITE_URL}/en`,
     locale: "en_AE",
     alternateLocale: "ar_AE",
     language: "en-AE",
-    serviceName: "Swimming and Water Confidence Coaching in Abu Dhabi",
+    serviceName: "Kids Swimming Lessons and Water Confidence Coaching in Abu Dhabi",
   },
 } as const;
 
@@ -43,17 +43,32 @@ function structuredData(lang: PublicLanguage) {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": ["Organization", "LocalBusiness", "SportsActivityLocation"],
         "@id": ORGANIZATION_ID,
         name: "Relax Fix UAE",
         url: SITE_URL,
+        image: SOCIAL_IMAGE_URL,
         sameAs: [INSTAGRAM_URL],
         email: OPERATIONAL_EMAIL,
         telephone: WHATSAPP_DISPLAY,
+        areaServed: {
+          "@type": "City",
+          name: "Abu Dhabi",
+          containedInPlace: {
+            "@type": "Country",
+            name: "United Arab Emirates",
+          },
+        },
         location: TRAINING_LOCATIONS.map((location) => ({
           "@type": "Place",
           name: location.displayName,
+          alternateName: location.googleMapsObservedName,
           hasMap: location.shortUrl,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Abu Dhabi",
+            addressCountry: "AE",
+          },
         })),
         contactPoint: {
           "@type": "ContactPoint",
@@ -61,7 +76,7 @@ function structuredData(lang: PublicLanguage) {
           telephone: WHATSAPP_DISPLAY,
           email: OPERATIONAL_EMAIL,
           availableLanguage: ["Arabic", "English"],
-          areaServed: "AE",
+          areaServed: "AE-AZ",
           hoursAvailable: [
             {
               "@type": "OpeningHoursSpecification",
@@ -91,7 +106,7 @@ function structuredData(lang: PublicLanguage) {
         "@type": "Service",
         "@id": SERVICE_ID,
         name: copy.serviceName,
-        serviceType: "Swimming and water confidence coaching",
+        serviceType: "Kids swimming lessons and water confidence coaching",
         provider: { "@id": ORGANIZATION_ID },
         areaServed: {
           "@type": "City",
@@ -100,6 +115,16 @@ function structuredData(lang: PublicLanguage) {
             "@type": "Country",
             name: "United Arab Emirates",
           },
+        },
+        availableChannel: {
+          "@type": "ServiceChannel",
+          serviceUrl: copy.url,
+          servicePhone: {
+            "@type": "ContactPoint",
+            telephone: WHATSAPP_DISPLAY,
+            contactType: "booking",
+          },
+          availableLanguage: ["Arabic", "English"],
         },
         availableLanguage: ["Arabic", "English"],
         url: copy.url,
@@ -121,6 +146,11 @@ function structuredData(lang: PublicLanguage) {
         isPartOf: { "@id": WEBSITE_ID },
         about: { "@id": SERVICE_ID },
         inLanguage: copy.language,
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: SOCIAL_IMAGE_URL,
+          caption: copy.imageAlt,
+        },
       },
     ],
   };
@@ -134,7 +164,10 @@ export function publicHomeHead(lang: PublicLanguage) {
     meta: [
       { title: copy.title },
       { name: "description", content: copy.description },
-      { name: "robots", content: "index,follow,max-image-preview:large" },
+      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
+      { name: "geo.region", content: "AE-AZ" },
+      { name: "geo.placename", content: "Abu Dhabi" },
+      { name: "theme-color", content: "#0b1f3a" },
       { property: "og:title", content: copy.title },
       { property: "og:description", content: copy.description },
       { property: "og:type", content: "website" },
