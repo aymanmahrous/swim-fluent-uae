@@ -8,6 +8,38 @@
       "schedule": "15 0 * * *"
     }
   ],
+  "redirects": [
+    {
+      "source": "/pricing",
+      "destination": "/#programs",
+      "permanent": true
+    },
+    {
+      "source": "/en/pricing",
+      "destination": "/en#programs",
+      "permanent": true
+    },
+    {
+      "source": "/services/:path*",
+      "destination": "/#programs",
+      "permanent": true
+    },
+    {
+      "source": "/en/services/:path*",
+      "destination": "/en#programs",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/tools/:path*",
+      "destination": "/gone"
+    },
+    {
+      "source": "/en/tools/:path*",
+      "destination": "/gone"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -27,6 +59,15 @@
         {
           "key": "X-Frame-Options",
           "value": "DENY"
+        }
+      ]
+    },
+    {
+      "source": "/gone",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
         }
       ]
     },
