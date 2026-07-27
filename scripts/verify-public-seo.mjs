@@ -36,13 +36,14 @@ for (const needle of [
   'property: "og:image:type"',
   'name: "twitter:image"',
   'name: "twitter:image:alt"',
-  '"@type": "Organization"',
-  "sameAs: [INSTAGRAM_URL]",
+  '"@type": ["Organization", "LocalBusiness", "SportsActivityLocation"]',
   '"@type": "Person"',
   '"@type": "Service"',
   '"@type": "WebSite"',
   '"@type": "WebPage"',
   'name: "Abu Dhabi"',
+  'name: "geo.region"',
+  'content: "AE-AZ"',
   'type: "application/ld+json"',
 ]) {
   requireText(seo, needle, "public SEO contract");
