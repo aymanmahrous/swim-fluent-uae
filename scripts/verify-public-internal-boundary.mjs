@@ -2,12 +2,13 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const root = process.cwd();
-const [rootShell, staffPortal, osRoute, adminRoute, robots, vercelConfigSource] =
+const [rootShell, staffPortal, osRoute, adminRoute, serverSource, robots, vercelConfigSource] =
   await Promise.all([
     readFile(join(root, "src/routes/__root.tsx"), "utf8"),
     readFile(join(root, "src/routes/staff.tsx"), "utf8"),
     readFile(join(root, "src/routes/os.tsx"), "utf8"),
     readFile(join(root, "src/routes/admin.tsx"), "utf8"),
+    readFile(join(root, "src/server.ts"), "utf8"),
     readFile(join(root, "public/robots.txt"), "utf8"),
     readFile(join(root, "vercel.json"), "utf8"),
   ]);
@@ -78,6 +79,16 @@ for (const needle of ['name: "robots"', 'content: "noindex"']) {
   }
 }
 
+for (const needle of [
+  'pathname === "/admin"',
+  'pathname.startsWith("/admin/")',
+  'headers.set("X-Robots-Tag", "noindex, nofollow, noarchive")',
+]) {
+  if (!serverSource.includes(needle)) {
+    throw new Error(`Server-side admin noindex boundary missing ${JSON.stringify(needle)}`);
+  }
+}
+
 console.log(
-  "Public/internal route boundary verification passed (no public links, authenticated Staff navigation retained, robots and X-Robots-Tag protections verified).",
+  "Public/internal route boundary verification passed (no public links, authenticated Staff navigation retained, robots and server-side X-Robots-Tag protections verified).",
 );
