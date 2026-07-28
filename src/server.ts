@@ -62,6 +62,7 @@ function applyBrowserSecurityHeaders(request: Request, response: Response): Resp
   if (isSensitivePath(new URL(request.url).pathname)) {
     headers.set("Cache-Control", "no-store, max-age=0");
     headers.set("Pragma", "no-cache");
+    headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   }
   return new Response(response.body, {
     status: response.status,
