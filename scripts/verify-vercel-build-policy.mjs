@@ -41,11 +41,19 @@ if (cronText.includes("*/5 * * * *") || cronText.includes("* * * * *")) {
   throw new Error("VERCEL_HOBBY_HIGH_FREQUENCY_CRON_FORBIDDEN");
 }
 
+const expectedRedirects = new Map([
+  ["/pricing", "/#programs"],
+  ["/en/pricing", "/en#programs"],
+]);
+
+if (config.redirects?.length !== expectedRedirects.size) {
+  throw new Error("VERCEL_SEO_REDIRECT_COUNT_INVALID");
+}
+
 for (const redirect of config.redirects ?? []) {
   if (
     redirect?.permanent !== true ||
-    typeof redirect?.source !== "string" ||
-    typeof redirect?.destination !== "string"
+    expectedRedirects.get(redirect.source) !== redirect.destination
   ) {
     throw new Error("VERCEL_SEO_REDIRECT_POLICY_INVALID");
   }
@@ -60,6 +68,29 @@ const goneRoutePaths = [
   "src/routes/tools/$.ts",
   "src/routes/en/tools/index.ts",
   "src/routes/en/tools/$.ts",
+  "src/routes/ar/tools/index.ts",
+  "src/routes/ar/tools/$.ts",
+  "src/routes/auth/index.ts",
+  "src/routes/auth/$.ts",
+  "src/routes/en/auth/index.ts",
+  "src/routes/en/auth/$.ts",
+  "src/routes/ar/auth/index.ts",
+  "src/routes/ar/auth/$.ts",
+  "src/routes/editor.ts",
+  "src/routes/en/editor.ts",
+  "src/routes/ar/editor.ts",
+  "src/routes/campaigns.ts",
+  "src/routes/en/campaigns.ts",
+  "src/routes/ar/campaigns.ts",
+  "src/routes/ai.ts",
+  "src/routes/en/ai.ts",
+  "src/routes/ar/ai.ts",
+  "src/routes/video.ts",
+  "src/routes/en/video.ts",
+  "src/routes/ar/video.ts",
+  "src/routes/portfolio.ts",
+  "src/routes/en/portfolio.ts",
+  "src/routes/ar/portfolio.ts",
 ];
 
 for (const routePath of goneRoutePaths) {
@@ -70,6 +101,35 @@ for (const routePath of goneRoutePaths) {
     !routeSource.includes("handlers:")
   ) {
     throw new Error(`ROUTE_BACKED_GONE_RESPONSE_MISSING:${routePath}`);
+  }
+}
+
+const serviceDecisionRoutes = [
+  "src/routes/services/$.ts",
+  "src/routes/en/services/$.ts",
+];
+
+for (const routePath of serviceDecisionRoutes) {
+  const routeSource = await readFile(routePath, "utf8");
+  if (
+    !routeSource.includes("motion-graphics") ||
+    !routeSource.includes("createGoneResponse") ||
+    !routeSource.includes("Response.redirect")
+  ) {
+    throw new Error(`LEGACY_SERVICE_DECISION_MISSING:${routePath}`);
+  }
+}
+
+const contactRedirectRoutes = [
+  "src/routes/contact.ts",
+  "src/routes/en/contact.ts",
+  "src/routes/ar/contact.ts",
+];
+
+for (const routePath of contactRedirectRoutes) {
+  const routeSource = await readFile(routePath, "utf8");
+  if (!routeSource.includes("#contact") || !routeSource.includes("Response.redirect")) {
+    throw new Error(`LEGACY_CONTACT_REDIRECT_MISSING:${routePath}`);
   }
 }
 
@@ -107,5 +167,5 @@ if (exitStatus("main", "") !== 1) {
 }
 
 console.log(
-  "Vercel build policy verification passed (6 project/branch cases + strict recovery cron + route-backed SEO cleanup policy).",
+  "Vercel build policy verification passed (canonical redirects + route-backed legacy URL decisions).",
 );
