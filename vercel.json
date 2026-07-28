@@ -18,16 +18,6 @@
       "source": "/en/pricing",
       "destination": "/en#programs",
       "permanent": true
-    },
-    {
-      "source": "/services/:path*",
-      "destination": "/#programs",
-      "permanent": true
-    },
-    {
-      "source": "/en/services/:path*",
-      "destination": "/en#programs",
-      "permanent": true
     }
   ],
   "headers": [
