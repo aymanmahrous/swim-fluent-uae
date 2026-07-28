@@ -83,7 +83,13 @@ for (const source of ["/api/(.*)", "/os/(.*)", "/os", "/staff", "/admin"]) {
   }
 }
 
-for (const needle of ['name: "robots"', 'content: "noindex"']) {
+for (const needle of [
+  'name: "robots"',
+  'content: "noindex"',
+  "status: 404",
+  '"Cache-Control": "no-store, max-age=0"',
+  '"X-Robots-Tag": "noindex, nofollow, noarchive"',
+]) {
   if (!adminRoute.includes(needle)) {
     throw new Error(`Legacy admin noindex contract missing ${JSON.stringify(needle)}`);
   }
