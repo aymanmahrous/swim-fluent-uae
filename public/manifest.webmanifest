@@ -1,0 +1,53 @@
+{
+  "id": "/",
+  "name": "Relax Fix UAE — Coach Ayman",
+  "short_name": "Relax Fix UAE",
+  "description": "Swimming and water-confidence coaching in Abu Dhabi with Coach Ayman.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7fbfc",
+  "theme_color": "#0b1f3a",
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "دخول الموظفين",
+      "short_name": "الموظفون",
+      "url": "/staff",
+      "icons": [
+        {
+          "src": "/pwa-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "لوحة التشغيل",
+      "short_name": "لوحة التشغيل",
+      "url": "/os",
+      "icons": [
+        {
+          "src": "/pwa-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
