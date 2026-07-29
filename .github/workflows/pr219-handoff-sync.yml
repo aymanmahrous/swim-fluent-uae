@@ -1,0 +1,99 @@
+name: PR 219 Handoff Sync
+
+on:
+  push:
+    branches:
+      - agent/restrict-os-rbac-sanitize-errors-20260730
+    paths:
+      - .github/workflows/pr219-handoff-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync-handoffs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/restrict-os-rbac-sanitize-errors-20260730
+          fetch-depth: 0
+      - name: Append release gate checkpoint
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          marker = "PR_219_RELEASE_GATE_CHECKS_PASS"
+          handoff = Path("PROJECT_HANDOFF.md")
+          ledger = Path("docs/program/STRATEGIC_EXECUTION_LEDGER.md")
+
+          handoff_text = handoff.read_text()
+          handoff_text = handoff_text.replace("Last verified: 2026-07-29 (Asia/Dubai)", "Last verified: 2026-07-30 (Asia/Dubai)", 1)
+          if marker not in handoff_text:
+              handoff_text += """
+
+
+## 28. PR #219 release-gate readiness — 2026-07-30
+
+Status: `PR_219_RELEASE_GATE_CHECKS_PASS`
+
+- Owner technical approval: `PR_219_TECHNICALLY_APPROVED` for the current isolated scope only.
+- Draft PR #219 remains open, Draft, mergeable, and unmerged.
+- Branch `agent/restrict-os-rbac-sanitize-errors-20260730` was verified against latest `main` at `2f526ca16cf9cdaf2ab410cb3ae0ba8118f6f3bc`: ahead only and `behind_by=0`; no new conflict was observed.
+- Approved behavior: remove `content_manager` from `get_staff_command_center()` and `get_staff_operations_queue()`; retain `super_admin`, `admin`, `reception`, and temporary `coach`; return `JOB_FAILED` instead of raw `last_error` to `coach`.
+- Release-gate evidence on documentation-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`: CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success.
+- Merge and Production migration remain separate protected gates. No merge occurred and migration `20260729221600_restrict_os_rbac_sanitize_errors.sql` has not been applied to Production.
+- Release and rollback plan: `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
+- Required post-Production runtime matrix: `super_admin`, `admin`, and `reception` receive successful command-center/operations responses and privileged raw operational error where applicable; `coach` receives successful responses but only sanitized `JOB_FAILED`; `content_manager` receives `STAFF_ACCESS_DENIED`; anonymous execution remains denied.
+- Rollback, if the separately approved Production migration causes authorization or response-shape regression: restore the prior two function definitions and role allowlists in a new explicit rollback migration, verify grants/search paths and role matrix read-only, and record receipts. Do not rewrite migration history or mutate data.
+- No Supabase Production, Auth, RLS, data, key, environment, Production deployment, publishing, Analytics, Ads, billing, or spend mutation occurred in this readiness stage.
+
+### Next protected gates
+
+1. Separate explicit Merge authorization for PR #219.
+2. After merge evidence is recorded, separate explicit Production Migration authorization.
+"""
+          handoff.write_text(handoff_text)
+
+          ledger_text = ledger.read_text()
+          ledger_text = ledger_text.replace("Last verified: 2026-07-29 (Asia/Dubai)", "Last verified: 2026-07-30 (Asia/Dubai)", 1)
+          old_phase = "| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |"
+          new_phase = "| 3 | Security, RBAC and Supabase authorization | `REVIEW_READY` | PR #219 Draft at release-gate documentation head `b7499c15bd7439a20b2fd865ca62492d962493b0`; CI #703, Fresh Supabase #31 and Booking Foundation #37 success; owner state `PR_219_TECHNICALLY_APPROVED` | Keep PR #219 Draft and unmerged; require separate Merge gate, then separate Production Migration gate and runtime role-matrix verification |"
+          if old_phase in ledger_text:
+              ledger_text = ledger_text.replace(old_phase, new_phase, 1)
+          if marker not in ledger_text:
+              ledger_text += """
+
+
+## Checkpoint — 2026-07-30 PR #219 release-gate readiness
+
+- Agent/workstream: Main Project Director / Supabase Security and OS RBAC.
+- Phase and task: Phase 3 — finalize merge readiness for the approved `REMOVE_CONTENT_MANAGER_KEEP_COACH_TEMPORARILY_SANITIZE_OPERATIONAL_ERRORS` change.
+- Status: `REVIEW_READY`; durable state `PR_219_RELEASE_GATE_CHECKS_PASS`.
+- Scope: release planning and durable documentation for PR #219 only.
+- Explicit exclusions: no merge, Production migration, Supabase Production mutation, Auth, RLS, data, keys, Production deployment, publishing, messaging, Analytics, Ads, billing or spend.
+- Last confirmed result: PR #219 is Draft, open, mergeable and unmerged; its branch is behind latest `main` by zero commits. The Production migration has not been executed.
+- Evidence: PR #219; documentation-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`; CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success; release/rollback plan `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
+- Runtime matrix after a separately approved Production migration: allow `super_admin`, `admin`, `reception`, and temporary `coach`; deny `content_manager`; sanitize coach background-job errors to `JOB_FAILED`; retain raw operational detail only for the other allowed privileged roles; keep anonymous execution denied.
+- Rollback: apply a new explicit rollback migration restoring prior function definitions and role allowlists, then run read-only grants, search-path, response-shape and per-role verification. Never rewrite migration history and never mutate application data as rollback.
+- Failure/recovery: initial implementation CI failures were limited to migration inventory, SQL verifier quoting and Phase A scenario isolation; each was corrected inside PR #219 and the final required matrix passed.
+- Protected actions not taken: every Production and merge action remains untouched.
+- Blocker class: separate owner Merge authorization, followed by a separate owner Production Migration authorization.
+- Next safe action: stop before Merge and present final readiness evidence. After explicit Merge approval, merge only the reviewed exact head; do not apply Production migration under the same authorization.
+- Context health: strong; implementation, tests, release order, rollback and protected boundaries are durable.
+"""
+          ledger.write_text(ledger_text)
+          PY
+      - name: Commit handoff synchronization
+        shell: bash
+        run: |
+          if git diff --quiet -- PROJECT_HANDOFF.md docs/program/STRATEGIC_EXECUTION_LEDGER.md; then
+            echo "Handoffs already synchronized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROJECT_HANDOFF.md docs/program/STRATEGIC_EXECUTION_LEDGER.md
+          git commit -m "Record PR 219 release gate readiness"
+          git push origin HEAD:agent/restrict-os-rbac-sanitize-errors-20260730
