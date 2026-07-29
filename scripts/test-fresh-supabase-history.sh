@@ -60,6 +60,7 @@ for migration in "${migration_files[@]}"; do
 done
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-fresh-supabase-history.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-no-anon-security-definer.sql
 
 if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" && ! -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-readonly.sql
