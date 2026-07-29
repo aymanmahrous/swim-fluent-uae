@@ -47,9 +47,9 @@ Every agent or workstream must append or update a checkpoint containing:
 | Phase | Workstream | Status | Last verified evidence | Gate / next safe action |
 |---|---|---|---|---|
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
-| 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #200 squash merged at `9ea1dfbfce4b3a9163b308161a39fb8d0cc94934`; CI #641 success; 23-file release matrix live on main | Exact asset/caption pairing, rights/source, account and release-readiness evidence; no publishing |
+| 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | 2026-07-29 read-only baseline: 61 security advisor items, 15 performance items, all listed public tables RLS-enabled | Function-by-function and role-by-role review; no bulk or Production fix |
+| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #203 squash merged at `02454cc3a4ef36c2604cefff522925995c67f4a4`; CI #647 success; 50/50 SECURITY DEFINER functions classified | Prepare isolated booking-ingress and trigger-grant remediation with rollback; no Production migration without protected approval |
 | 4 | PWA installability | `REVIEW_READY` | Draft PR #198; head `6fa994e...`; CI #639 success; Vercel Preview READY; no runtime errors in inspected 24h | Android/iPhone install, standalone, offline and private-route cache verification |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
@@ -88,3 +88,18 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: Phase 1 release evidence — exact asset/caption pairing, source/rights, account readiness and human release approval.
 - Next safe action: pair one approved content unit at a time and continue the isolated Supabase authorization review in parallel.
 - Context health: strong; current state and merge evidence are durable on `main`.
+
+## Checkpoint — 2026-07-29 Drive mapping and Supabase authorization audit
+
+- Agent/workstream: Main Project Director / Content Release Readiness and Supabase Security.
+- Task: Replace unverified Week 1 file pairing with canonical Drive evidence and complete the read-only privileged-function/booking-ingress audit.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for the two audit/documentation tasks; Phases 1 and 3 remain `IN_PROGRESS`.
+- Scope: one content matrix update and one security audit document.
+- Explicit exclusions: no asset mutation, `RF30D-*` inference, publishing, scheduling, external account write, SQL, migration, policy, key, Auth, Production data, environment variable or deployment change.
+- Last confirmed result: all 23 Batch A1 files have verified Batch ID, visible Arabic copy and SHA-256 evidence; 50/50 observed SECURITY DEFINER functions classified.
+- Evidence: PR #202 head `e176bf375407ce8b768de7ba518cacef93a194b4`, CI #646 success, squash merge `413574ddf17c5c756aa6bb3923334edb0aabec2b`; PR #203 head `87bc4c31da7bf3f5463f8d844c5bc65fee6b02e3`, CI #647 success, squash merge `02454cc3a4ef36c2604cefff522925995c67f4a4`.
+- Failure/recovery: PR #203 temporarily reported non-mergeable while GitHub recalculated after PR #202 changed `main`; no force or unsafe rebase was used; it became mergeable after recalculation.
+- Protected actions not taken: all Production and external release actions.
+- Blocker class: Phase 1 rights/caption/calendar/account/release gates; Phase 3 protected secret/config and migration approval.
+- Next safe action: prepare a separate Preview-first remediation PR that routes booking through the hardened service-only ingress, revokes direct anonymous execution and adds regression tests; do not apply the migration or Production secrets without approval. Continue one content-unit caption/calendar comparison in parallel.
+- Context health: strong; source IDs, exact commits, CI runs, findings and protected boundaries are durable.
