@@ -1,4 +1,5 @@
 // This cache owns only public install resources; navigation and private routes remain network-only.
+// Rollback observation seed: PWA enabled on the stable preview branch alias.
 const CACHE_PREFIX = "relax-fix-pwa-";
 const CACHE_VERSION = `${CACHE_PREFIX}v5`;
 const OFFLINE_URL = "/offline.html";
