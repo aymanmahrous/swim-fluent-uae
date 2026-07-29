@@ -46,8 +46,8 @@ Every agent or workstream must append or update a checkpoint containing:
 
 | Phase | Workstream | Status | Last verified evidence | Gate / next safe action |
 |---|---|---|---|---|
-| 0 | Governance, canonical systems and durable agent continuity | `REVIEW_READY` | Branch `agent/strategy-execution-governance-20260729`; Handoff, Strategy Handoff and this ledger updated | Review PR; do not merge without explicit owner approval |
-| 1 | 30-day bilingual content plan and Week 1 release preparation | `REVIEW_READY` | Plan merged by PR #97; canonical Batch A1 package and final owner visual approval receipt recorded in Handoff | Exact asset/caption pairing, rights/source, account and release-readiness evidence; no publishing |
+| 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
+| 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #200 squash merged at `9ea1dfbfce4b3a9163b308161a39fb8d0cc94934`; CI #641 success; 23-file release matrix live on main | Exact asset/caption pairing, rights/source, account and release-readiness evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
 | 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | 2026-07-29 read-only baseline: 61 security advisor items, 15 performance items, all listed public tables RLS-enabled | Function-by-function and role-by-role review; no bulk or Production fix |
 | 4 | PWA installability | `REVIEW_READY` | Draft PR #198; head `6fa994e...`; CI #639 success; Vercel Preview READY; no runtime errors in inspected 24h | Android/iPhone install, standalone, offline and private-route cache verification |
@@ -73,3 +73,18 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: owner review for merge; protected mobile/offline evidence for PWA; external Replit service timeout.
 - Next safe action: open Draft PR, verify exact diff and CI, then continue content release-readiness and isolated Supabase authorization review without protected writes.
 - Context health: sufficient; canonical documents and current evidence identifiers are recorded.
+
+
+## Checkpoint — 2026-07-29 merge-authorized foundation closure
+
+- Agent/workstream: Main Project Director / Program Governance and Content Release Readiness.
+- Task: Merge the owner-approved governance foundation and Week 1 truth synchronization, then persist the resulting evidence.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for Phase 0; `IN_PROGRESS` for Phase 1.
+- Scope: governance and content documentation only.
+- Last confirmed result: PR #199 and PR #200 squash merged to `main`; canonical Handoffs, ledger, synchronized 30-day plan and 23-file matrix are live on `main`.
+- Evidence: PR #199 → `766fd73f31bdaebf604a1be061f44dacd7722859`, CI #640 success; PR #200 → `9ea1dfbfce4b3a9163b308161a39fb8d0cc94934`, CI #641 success; Vercel statuses success for both reviewed heads.
+- Failure/recovery: PR #200 briefly reported non-mergeable while GitHub recalculated after PR #199 changed `main`; no force/rebase was used; the PR became mergeable after recalculation and its disjoint two-file scope was rechecked.
+- Protected actions not taken: no Production deployment/promotion, database/Auth/key change, Replit update, asset mutation, scheduling, publishing, message, Analytics activation, Ads, billing or spend.
+- Blocker class: Phase 1 release evidence — exact asset/caption pairing, source/rights, account readiness and human release approval.
+- Next safe action: pair one approved content unit at a time and continue the isolated Supabase authorization review in parallel.
+- Context health: strong; current state and merge evidence are durable on `main`.
