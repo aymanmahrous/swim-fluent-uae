@@ -9,6 +9,7 @@ MIGRATIONS_DIR="supabase/migrations"
 MIGRATIONS_BACKUP="$(mktemp -d /tmp/relax-fix-stacked-phase-a.XXXXXX)"
 PHASE_A_FILENAME="20260711003100_international_booking_phone_foundation.sql"
 BOOKING_INGRESS_FILENAME="20260729144612_harden_booking_ingress_rpc.sql"
+OS_RBAC_FILENAME="20260729221600_restrict_os_rbac_sanitize_errors.sql"
 PHASE_A_PATH="$MIGRATIONS_DIR/$PHASE_A_FILENAME"
 PHASE_A_FILE="$(mktemp /tmp/phase-a-foundation.XXXXXX.sql)"
 DATABASE_RUNNING=0
@@ -50,6 +51,7 @@ mapfile -d '' migration_files < <(
   find "$MIGRATIONS_DIR" -maxdepth 1 -type f -name '*.sql' \
     ! -name "$PHASE_A_FILENAME" \
     ! -name "$BOOKING_INGRESS_FILENAME" \
+    ! -name "$OS_RBAC_FILENAME" \
     -print0 | LC_ALL=C sort -z
 )
 
