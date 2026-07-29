@@ -19,6 +19,8 @@ assert.ok(manifest.shortcuts.some((entry) => entry.url === "/os"));
 
 assert.match(rootRoute, /rel: "manifest", href: "\/manifest\.webmanifest"/);
 assert.match(rootRoute, /rel: "apple-touch-icon", href: "\/pwa-icon\.svg"/);
+assert.match(rootRoute, /name: "apple-mobile-web-app-capable", content: "yes"/);
+assert.match(rootRoute, /name: "apple-mobile-web-app-title", content: "Relax Fix UAE"/);
 assert.match(rootRoute, /navigator\.serviceWorker\.register\("\/service-worker\.js"/);
 
 for (const privatePrefix of ["/api", "/staff", "/os", "/admin"]) {
