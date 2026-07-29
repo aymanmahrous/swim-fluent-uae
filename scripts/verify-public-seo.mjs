@@ -102,6 +102,51 @@ requireText(
   'id="booking-phone"',
   "booking phone accessible name",
 );
+requireText(
+  publicHomeText,
+  'className="relative scroll-mt-24 bg-muted/55 py-24"',
+  "booking sticky-header scroll offset",
+);
+requireText(
+  publicHomeText,
+  'htmlFor="booking-location"',
+  "booking location label association",
+);
+requireText(
+  publicHomeText,
+  'id="booking-location"',
+  "booking location accessible name",
+);
+requireText(
+  publicHomeText,
+  'htmlFor="booking-other-location"',
+  "booking other-location label association",
+);
+requireText(
+  publicHomeText,
+  'id="booking-other-location"',
+  "booking other-location accessible name",
+);
+requireText(
+  publicHomeText,
+  "<fieldset>",
+  "booking grouped controls semantics",
+);
+requireText(
+  publicHomeText,
+  "<legend className={labelClass}>",
+  "booking grouped controls accessible name",
+);
+requireText(
+  publicHomeText,
+  "aria-pressed={form.requestedDate === date}",
+  "booking date selection state",
+);
+requireText(
+  publicHomeText,
+  "aria-pressed={form.slot === slot}",
+  "booking time selection state",
+);
 
 const styles = await text("src/styles.css");
 requireText(
