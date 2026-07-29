@@ -1,6 +1,6 @@
 # PROJECT STRATEGY HANDOFF
 
-Last verified: 2026-07-15 (Asia/Dubai)
+Last verified: 2026-07-29 (Asia/Dubai)
 
 This file records durable strategic decisions only. Operational facts, temporary blockers, current PR states, and implementation evidence belong in `PROJECT_HANDOFF.md`.
 
@@ -286,3 +286,75 @@ Protected approvals remain required for budgets and paid spend, credentials and 
 - The existing Google Business Profile evidence is limited to visible profile existence/name/region/verification. All internal fields remain read-only-unverified until an authorized audit, and live writes require separate approval.
 - Use **Training locations / مواقع تدريب**, not branches, unless future legal and operational evidence supports separate eligible listings.
 - Automation and content remain test-mode, fictional-data and review-required. No real booking, invitation, message, workflow activation, GBP edit or post publication is authorized.
+
+
+## 18. Durable execution charter — owner approval 2026-07-29
+
+The owner approved the strategic plan and delegated its controlled execution with the following durable intent:
+
+- deliver real, verifiable outcomes that benefit Coach Ayman;
+- preserve and extend verified work rather than restart, demolish or duplicate it;
+- continue through a phase until its defined evidence gate is met;
+- stop only for a necessary protected approval, external permission, safety risk or unavailable dependency;
+- when one path is blocked, record the blocker and continue a safe isolated parallel workstream;
+- diagnose failures, change approach after repeated failure and preserve a truthful receipt;
+- never convert urgency or delegation into permission to bypass security, Privacy, legal, financial, Production or human-release gates.
+
+### Binding execution order
+
+The following order governs current execution and clarifies earlier track lists without discarding completed evidence:
+
+1. Preserve canonical architecture and Handoff/ledger continuity.
+2. Complete review and controlled release preparation for the existing 30-day bilingual content plan and approved Week 1 package.
+3. Operate weekly text review and approval; media creation follows text approval.
+4. Run security, RBAC, Supabase advisor and duplication/consolidation review as an isolated safety track. Production changes remain separately gated.
+5. Complete SEO, Local SEO, mobile conversion and external-account evidence.
+6. Complete Privacy/Consent-approved GA4, UTM, attribution and conversion measurement.
+7. Prove publishing readiness, receipts, duplicate prevention and a limited owner-approved Organic Pilot.
+8. Implement controlled Lead Operations and n8n only after Privacy, credential, audit, idempotency, retry, safe-stop and human-escalation gates.
+9. Launch Google Ads first only after conversion proof and explicit budget/spend approval.
+10. Launch Meta Ads later after measured organic/Google evidence and approved creative.
+
+PWA installability is an isolated product-enhancement workstream. It may be reviewed in parallel, but it must not delay content, measurement or safety foundations and must not be merged or promoted without its mobile/offline evidence and explicit owner approval.
+
+### Canonical-system rule
+
+- GitHub repository `aymanmahrous/swim-fluent-uae` is the code and durable-document source of truth.
+- Vercel project `swim-fluent-uae-w532` is the canonical connected customer-app project unless a later approved consolidation decision changes it.
+- Active Supabase project `nmzxrjdxvmmzzmajrskm` is the canonical connected data platform.
+- Replit `Command Center Hub` is separate and cannot own duplicated Production customer, booking, content, media, auth or analytics truth.
+- Similar or inactive projects are retained read-only pending evidence-backed consolidation; no automatic deletion or repurposing.
+
+### Mandatory agent phase-persistence protocol
+
+Before acting, every agent must:
+
+1. Read `PROJECT_STRATEGY_HANDOFF.md`, `PROJECT_HANDOFF.md` and `docs/program/STRATEGIC_EXECUTION_LEDGER.md`.
+2. Identify the current phase, gate, canonical source and protected exclusions.
+3. Reuse existing evidence and avoid duplicate branches, systems, migrations, content or assets.
+4. Record the workstream as one of:
+   - `NOT_STARTED`
+   - `IN_PROGRESS`
+   - `BLOCKED_PROTECTED_APPROVAL`
+   - `BLOCKED_EXTERNAL`
+   - `REVIEW_READY`
+   - `COMPLETED_EVIDENCE_VERIFIED`
+5. At every durable checkpoint, update the ledger with:
+   - agent/workstream;
+   - exact task and scope;
+   - last confirmed result;
+   - commit, PR, CI, Preview, query, receipt or reviewed artifact;
+   - failures and attempted recovery;
+   - protected actions not taken;
+   - next safe action;
+   - context health.
+6. Update `PROJECT_HANDOFF.md` at the end of a major phase or when current operational truth changes.
+7. Update this strategy file only when the owner approves a durable strategy change.
+
+No agent may mark a phase complete from an Issue, plan, chat message, UI presence, contract test alone or an unreviewed generated artifact. Completion requires evidence appropriate to the claim.
+
+### Failure and continuation rule
+
+After two or three materially equivalent failures, the agent must stop repeating the same method, classify the failure, inspect evidence/logs or select a safer alternative, record the result and continue an independent approved track where possible. Agents must not silently abandon work, conceal partial state, invent access or claim Live/Production success from a Preview or contract.
+
+This charter does not authorize automatic merges. Every merge and every protected external or Production action remains subject to its existing explicit gate.
