@@ -11,7 +11,21 @@ assert.ok(login.includes("rateLimitedResponse"), "Staff login must return a stan
 const booking = await read("src/routes/api.booking-request.ts");
 assert.ok(booking.includes("abuseControlAllowed"), "Public booking ingress must enforce abuse control before proxying");
 assert.ok(booking.includes('scope: "public-booking"'), "Public booking must keep a dedicated abuse-control scope");
-assert.ok(booking.indexOf("abuseControlAllowed") < booking.indexOf("submit_booking_request"), "Booking abuse control must run before the database RPC");
+assert.ok(booking.includes("abuseControlFingerprint"), "Booking ingress must derive its fingerprint on the server");
+assert.ok(booking.includes("supabaseSecretRpc"), "Booking ingress must use the privileged server-only RPC client");
+assert.ok(booking.includes('"submit_booking_request_ingress"'), "Booking route must call the hardened ingress RPC");
+assert.ok(!/["']submit_booking_request["']/.test(booking), "Booking route must not call the direct public RPC");
+assert.ok(!booking.includes("supabasePublicHeaders"), "Booking route must not use public Supabase credentials");
+assert.ok(booking.indexOf("abuseControlAllowed") < booking.indexOf("submit_booking_request_ingress"), "Booking abuse control must run before the hardened database RPC");
+
+const bookingClient = await read("src/platform/booking-request.ts");
+assert.ok(bookingClient.includes("p_honeypot"), "Booking client must send the honeypot signal");
+assert.ok(bookingClient.includes("p_form_elapsed_ms"), "Booking client must send elapsed form time");
+
+const bookingMigration = await read("supabase/migrations/20260729144612_harden_booking_ingress_rpc.sql");
+assert.ok(bookingMigration.includes("revoke all on function public.submit_booking_request("), "Direct booking RPC execute must be revoked");
+assert.ok(bookingMigration.includes("grant execute on function public.submit_booking_request("), "Direct booking RPC must retain service-only execution");
+assert.ok(bookingMigration.includes("revoke all on function public.enqueue_content_media_after_insert()"), "Media trigger execute grants must be hardened");
 
 const recovery = await read("src/routes/api.password-recovery.ts");
 const recoveryPolicy = await read("src/platform/password-recovery.server.ts");
