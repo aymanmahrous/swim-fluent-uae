@@ -487,8 +487,12 @@ function AboutStep({ form, setForm }: StepProps) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 animate-float-in">
       <div>
-        <label className={labelClass}>{tr("fullName")} *</label>
+        <label htmlFor="booking-full-name" className={labelClass}>
+          {tr("fullName")} *
+        </label>
         <input
+          id="booking-full-name"
+          name="fullName"
           autoComplete="name"
           className={inputClass}
           value={form.name}
@@ -496,8 +500,12 @@ function AboutStep({ form, setForm }: StepProps) {
         />
       </div>
       <div>
-        <label className={labelClass}>{tr("phone")} *</label>
+        <label htmlFor="booking-phone" className={labelClass}>
+          {tr("phone")} *
+        </label>
         <input
+          id="booking-phone"
+          name="phone"
           type="tel"
           inputMode="tel"
           autoComplete="tel"

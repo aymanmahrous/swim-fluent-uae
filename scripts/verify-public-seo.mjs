@@ -82,6 +82,26 @@ requireText(publicHomeText, "width={1024}", "hero intrinsic dimensions");
 requireText(publicHomeText, "height={1024}", "hero intrinsic dimensions");
 requireText(publicHomeText, 'fetchPriority="high"', "first hero fetch priority");
 requireText(publicHomeText, 'loading="lazy"', "below-the-fold hero loading");
+requireText(
+  publicHomeText,
+  'htmlFor="booking-full-name"',
+  "booking full-name label association",
+);
+requireText(
+  publicHomeText,
+  'id="booking-full-name"',
+  "booking full-name accessible name",
+);
+requireText(
+  publicHomeText,
+  'htmlFor="booking-phone"',
+  "booking phone label association",
+);
+requireText(
+  publicHomeText,
+  'id="booking-phone"',
+  "booking phone accessible name",
+);
 
 const styles = await text("src/styles.css");
 requireText(
