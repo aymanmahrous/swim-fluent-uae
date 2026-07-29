@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-19 (Asia/Dubai)
+Last verified: 2026-07-29 (Asia/Dubai)
 
 This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
@@ -641,3 +641,86 @@ Push the tested performance and handoff follow-up to the same Draft PR, re-check
 ### Next required action
 
 Review PR #143. Do not merge or promote the Preview to Production without explicit owner approval.
+
+
+## 18. Owner execution delegation and verified platform snapshot — 2026-07-29
+
+Status: `DELEGATED_EXECUTION_ACTIVE_PROTECTED_GATES_PRESERVED`
+
+The owner explicitly delegated end-to-end execution of the approved strategy on 2026-07-29, with the instruction to produce real, evidence-backed work that benefits Coach Ayman, preserves completed work, avoids harm and demolition, does not stop mid-phase except for a necessary protected gate or external blocker, and continues through safe parallel work when one path is blocked.
+
+This delegation authorizes routine, reversible, isolated and evidence-backed work already allowed by Issue #70. It does not authorize bypassing protected approvals. No agent may interpret delegation as permission for automatic merge, Production migration/write, real customer/child/health data, credentials, outbound messages, publishing, scheduling, Analytics activation, Ads, billing, spend, unsupported public claims or irreversible deletion.
+
+### Canonical connected-platform map
+
+Fresh read-only verification on 2026-07-29 established:
+
+- GitHub canonical repository: `aymanmahrous/swim-fluent-uae`; default branch `main`; connected owner permission `admin`.
+- Canonical connected Vercel Production project remains `swim-fluent-uae-w532`, project ID `prj_4wRrALwNzlU0msHb9pGOsExmNID0`.
+- The similarly named Vercel project `swim-fluent-uae` is non-canonical pending a separate documented consolidation decision; do not delete or repurpose it automatically.
+- Canonical active Supabase project: `nmzxrjdxvmmzzmajrskm`, status `ACTIVE_HEALTHY`, PostgreSQL 17, region `eu-west-1`.
+- Supabase project `relaxfix-pro` is `INACTIVE` and non-canonical pending a separate evidence-backed disposition decision.
+- Replit app `Command Center Hub`, replId `744ff594-34c9-410f-92d4-5287d6efdc41`, remains separate and must not become a duplicate Production website or source of truth.
+- GitHub and Vercel are authoritative for the customer application; Supabase is the canonical connected data platform; Replit remains a separate internal/experimental surface.
+
+### PWA workstream receipt
+
+- Draft PR #198: `Add privacy-safe PWA installability`.
+- Branch: `agent/pwa-installability`.
+- Head: `6fa994e3b561a7e2f9ecf7d57a4266c57900c877`.
+- Scope: seven changed files, 225 additions, zero deletions.
+- GitHub CI run #639: `SUCCESS`.
+- Both Vercel commit statuses: `SUCCESS`.
+- Canonical Preview deployment `dpl_4jk3g1xRAn7i8EdoYhZpKdjZKaay`: `READY`.
+- Vercel error-only build log contained no build error; no runtime errors were found in the inspected 24-hour range.
+- PR remains Draft, open, mergeable and unmerged.
+- Remaining gate: protected Preview access plus real Android/iPhone install, standalone and offline verification. No merge or Production promotion is authorized without explicit owner approval.
+
+### Supabase read-only advisor baseline
+
+The 2026-07-29 read-only baseline found:
+
+- 61 security advisor items: 33 `INFO`, 28 `WARN`.
+- 33 `rls_enabled_no_policy` notices. These tables are closed by RLS but require an explicit access-model review; absence of a policy must not automatically be treated as a defect.
+- 24 signed-in-user and 2 anonymous-user `SECURITY DEFINER` executable-function warnings requiring function-by-function authorization review.
+- leaked-password protection disabled.
+- one extension-in-public warning.
+- 15 performance items: one unindexed foreign key, one RLS initialization-plan warning and 13 unused-index notices.
+- All listed public tables had RLS enabled.
+- No SQL, migration, policy, key, Auth setting or Production data was changed.
+
+Do not apply bulk fixes. Review authorization semantics function by function, preserve intentional denial-by-default tables, validate tests and advisors, and use a new isolated migration only after protected approval.
+
+### Replit connection state
+
+- App discovery succeeds.
+- Two read-only internal inspection requests returned HTTP 504.
+- No update request was sent and no app change occurred.
+- Per the recovery rule, do not loop on the same failing request. Continue independent GitHub/Vercel/Supabase work and retry Replit later with a narrower inspection or after service recovery.
+
+### Mandatory execution ledger
+
+All agents must read and update:
+
+- `PROJECT_HANDOFF.md`
+- `PROJECT_STRATEGY_HANDOFF.md`
+- `docs/program/STRATEGIC_EXECUTION_LEDGER.md`
+
+before claiming progress or phase completion.
+
+Every phase handoff must record the agent/workstream, status, exact scope, last verified result, evidence links or identifiers, protected exclusions, blocker classification, next safe action and context health. A phase cannot be marked complete without durable evidence. Chat statements alone are not evidence.
+
+### Current next safe execution order
+
+1. Merge this governance documentation only after review and explicit approval.
+2. Complete the 30-day plan owner-review state and Week 1 exact asset/caption, rights/source and release-readiness evidence without publishing.
+3. Continue weekly copy approval; create or adapt media only after the corresponding text is approved.
+4. In an isolated parallel safety track, review Supabase privileged-function authorization and RBAC without Production writes.
+5. Complete SEO/Local SEO external evidence and mobile conversion/accessibility evidence.
+6. Implement GA4/UTM/attribution/conversion measurement only after Privacy/Consent decisions and through Preview-first isolated PRs.
+7. Prove publishing readiness and run a separately approved limited Organic Pilot with receipts.
+8. Prepare controlled Lead Operations/n8n only after Privacy, credentials, idempotency, retry and human-escalation gates.
+9. Launch Google Ads only after conversion proof and explicit budget/spend approval.
+10. Launch Meta Ads later, after Google/organic measurement and creative performance are proven.
+
+Safe parallel work is required when scopes are isolated. A blocked protected path must be logged and bypassed only by moving to another approved read-only, documentation, QA or Preview-first task; the protected gate itself must never be bypassed.
