@@ -820,3 +820,29 @@ Status: `IMPLEMENTED_AND_CI_GREEN_PRODUCTION_CHANGE_NOT_APPLIED`
 7. If the route fails before the migration, roll back the Vercel deployment. If the database privilege verification fails after migration, use the documented narrowly scoped SQL rollback and record the exact result.
 8. Update this handoff and `docs/program/STRATEGIC_EXECUTION_LEDGER.md` with merge, deployment, migration and verification receipts before marking the security phase complete.
 
+## 22. Booking ingress Production release receipt — 2026-07-29
+
+Status: `PRODUCTION_RELEASE_COMPLETED_EVIDENCE_VERIFIED`
+
+- Owner explicitly authorized: `نفذ بوابة الانتاج PR#205`.
+- PR #205 was marked ready and squash merged to `main`.
+- Final reviewed PR head: `ef6740953b326531917a8d925e3b04f03c804aaa`.
+- Merge commit: `23f8abdeb31568287a0b25710e855ac0d4d3e1ed`.
+- Final pre-release checks: CI #661 `SUCCESS`; Booking Phone Foundation #32 `SUCCESS`; Fresh Supabase Migration Compatibility #24 `SUCCESS`.
+- Vercel Production deployment `dpl_3snNe5kDzLoK28D2vPgbPaZcjnT7` reached `READY` for the merge commit. Aliases include `www.relaxfixuae.com` and `relaxfixuae.com`.
+- The public Arabic homepage returned HTTP 200 after deployment. Deployment-scoped Vercel Runtime error/fatal scan returned no entries.
+- Supabase preflight proved the service-only ingress signature existed and `service_role` could execute it before the application switch.
+- Production migration record: `20260729154439_harden_booking_ingress_rpc`.
+- Post-migration read-only verification proved:
+  - `anon` and `authenticated` cannot execute `submit_booking_request`;
+  - `anon` and `authenticated` cannot execute `submit_booking_request_ingress`;
+  - `anon` and `authenticated` cannot execute `enqueue_content_media_after_insert()`;
+  - `service_role` retains execution on all three required functions.
+- Supabase Security Advisors were rerun. Existing broader INFO/WARN findings remain separate review work; no bulk fix was attempted.
+- No live booking, customer record, Auth change, key change, content publication, message, Analytics activation, Ads, billing or spend occurred.
+- Rollback was not required.
+
+### Next safe action
+
+Continue the remaining privileged-function/RBAC review one function at a time. Preserve the booking route and grants above as the Production baseline. Do not restore anonymous direct booking execution.
+

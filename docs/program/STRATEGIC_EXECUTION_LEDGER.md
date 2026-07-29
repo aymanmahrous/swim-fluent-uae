@@ -49,7 +49,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #203 squash merged at `02454cc3a4ef36c2604cefff522925995c67f4a4`; CI #647 success; 50/50 SECURITY DEFINER functions classified | Prepare isolated booking-ingress and trigger-grant remediation with rollback; no Production migration without protected approval |
+| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | Booking ingress remediation Production-complete: PR #205 merge `23f8abdeb31568287a0b25710e855ac0d4d3e1ed`; Vercel `dpl_3snNe5kDzLoK28D2vPgbPaZcjnT7` READY; Supabase migration `20260729154439_harden_booking_ingress_rpc`; post-grant checks passed | Preserve closed booking boundary; continue remaining privileged-function/RBAC review one function at a time |
 | 4 | PWA installability | `REVIEW_READY` | Draft PR #198; head `6fa994e...`; CI #639 success; Vercel Preview READY; no runtime errors in inspected 24h | Android/iPhone install, standalone, offline and private-route cache verification |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
@@ -117,4 +117,18 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: coordinated Production release window and post-deploy privilege verification.
 - Next safe action: preserve Draft state; on explicit Production approval, deploy the server route first, verify Vercel health, then apply `20260729144612_harden_booking_ingress_rpc.sql` and run read-only grant checks. Record every receipt before phase completion.
 - Context health: strong; implementation, exact migration, CI receipts, Vercel state, rollback boundary and release order are durable in PR #205 and `PROJECT_HANDOFF.md`.
+
+## Checkpoint — 2026-07-29 booking ingress Production closure
+
+- Agent/workstream: Main Project Director / Supabase Security and Booking Ingress.
+- Task: Execute the owner-authorized Production gate for PR #205 in the protected order.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for booking ingress remediation; broader Phase 3 remains `IN_PROGRESS`.
+- Scope: squash merge, Vercel Production health verification, one privilege-only Supabase migration, post-migration read-only grants verification and durable receipts.
+- Last confirmed result: hardened server route is live; anonymous direct booking execution and public media-trigger execution are closed; required `service_role` execution remains.
+- Evidence: owner authorization `نفذ بوابة الانتاج PR#205`; merge `23f8abdeb31568287a0b25710e855ac0d4d3e1ed`; CI #661 success; Booking Phone Foundation #32 success; Fresh Supabase Migration Compatibility #24 success; Vercel `dpl_3snNe5kDzLoK28D2vPgbPaZcjnT7` READY; Supabase migration `20260729154439_harden_booking_ingress_rpc`; direct privilege query passed; Security Advisors rerun.
+- Failure/recovery: no release failure; rollback was not required. Earlier test-contract failures were resolved before Production and are recorded in the prior checkpoint.
+- Protected actions not taken: no live/test booking, customer-data mutation, Auth/key change, publication, messaging, Analytics, Ads, billing or spend.
+- Blocker class: none for this remediation. Remaining Phase 3 function warnings require independent semantic review and must not be bulk-revoked.
+- Next safe action: preserve the closed booking boundary and continue remaining function-by-function RBAC review in isolated Preview-first changes.
+- Context health: strong; merge, deployment, migration, verification and rollback outcome are durably identified.
 
