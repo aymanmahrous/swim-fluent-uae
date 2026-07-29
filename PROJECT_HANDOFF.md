@@ -753,3 +753,35 @@ Status: `GOVERNANCE_FOUNDATION_COMPLETED_CONTENT_RELEASE_PAIRING_IN_PROGRESS`
 ### Current next safe action
 
 Continue exact Week 1 asset/caption pairing and rights/source verification one content unit at a time. In parallel, continue the isolated Supabase privileged-function/RBAC review. Publishing, external account writes, Production database changes, Analytics activation and Ads remain protected.
+
+## 20. Drive mapping and Supabase authorization audit receipt — 2026-07-29
+
+Status: `AUDIT_EVIDENCE_MERGED_REMEDIATION_AND_RELEASE_GATES_PRESERVED`
+
+### Week 1 Batch A1
+
+- PR #202 `Verify Week 1 Batch A1 asset-copy mapping`: squash merged.
+- Merge commit: `413574ddf17c5c756aa6bb3923334edb0aabec2b`.
+- GitHub CI #646: `SUCCESS`.
+- Canonical Drive receipt `1ZSqVdBQwgmR8g4sZ7TFahMTXL2GUqoHI` verifies exact Batch ID, visible Arabic copy and SHA-256 for all 23 PNGs.
+- Approved ZIP `1FuuGNex5_DclfzdEbuw3zHHjI1qmUsJg` and preserved source archive `1sh0PZXbst5m8Tk2vEZyGmVmmsmAlX15r` are each 54,550,661 bytes.
+- This evidence does not map `w1_*` to `RF30D-*`, approve an exact platform caption/CTA, complete legal-rights review or authorize release.
+- Arabic-only Batch A1 must not be silently adapted into English or bilingual media.
+
+### Supabase authorization
+
+- PR #203 `Record Supabase privileged-function and booking-ingress audit`: squash merged.
+- Merge commit: `02454cc3a4ef36c2604cefff522925995c67f4a4`.
+- GitHub CI #647: `SUCCESS`.
+- Read-only audit classified 50/50 observed SECURITY DEFINER functions: 23 guarded authenticated functions, 25 internal-only functions and 2 public/anonymous review findings.
+- High-priority design gap: `src/routes/api.booking-request.ts` calls anonymous `submit_booking_request` directly, so callers can bypass both the application process limiter and the hardened service-only `submit_booking_request_ingress` controls.
+- Hardening finding: `enqueue_content_media_after_insert()` retains unnecessary execute grants for `PUBLIC`, `anon` and `authenticated`.
+- No SQL, migration, policy, Auth, key, Production data, environment variable or deployment changed.
+
+### Mandatory next-agent instruction
+
+1. Read `docs/content/WEEK1_RELEASE_READINESS_MATRIX.md` before any Week 1 media reuse; do not infer calendar mapping or release readiness.
+2. Read `docs/security/SUPABASE_PRIVILEGED_FUNCTION_AND_BOOKING_INGRESS_AUDIT_2026-07-29.md` before changing booking or Supabase grants.
+3. Prepare booking ingress code, regression tests and a CLI-named isolated migration in one Preview-first security PR, including rollback and secret/config dependency checks.
+4. Do not switch the route before the approved server-only secret exists; do not apply any Production migration without protected approval.
+5. Continue content caption/calendar/rights verification independently while the protected security gate is pending.
