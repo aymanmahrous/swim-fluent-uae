@@ -344,7 +344,7 @@ function Home() {
         </div>
       </section>
 
-      <section id="book" className="relative bg-muted/55 py-24">
+      <section id="book" className="relative scroll-mt-24 bg-muted/55 py-24">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
         <div className="mx-auto max-w-5xl px-6">
           <div className="mx-auto max-w-3xl text-center">
@@ -543,8 +543,12 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
         onChange={(category) => setForm((value) => ({ ...value, category }))}
       />
       <div>
-        <label className={labelClass}>{tr("neighborhood")} *</label>
+        <label htmlFor="booking-location" className={labelClass}>
+          {tr("neighborhood")} *
+        </label>
         <select
+          id="booking-location"
+          name="location"
           className={inputClass}
           value={form.location}
           onChange={(e) =>
@@ -558,12 +562,19 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
           <option value="Other">{tr("other")}</option>
         </select>
         {isOther && (
-          <input
-            className={`${inputClass} mt-3`}
-            value={form.otherLocation}
-            onChange={(e) => setForm((value) => ({ ...value, otherLocation: e.target.value }))}
-            placeholder={tr("otherLabel")}
-          />
+          <>
+            <label htmlFor="booking-other-location" className="sr-only">
+              {tr("otherLabel")}
+            </label>
+            <input
+              id="booking-other-location"
+              name="otherLocation"
+              className={`${inputClass} mt-3`}
+              value={form.otherLocation}
+              onChange={(e) => setForm((value) => ({ ...value, otherLocation: e.target.value }))}
+              placeholder={tr("otherLabel")}
+            />
+          </>
         )}
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
@@ -616,8 +627,8 @@ function TimeStep({
   const { tr } = useLang();
   return (
     <div className="space-y-8 animate-float-in">
-      <div>
-        <label className={labelClass}>{tr("selectDate")} *</label>
+      <fieldset>
+        <legend className={labelClass}>{tr("selectDate")} *</legend>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
           {dates.map((date) => {
             const label = new Intl.DateTimeFormat(lang === "ar" ? "ar-AE" : "en-AE", {
@@ -630,6 +641,7 @@ function TimeStep({
               <button
                 type="button"
                 key={date}
+                aria-pressed={form.requestedDate === date}
                 onClick={() => setForm((value) => ({ ...value, requestedDate: date, slot: "" }))}
                 className={`rounded-2xl border px-3 py-3 text-xs font-bold transition ${
                   form.requestedDate === date
@@ -642,14 +654,15 @@ function TimeStep({
             );
           })}
         </div>
-      </div>
-      <div>
-        <label className={labelClass}>{tr("slot")} *</label>
+      </fieldset>
+      <fieldset>
+        <legend className={labelClass}>{tr("slot")} *</legend>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {slots.map((slot) => (
             <button
               type="button"
               key={slot}
+              aria-pressed={form.slot === slot}
               onClick={() => setForm((value) => ({ ...value, slot }))}
               className={`rounded-xl border-2 px-3 py-3 font-mono text-sm font-bold transition ${
                 form.slot === slot
@@ -661,7 +674,7 @@ function TimeStep({
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
     </div>
   );
 }
@@ -751,8 +764,8 @@ function ChoiceGroup({
   columns?: 2 | 3;
 }) {
   return (
-    <div>
-      <label className={labelClass}>{label} *</label>
+    <fieldset>
+      <legend className={labelClass}>{label} *</legend>
       <div className={`grid gap-2 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
         {options.map(([optionValue, optionLabel]) => (
           <label
@@ -766,6 +779,7 @@ function ChoiceGroup({
             <input
               type="radio"
               name={name}
+              value={optionValue}
               className="sr-only"
               checked={value === optionValue}
               onChange={() => onChange(optionValue)}
@@ -774,6 +788,6 @@ function ChoiceGroup({
           </label>
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 }
