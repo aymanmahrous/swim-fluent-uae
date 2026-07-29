@@ -50,7 +50,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
 | 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |
-| 4 | PWA installability | `REVIEW_READY` | Draft PR #213 head `9035184666cba759066b138b2ae1d0466542259e`; CI #686 success; Vercel Preview `dpl_14VHvSnfbr3EpwDud16BiRmbSKnG` READY; manifest/icons/offline source and zero runtime errors verified | Android+iPhone install/standalone, real offline navigation, private CacheStorage and rollback observation; no merge before evidence |
+| 4 | PWA installability | `REVIEW_READY_ANDROID_EVIDENCE_UNVERIFIED` | PR #213 Preview/CI green; iPhone PASS; private CacheStorage PASS; same-origin root rollback PASS via PR #217 and CI #694 | Preserve Draft; obtain conclusive Android standalone/offline evidence or explicit risk acceptance before readiness/merge |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
 | 7 | Publishing readiness and Organic Pilot | `BLOCKED_PROTECTED_APPROVAL` | Contracts exist; Live readiness and receipts unproven | Verify accounts, credentials, idempotency, retry, receipts and obtain release approval |
@@ -190,3 +190,33 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: physical-device and real offline/cache runtime evidence.
 - Next safe action: execute Android and iPhone install/standalone checks plus real offline/private-cache/root-rollback checks; keep PR #213 Draft until all pass.
 - Context health: strong; exact PR head, CI, Preview ID, runtime outcome, browser receipts and remaining gates are durable.
+
+
+## Checkpoint — 2026-07-29 iPhone PWA physical-device verification
+
+- Agent/workstream: Main Project Director / PWA Device QA.
+- Task: Verify install, standalone and real offline behavior on a physical iPhone.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for iPhone; Phase 4 is `BLOCKED_EXTERNAL`.
+- Scope: iPhone Home Screen installation, standalone launch and Airplane Mode offline reopening.
+- Last confirmed result: all three iPhone gates passed; bilingual offline fallback rendered in standalone.
+- Evidence: 739×1600 JPEG SHA-256 receipts `b476a0d4a877c4688ad490bd0242034dfc6ee67e47d9e3b932825fe2872925fd`, `1ef9f44d87ae78c293970d237acf2dec034f2cabc18696e64e194caa8b3c98cf`, and `0205d6517c18bb82ff035845022a976b1bb2b8a57a2d17c0a76e9300e881de9f`; PR #213 comments contain the receipts.
+- Failure/recovery: none on iPhone. A friend’s Android later became available, but captured screenshots proved browser-only rendering and a generic browser offline failure; owner attestation is not equivalent to standalone/offline evidence.
+- Protected actions not taken: no merge, Production promotion, paid device cloud, environment, Supabase/Auth, publishing, Analytics, Ads, billing or spend mutation.
+- Blocker class: conclusive Android installed-standalone and Relax Fix offline evidence; private CacheStorage and root rollback runtime evidence are now closed.
+- Next safe action: keep PR #213 Draft; obtain two conclusive Android screenshots or record explicit owner risk acceptance before readiness/merge.
+- Context health: strong; iPhone proof, exact hashes, Android blocker and remaining gates are durable.
+
+
+## Checkpoint — 2026-07-30 PWA private-cache and same-origin rollback closure
+
+- Agent/workstream: Main Project Director / PWA Runtime Safety.
+- Task: Prove private routes never enter CacheStorage and prove the root kill path unregisters and deletes only owned caches on the same origin.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for both runtime gates; Phase 4 remains `REVIEW_READY_ANDROID_EVIDENCE_UNVERIFIED`.
+- Scope: read-only Chrome CacheStorage inspection plus disposable Preview-only enabled-to-disabled observation.
+- Last confirmed result: `/admin`, `/staff` and `/os` left the v5 cache at 6 public entries; same-origin rollback changed root registrations 1→0 and owned caches 1→0 while foreign caches remained 0→0.
+- Evidence: PNG SHA-256 `03651c38e63e67494ff309d74d49039f88ab590899d01efb7e37502f19f30651` and `9d4572f360ff79d596fff0daf5a9faf1a3eab855f2164b430788445a7ec62ac1`; disposable PR #217 head `08bbc399820ce5c990a4d47b3aac6db22830dcfd`; CI #694 success; Vercel `dpl_Dcic9Rtv2x686z3FwWsrBy9VBVdd` READY Preview.
+- Failure/recovery: initial Draft PR #216 used different deployment origins and therefore could not prove root cleanup. It was closed superseded; PR #217 used one stable branch alias before and after disabling.
+- Protected actions not taken: no merge, `main` write, Production promotion, Supabase/Auth/environment mutation, publication, messaging, Analytics, Ads, billing or spend.
+- Blocker class: Android evidence quality only. Owner attestation exists, but the captured browser screenshots do not prove installed standalone or the Relax Fix offline fallback.
+- Next safe action: preserve PR #213 Draft; obtain conclusive Android standalone and airplane-mode reopen evidence or explicit owner risk acceptance, then review the final readiness decision. Never merge PR #217.
+- Context health: strong; exact heads, deployment, CI, cache counts, hashes, failure recovery and remaining decision are durable.
