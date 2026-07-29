@@ -2,13 +2,23 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const root = process.cwd();
-const [rootShell, staffPortal, osRoute, adminRoute, serverSource, robots, vercelConfigSource] =
+const [
+  rootShell,
+  staffPortal,
+  osRoute,
+  adminRoute,
+  serverSource,
+  startSource,
+  robots,
+  vercelConfigSource,
+] =
   await Promise.all([
     readFile(join(root, "src/routes/__root.tsx"), "utf8"),
     readFile(join(root, "src/routes/staff.tsx"), "utf8"),
     readFile(join(root, "src/routes/os.tsx"), "utf8"),
     readFile(join(root, "src/routes/admin.tsx"), "utf8"),
     readFile(join(root, "src/server.ts"), "utf8"),
+    readFile(join(root, "src/start.ts"), "utf8"),
     readFile(join(root, "public/robots.txt"), "utf8"),
     readFile(join(root, "vercel.json"), "utf8"),
   ]);
@@ -73,7 +83,13 @@ for (const source of ["/api/(.*)", "/os/(.*)", "/os", "/staff", "/admin"]) {
   }
 }
 
-for (const needle of ['name: "robots"', 'content: "noindex"']) {
+for (const needle of [
+  'name: "robots"',
+  'content: "noindex"',
+  "status: 404",
+  '"Cache-Control": "no-store, max-age=0"',
+  '"X-Robots-Tag": "noindex, nofollow, noarchive"',
+]) {
   if (!adminRoute.includes(needle)) {
     throw new Error(`Legacy admin noindex contract missing ${JSON.stringify(needle)}`);
   }
@@ -89,6 +105,18 @@ for (const needle of [
   }
 }
 
+for (const needle of [
+  'pathname === "/admin"',
+  'pathname.startsWith("/admin/")',
+  'headers.set("X-Robots-Tag", "noindex, nofollow, noarchive")',
+  "sensitiveResponseHeadersMiddleware",
+  "response: new Response(result.response.body",
+]) {
+  if (!startSource.includes(needle)) {
+    throw new Error(`TanStack request middleware noindex boundary missing ${JSON.stringify(needle)}`);
+  }
+}
+
 console.log(
-  "Public/internal route boundary verification passed (no public links, authenticated Staff navigation retained, robots and server-side X-Robots-Tag protections verified).",
+  "Public/internal route boundary verification passed (no public links, authenticated Staff navigation retained, robots and active TanStack request X-Robots-Tag protections verified).",
 );

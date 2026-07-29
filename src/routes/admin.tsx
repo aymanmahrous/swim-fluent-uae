@@ -4,6 +4,19 @@ import { LockKeyhole } from "lucide-react";
 const legacyAdminEnabled = import.meta.env.VITE_ENABLE_LEGACY_ADMIN === "true";
 
 export const Route = createFileRoute("/admin")({
+  server: {
+    handlers: {
+      GET: async () =>
+        new Response("Not Found", {
+          status: 404,
+          headers: {
+            "Cache-Control": "no-store, max-age=0",
+            "Content-Type": "text/plain; charset=utf-8",
+            "X-Robots-Tag": "noindex, nofollow, noarchive",
+          },
+        }),
+    },
+  },
   beforeLoad: () => {
     if (!legacyAdminEnabled) {
       throw redirect({ to: "/", replace: true });
