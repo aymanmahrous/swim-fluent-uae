@@ -22,7 +22,7 @@ import {
 } from "../platform/business-settings";
 import appCss from "../styles.css?url";
 
-const PWA_ENABLED = true;
+const PWA_ENABLED = false;
 const PWA_CACHE_PREFIX = "relax-fix-pwa-";
 
 function localizedPublicLanguage(pathname: string): Lang {
