@@ -49,7 +49,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | Booking ingress remediation Production-complete: PR #205 merge `23f8abdeb31568287a0b25710e855ac0d4d3e1ed`; Vercel `dpl_3snNe5kDzLoK28D2vPgbPaZcjnT7` READY; Supabase migration `20260729154439_harden_booking_ingress_rpc`; post-grant checks passed | Preserve closed booking boundary; continue remaining privileged-function/RBAC review one function at a time |
+| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | Booking ingress Production-complete; anonymous privileged-function regression guard merged in PR #207 at `1e3e5190f7a00dd0e7872c5d39c1721e9dcad202`; CI #665 and Fresh Supabase #25 success; live anonymous-executable privileged functions verified at zero | Preserve closed booking boundary and generic anon invariant; review guarded authenticated contracts one function at a time |
 | 4 | PWA installability | `REVIEW_READY` | Draft PR #198; head `6fa994e...`; CI #639 success; Vercel Preview READY; no runtime errors in inspected 24h | Android/iPhone install, standalone, offline and private-route cache verification |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
@@ -132,3 +132,17 @@ Every agent or workstream must append or update a checkpoint containing:
 - Next safe action: preserve the closed booking boundary and continue remaining function-by-function RBAC review in isolated Preview-first changes.
 - Context health: strong; merge, deployment, migration, verification and rollback outcome are durably identified.
 
+
+## Checkpoint — 2026-07-29 anonymous privileged-function regression guard
+
+- Agent/workstream: Main Project Director / Supabase Security.
+- Task: Convert the completed anonymous privilege remediation into a generic full-history regression invariant and synchronize the audit truth.
+- Status: `COMPLETED_EVIDENCE_VERIFIED`; broader Phase 3 remains `IN_PROGRESS`.
+- Scope: one SQL verification contract, one disposable-database runner integration and security documentation.
+- Last confirmed result: no `public.SECURITY DEFINER` function can regain anonymous execution without failing the full-history CI gate.
+- Evidence: PR #207 reviewed head `9b71985f8dfb2f2788adb32e011d38a6b9928ade`; squash merge `1e3e5190f7a00dd0e7872c5d39c1721e9dcad202`; CI #665 success; Fresh Supabase Migration Compatibility #25 success across all jobs.
+- Failure/recovery: the first file-write orchestration attempt failed locally before any write because Markdown backticks conflicted with the JavaScript template literal; the content was rebuilt safely as line arrays and all subsequent GitHub writes and checks succeeded.
+- Protected actions not taken: no Supabase Production mutation, Auth/key/policy change, live-data write, Vercel environment change, publication, message, Analytics, Ads, billing or spend.
+- Blocker class: none for the anonymous regression guard. Leaked-password protection remains a protected Auth decision; authenticated privileged functions and remaining advisor notices require independent semantic review.
+- Next safe action: continue function-by-function review while preserving the closed booking boundary and the generic anonymous-execution invariant; never bulk-revoke guarded contracts.
+- Context health: strong; implementation, merge, complete CI matrix, production authorization state and remaining boundaries are durable.
