@@ -17,10 +17,18 @@ function clientIp(request: Request): string {
   );
 }
 
-function keyFor(request: Request, policy: AbuseControlPolicy): string {
+function fingerprintFor(request: Request, scope: string, subject = ""): string {
   return createHash("sha256")
-    .update(`${policy.scope}:${clientIp(request)}:${policy.subject?.trim().toLowerCase() ?? ""}`)
+    .update(`${scope}:${clientIp(request)}:${subject.trim().toLowerCase()}`)
     .digest("hex");
+}
+
+export function abuseControlFingerprint(request: Request, scope: string): string {
+  return fingerprintFor(request, scope);
+}
+
+function keyFor(request: Request, policy: AbuseControlPolicy): string {
+  return fingerprintFor(request, policy.scope, policy.subject);
 }
 
 export function abuseControlAllowed(request: Request, policy: AbuseControlPolicy): boolean {

@@ -8,8 +8,16 @@ export const BookingRequestResultSchema = z.discriminatedUnion("success", [
   }),
   z.object({
     success: z.literal(false),
-    code: z.enum(["INVALID_INPUT", "INVALID_PHONE", "DUPLICATE_REQUEST", "SERVER_ERROR"]),
-    message: z.string(),
+    code: z.enum([
+      "INVALID_INPUT",
+      "INVALID_PHONE",
+      "DUPLICATE_REQUEST",
+      "RATE_LIMITED",
+      "BOT_REJECTED",
+      "INGRESS_UNAVAILABLE",
+      "SERVER_ERROR",
+    ]),
+    message: z.string().optional().default("Unable to submit the booking request."),
   }),
 ]);
 
@@ -29,6 +37,8 @@ export interface SubmitBookingRequestInput {
   requestedTime: string;
   termsAccepted: boolean;
   idempotencyKey: string;
+  honeypot: string;
+  formElapsedMs: number;
 }
 
 export function formatDubaiCalendarDate(date: Date): string {
@@ -65,6 +75,8 @@ export async function submitBookingRequest(
       p_requested_time: input.requestedTime,
       p_terms_accepted: input.termsAccepted,
       p_idempotency_key: input.idempotencyKey,
+      p_honeypot: input.honeypot,
+      p_form_elapsed_ms: input.formElapsedMs,
     }),
   });
 

@@ -10,6 +10,7 @@ MIGRATIONS_BACKUP="$(mktemp -d /tmp/relax-fix-full-history.XXXXXX)"
 DATABASE_RUNNING=0
 MIGRATIONS_HIDDEN=0
 PHASE_A_FILENAME="20260711003100_international_booking_phone_foundation.sql"
+BOOKING_INGRESS_FILENAME="20260729144612_harden_booking_ingress_rpc.sql"
 
 cleanup() {
   if [[ "$DATABASE_RUNNING" -eq 1 ]]; then
@@ -42,7 +43,10 @@ mapfile -d '' migration_files < <(
 
 expected_count=32
 if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" ]]; then
-  expected_count=33
+  expected_count=$((expected_count + 1))
+fi
+if [[ -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
+  expected_count=$((expected_count + 1))
 fi
 
 if [[ "${#migration_files[@]}" -ne "$expected_count" ]]; then
@@ -57,9 +61,15 @@ done
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-fresh-supabase-history.sql
 
-if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" ]]; then
+if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" && ! -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-readonly.sql
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-fresh.sql
+fi
+
+if [[ -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
+  # The final hardening migration intentionally supersedes Phase A's temporary
+  # anon-executable legacy RPC contract. Its verifier enforces the closed state.
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-ingress-hardening.sql
 fi
 
 supabase stop --no-backup

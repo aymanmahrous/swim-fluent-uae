@@ -785,3 +785,38 @@ Status: `AUDIT_EVIDENCE_MERGED_REMEDIATION_AND_RELEASE_GATES_PRESERVED`
 3. Prepare booking ingress code, regression tests and a CLI-named isolated migration in one Preview-first security PR, including rollback and secret/config dependency checks.
 4. Do not switch the route before the approved server-only secret exists; do not apply any Production migration without protected approval.
 5. Continue content caption/calendar/rights verification independently while the protected security gate is pending.
+
+## 21. Booking ingress hardening implementation checkpoint — 2026-07-29
+
+Status: `IMPLEMENTED_AND_CI_GREEN_PRODUCTION_CHANGE_NOT_APPLIED`
+
+### Isolated implementation
+
+- Draft PR #205 `Harden public booking ingress` remains isolated on branch `agent/harden-booking-ingress-20260729`.
+- Verified head before this handoff receipt: `178ddaa43d457047fd4b60ce133b5c629778eb40`.
+- The public booking route now validates bounded input server-side and invokes the service-only `submit_booking_request_ingress` RPC with a server-derived abuse fingerprint.
+- The browser sends bounded honeypot and form-elapsed signals; it never receives the Supabase secret.
+- CLI-generated migration `20260729144612_harden_booking_ingress_rpc.sql` revokes direct legacy booking RPC execution and unnecessary media-trigger execution from `PUBLIC`, `anon` and `authenticated`, while preserving `service_role`.
+- Emergency rollback commands are documented in the migration. No migration has been applied to the linked Supabase Production project.
+
+### Configuration and verification evidence
+
+- Owner-confirmed Vercel console evidence shows `SUPABASE_SECRET_KEY` exists as a Sensitive variable for Production and Preview; no value was exposed or changed.
+- GitHub CI #659: `SUCCESS`.
+- Booking Phone Foundation #30: `SUCCESS`, including staged foundation execution and the complete migration chain on disposable databases.
+- Fresh Supabase Migration Compatibility #22: all jobs `SUCCESS` — migration history audit, campaigns compatibility, full-history execution and stacked Phase A.
+- Vercel deployment `dpl_6TQ7JgQ4gByUFSf6RYL3UwKehoFB` for the verified head was `CANCELED` by the configured ignored-build-step policy, not by a build error. GitHub CI independently completed the application build successfully.
+- The current Vercel Production deployment remains `dpl_8nkrTuuzwxapJ9QMGqHfTWcjhMer` at main commit `6949b30cc15e4671adee68a7159d625f594200ce`.
+- No live booking was submitted because Preview uses Production Supabase configuration and such a test would create Production data.
+
+### Mandatory protected release sequence
+
+1. Keep PR #205 Draft and do not merge while the Production release gate is closed.
+2. Before release, confirm the existing Production ingress RPC signature and the `SUPABASE_SECRET_KEY` scope without exposing the value.
+3. Merge only under an explicitly approved Production window; wait for the main Vercel deployment to become `READY`.
+4. Smoke-test only read-only routes first. Do not submit a real booking without an approved disposable test identity and cleanup plan.
+5. Apply `20260729144612_harden_booking_ingress_rpc.sql` to Supabase Production only after the new server route is live and healthy.
+6. Immediately run read-only privilege checks proving `anon` and `authenticated` cannot execute the direct booking RPC or media trigger, and `service_role` retains required execution.
+7. If the route fails before the migration, roll back the Vercel deployment. If the database privilege verification fails after migration, use the documented narrowly scoped SQL rollback and record the exact result.
+8. Update this handoff and `docs/program/STRATEGIC_EXECUTION_LEDGER.md` with merge, deployment, migration and verification receipts before marking the security phase complete.
+

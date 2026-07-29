@@ -28,12 +28,24 @@ begin
     raise exception 'FRESH_HISTORY_BOOKING_INGRESS_MISSING';
   end if;
 
-  if not has_function_privilege(
+  if has_function_privilege(
     'anon',
     'public.submit_booking_request(text,text,text,text,text,text,boolean,boolean,text,date,time without time zone,boolean,uuid)',
     'EXECUTE'
+  ) or has_function_privilege(
+    'authenticated',
+    'public.submit_booking_request(text,text,text,text,text,text,boolean,boolean,text,date,time without time zone,boolean,uuid)',
+    'EXECUTE'
   ) then
-    raise exception 'FRESH_HISTORY_LEGACY_BOOKING_ANON_EXECUTE_MISSING';
+    raise exception 'FRESH_HISTORY_DIRECT_BOOKING_PUBLIC_EXECUTE';
+  end if;
+
+  if not has_function_privilege(
+    'service_role',
+    'public.submit_booking_request(text,text,text,text,text,text,boolean,boolean,text,date,time without time zone,boolean,uuid)',
+    'EXECUTE'
+  ) then
+    raise exception 'FRESH_HISTORY_DIRECT_BOOKING_SERVICE_ROLE_EXECUTE_MISSING';
   end if;
 
   if has_function_privilege(
@@ -93,7 +105,7 @@ $$;
 
 commit;
 
-set role anon;
+set role service_role;
 
 select public.submit_booking_request(
   'Disposable UAE Booking',
@@ -120,14 +132,14 @@ begin
     from public.booking_requests
     where idempotency_key = '40000000-0000-4000-8000-000000000001'::uuid
   ) then
-    raise exception 'FRESH_HISTORY_LEGACY_UAE_BOOKING_FAILED';
+    raise exception 'FRESH_HISTORY_INTERNAL_UAE_BOOKING_FAILED';
   end if;
 
   if (select normalized_phone
       from public.booking_requests
       where idempotency_key = '40000000-0000-4000-8000-000000000001'::uuid)
       <> '971500000000' then
-    raise exception 'FRESH_HISTORY_LEGACY_UAE_NORMALIZATION_FAILED';
+    raise exception 'FRESH_HISTORY_INTERNAL_UAE_NORMALIZATION_FAILED';
   end if;
 end
 $$;

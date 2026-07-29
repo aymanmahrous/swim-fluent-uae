@@ -8,8 +8,11 @@ const filenames = (await readdir(migrationsDirectory))
   .sort((left, right) => left.localeCompare(right, "en"));
 
 const phaseAFilename = "20260711003100_international_booking_phone_foundation.sql";
-const historicalFilenames = filenames.filter((filename) => filename !== phaseAFilename);
+const bookingIngressFilename = "20260729144612_harden_booking_ingress_rpc.sql";
+const controlledFilenames = new Set([phaseAFilename, bookingIngressFilename]);
+const historicalFilenames = filenames.filter((filename) => !controlledFilenames.has(filename));
 const phaseAPresent = filenames.includes(phaseAFilename);
+const bookingIngressPresent = filenames.includes(bookingIngressFilename);
 
 assert.equal(
   historicalFilenames.length,
@@ -18,7 +21,7 @@ assert.equal(
 );
 assert.equal(
   filenames.length,
-  phaseAPresent ? 33 : 32,
+  32 + Number(phaseAPresent) + Number(bookingIngressPresent),
   `Unexpected migration inventory: found ${filenames.length}`,
 );
 
@@ -63,6 +66,15 @@ if (phaseAPresent) {
   );
 }
 
+if (bookingIngressPresent) {
+  const bookingIngressEntry = entries.find((entry) => entry.filename === bookingIngressFilename);
+  assert.equal(
+    bookingIngressEntry?.parsedVersion,
+    "20260729144612",
+    "Booking ingress hardening must keep its Supabase CLI-generated migration version",
+  );
+}
+
 const uniqueExecutionKeys = new Set(entries.map((entry) => entry.filename));
 assert.equal(
   uniqueExecutionKeys.size,
@@ -77,6 +89,7 @@ console.log(
       productionDeploymentStrategy: "BLOCKED",
       historicalMigrationCount: historicalFilenames.length,
       phaseAPresent,
+      bookingIngressPresent,
       migrationCount: entries.length,
       duplicateVersions,
       executionOrder: entries,

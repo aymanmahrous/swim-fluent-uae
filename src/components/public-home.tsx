@@ -17,7 +17,7 @@ import {
   UserRound,
   Waves,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import heroAvif from "../assets/hero-pool.avif";
 import heroImg from "../assets/hero-pool.jpg";
@@ -62,6 +62,7 @@ type BookingForm = {
   requestedDate: string;
   slot: string;
   agree: boolean;
+  website: string;
 };
 
 const emptyForm: BookingForm = {
@@ -77,6 +78,7 @@ const emptyForm: BookingForm = {
   requestedDate: "",
   slot: "",
   agree: false,
+  website: "",
 };
 
 function upcomingDubaiDates(): string[] {
@@ -96,6 +98,7 @@ function Home() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState<Booking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const bookingFormStartedAt = useRef(Date.now());
 
   const dates = useMemo(upcomingDubaiDates, []);
   const slots = useMemo(
@@ -174,6 +177,8 @@ function Home() {
         requestedTime: booking.slot,
         termsAccepted: form.agree,
         idempotencyKey: booking.id,
+        honeypot: form.website,
+        formElapsedMs: Math.min(Date.now() - bookingFormStartedAt.current, 86_400_000),
       });
 
       if (!result.success) {
@@ -358,6 +363,18 @@ function Home() {
               <SuccessState booking={submitted} settings={settings} />
             ) : (
               <form onSubmit={submit}>
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={(event) =>
+                    setForm((value) => ({ ...value, website: event.target.value }))
+                  }
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[10000px] h-px w-px overflow-hidden"
+                />
                 <WizardProgress step={step} />
                 <div className="p-6 sm:p-10">
                   {settingsQuery.isError && (
