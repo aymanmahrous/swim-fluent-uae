@@ -870,3 +870,28 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 ### Next safe action
 
 Continue the remaining authenticated privileged-function review one function or tightly related contract at a time. Preserve the generic anonymous-execution invariant and the closed booking boundary. Do not bulk-revoke grants or change protected Auth configuration without an isolated evidence-backed plan and approval.
+
+
+## 24. Authenticated privileged-function CI contract receipt — 2026-07-29
+
+Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
+
+- PR #210 `Lock authenticated privileged-function contracts` was marked ready and squash merged to `main`.
+- Final reviewed PR head: `a269f46c875d611fb9ca22e39a3663c4c66f3817`.
+- Merge commit: `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`.
+- GitHub CI #679: `SUCCESS`.
+- Fresh Supabase Migration Compatibility #26: `SUCCESS` across the complete disposable migration history.
+- `scripts/sql/verify-authenticated-security-definer-contract.sql` now allowlists the exact 23 reviewed authenticated-executable `public.SECURITY DEFINER` signatures and rejects unexpected additions, anonymous/Public execution, ACL drift, mutable search paths, missing reviewed guard markers, disabled `staff_profiles` RLS, or authenticated write grants.
+- This was a repository CI contract only. No Supabase Production SQL, migration, Auth, key, policy, live data, Vercel environment, publishing, messaging, Analytics, Ads, billing or spend changed.
+
+### Remaining Phase 3 boundary
+
+- `get_staff_command_center()` and `get_staff_operations_queue()` remain semantic least-privilege candidates because content-manager output includes lead/operational fields.
+- Coach visibility into bookings, leads and messages remains a product/RBAC decision.
+- Do not bulk-revoke or narrow these guarded contracts without an isolated compatibility plan, Preview/disposable proof and protected approval where required.
+
+### PWA parallel gate
+
+- Replacement Draft PR #211 is the current PWA candidate; CI #681 passed.
+- PR #198 is stale and PR #209 is superseded; neither may be merged.
+- No Vercel Preview exists yet for the final #211 head, and Android/iPhone install evidence is still required. Keep #211 Draft and do not promote it to Production until every gate is proven.
