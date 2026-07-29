@@ -98,6 +98,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/pwa-icon.svg" },
     ],
   }),
   shellComponent: RootShell,
@@ -232,6 +234,24 @@ function RootComponent() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const publicLang = localizedPublicLanguage(pathname);
   const isLocalizedPublicPage = localizedLanguageSwitchTarget(pathname) !== null;
+
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+
+    const registerServiceWorker = () => {
+      void navigator.serviceWorker.register("/service-worker.js", { scope: "/" }).catch(() => {
+        // Installation support is progressive enhancement; the web app remains usable.
+      });
+    };
+
+    if (document.readyState === "complete") {
+      registerServiceWorker();
+      return;
+    }
+
+    window.addEventListener("load", registerServiceWorker, { once: true });
+    return () => window.removeEventListener("load", registerServiceWorker);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
