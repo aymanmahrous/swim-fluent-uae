@@ -1,3 +1,4 @@
+import heroAvif from "../assets/hero-pool.avif";
 import heroImg from "../assets/hero-pool.jpg";
 import { OPERATIONAL_EMAIL, TRAINING_LOCATIONS, WHATSAPP_DISPLAY } from "./public-business-config";
 
@@ -164,7 +165,10 @@ export function publicHomeHead(lang: PublicLanguage) {
     meta: [
       { title: copy.title },
       { name: "description", content: copy.description },
-      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
+      {
+        name: "robots",
+        content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+      },
       { name: "geo.region", content: "AE-AZ" },
       { name: "geo.placename", content: "Abu Dhabi" },
       { name: "theme-color", content: "#0b1f3a" },
@@ -185,6 +189,13 @@ export function publicHomeHead(lang: PublicLanguage) {
       { name: "twitter:image:alt", content: copy.imageAlt },
     ],
     links: [
+      {
+        rel: "preload",
+        href: heroAvif,
+        as: "image",
+        type: "image/avif",
+        fetchPriority: "high" as const,
+      },
       { rel: "canonical", href: copy.url },
       { rel: "alternate", hrefLang: "ar-AE", href: `${SITE_URL}/` },
       { rel: "alternate", hrefLang: "en-AE", href: `${SITE_URL}/en` },
