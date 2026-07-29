@@ -50,7 +50,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
 | 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |
-| 4 | PWA installability | `REVIEW_READY` | Draft PR #213 head `9035184666cba759066b138b2ae1d0466542259e`; CI #686 success; Vercel Preview `dpl_14VHvSnfbr3EpwDud16BiRmbSKnG` READY; manifest/icons/offline source and zero runtime errors verified | Android+iPhone install/standalone, real offline navigation, private CacheStorage and rollback observation; no merge before evidence |
+| 4 | PWA installability | `BLOCKED_EXTERNAL` | PR #213 Preview and CI green; iPhone install/standalone/real-offline PASS with hashed screenshots; no physical Android device available | Preserve Draft; obtain physical Android evidence plus private CacheStorage and root rollback observation; no paid device cloud without approval |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
 | 7 | Publishing readiness and Organic Pilot | `BLOCKED_PROTECTED_APPROVAL` | Contracts exist; Live readiness and receipts unproven | Verify accounts, credentials, idempotency, retry, receipts and obtain release approval |
@@ -190,3 +190,18 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: physical-device and real offline/cache runtime evidence.
 - Next safe action: execute Android and iPhone install/standalone checks plus real offline/private-cache/root-rollback checks; keep PR #213 Draft until all pass.
 - Context health: strong; exact PR head, CI, Preview ID, runtime outcome, browser receipts and remaining gates are durable.
+
+
+## Checkpoint — 2026-07-29 iPhone PWA physical-device verification
+
+- Agent/workstream: Main Project Director / PWA Device QA.
+- Task: Verify install, standalone and real offline behavior on a physical iPhone.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for iPhone; Phase 4 is `BLOCKED_EXTERNAL`.
+- Scope: iPhone Home Screen installation, standalone launch and Airplane Mode offline reopening.
+- Last confirmed result: all three iPhone gates passed; bilingual offline fallback rendered in standalone.
+- Evidence: 739×1600 JPEG SHA-256 receipts `b476a0d4a877c4688ad490bd0242034dfc6ee67e47d9e3b932825fe2872925fd`, `1ef9f44d87ae78c293970d237acf2dec034f2cabc18696e64e194caa8b3c98cf`, and `0205d6517c18bb82ff035845022a976b1bb2b8a57a2d17c0a76e9300e881de9f`; PR #213 comments contain the receipts.
+- Failure/recovery: none on iPhone. Android cannot be tested because no physical Android phone is available.
+- Protected actions not taken: no merge, Production promotion, paid device cloud, environment, Supabase/Auth, publishing, Analytics, Ads, billing or spend mutation.
+- Blocker class: external physical Android availability; private CacheStorage and root rollback runtime evidence also open.
+- Next safe action: keep PR #213 Draft and continue independent project work; resume physical Android/device-runtime verification when available.
+- Context health: strong; iPhone proof, exact hashes, Android blocker and remaining gates are durable.
