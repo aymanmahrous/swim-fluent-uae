@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Relax Fix UAE</title>
+  <rect width="512" height="512" rx="112" fill="#0b1f3a"/>
+  <circle cx="256" cy="256" r="176" fill="#0f7890"/>
+  <path d="M98 210c40 0 40-30 80-30s40 30 80 30 40-30 80-30 40 30 80 30" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="34"/>
+  <path d="M98 286c40 0 40-30 80-30s40 30 80 30 40-30 80-30 40 30 80 30" fill="none" stroke="#b9eef4" stroke-linecap="round" stroke-width="34"/>
+  <path d="M98 362c40 0 40-30 80-30s40 30 80 30 40-30 80-30 40 30 80 30" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="34"/>
+</svg>
