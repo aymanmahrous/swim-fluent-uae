@@ -4,7 +4,7 @@ Date: 2026-07-29 (Asia/Dubai)
 
 Project: `nmzxrjdxvmmzzmajrskm`
 
-Status: `READ_ONLY_AUDIT_COMPLETE_REMEDIATION_NOT_APPLIED`
+Status: `REMEDIATION_APPLIED_PRODUCTION_VERIFIED_REGRESSION_GUARD_ADDED`
 
 ## Scope and safety
 
@@ -88,4 +88,28 @@ Required remediation design:
 
 Final truthful state:
 
-`SUPABASE_SECURITY_DEFINER_AUDIT_50_OF_50_CLASSIFIED_BOOKING_INGRESS_BYPASS_AND_TRIGGER_GRANT_REMEDIATION_PENDING_PRODUCTION_UNCHANGED`
+`SUPABASE_SECURITY_DEFINER_AUDIT_50_OF_50_CLASSIFIED_ACTIONABLE_FINDINGS_CLOSED_PRODUCTION_VERIFIED_ANON_REGRESSION_GUARD_ADDED`
+
+## Production remediation receipt — 2026-07-29
+
+- PR #205 was squash-merged to `main` at commit `23f8abdeb31568287a0b25710e855ac0d4d3e1ed`.
+- Vercel Production deployment `dpl_3snNe5kDzLoK28D2vPgbPaZcjnT7` reached `READY` on the official aliases.
+- Supabase migration `20260729154439_harden_booking_ingress_rpc` was applied through the protected production path.
+- Finding 1 is closed: the public route uses the hardened ingress and direct `submit_booking_request` execution is denied to `anon` and `authenticated`.
+- Finding 2 is closed: `enqueue_content_media_after_insert()` is denied to `anon` and `authenticated` while the trigger remains intact.
+- No live booking or customer record was written during verification.
+
+## Post-remediation advisor and authorization state
+
+- Direct execute checks returned `false` for `anon` and `authenticated` on `submit_booking_request`, `submit_booking_request_ingress` and `enqueue_content_media_after_insert()`.
+- The required internal `service_role` execute permissions remain present.
+- The post-remediation security advisor returned 58 items: 33 RLS-without-policy informational notices, 23 authenticated-executable `SECURITY DEFINER` warnings, one leaked-password-protection warning and one extension-in-public warning.
+- Anonymous-executable `SECURITY DEFINER` warnings are now zero.
+- All 23 authenticated-executable `SECURITY DEFINER` functions observed in this review contain an explicit staff, identity or media authorization guard. They were not bulk-revoked because doing so could break legitimate application contracts.
+- Leaked-password protection and extension placement remain separate protected configuration decisions; neither was changed in this remediation.
+
+## Regression prevention
+
+- `scripts/sql/verify-no-anon-security-definer.sql` fails whenever any `public` schema `SECURITY DEFINER` function is executable by `anon`, including grants inherited through `PUBLIC`.
+- `scripts/test-fresh-supabase-history.sh` runs this guard after the complete migration chain on the disposable database.
+- This is intentionally a narrow invariant. It prevents recurrence of the confirmed anonymous privilege class without changing guarded authenticated contracts.
