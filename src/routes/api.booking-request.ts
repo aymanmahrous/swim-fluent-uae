@@ -38,7 +38,8 @@ export const Route = createFileRoute("/api/booking-request")({
         }
 
         try {
-          const parsed = BookingIngressSchema.safeParse(await request.json());
+          const payload: unknown = await request.json().catch(() => null);
+          const parsed = BookingIngressSchema.safeParse(payload);
           if (!parsed.success) {
             return Response.json(
               {
