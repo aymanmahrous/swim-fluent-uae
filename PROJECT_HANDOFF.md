@@ -846,3 +846,27 @@ Status: `PRODUCTION_RELEASE_COMPLETED_EVIDENCE_VERIFIED`
 
 Continue the remaining privileged-function/RBAC review one function at a time. Preserve the booking route and grants above as the Production baseline. Do not restore anonymous direct booking execution.
 
+
+## 23. Anonymous privileged-function regression guard receipt — 2026-07-29
+
+Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
+
+- PR #207 `Lock anonymous privileged-function regression` was marked ready and squash merged to `main`.
+- Final reviewed PR head: `9b71985f8dfb2f2788adb32e011d38a6b9928ade`.
+- Merge commit: `1e3e5190f7a00dd0e7872c5d39c1721e9dcad202`.
+- GitHub CI #665: `SUCCESS`.
+- Fresh Supabase Migration Compatibility #25: `SUCCESS`, including migration-history audit, campaigns compatibility, full-history execution and stacked Phase A.
+- `scripts/sql/verify-no-anon-security-definer.sql` now fails the disposable full-history build if any `public` schema `SECURITY DEFINER` function is executable by `anon`, including execution inherited through `PUBLIC`.
+- The production authorization audit now records the completed PR #205 release, exact Vercel and Supabase receipts, zero anonymous-executable privileged functions and the intentionally preserved guarded authenticated contracts.
+- This stage changed only repository tests and documentation. It did not mutate Supabase Production, Auth, keys, policies, live data, Vercel environment variables, publishing, messaging, Analytics, Ads, billing or spend.
+
+### Remaining Phase 3 boundary
+
+- Phase 3 remains `IN_PROGRESS`; do not treat every advisor warning as an automatic revoke.
+- The 23 authenticated-executable privileged functions observed in this review have explicit staff, identity or media authorization guards and require function-by-function semantic review before any contract change.
+- Leaked-password protection is a protected Auth configuration decision and was not changed.
+- The extension-in-public notice and 33 RLS-without-policy informational notices remain separate scoped reviews.
+
+### Next safe action
+
+Continue the remaining authenticated privileged-function review one function or tightly related contract at a time. Preserve the generic anonymous-execution invariant and the closed booking boundary. Do not bulk-revoke grants or change protected Auth configuration without an isolated evidence-backed plan and approval.
