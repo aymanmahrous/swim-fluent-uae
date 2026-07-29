@@ -105,6 +105,10 @@ jobs:
         run: npm run verify:supabase-server-key
       - name: Verify password recovery flow contracts
         run: npm run verify:password-recovery
+      - name: Verify privacy-safe PWA installability
+        run: |
+          node --check public/service-worker.js
+          npm run verify:pwa-installability
       - name: Verify Vercel automated preview build policy
         run: node scripts/verify-vercel-build-policy.mjs
       - name: Verify AI OS security and real-data contracts
