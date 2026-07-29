@@ -892,6 +892,7 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 
 ### PWA parallel gate
 
-- Replacement Draft PR #211 is the current PWA candidate; CI #681 passed.
-- PR #198 is stale and PR #209 is superseded; neither may be merged.
-- No Vercel Preview exists yet for the final #211 head, and Android/iPhone install evidence is still required. Keep #211 Draft and do not promote it to Production until every gate is proven.
+- Replacement Draft PR #213 is the current Preview-eligible PWA candidate; exact head `9035184666cba759066b138b2ae1d0466542259e` passed CI #686.
+- PR #198 was closed stale; PRs #209 and #211 are superseded and must not be merged.
+- Repository `vercel.json` intentionally cancels `agent/*` Preview builds. Moving the exact reviewed tree to `preview/pwa-installability-v2` removed that policy conflict, but Git integration still did not emit a deployment. Connected Vercel reads work; local Vercel CLI/token and a full local checkout are unavailable, so exact-head Preview remains externally blocked.
+- Android/iPhone install evidence is still required. Keep #213 Draft and do not promote it to Production until Preview, browser and both-device gates are proven.
