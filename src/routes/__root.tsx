@@ -22,7 +22,7 @@ import {
 } from "../platform/business-settings";
 import appCss from "../styles.css?url";
 
-const PWA_ENABLED = true;
+const PWA_ENABLED = false;
 const PWA_CACHE_PREFIX = "relax-fix-pwa-";
 
 function localizedPublicLanguage(pathname: string): Lang {
@@ -247,21 +247,35 @@ function RootComponent() {
       if (!("serviceWorker" in navigator)) return;
 
       if (!PWA_ENABLED) {
+        const rootScope = `${window.location.origin}/`;
         const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(
-          registrations
-            .filter((registration) => registration.scope === `${window.location.origin}/`)
-            .map((registration) => registration.unregister()),
+        const rootRegistrations = registrations.filter(
+          (registration) => registration.scope === rootScope,
+        );
+        const cacheKeysBefore = "caches" in window ? await caches.keys() : [];
+        const ownedCacheKeysBefore = cacheKeysBefore.filter((key) =>
+          key.startsWith(PWA_CACHE_PREFIX),
         );
 
-        if ("caches" in window) {
-          const cacheKeys = await caches.keys();
-          await Promise.all(
-            cacheKeys
-              .filter((key) => key.startsWith(PWA_CACHE_PREFIX))
-              .map((key) => caches.delete(key)),
-          );
-        }
+        await Promise.all(rootRegistrations.map((registration) => registration.unregister()));
+        await Promise.all(ownedCacheKeysBefore.map((key) => caches.delete(key)));
+
+        const registrationsAfter = await navigator.serviceWorker.getRegistrations();
+        const cacheKeysAfter = "caches" in window ? await caches.keys() : [];
+        document.documentElement.dataset.pwaRollbackEvidence = JSON.stringify({
+          before: {
+            rootRegistrations: rootRegistrations.length,
+            ownedCaches: ownedCacheKeysBefore.length,
+            foreignCaches: cacheKeysBefore.length - ownedCacheKeysBefore.length,
+          },
+          after: {
+            rootRegistrations: registrationsAfter.filter(
+              (registration) => registration.scope === rootScope,
+            ).length,
+            ownedCaches: cacheKeysAfter.filter((key) => key.startsWith(PWA_CACHE_PREFIX)).length,
+            foreignCaches: cacheKeysAfter.filter((key) => !key.startsWith(PWA_CACHE_PREFIX)).length,
+          },
+        });
         return;
       }
 
