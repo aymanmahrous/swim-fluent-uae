@@ -19,7 +19,9 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import heroAvif from "../assets/hero-pool.avif";
 import heroImg from "../assets/hero-pool.jpg";
+import heroWebp from "../assets/hero-pool.webp";
 import { useLang, type TranslationKey } from "../lib/i18n";
 import {
   buildWhatsAppMessage,
@@ -203,13 +205,19 @@ function Home() {
     <div dir={dir} className="overflow-hidden">
       <section className="relative isolate min-h-[82vh] overflow-hidden bg-deep text-white">
         <div className="absolute inset-0">
-          <img
-            src={heroImg}
-            alt="Swimming pool in Abu Dhabi"
-            className="h-full w-full object-cover object-center"
-            width={1920}
-            height={1080}
-          />
+          <picture className="absolute inset-0 block h-full w-full">
+            <source srcSet={heroAvif} type="image/avif" />
+            <source srcSet={heroWebp} type="image/webp" />
+            <img
+              src={heroImg}
+              alt="Swimming pool in Abu Dhabi"
+              className="h-full w-full object-cover object-center"
+              width={1024}
+              height={1024}
+              decoding="async"
+              fetchPriority="high"
+            />
+          </picture>
           <div className="absolute inset-0 premium-hero-overlay" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-deep to-transparent" />
         </div>
@@ -307,7 +315,19 @@ function Home() {
 
       <section className="mx-auto grid max-w-7xl gap-10 px-6 py-24 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
         <div className="relative min-h-[420px] overflow-hidden rounded-[2.25rem] bg-deep shadow-elegant">
-          <img src={heroImg} alt="Coach Ayman swimming coaching" className="absolute inset-0 h-full w-full object-cover opacity-75" />
+          <picture className="absolute inset-0 block h-full w-full">
+            <source srcSet={heroAvif} type="image/avif" />
+            <source srcSet={heroWebp} type="image/webp" />
+            <img
+              src={heroImg}
+              alt="Coach Ayman swimming coaching"
+              className="absolute inset-0 h-full w-full object-cover opacity-75"
+              width={1024}
+              height={1024}
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/40 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-7 text-white">
             <div className="text-sm font-bold uppercase tracking-[0.2em] text-aqua">Relax Fix UAE</div>

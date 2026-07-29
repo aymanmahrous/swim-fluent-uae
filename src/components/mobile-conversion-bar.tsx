@@ -39,7 +39,7 @@ export function MobileConversionBar() {
             target="_blank"
             rel="noreferrer"
             onClick={trackWhatsApp}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-center text-sm font-black text-white"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-3 py-3 text-center text-sm font-black text-white transition hover:bg-emerald-800"
           >
             <MessageCircle className="h-5 w-5" aria-hidden="true" />
             {isArabic ? "واتساب" : "WhatsApp"}

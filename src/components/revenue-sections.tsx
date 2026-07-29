@@ -128,7 +128,7 @@ export function RevenueSections() {
 
       <section id="locations" className="mx-auto max-w-7xl px-6 py-24">
         <div className="max-w-3xl">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-deep">
             {copy.locations}
           </p>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{copy.locations}</h2>
@@ -183,7 +183,7 @@ export function RevenueSections() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => trackWhatsApp(`location_${location.id}`)}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-black text-white"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-800"
                   >
                     <MessageCircle className="h-4 w-4" aria-hidden="true" /> {copy.whatsapp}
                   </a>

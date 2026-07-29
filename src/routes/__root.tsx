@@ -20,7 +20,6 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
-import premiumCss from "../premium.css?url";
 import appCss from "../styles.css?url";
 
 function localizedPublicLanguage(pathname: string): Lang {
@@ -98,13 +97,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "stylesheet", href: premiumCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:wght@700;900&display=swap",
-      },
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),

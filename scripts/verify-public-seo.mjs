@@ -36,6 +36,10 @@ for (const needle of [
   'property: "og:image:type"',
   'name: "twitter:image"',
   'name: "twitter:image:alt"',
+  'rel: "preload"',
+  'as: "image"',
+  'type: "image/avif"',
+  'fetchPriority: "high"',
   '"@type": ["Organization", "LocalBusiness", "SportsActivityLocation"]',
   '"@type": "Person"',
   '"@type": "Service"',
@@ -53,8 +57,6 @@ for (const needle of [
   '"@type": "Review"',
   "streetAddress",
   "facebook.com/share/",
-  'rel: "preload"',
-  'fetchPriority: "high"',
 ]) {
   forbidText(seo, needle, "truthful and non-duplicated structured head data");
 }
@@ -74,8 +76,53 @@ requireText(publicHomeText, "submitBookingRequest", "preserved booking page");
 requireText(publicHomeText, "generateSlotsForDubaiDate", "preserved booking page");
 requireText(publicHomeText, 'id="book"', "preserved booking page");
 requireText(publicHomeText, "src={heroImg}", "SSR hero image discovery");
-requireText(publicHomeText, "width={1920}", "hero intrinsic dimensions");
-requireText(publicHomeText, "height={1080}", "hero intrinsic dimensions");
+requireText(publicHomeText, "srcSet={heroAvif}", "AVIF hero source");
+requireText(publicHomeText, "srcSet={heroWebp}", "WebP hero source");
+requireText(publicHomeText, "width={1024}", "hero intrinsic dimensions");
+requireText(publicHomeText, "height={1024}", "hero intrinsic dimensions");
+requireText(publicHomeText, 'fetchPriority="high"', "first hero fetch priority");
+requireText(publicHomeText, 'loading="lazy"', "below-the-fold hero loading");
+
+const styles = await text("src/styles.css");
+requireText(
+  styles,
+  "@fontsource-variable/cairo/files/cairo-arabic-wght-normal.woff2",
+  "self-hosted Arabic Cairo",
+);
+requireText(
+  styles,
+  "@fontsource-variable/cairo/files/cairo-latin-wght-normal.woff2",
+  "self-hosted Latin Cairo",
+);
+requireText(
+  styles,
+  "@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2",
+  "self-hosted Playfair Display",
+);
+requireText(styles, "font-display: swap", "local font loading policy");
+forbidText(styles, "fonts.googleapis.com", "local-only font source");
+forbidText(styles, "fonts.gstatic.com", "local-only font source");
+
+const packageLock = await text("package-lock.json");
+for (const fontPackage of [
+  '"node_modules/@fontsource-variable/cairo"',
+  '"node_modules/@fontsource-variable/playfair-display"',
+]) {
+  requireText(packageLock, fontPackage, `${fontPackage} dependency`);
+}
+requireText(packageLock, '"license": "OFL-1.1"', "font license");
+
+const rootShell = await text("src/routes/__root.tsx");
+for (const origin of ["fonts.googleapis.com", "fonts.gstatic.com", "premium.css"]) {
+  forbidText(rootShell, origin, "render-blocking root resources");
+}
+
+const revenueSections = await text("src/components/revenue-sections.tsx");
+requireText(revenueSections, "text-deep", "Locations contrast");
+requireText(revenueSections, "bg-emerald-700", "WhatsApp contrast");
+
+const mobileConversionBar = await text("src/components/mobile-conversion-bar.tsx");
+requireText(mobileConversionBar, "bg-emerald-700", "mobile WhatsApp contrast");
 
 const publicConfig = await text("src/platform/public-business-config.ts");
 for (const needle of [
@@ -132,7 +179,7 @@ for (const needle of [
   'if (pathname === "/privacy") return "/en/privacy"',
   'if (pathname === "/en/privacy") return "/privacy"',
   "const publicHome = localizedPublicHome(lang)",
-  'const languageSwitchTarget = localizedLanguageSwitchTarget(pathname)',
+  "const languageSwitchTarget = localizedLanguageSwitchTarget(pathname)",
   "const languageSwitchHref = languageSwitchTarget",
   "to={publicHome}",
   'href={isPublicHome ? "#programs" : `${publicHome}#programs`}',
