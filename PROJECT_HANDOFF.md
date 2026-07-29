@@ -870,3 +870,29 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 ### Next safe action
 
 Continue the remaining authenticated privileged-function review one function or tightly related contract at a time. Preserve the generic anonymous-execution invariant and the closed booking boundary. Do not bulk-revoke grants or change protected Auth configuration without an isolated evidence-backed plan and approval.
+
+
+## 24. Authenticated privileged-function CI contract receipt — 2026-07-29
+
+Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
+
+- PR #210 `Lock authenticated privileged-function contracts` was marked ready and squash merged to `main`.
+- Final reviewed PR head: `a269f46c875d611fb9ca22e39a3663c4c66f3817`.
+- Merge commit: `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`.
+- GitHub CI #679: `SUCCESS`.
+- Fresh Supabase Migration Compatibility #26: `SUCCESS` across the complete disposable migration history.
+- `scripts/sql/verify-authenticated-security-definer-contract.sql` now allowlists the exact 23 reviewed authenticated-executable `public.SECURITY DEFINER` signatures and rejects unexpected additions, anonymous/Public execution, ACL drift, mutable search paths, missing reviewed guard markers, disabled `staff_profiles` RLS, or authenticated write grants.
+- This was a repository CI contract only. No Supabase Production SQL, migration, Auth, key, policy, live data, Vercel environment, publishing, messaging, Analytics, Ads, billing or spend changed.
+
+### Remaining Phase 3 boundary
+
+- `get_staff_command_center()` and `get_staff_operations_queue()` remain semantic least-privilege candidates because content-manager output includes lead/operational fields.
+- Coach visibility into bookings, leads and messages remains a product/RBAC decision.
+- Do not bulk-revoke or narrow these guarded contracts without an isolated compatibility plan, Preview/disposable proof and protected approval where required.
+
+### PWA parallel gate
+
+- Replacement Draft PR #213 is the current Preview-eligible PWA candidate; exact head `9035184666cba759066b138b2ae1d0466542259e` passed CI #686.
+- PR #198 was closed stale; PRs #209 and #211 are superseded and must not be merged.
+- Repository `vercel.json` intentionally cancels `agent/*` Preview builds. Moving the exact reviewed tree to `preview/pwa-installability-v2` removed that policy conflict, but Git integration still did not emit a deployment. Connected Vercel reads work; local Vercel CLI/token and a full local checkout are unavailable, so exact-head Preview remains externally blocked.
+- Android/iPhone install evidence is still required. Keep #213 Draft and do not promote it to Production until Preview, browser and both-device gates are proven.
