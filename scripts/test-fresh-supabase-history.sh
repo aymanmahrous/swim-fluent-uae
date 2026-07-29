@@ -61,12 +61,14 @@ done
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-fresh-supabase-history.sql
 
-if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" ]]; then
+if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" && ! -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-readonly.sql
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-fresh.sql
 fi
 
 if [[ -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
+  # The final hardening migration intentionally supersedes Phase A's temporary
+  # anon-executable legacy RPC contract. Its verifier enforces the closed state.
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-ingress-hardening.sql
 fi
 
