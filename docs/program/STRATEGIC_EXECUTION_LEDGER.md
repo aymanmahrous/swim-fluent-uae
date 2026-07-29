@@ -50,7 +50,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
 | 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |
-| 4 | PWA installability | `IN_PROGRESS` | Replacement Draft PR #211 head `c45343c727b3bfa823e0247c6e4bc0417be9828b`; CI #681 success; final-head Vercel Preview not yet created | Prove Preview manifest/icons/offline/private-cache/rollback, then Android/iPhone install and standalone; no merge before evidence |
+| 4 | PWA installability | `BLOCKED_EXTERNAL` | Preview-eligible Draft PR #213 head `9035184666cba759066b138b2ae1d0466542259e`; CI #686 success; Git integration emitted no exact-head deployment | Restore/trigger exact-head Vercel Preview, then browser and Android/iPhone install/standalone proof; no merge before evidence |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
 | 7 | Publishing readiness and Organic Pilot | `BLOCKED_PROTECTED_APPROVAL` | Contracts exist; Live readiness and receipts unproven | Verify accounts, credentials, idempotency, retry, receipts and obtain release approval |
@@ -168,10 +168,10 @@ Every agent or workstream must append or update a checkpoint containing:
 - Task: Replace stale PR #198 with a reversible privacy-safe installability implementation.
 - Status: `IN_PROGRESS`.
 - Scope: public manifest, PNG icons, bilingual noindex offline fallback, scoped service worker, root kill path and CI verification.
-- Last confirmed result: Draft PR #211 head `c45343c727b3bfa823e0247c6e4bc0417be9828b` passes CI #681.
-- Evidence: PR #209 closed as superseded; #211 remains Draft; Vercel has not created a Preview for the final #211 head.
-- Failure/recovery: the first client-module import violated route import protection and was removed; an unbounded runtime asset cache was found in review and removed; cache version was bumped for a unique final head.
+- Last confirmed result: Preview-eligible Draft PR #213 head `9035184666cba759066b138b2ae1d0466542259e` passes CI #686; the exact reviewed code remains unmerged.
+- Evidence: PR #198 closed stale; PRs #209/#211 superseded; PR #213 remains Draft; `vercel.json` policy conflict was removed by the `preview/*` branch, but both connected Vercel projects still show no deployment for the exact head.
+- Failure/recovery: the first client-module import violated route import protection and was removed; an unbounded runtime asset cache was removed; `agent/*` Preview cancellation was traced to `vercel.json` and the exact tree was moved to a Preview-eligible branch; Git integration still emitted no deployment, while local CLI/token and a full checkout are unavailable.
 - Protected actions not taken: no merge, Production promotion, environment change, Supabase/Auth mutation, publishing, Analytics, Ads, billing or spend.
-- Blocker class: Vercel Preview creation plus Android/iPhone install and standalone evidence.
-- Next safe action: create/obtain a Preview for the exact #211 head, verify browser and cache/rollback contracts, then collect both device receipts; keep Draft until all pass.
+- Blocker class: external Vercel Git-integration/Preview creation plus Android/iPhone install and standalone evidence.
+- Next safe action: restore or manually trigger a Preview for exact PR #213 head, verify browser and cache/rollback contracts, then collect both device receipts; keep Draft until all pass.
 - Context health: strong; stale candidates, final head, CI and remaining gates are explicit.
