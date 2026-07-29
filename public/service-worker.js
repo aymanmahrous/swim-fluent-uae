@@ -1,3 +1,4 @@
+// This cache owns only public install resources; navigation and private routes remain network-only.
 const CACHE_PREFIX = "relax-fix-pwa-";
 const CACHE_VERSION = `${CACHE_PREFIX}v2`;
 const OFFLINE_URL = "/offline.html";
