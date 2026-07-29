@@ -42,7 +42,7 @@ assert.match(serviceWorker, /caches\.match\(OFFLINE_URL\)/);
 assert.doesNotMatch(serviceWorker, /cache\.put\(/);
 assert.doesNotMatch(serviceWorker, /addEventListener\("(push|sync|notificationclick)"/i);
 
-assert.match(rootRoute, /const PWA_ENABLED = true/);
+assert.match(rootRoute, /const PWA_ENABLED = false/);
 assert.match(rootRoute, /registration\.unregister\(\)/);
 assert.match(rootRoute, /key\.startsWith\(PWA_CACHE_PREFIX\)/);
 assert.match(rootRoute, /updateViaCache: "none"/);
@@ -51,4 +51,4 @@ assert.match(offlinePage, /لا يوجد اتصال بالإنترنت/);
 assert.match(offlinePage, /You are offline/);
 assert.match(offlinePage, /name="robots" content="noindex,nofollow"/);
 
-console.log("Privacy-safe PWA installability contracts passed.");
+console.log("Privacy-safe PWA rollback gate contracts passed.");
