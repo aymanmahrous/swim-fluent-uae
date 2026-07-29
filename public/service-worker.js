@@ -1,6 +1,6 @@
 // This cache owns only public install resources; navigation and private routes remain network-only.
 const CACHE_PREFIX = "relax-fix-pwa-";
-const CACHE_VERSION = `${CACHE_PREFIX}v2`;
+const CACHE_VERSION = `${CACHE_PREFIX}v3`;
 const OFFLINE_URL = "/offline.html";
 const PRECACHE_URLS = [OFFLINE_URL, "/manifest.webmanifest", "/pwa-icon-192.png", "/pwa-icon-512.png", "/apple-touch-icon.png", "/favicon.ico"];
 const PRIVATE_PREFIXES = ["/api", "/staff", "/os", "/admin"];
