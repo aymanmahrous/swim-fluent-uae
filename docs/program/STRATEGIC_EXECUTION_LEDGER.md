@@ -49,8 +49,8 @@ Every agent or workstream must append or update a checkpoint containing:
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | Booking ingress Production-complete; anonymous privileged-function regression guard merged in PR #207 at `1e3e5190f7a00dd0e7872c5d39c1721e9dcad202`; CI #665 and Fresh Supabase #25 success; live anonymous-executable privileged functions verified at zero | Preserve closed booking boundary and generic anon invariant; review guarded authenticated contracts one function at a time |
-| 4 | PWA installability | `REVIEW_READY` | Draft PR #198; head `6fa994e...`; CI #639 success; Vercel Preview READY; no runtime errors in inspected 24h | Android/iPhone install, standalone, offline and private-route cache verification |
+| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |
+| 4 | PWA installability | `IN_PROGRESS` | Replacement Draft PR #211 head `c45343c727b3bfa823e0247c6e4bc0417be9828b`; CI #681 success; final-head Vercel Preview not yet created | Prove Preview manifest/icons/offline/private-cache/rollback, then Android/iPhone install and standalone; no merge before evidence |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
 | 7 | Publishing readiness and Organic Pilot | `BLOCKED_PROTECTED_APPROVAL` | Contracts exist; Live readiness and receipts unproven | Verify accounts, credentials, idempotency, retry, receipts and obtain release approval |
@@ -146,3 +146,32 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: none for the anonymous regression guard. Leaked-password protection remains a protected Auth decision; authenticated privileged functions and remaining advisor notices require independent semantic review.
 - Next safe action: continue function-by-function review while preserving the closed booking boundary and the generic anonymous-execution invariant; never bulk-revoke guarded contracts.
 - Context health: strong; implementation, merge, complete CI matrix, production authorization state and remaining boundaries are durable.
+
+
+## Checkpoint — 2026-07-29 authenticated privileged-function contract
+
+- Agent/workstream: Main Project Director / Supabase Security.
+- Task: Turn the reviewed 23 authenticated privileged functions into an exact disposable-database regression contract.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for the CI contract; broader Phase 3 remains `IN_PROGRESS`.
+- Scope: one read-only SQL verifier and its full-history runner integration.
+- Last confirmed result: repository CI rejects unclassified authenticated privileged functions and drift in exact ACLs, anonymous/Public execution, fixed search paths, reviewed guard markers, or the `staff_profiles` RLS/read-only boundary.
+- Evidence: PR #210 head `a269f46c875d611fb9ca22e39a3663c4c66f3817`; squash merge `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 success; Fresh Supabase Migration Compatibility #26 success.
+- Failure/recovery: none in the final contract runs.
+- Protected actions not taken: no Production database/Auth/key/policy/data/environment mutation, publication, messaging, Analytics, Ads, billing or spend.
+- Blocker class: semantic product/RBAC decisions for command-center, operations-queue and coach data visibility.
+- Next safe action: preserve the exact contract; design one isolated least-privilege compatibility change at a time.
+- Context health: strong; exact scope, receipts, remaining candidates and protected boundaries are durable.
+
+## Checkpoint — 2026-07-29 PWA replacement gate
+
+- Agent/workstream: Main Project Director / PWA and Vercel Preview.
+- Task: Replace stale PR #198 with a reversible privacy-safe installability implementation.
+- Status: `IN_PROGRESS`.
+- Scope: public manifest, PNG icons, bilingual noindex offline fallback, scoped service worker, root kill path and CI verification.
+- Last confirmed result: Draft PR #211 head `c45343c727b3bfa823e0247c6e4bc0417be9828b` passes CI #681.
+- Evidence: PR #209 closed as superseded; #211 remains Draft; Vercel has not created a Preview for the final #211 head.
+- Failure/recovery: the first client-module import violated route import protection and was removed; an unbounded runtime asset cache was found in review and removed; cache version was bumped for a unique final head.
+- Protected actions not taken: no merge, Production promotion, environment change, Supabase/Auth mutation, publishing, Analytics, Ads, billing or spend.
+- Blocker class: Vercel Preview creation plus Android/iPhone install and standalone evidence.
+- Next safe action: create/obtain a Preview for the exact #211 head, verify browser and cache/rollback contracts, then collect both device receipts; keep Draft until all pass.
+- Context health: strong; stale candidates, final head, CI and remaining gates are explicit.
