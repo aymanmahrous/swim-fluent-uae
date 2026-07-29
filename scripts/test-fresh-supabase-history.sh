@@ -11,6 +11,7 @@ DATABASE_RUNNING=0
 MIGRATIONS_HIDDEN=0
 PHASE_A_FILENAME="20260711003100_international_booking_phone_foundation.sql"
 BOOKING_INGRESS_FILENAME="20260729144612_harden_booking_ingress_rpc.sql"
+OS_RBAC_FILENAME="20260729221600_restrict_os_rbac_sanitize_errors.sql"
 
 cleanup() {
   if [[ "$DATABASE_RUNNING" -eq 1 ]]; then
@@ -48,6 +49,9 @@ fi
 if [[ -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   expected_count=$((expected_count + 1))
 fi
+if [[ -f "$MIGRATIONS_DIR/$OS_RBAC_FILENAME" ]]; then
+  expected_count=$((expected_count + 1))
+fi
 
 if [[ "${#migration_files[@]}" -ne "$expected_count" ]]; then
   echo "Expected $expected_count exact repository SQL files, found ${#migration_files[@]}" >&2
@@ -72,6 +76,10 @@ if [[ -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   # The final hardening migration intentionally supersedes Phase A's temporary
   # anon-executable legacy RPC contract. Its verifier enforces the closed state.
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-ingress-hardening.sql
+fi
+
+if [[ -f "$MIGRATIONS_DIR/$OS_RBAC_FILENAME" ]]; then
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-os-rbac-sanitized-errors.sql
 fi
 
 supabase stop --no-backup
