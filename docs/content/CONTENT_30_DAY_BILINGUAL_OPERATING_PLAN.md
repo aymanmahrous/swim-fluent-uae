@@ -1,6 +1,8 @@
 # 30-DAY BILINGUAL CONTENT OPERATING PLAN
 
-Status: `CONTENT_30_DAY_PLAN_READY_FOR_OWNER_REVIEW`
+Status: `CONTENT_30_DAY_PLAN_READY_FOR_OWNER_REVIEW_BATCH_A1_VISUAL_APPROVAL_PAIRING_PENDING`
+
+Synchronized: 2026-07-29 (Asia/Dubai)
 
 Prepared: 2026-07-15 (Asia/Dubai)
 
@@ -24,8 +26,8 @@ Current verified inputs:
 
 - Post 1 has a documented publication state and receipts in the Week 1 pack.
 - Post 2 — Fear of Water — was recorded as scheduled for 2026-07-15 with publication receipts pending. This plan does not claim it published.
-- Post 3 content and Visual Brief are approved, but final assets are not created, scheduled, or published.
-- Batch A1 is not closed because individual human visual evidence and font-weight proof remain incomplete.
+- Post 3 content and Visual Brief are approved. The Batch A1 archive contains a `p03`-named visual group, but naming alone does not prove canonical Post 3 asset/caption pairing; Post 3 remains unscheduled and unpublished.
+- Batch A1 visual QA is closed: the owner-selected canonical package contains 23/23 individually hashed PNG exports, reviewed at 1080×1350 and 390 px mobile, with `23 PASS / 0 REVISE`. Release reuse remains blocked by exact asset/caption pairing, rights/source confirmation, account readiness and separate human release approval.
 
 ## 2. Hard operating rules
 
@@ -595,17 +597,17 @@ Rules:
 
 ## 6. Batch A1 reuse map
 
-Current state: `NO_ASSET_REUSE_APPROVED_WITHOUT_VIEWABLE_FILE_AND_HASH`
+Current state: `BATCH_A1_VISUALLY_APPROVED_REUSE_BLOCKED_BY_PAIRING_RIGHTS_AND_RELEASE`
 
 | Reuse category | Current decision | Required evidence before reuse |
 |---|---|---|
-| Approved Batch A1 Feed asset | Not identified for reuse | exact filename/hash, individual PNG, dimensions, human Arabic visual review, source/rights receipt |
-| Approved Batch A1 Story asset | Not identified for reuse | exact filename/hash, 1080×1920 proof, mobile safe-zone review, rights receipt |
+| Canonical Batch A1 Feed assets | 23/23 visually approved with exact filenames, dimensions and SHA-256 values in the 2026-07-19 receipt | exact content/caption pairing, rights/source confirmation, account readiness and separate human release approval |
+| Batch A1 Story adaptation | No canonical 1080×1920 Story set is proven by the receipt | exact Story export/hash, platform safe-zone review, content/caption pairing and rights receipt |
 | Coach Ayman source photo | Not automatically reusable | owner-controlled original, permission, identity-preservation instructions, final export review |
 | Brand-only template | Potentially reusable after review | editable source, approved logo/colors/fonts, exact version, Arabic/English layout QA |
-| Post 3 visual | Not yet created | use only canonical approved Visual Brief and separate production authorization |
+| `p03`-named Batch A1 group | Visually approved as files, but not asserted as the canonical Post 3 match | compare every slide to the approved Post 3 brief and caption, record mapping receipt and obtain release approval |
 
-A manifest entry or filename alone is insufficient. No row in this plan claims an approved reusable asset.
+The 2026-07-19 receipt proves file-level visual approval. It does not by itself prove content/caption pairing, source rights, platform account readiness or release authorization. Reuse becomes approved only when all four are recorded in the Week 1 Release Readiness Matrix.
 
 ## 7. Media-production brief rules for all draft posts
 
@@ -669,18 +671,18 @@ Ordered by revenue impact and production effort:
 5. **Coach-led Reels** — select which original footage can be produced without client/child imagery.
 6. **Safety/technique content** — Coach Ayman reviews all technical and supervision wording.
 7. **Brand-only engagement Stories** — lowest production effort; still require bilingual and platform QA.
-8. **Batch A1 reuse** — remains blocked until the actual files/hashes and human review evidence exist.
+8. **Batch A1 release pairing** — 23/23 files and human visual evidence exist; complete exact asset/caption mapping, rights/source and separate release authorization.
 
 ## 10. Readiness summary
 
 - Editorial strategy: ready for owner review.
-- Post 3 copy and Visual Brief: approved; assets not created.
+- Post 3 copy and Visual Brief: approved; a visually approved `p03`-named file group exists, but canonical pairing is not yet proven.
 - Days 2–30: draft concepts/copy; not approved for production or release.
-- Batch A1 reuse: no approved reuse assertion.
+- Batch A1 visual package: owner approved, 23/23 PASS. Release reuse: blocked pending exact pairing, rights/source, account readiness and separate release approval.
 - Scheduling/publishing: not authorized.
 - Analytics/UTM activation: not authorized.
 - Ads/Boost: prohibited in this plan.
 
 Final truthful state:
 
-`CONTENT_30_DAY_PLAN_READY_FOR_OWNER_REVIEW_NO_ASSETS_SCHEDULE_OR_PUBLICATION`
+`CONTENT_30_DAY_PLAN_READY_FOR_OWNER_REVIEW_BATCH_A1_VISUAL_APPROVAL_PAIRING_PENDING_NO_NEW_SCHEDULE_OR_PUBLICATION`
