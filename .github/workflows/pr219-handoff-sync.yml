@@ -1,17 +1,16 @@
 name: PR 219 Handoff Sync
 
 on:
-  push:
-    branches:
-      - agent/restrict-os-rbac-sanitize-errors-20260730
-    paths:
-      - .github/workflows/pr219-handoff-sync.yml
+  pull_request:
+    types: [synchronize]
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   sync-handoffs:
+    if: github.event.pull_request.head.ref == 'agent/restrict-os-rbac-sanitize-errors-20260730'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
