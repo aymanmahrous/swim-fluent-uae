@@ -920,7 +920,7 @@ Before marking PR #213 ready or merging, collect Android install/standalone evid
 
 ## 26. iPhone PWA physical-device receipt — 2026-07-29
 
-Status: `IPHONE_PASS_ANDROID_BLOCKED_EXTERNAL`
+Status: `IPHONE_PASS_ANDROID_OWNER_ATTESTED_NOT_EVIDENCE_VERIFIED`
 
 - iPhone Add-to-Home-Screen evidence passed; Relax Fix UAE wave icon was visible on the Home Screen.
 - Standalone launch passed; the Arabic RTL application rendered without Safari address or bottom toolbars.
@@ -930,5 +930,31 @@ Status: `IPHONE_PASS_ANDROID_BLOCKED_EXTERNAL`
   - Standalone application evidence: `1ef9f44d87ae78c293970d237acf2dec034f2cabc18696e64e194caa8b3c98cf`.
   - Airplane Mode offline evidence: `0205d6517c18bb82ff035845022a976b1bb2b8a57a2d17c0a76e9300e881de9f`.
 - All three reviewed JPEG receipts are 739×1600.
-- The owner confirmed no physical Android phone is available. Android remains `BLOCKED_EXTERNAL_DEVICE_UNAVAILABLE`; do not substitute desktop emulation as physical-device evidence or purchase device-cloud access without approval.
-- PR #213 remains Draft and must not be merged. Private-route CacheStorage inspection and observed root rollback also remain open.
+- A friend’s physical Android phone became available. Captured evidence showed the page rendered inside a browser and the generic browser `INTERNET_DISCONNECTED -2` screen; it did not prove installed standalone or PWA offline fallback. The owner later attested completion, recorded as `OWNER_ATTESTED_NOT_EVIDENCE_VERIFIED`.
+- PR #213 remains Draft and must not be merged. Private-route CacheStorage and observed root rollback are now verified; Android standalone/offline evidence remains unverified.
+
+
+## 27. PWA private-cache and same-origin rollback receipt — 2026-07-30
+
+Status: `RUNTIME_GATES_PASS_ANDROID_OWNER_ATTESTED_ONLY`
+
+- Candidate remains Draft PR #213 at exact head `9035184666cba759066b138b2ae1d0466542259e`; it was not changed, marked ready or merged.
+- Private-route CacheStorage inspection passed on exact-head Preview `dpl_14VHvSnfbr3EpwDud16BiRmbSKnG`:
+  - baseline cache contained exactly 6 public install resources;
+  - after visiting `/admin`, `/staff` and `/os`, total remained 6;
+  - no private route entered CacheStorage.
+- Cache evidence: 1366×768 PNG SHA-256 `03651c38e63e67494ff309d74d49039f88ab590899d01efb7e37502f19f30651` before route checks and `9d4572f360ff79d596fff0daf5a9faf1a3eab855f2164b430788445a7ec62ac1` after them.
+- Same-origin rollback observation passed through disposable Draft PR #217:
+  - stable Preview alias first loaded the enabled PWA;
+  - the same alias then loaded disabled exact head `08bbc399820ce5c990a4d47b3aac6db22830dcfd`;
+  - count receipt: `before rootRegistrations=1, ownedCaches=1, foreignCaches=0; after rootRegistrations=0, ownedCaches=0, foreignCaches=0`;
+  - Vercel deployment `dpl_Dcic9Rtv2x686z3FwWsrBy9VBVdd` reached `READY`, no Production target;
+  - GitHub CI #694: `SUCCESS`;
+  - page remained rendered with no framework error overlay.
+- Draft PR #216 was closed superseded because its two origins could not prove same-origin rollback. Draft PR #217 is disposable observation code and must never be merged.
+- Android is recorded only as owner-attested completion. Existing screenshots do not prove installed standalone or Relax Fix offline fallback, so the physical Android evidence gate is not evidence-verified.
+- No `main` mutation, Production promotion, Supabase/Auth/environment change, publication, Analytics, Ads, billing or spend occurred.
+
+### Next safe action
+
+Keep PR #213 Draft until the owner decides whether to accept the Android attestation risk or provide two conclusive Android screenshots: installed standalone without browser chrome, then the Relax Fix bilingual offline fallback after airplane-mode relaunch. PR #215 carries this durable documentation update and requires explicit approval before merge.
