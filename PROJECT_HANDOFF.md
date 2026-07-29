@@ -916,3 +916,19 @@ Status: `PREVIEW_READY_DEVICE_AND_OFFLINE_RUNTIME_EVIDENCE_PENDING`
 ### Mandatory remaining gate
 
 Before marking PR #213 ready or merging, collect Android install/standalone evidence, iPhone Add-to-Home-Screen/standalone evidence, a real network-offline navigation receipt, private-route CacheStorage inspection and observed root unregister/scoped-cache rollback. Do not merge based on CI/source inspection alone.
+
+
+## 26. iPhone PWA physical-device receipt — 2026-07-29
+
+Status: `IPHONE_PASS_ANDROID_BLOCKED_EXTERNAL`
+
+- iPhone Add-to-Home-Screen evidence passed; Relax Fix UAE wave icon was visible on the Home Screen.
+- Standalone launch passed; the Arabic RTL application rendered without Safari address or bottom toolbars.
+- Real offline navigation passed after closing the app, enabling Airplane Mode and reopening from the Home Screen icon; the bilingual offline fallback rendered in standalone presentation.
+- Evidence hashes:
+  - Home Screen icon/context evidence: `b476a0d4a877c4688ad490bd0242034dfc6ee67e47d9e3b932825fe2872925fd`.
+  - Standalone application evidence: `1ef9f44d87ae78c293970d237acf2dec034f2cabc18696e64e194caa8b3c98cf`.
+  - Airplane Mode offline evidence: `0205d6517c18bb82ff035845022a976b1bb2b8a57a2d17c0a76e9300e881de9f`.
+- All three reviewed JPEG receipts are 739×1600.
+- The owner confirmed no physical Android phone is available. Android remains `BLOCKED_EXTERNAL_DEVICE_UNAVAILABLE`; do not substitute desktop emulation as physical-device evidence or purchase device-cloud access without approval.
+- PR #213 remains Draft and must not be merged. Private-route CacheStorage inspection and observed root rollback also remain open.
