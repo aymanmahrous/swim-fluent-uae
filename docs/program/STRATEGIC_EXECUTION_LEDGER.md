@@ -103,3 +103,18 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: Phase 1 rights/caption/calendar/account/release gates; Phase 3 protected secret/config and migration approval.
 - Next safe action: prepare a separate Preview-first remediation PR that routes booking through the hardened service-only ingress, revokes direct anonymous execution and adds regression tests; do not apply the migration or Production secrets without approval. Continue one content-unit caption/calendar comparison in parallel.
 - Context health: strong; source IDs, exact commits, CI runs, findings and protected boundaries are durable.
+
+## Checkpoint — 2026-07-29 booking ingress hardening implementation
+
+- Agent/workstream: Main Project Director / Supabase Security and Booking Ingress.
+- Task: Implement the audited booking-ingress remediation in an isolated Draft PR and prove application and migration compatibility without Production writes.
+- Status: `REVIEW_READY`; Production release remains `BLOCKED_PROTECTED_APPROVAL`.
+- Scope: server-side booking route, bounded input contract, browser bot signals, server-derived fingerprint, CLI-generated privilege migration, regression checks and disposable-database migration tests.
+- Last confirmed result: Draft PR #205 head `178ddaa43d457047fd4b60ce133b5c629778eb40` passes the complete required GitHub test matrix.
+- Evidence: CI #659 success; Booking Phone Foundation #30 success; Fresh Supabase Migration Compatibility #22 success for migration-history-audit, campaigns-compatibility, full-history-execution and stacked-phase-a; Vercel deployment `dpl_6TQ7JgQ4gByUFSf6RYL3UwKehoFB` canceled by the configured ignored-build-step policy; current Production remains `dpl_8nkrTuuzwxapJ9QMGqHfTWcjhMer` at `6949b30cc15e4671adee68a7159d625f594200ce`.
+- Failure/recovery: migration-chain tests exposed stale Phase A assumptions and a historical scenario that included the new final migration. The contracts were separated by lifecycle stage; the security assertion was not weakened. Subsequent full runs passed.
+- Protected actions not taken: no merge to `main`, Vercel Production promotion, Supabase Production migration, live booking submission, key value read/change, Auth/policy/data mutation or rollback.
+- Blocker class: coordinated Production release window and post-deploy privilege verification.
+- Next safe action: preserve Draft state; on explicit Production approval, deploy the server route first, verify Vercel health, then apply `20260729144612_harden_booking_ingress_rpc.sql` and run read-only grant checks. Record every receipt before phase completion.
+- Context health: strong; implementation, exact migration, CI receipts, Vercel state, rollback boundary and release order are durable in PR #205 and `PROJECT_HANDOFF.md`.
+
