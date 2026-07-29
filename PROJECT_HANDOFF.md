@@ -896,3 +896,23 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 - PR #198 was closed stale; PRs #209 and #211 are superseded and must not be merged.
 - Repository `vercel.json` intentionally cancels `agent/*` Preview builds. Moving the exact reviewed tree to `preview/pwa-installability-v2` removed that policy conflict, but Git integration still did not emit a deployment. Connected Vercel reads work; local Vercel CLI/token and a full local checkout are unavailable, so exact-head Preview remains externally blocked.
 - Android/iPhone install evidence is still required. Keep #213 Draft and do not promote it to Production until Preview, browser and both-device gates are proven.
+
+
+## 25. PWA exact-head Preview receipt — 2026-07-29
+
+Status: `PREVIEW_READY_DEVICE_AND_OFFLINE_RUNTIME_EVIDENCE_PENDING`
+
+- Current candidate: Draft PR #213, exact head `9035184666cba759066b138b2ae1d0466542259e`.
+- GitHub CI #686: `SUCCESS`, including the privacy-safe PWA and Vercel policy checks.
+- Owner manually created the Preview from `preview/pwa-installability-v2`.
+- Vercel deployment `dpl_14VHvSnfbr3EpwDud16BiRmbSKnG`: `READY`, source `git`, no Production target.
+- Deployment-scoped runtime error/fatal scan returned no entries.
+- Protected Preview opened successfully through Vercel's temporary access mechanism; Arabic homepage rendered.
+- Browser inspection proved the public standalone manifest, no private shortcuts, 192×192 and 512×512 PNG icons, 180×180 Apple icon, bilingual RTL offline page with `noindex,nofollow`, and the bounded v5 service-worker source.
+- The service worker bypasses non-GET, cross-origin, `/api`, `/staff`, `/os` and `/admin`; precaches only public install resources; deletes only `relax-fix-pwa-*` caches; and falls back to the offline page only for failed navigation.
+- PR #198 is closed stale; PRs #209 and #211 are closed superseded. Do not reopen or merge them.
+- PR #213 remains Draft. No Production deployment, environment change, Supabase/Auth mutation, publishing, Analytics, Ads, billing or spend occurred.
+
+### Mandatory remaining gate
+
+Before marking PR #213 ready or merging, collect Android install/standalone evidence, iPhone Add-to-Home-Screen/standalone evidence, a real network-offline navigation receipt, private-route CacheStorage inspection and observed root unregister/scoped-cache rollback. Do not merge based on CI/source inspection alone.
