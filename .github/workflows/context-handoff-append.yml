@@ -6,12 +6,16 @@ on:
       - governance/context-handoff-protocol
     paths:
       - .github/workflows/context-handoff-append.yml
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   append-protocol:
+    if: github.head_ref == 'governance/context-handoff-protocol' || github.ref_name == 'governance/context-handoff-protocol'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
