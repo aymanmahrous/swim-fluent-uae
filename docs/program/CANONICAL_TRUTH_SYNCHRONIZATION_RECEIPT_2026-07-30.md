@@ -1,6 +1,6 @@
 # Canonical Truth Synchronization Receipt
 
-Last verified: 2026-07-30 Asia/Dubai
+Last verified: 2026-07-30 12:22 Asia/Dubai
 
 Status: `CANONICAL_TRUTH_SYNCHRONIZED_STALE_PRS_CONTROLLED_REVIEW_READY`
 
@@ -22,3 +22,7 @@ No Merge, PWA code/rebase, Production Promotion, Supabase/Auth/RLS/data/key/envi
 ## Review boundary
 
 PR #220 remains Draft. Its merge requires a separate manager decision after final diff and checks review.
+
+## Final review trigger
+
+This receipt timestamp update is documentation-only and triggers the normal PR checks on the final synchronized tree. It changes no operational decision or application behavior.
