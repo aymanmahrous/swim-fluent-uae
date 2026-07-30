@@ -358,3 +358,114 @@ No agent may mark a phase complete from an Issue, plan, chat message, UI presenc
 After two or three materially equivalent failures, the agent must stop repeating the same method, classify the failure, inspect evidence/logs or select a safer alternative, record the result and continue an independent approved track where possible. Agents must not silently abandon work, conceal partial state, invent access or claim Live/Production success from a Preview or contract.
 
 This charter does not authorize automatic merges. Every merge and every protected external or Production action remains subject to its existing explicit gate.
+
+## CONTEXT_LENGTH_AND_NEW_CHAT_PROTOCOL
+
+Added: 2026-07-30 23:59 Asia/Dubai.
+Reason: owner-approved durable governance rule to prevent context loss, duplicated work, evidence confusion, and unsafe continuation in long conversations.
+
+### Mandatory context monitoring
+
+1. Every agent must monitor conversation length and context integrity throughout the work.
+2. When conversation length may impair decision recall, the last confirmed state, completed-versus-remaining classification, duplicate-work prevention, Branch/PR/Workflow tracking, or safe handling of sensitive commands, the agent must stop before starting a new task and issue:
+
+`NEW_CHAT_RECOMMENDED`
+
+3. The warning must be issued early, before context loss or duplication appears. Saying only that the conversation is long is not sufficient.
+4. Before recommending a new chat, the agent must prepare a complete copy-ready transitional Handoff.
+5. The new chat must continue from the last confirmed point and must not restart the project from zero.
+6. Every receiving agent must read `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, `docs/program/STRATEGIC_EXECUTION_LEDGER.md`, and the named source-of-truth evidence before proposing or executing work.
+
+### Evidence-level separation
+
+Every Handoff and execution report must distinguish:
+
+- `CODE`
+- `CI`
+- `PREVIEW`
+- `PRODUCTION`
+- `OWNER`
+- `QA`
+- `NOT_LIVE`
+
+`CODE MERGED` is never equivalent to `PRODUCTION DEPLOYED`.
+A migration merged into the repository is never equivalent to a migration applied to Production.
+No stronger state may be claimed without evidence at that exact level.
+
+### Required transitional Handoff template
+
+```text
+AGENT_TYPE:
+CURRENT_PHASE:
+CURRENT_TASK:
+TASK_STATUS:
+LAST_CONFIRMED_RESULT:
+DECISION:
+NEXT_REQUIRED_ACTION:
+OWNER_ACTION_REQUIRED:
+RISK_LEVEL:
+PRODUCTION_CHANGED:
+COST_OR_SPEND:
+WORKSTREAM_OWNER:
+ACTIVE_BRANCH:
+ACTIVE_PR:
+LATEST_BASE_SHA:
+LATEST_HEAD_SHA:
+LATEST_MERGE_SHA:
+OVERLAP_STATUS:
+DO_NOT_DO:
+CONTEXT_HEALTH: NEW_CHAT_RECOMMENDED
+
+PROJECT:
+REPOSITORY:
+SOURCE_OF_TRUTH:
+APPROVED_STRATEGY_ORDER:
+COMPLETED_WORK:
+PARTIALLY_COMPLETED_WORK:
+CURRENT_ACTIVE_WORK:
+EXACT_REMAINING_GAP:
+OPEN_PRS_AND_BRANCHES:
+MERGED_PRS:
+WORKFLOW_RESULTS:
+PRODUCTION_STATE:
+SUPABASE_STATE:
+VERCEL_STATE:
+OWNER_APPROVALS_ALREADY_GIVEN:
+APPROVALS_STILL_REQUIRED:
+PROTECTED_ACTIONS:
+FILES_ALREADY_INSPECTED:
+EXISTING_IMPLEMENTATION:
+DO_NOT_REPEAT:
+NEXT_SAFE_TASK:
+EXACT_STOP_POINT:
+COPYABLE_INSTRUCTION_FOR_NEW_AGENT:
+```
+
+### Mandatory duplicate-work prevention block
+
+Every transitional Handoff must state:
+
+```text
+EXISTING_IMPLEMENTATION =
+EXISTING_FILES =
+EXISTING_PRS =
+ALREADY_COMPLETED =
+ACTUAL_GAP =
+WHY_NEW_WORK_IS_NEEDED =
+OVERLAP_CHECK =
+```
+
+The agent must verify existing implementation, files, PRs, audits, inspections, migrations, tests, and receipts before creating new work. Completed audits, inspections, PRs, files, or systems must not be repeated unless the exact remaining gap and reason for new work are documented.
+
+### Stop rule after NEW_CHAT_RECOMMENDED
+
+After issuing `NEW_CHAT_RECOMMENDED`, the agent must not:
+
+- start a new task;
+- merge a PR;
+- perform a Production write;
+- apply a migration;
+- execute a deployment;
+- create a new PR.
+
+The agent must stop after delivering the complete Handoff and wait for the owner to open a new conversation and paste it.
