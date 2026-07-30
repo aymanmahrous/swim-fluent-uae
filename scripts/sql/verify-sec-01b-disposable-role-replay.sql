@@ -102,7 +102,6 @@ do $$
 declare
   v_bad integer;
 begin
-  -- Denials: anon may be ACL 42501; all other denied contexts must be STAFF_ACCESS_DENIED/42501.
   select count(*) into v_bad from sec01b_results
   where actor in ('anon','authenticated_non_staff','inactive_staff','content_manager','service_role_without_staff_context')
     and not (sqlstate = '42501' and error_message is not null and error_message !~* '(select |insert |update |delete |stack|context:)');
@@ -120,7 +119,6 @@ begin
 end
 $$;
 
--- Replay, audit, invalid input and NOT_FOUND contracts as admin.
 select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000006', true);
 set local role authenticated;
 
@@ -136,7 +134,9 @@ begin
   if a->>'changed' <> 'true' or b->>'changed' <> 'false' or a->>'status' <> 'contacted' then
     raise exception 'SEC01B_BOOKING_REPLAY_RESPONSE_FAILED:%:%', a, b;
   end if;
-  select count(*), max(detail) into v_count, v_detail from public.audit_logs
+  select count(*), (array_agg(detail order by created_at desc, id desc))[1]
+    into v_count, v_detail
+  from public.audit_logs
   where action='booking_request_status_updated' and entity_id='20000000-0000-0000-0000-000000000001';
   if v_count <> 1 or v_detail->>'previousStatus' <> 'pending' or v_detail->>'nextStatus' <> 'contacted' then
     raise exception 'SEC01B_BOOKING_AUDIT_FAILED:%:%', v_count, v_detail;
@@ -147,7 +147,9 @@ begin
   if a->>'changed' <> 'true' or b->>'changed' <> 'false' or a->>'mode' <> 'human_takeover' then
     raise exception 'SEC01B_CONVERSATION_REPLAY_RESPONSE_FAILED:%:%', a, b;
   end if;
-  select count(*), max(detail) into v_count, v_detail from public.audit_logs
+  select count(*), (array_agg(detail order by created_at desc, id desc))[1]
+    into v_count, v_detail
+  from public.audit_logs
   where action='conversation_mode_updated' and entity_id='40000000-0000-0000-0000-000000000001';
   if v_count <> 1 or v_detail->>'previousMode' <> 'ai_active' or v_detail->>'nextMode' <> 'human_takeover' then
     raise exception 'SEC01B_CONVERSATION_AUDIT_FAILED:%:%', v_count, v_detail;
@@ -159,7 +161,6 @@ begin
   b := public.update_staff_lead_workflow(
     '30000000-0000-0000-0000-000000000001','qualified',false,false,now()+interval '2 days'
   );
-  -- Timestamp calls above are not byte-identical; exercise exact replay with persisted effective value.
   b := public.update_staff_lead_workflow(
     '30000000-0000-0000-0000-000000000001','qualified',false,false,
     (select next_follow_up_at from public.leads where id='30000000-0000-0000-0000-000000000001')
@@ -170,10 +171,11 @@ begin
   select count(*) into v_count from public.follow_up_jobs
   where lead_id='30000000-0000-0000-0000-000000000001' and status in ('queued','processing','retrying');
   if v_count <> 1 then raise exception 'SEC01B_LEAD_ACTIVE_JOB_DUPLICATED:%', v_count; end if;
-  select count(*), max(detail) into v_count, v_detail from public.audit_logs
+  select count(*), (array_agg(detail order by created_at desc, id desc))[1]
+    into v_count, v_detail
+  from public.audit_logs
   where action='lead_workflow_updated' and entity_id='30000000-0000-0000-0000-000000000001';
   if v_count <> 2 then
-    -- One audit for initial schedule plus one for the intentionally different first replay timestamp.
     raise exception 'SEC01B_LEAD_AUDIT_COUNT_FAILED:%', v_count;
   end if;
   if v_detail->>'nextStage' <> 'qualified' then raise exception 'SEC01B_LEAD_AUDIT_DETAIL_FAILED:%', v_detail; end if;
