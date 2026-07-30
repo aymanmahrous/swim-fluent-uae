@@ -12,12 +12,21 @@ const bookingIngressFilename = "20260729144612_harden_booking_ingress_rpc.sql";
 const osRbacFilename = "20260729221600_restrict_os_rbac_sanitize_errors.sql";
 const sec01bRoleFilename = "20260730213000_sec_01b_align_conversation_mode_role_contract.sql";
 const sec01bIdempotencyFilename = "20260730214500_sec_01b_idempotent_booking_lead_conversation_writes.sql";
+
+const historicalControlledContracts = [
+  [phaseAFilename, "20260711003100", "create or replace function public.submit_booking_request"],
+  [bookingIngressFilename, "20260729144612", "create or replace function public.submit_booking_request"],
+  [osRbacFilename, "20260729221600", "create or replace function public.get_staff_command_center"],
+];
+
+const sec01bContracts = [
+  [sec01bRoleFilename, "20260730213000", "create or replace function public.set_staff_conversation_mode"],
+  [sec01bIdempotencyFilename, "20260730214500", "create or replace function public.update_booking_request_status"],
+];
+
 const controlledFilenames = new Set([
-  phaseAFilename,
-  bookingIngressFilename,
-  osRbacFilename,
-  sec01bRoleFilename,
-  sec01bIdempotencyFilename,
+  ...historicalControlledContracts.map(([filename]) => filename),
+  ...sec01bContracts.map(([filename]) => filename),
 ]);
 const historicalFilenames = filenames.filter((filename) => !controlledFilenames.has(filename));
 const controlledPresence = Object.fromEntries(
@@ -61,20 +70,20 @@ assert.deepEqual(
   "Historical migration collision inventory changed; review Production history before changing strategy",
 );
 
-const exactContracts = [
-  [phaseAFilename, "20260711003100", "create or replace function public.submit_booking_request"],
-  [bookingIngressFilename, "20260729144612", "create or replace function public.submit_booking_request"],
-  [osRbacFilename, "20260729221600", "create or replace function public.get_staff_command_center"],
-  [sec01bRoleFilename, "20260730213000", "create or replace function public.set_staff_conversation_mode"],
-  [sec01bIdempotencyFilename, "20260730214500", "create or replace function public.update_booking_request_status"],
-];
-
-for (const [filename, expectedVersion, requiredToken] of exactContracts) {
+for (const [filename, expectedVersion, requiredToken] of historicalControlledContracts) {
   if (!controlledPresence[filename]) continue;
   const entry = entries.find((candidate) => candidate.filename === filename);
   assert.equal(entry?.parsedVersion, expectedVersion, `${filename} must keep its exact migration version`);
   const content = (await readFile(join(migrationsDirectory, filename), "utf8")).toLowerCase();
-  assert.ok(content.includes(requiredToken), `${filename} lost its required append-only contract token`);
+  assert.ok(content.includes(requiredToken), `${filename} lost its required historical contract token`);
+}
+
+for (const [filename, expectedVersion, requiredToken] of sec01bContracts) {
+  if (!controlledPresence[filename]) continue;
+  const entry = entries.find((candidate) => candidate.filename === filename);
+  assert.equal(entry?.parsedVersion, expectedVersion, `${filename} must keep its exact migration version`);
+  const content = (await readFile(join(migrationsDirectory, filename), "utf8")).toLowerCase();
+  assert.ok(content.includes(requiredToken), `${filename} lost its required SEC-01B contract token`);
   assert.ok(content.trimStart().startsWith("begin;"), `${filename} must remain transactional`);
   assert.ok(content.trimEnd().endsWith("commit;"), `${filename} must remain append-only and committed`);
 }
@@ -93,6 +102,8 @@ console.log(JSON.stringify({
   strategy: "repository_full_filename_lexical_order_for_disposable_validation_only",
   productionDeploymentStrategy: "BLOCKED",
   historicalMigrationCount: historicalFilenames.length,
+  historicalControlledContracts: historicalControlledContracts.map(([filename, expectedVersion]) => ({ filename, expectedVersion })),
+  sec01bContracts: sec01bContracts.map(([filename, expectedVersion]) => ({ filename, expectedVersion, transactional: true })),
   controlledPresence,
   migrationCount: entries.length,
   duplicateVersions,
