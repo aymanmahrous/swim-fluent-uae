@@ -11,6 +11,7 @@ begin
     select
       format('%I.%I(%s)', n.nspname, p.proname, pg_get_function_identity_arguments(p.oid)) as full_signature,
       case
+        when n.nspname = 'pgbouncer' then 'SERVICE_ONLY'
         when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
         when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
         when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
@@ -70,6 +71,7 @@ with inventory as (
     pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*uuid([, ]|$)' as accepts_uuid,
     pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*(json|jsonb)([, ]|$)' as accepts_json_or_jsonb,
     case
+      when n.nspname = 'pgbouncer' then 'SERVICE_ONLY'
       when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
       when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
       when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
@@ -89,6 +91,7 @@ from inventory i;
 with inventory as (
   select
     case
+      when n.nspname = 'pgbouncer' then 'SERVICE_ONLY'
       when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
       when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
       when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
