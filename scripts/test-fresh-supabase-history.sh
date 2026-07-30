@@ -66,6 +66,8 @@ done
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-fresh-supabase-history.sql
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-no-anon-security-definer.sql
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-authenticated-security-definer-contract.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/inventory-security-definer-functions.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-security-definer-role-contracts.sql
 
 if [[ -f "$MIGRATIONS_DIR/$PHASE_A_FILENAME" && ! -f "$MIGRATIONS_DIR/$BOOKING_INGRESS_FILENAME" ]]; then
   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/sql/verify-booking-phone-foundation-readonly.sql
