@@ -1,6 +1,6 @@
 # STRATEGIC EXECUTION LEDGER
 
-Last verified: 2026-07-29 (Asia/Dubai)
+Last verified: 2026-07-30 (Asia/Dubai)
 
 This ledger is the mandatory durable phase-state record for Relax Fix UAE / Swim Fluent UAE. Read it with `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md`. It records current execution state; it does not replace evidence in PRs, CI, Previews, receipts or source documents.
 
@@ -49,7 +49,7 @@ Every agent or workstream must append or update a checkpoint containing:
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #210 merged at `bf460fe8b25d8b3fd35a862694cc00b07545b9bf`; CI #679 and Fresh Supabase #26 success; exact 23 authenticated privileged contracts now fail CI on ACL/guard/search-path/RLS drift | Preserve closed booking and anon invariants; decide command-center/queue and coach least privilege in isolated compatibility work |
+| 3 | Security, RBAC and Supabase authorization | `REVIEW_READY` | PR #219 Draft; release-gate checks CI #703, Fresh Supabase #31 and Booking Foundation #37 success; owner state `PR_219_TECHNICALLY_APPROVED` | Keep PR #219 Draft and unmerged; require separate Merge gate, then separate Production Migration gate and runtime role-matrix verification |
 | 4 | PWA installability | `REVIEW_READY_ANDROID_EVIDENCE_UNVERIFIED` | PR #213 Preview/CI green; iPhone PASS; private CacheStorage PASS; same-origin root rollback PASS via PR #217 and CI #694 | Preserve Draft; obtain conclusive Android standalone/offline evidence or explicit risk acceptance before readiness/merge |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
@@ -220,3 +220,21 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: Android evidence quality only. Owner attestation exists, but the captured browser screenshots do not prove installed standalone or the Relax Fix offline fallback.
 - Next safe action: preserve PR #213 Draft; obtain conclusive Android standalone and airplane-mode reopen evidence or explicit owner risk acceptance, then review the final readiness decision. Never merge PR #217.
 - Context health: strong; exact heads, deployment, CI, cache counts, hashes, failure recovery and remaining decision are durable.
+
+
+## Checkpoint — 2026-07-30 PR #219 release-gate readiness
+
+- Agent/workstream: Main Project Director / Supabase Security and OS RBAC.
+- Phase and task: Phase 3 — finalize merge readiness for the approved `REMOVE_CONTENT_MANAGER_KEEP_COACH_TEMPORARILY_SANITIZE_OPERATIONAL_ERRORS` change.
+- Status: `REVIEW_READY`; durable state `PR_219_RELEASE_GATE_CHECKS_PASS`.
+- Scope: release planning and durable documentation for PR #219 only.
+- Explicit exclusions: no merge, Production migration, Supabase Production mutation, Auth, RLS, data, keys, Production deployment, publishing, messaging, Analytics, Ads, billing or spend.
+- Last confirmed result: PR #219 is Draft, open, mergeable and unmerged; its branch is behind latest `main` by zero commits. The Production migration has not been executed.
+- Evidence: PR #219; release-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`; CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success; release/rollback plan `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
+- Runtime matrix after a separately approved Production migration: allow `super_admin`, `admin`, `reception`, and temporary `coach`; deny `content_manager`; sanitize coach background-job errors to `JOB_FAILED`; retain raw operational detail only for the other allowed privileged roles; keep anonymous execution denied.
+- Rollback: apply a new explicit rollback migration restoring prior function definitions and role allowlists, then run read-only grants, search-path, response-shape and per-role verification. Never rewrite migration history and never mutate application data as rollback.
+- Failure/recovery: initial implementation CI failures were limited to migration inventory, SQL verifier quoting and Phase A scenario isolation; each was corrected inside PR #219 and the required release-gate matrix passed.
+- Protected actions not taken: every Production and merge action remains untouched. PR #219 remains Draft and unmerged; the Production migration remains unapplied.
+- Blocker class: separate owner Merge authorization, followed by a separate owner Production Migration authorization.
+- Next safe action: stop before Merge and present final readiness evidence.
+- Context health: strong; implementation, tests, release order, rollback and protected boundaries are durable.

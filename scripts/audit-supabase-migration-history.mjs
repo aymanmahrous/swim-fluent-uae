@@ -9,10 +9,12 @@ const filenames = (await readdir(migrationsDirectory))
 
 const phaseAFilename = "20260711003100_international_booking_phone_foundation.sql";
 const bookingIngressFilename = "20260729144612_harden_booking_ingress_rpc.sql";
-const controlledFilenames = new Set([phaseAFilename, bookingIngressFilename]);
+const osRbacFilename = "20260729221600_restrict_os_rbac_sanitize_errors.sql";
+const controlledFilenames = new Set([phaseAFilename, bookingIngressFilename, osRbacFilename]);
 const historicalFilenames = filenames.filter((filename) => !controlledFilenames.has(filename));
 const phaseAPresent = filenames.includes(phaseAFilename);
 const bookingIngressPresent = filenames.includes(bookingIngressFilename);
+const osRbacPresent = filenames.includes(osRbacFilename);
 
 assert.equal(
   historicalFilenames.length,
@@ -21,7 +23,7 @@ assert.equal(
 );
 assert.equal(
   filenames.length,
-  32 + Number(phaseAPresent) + Number(bookingIngressPresent),
+  32 + Number(phaseAPresent) + Number(bookingIngressPresent) + Number(osRbacPresent),
   `Unexpected migration inventory: found ${filenames.length}`,
 );
 
@@ -75,6 +77,15 @@ if (bookingIngressPresent) {
   );
 }
 
+if (osRbacPresent) {
+  const osRbacEntry = entries.find((entry) => entry.filename === osRbacFilename);
+  assert.equal(
+    osRbacEntry?.parsedVersion,
+    "20260729221600",
+    "OS RBAC hardening must keep its isolated 14-digit migration version",
+  );
+}
+
 const uniqueExecutionKeys = new Set(entries.map((entry) => entry.filename));
 assert.equal(
   uniqueExecutionKeys.size,
@@ -90,6 +101,7 @@ console.log(
       historicalMigrationCount: historicalFilenames.length,
       phaseAPresent,
       bookingIngressPresent,
+      osRbacPresent,
       migrationCount: entries.length,
       duplicateVersions,
       executionOrder: entries,

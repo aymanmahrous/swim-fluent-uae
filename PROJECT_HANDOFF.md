@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-29 (Asia/Dubai)
+Last verified: 2026-07-30 (Asia/Dubai)
 
 This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
@@ -425,7 +425,7 @@ Do not mix unrelated workstreams in one PR.
 - No unapproved public claim, credential, medical/therapy/rehabilitation claim, price, offer, testimonial, address, hours, or location.
 - No PII or sensitive data in Analytics or advertising systems.
 - No credentials, tokens, private links, or secrets in public records or browser code.
-- Do not describe assigned, planned, contract-tested, Preview-tested, or paused work as Live, complete, or Production-ready without matching evidence.
+- Do not describe assigned, planned, documented, contract-tested, Preview-tested, or paused work as Live, complete, or Production-ready without matching evidence.
 
 ## 13. Owner Decision Queue format
 
@@ -958,3 +958,24 @@ Status: `RUNTIME_GATES_PASS_ANDROID_OWNER_ATTESTED_ONLY`
 ### Next safe action
 
 Keep PR #213 Draft until the owner decides whether to accept the Android attestation risk or provide two conclusive Android screenshots: installed standalone without browser chrome, then the Relax Fix bilingual offline fallback after airplane-mode relaunch. PR #215 carries this durable documentation update and requires explicit approval before merge.
+
+
+## 28. PR #219 release-gate readiness — 2026-07-30
+
+Status: `PR_219_RELEASE_GATE_CHECKS_PASS`
+
+- Owner technical approval: `PR_219_TECHNICALLY_APPROVED` for the current isolated scope only.
+- Draft PR #219 remains open, Draft, mergeable, and unmerged.
+- Branch `agent/restrict-os-rbac-sanitize-errors-20260730` was verified against latest `main` at `2f526ca16cf9cdaf2ab410cb3ae0ba8118f6f3bc`: ahead only and `behind_by=0`; no new conflict was observed.
+- Approved behavior: remove `content_manager` from `get_staff_command_center()` and `get_staff_operations_queue()`; retain `super_admin`, `admin`, `reception`, and temporary `coach`; return `JOB_FAILED` instead of raw `last_error` to `coach`.
+- Release-gate evidence on release-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`: CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success.
+- Merge and Production migration remain separate protected gates. No merge occurred and migration `20260729221600_restrict_os_rbac_sanitize_errors.sql` has not been applied to Production.
+- Release and rollback plan: `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
+- Required post-Production runtime matrix: `super_admin`, `admin`, and `reception` receive successful command-center/operations responses and privileged raw operational error where applicable; `coach` receives successful responses but only sanitized `JOB_FAILED`; `content_manager` receives `STAFF_ACCESS_DENIED`; anonymous execution remains denied.
+- Rollback, if the separately approved Production migration causes authorization or response-shape regression: restore the prior two function definitions and role allowlists in a new explicit rollback migration, verify grants/search paths and role matrix read-only, and record receipts. Do not rewrite migration history or mutate data.
+- No Supabase Production, Auth, RLS, data, key, environment, Production deployment, publishing, Analytics, Ads, billing, or spend mutation occurred in this readiness stage.
+
+### Next protected gates
+
+1. Separate explicit Merge authorization for PR #219.
+2. After merge evidence is recorded, separate explicit Production Migration authorization.
