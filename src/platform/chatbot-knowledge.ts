@@ -42,8 +42,8 @@ export const CHATBOT_KNOWLEDGE: readonly ChatbotKnowledgeEntry[] = [
       en: ["What are your prices?", "How much do lessons cost in AED?", "What is the coaching cost?", "What is the lesson price?", "What is the session cost in dirhams?", "Is there a sibling price?", "What is the group price per child?", "I want to know the prices in AED"],
     },
     answer: {
-      ar: `المجموعة الصغيرة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. السعر ${PUBLIC_PRICING.groupChildPriceAED} درهمًا للطفل، وسعر الإخوة ${PUBLIC_PRICING.siblingChildPriceAED} درهم لكل طفل. جلسة الحركة المائية أو البرية ${PUBLIC_PRICING.aquaticSessionPriceAED} درهمًا. لا تحدد هذه الأسعار مدة أو عدد حصص أو باقة.`,
-      en: `Small groups are limited to ${PUBLIC_PRICING.groupMaxSize} children. The price is AED ${PUBLIC_PRICING.groupChildPriceAED} per child and AED ${PUBLIC_PRICING.siblingChildPriceAED} per sibling child. An aquatic or land-based movement session is AED ${PUBLIC_PRICING.aquaticSessionPriceAED}. These prices do not specify a duration, number of sessions, or package.`,
+      ar: `المجموعة الصغيرة بحد أقصى ${PUBLIC_PRICING.groupMaxSize} أطفال. السعر ${PUBLIC_PRICING.groupChildPriceAED} درهمًا للطفل، وسعر الإخوة ${PUBLIC_PRICING.siblingChildPriceAED} درهم لكل طفل. جلسة تدريب مائي خاصة لمدة 30 دقيقة بسعر ${PUBLIC_PRICING.privateAquatic30MinutesAED} درهمًا، وجلسة 60 دقيقة بسعر ${PUBLIC_PRICING.privateAquatic60MinutesAED} درهمًا. الجلسة فردية ومخصصة للتأهيل الحركي، تحسين اللياقة أو خسارة الوزن حسب الهدف.`,
+      en: `Small groups are limited to ${PUBLIC_PRICING.groupMaxSize} children. The price is AED ${PUBLIC_PRICING.groupChildPriceAED} per child and AED ${PUBLIC_PRICING.siblingChildPriceAED} per sibling child. A private aquatic training session is AED ${PUBLIC_PRICING.privateAquatic30MinutesAED} for 30 minutes or AED ${PUBLIC_PRICING.privateAquatic60MinutesAED} for 60 minutes. It is a private, individual session tailored to mobility support, fitness improvement, or weight-loss goals.`,
     },
     ctas: ["pricing", "booking"],
   },
