@@ -14,7 +14,7 @@ Explicit exclusions preserved:
 - no RLS or policy change
 - no application-data mutation
 - no key or environment change
-- no Production deployment
+- no application-code Production release action
 - no publishing, messaging, Analytics, Ads, billing or spend
 
 ## Repository and merge evidence
@@ -66,6 +66,10 @@ Result: `RUNTIME_SUPER_ADMIN_AND_NONSTAFF_DENIAL_PASS`.
 
 Security Advisors were run before and after application. The existing broader informational and warning baseline remained. No migration-specific new finding or permission regression was observed. Existing authenticated `SECURITY DEFINER` warnings remain the reviewed intentional staff-RPC model and broader function-by-function Phase 3 work; they were not bulk-modified.
 
+## Documentation deployment note
+
+Recording this receipt on `main` triggered the repository's normal Vercel Git integration. The canonical `swim-fluent-uae-w532` status succeeded for the documentation commit. This was an automatic documentation-only deployment caused by the receipt commit; it contained no application-code, Auth, RLS, data, key or environment change.
+
 ## Rollback outcome
 
 Rollback was not required. The migration, grants, response contracts and executable runtime checks passed.
@@ -74,4 +78,4 @@ Rollback was not required. The migration, grants, response contracts and executa
 
 `PR_219_PRODUCTION_MIGRATION_APPLIED_RUNTIME_VERIFIED`
 
-The OS RBAC change is applied to Supabase Production. This does not claim a Vercel Production deployment, application release, Auth/RLS change or data mutation.
+The OS RBAC change is applied to Supabase Production. No application-code release, Auth/RLS change, data mutation, key change or environment change was performed.
