@@ -1,0 +1,143 @@
+name: Append Context Handoff Protocol
+
+on:
+  push:
+    branches:
+      - governance/context-handoff-protocol
+    paths:
+      - .github/workflows/context-handoff-append.yml
+
+permissions:
+  contents: write
+
+jobs:
+  append-protocol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: governance/context-handoff-protocol
+          fetch-depth: 0
+
+      - name: Append protocol without rewriting history
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="PROJECT_HANDOFF.md"
+          heading="## CONTEXT_LENGTH_AND_NEW_CHAT_PROTOCOL"
+          if grep -Fqx "$heading" "$file"; then
+            echo "Protocol already exists; refusing to duplicate it."
+          else
+            cat >> "$file" <<'EOF'
+
+## CONTEXT_LENGTH_AND_NEW_CHAT_PROTOCOL
+
+Updated: 2026-07-31 (Asia/Dubai)
+
+Reason: persist the owner-approved context-length, safe new-chat transition, evidence-level, and duplicate-work prevention rules in the official Handoff sources without rewriting earlier project history or changing the approved strategy order.
+
+### Binding context-health rules
+
+1. Every agent must monitor conversation length and context integrity throughout the work.
+2. When conversation length may affect accurate recall of decisions, the last confirmed state, completed-versus-remaining work, duplicate-work prevention, Branch/PR/Workflow tracking, or sensitive-command safety, the agent must stop before starting a new task and issue `NEW_CHAT_RECOMMENDED` early.
+3. Stating only that the conversation is long is insufficient. The agent must prepare a complete, copy-ready transition Handoff.
+4. After `NEW_CHAT_RECOMMENDED`, the agent must not start a new task, merge, perform a Production write, apply a migration, deploy, or create a new PR. Work stops until the owner opens a new chat and pastes the Handoff.
+5. The new chat must continue from the last confirmed point and must not restart the project from scratch.
+6. Every incoming agent must read `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, the mandatory source-of-truth documents, and the execution ledger before proposing or executing work.
+7. The warning must be issued before context loss, contradictions, or duplicated execution appear.
+
+### Mandatory transition Handoff template
+
+```text
+AGENT_TYPE:
+CURRENT_PHASE:
+CURRENT_TASK:
+TASK_STATUS:
+LAST_CONFIRMED_RESULT:
+DECISION:
+NEXT_REQUIRED_ACTION:
+OWNER_ACTION_REQUIRED:
+RISK_LEVEL:
+PRODUCTION_CHANGED:
+COST_OR_SPEND:
+WORKSTREAM_OWNER:
+ACTIVE_BRANCH:
+ACTIVE_PR:
+LATEST_BASE_SHA:
+LATEST_HEAD_SHA:
+LATEST_MERGE_SHA:
+OVERLAP_STATUS:
+DO_NOT_DO:
+CONTEXT_HEALTH: NEW_CHAT_RECOMMENDED
+
+PROJECT:
+REPOSITORY:
+SOURCE_OF_TRUTH:
+APPROVED_STRATEGY_ORDER:
+COMPLETED_WORK:
+PARTIALLY_COMPLETED_WORK:
+CURRENT_ACTIVE_WORK:
+EXACT_REMAINING_GAP:
+OPEN_PRS_AND_BRANCHES:
+MERGED_PRS:
+WORKFLOW_RESULTS:
+PRODUCTION_STATE:
+SUPABASE_STATE:
+VERCEL_STATE:
+OWNER_APPROVALS_ALREADY_GIVEN:
+APPROVALS_STILL_REQUIRED:
+PROTECTED_ACTIONS:
+FILES_ALREADY_INSPECTED:
+EXISTING_IMPLEMENTATION:
+DO_NOT_REPEAT:
+NEXT_SAFE_TASK:
+EXACT_STOP_POINT:
+COPYABLE_INSTRUCTION_FOR_NEW_AGENT:
+```
+
+### Mandatory duplicate-work prevention record
+
+Every new Handoff and every proposed implementation must explicitly record:
+
+```text
+EXISTING_IMPLEMENTATION =
+EXISTING_FILES =
+EXISTING_PRS =
+ALREADY_COMPLETED =
+ACTUAL_GAP =
+WHY_NEW_WORK_IS_NEEDED =
+OVERLAP_CHECK =
+```
+
+Agents must not repeat a completed Audit, Inspection, implementation, migration, asset, Branch, or PR merely because the current chat does not contain its history.
+
+### Evidence-level separation
+
+Every claim must be classified using the applicable evidence level:
+
+- `CODE` — present in repository code or documentation only.
+- `CI` — verified by an identified automated check on an exact commit.
+- `PREVIEW` — observed on a specific non-Production deployment.
+- `PRODUCTION` — deployed or applied to the identified Production system and directly verified.
+- `OWNER` — explicitly approved or attested by the owner; this does not automatically equal independent QA.
+- `QA` — reviewed through the stated human or automated quality method.
+- `NOT_LIVE` — planned, documented, contract-tested, Preview-only, merged-but-not-deployed, or otherwise not live.
+
+`CODE MERGED` is never equivalent to `PRODUCTION DEPLOYED`.
+
+A migration committed or merged in Git is never equivalent to a migration applied to Supabase Production. Repository, CI, Preview, Vercel Production, and Supabase Production states must be reported separately.
+
+This protocol is binding for all future agents and supplements the existing Handoff maintenance and phase-persistence rules without changing any earlier owner decision, protected gate, or approved execution order.
+EOF
+          fi
+
+          git rm .github/workflows/context-handoff-append.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROJECT_HANDOFF.md
+          if git diff --cached --quiet; then
+            echo "No content change required."
+            exit 0
+          fi
+          git commit -m "docs(governance): persist context and new-chat protocol"
+          git push origin HEAD:governance/context-handoff-protocol
