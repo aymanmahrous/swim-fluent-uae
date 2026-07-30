@@ -1,6 +1,6 @@
 # STRATEGIC EXECUTION LEDGER
 
-Last verified: 2026-07-30 (Asia/Dubai)
+Last verified: 2026-07-30 12:10 (Asia/Dubai)
 
 This ledger is the mandatory durable phase-state record for Relax Fix UAE / Swim Fluent UAE. Read it with `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md`. It records current execution state; it does not replace evidence in PRs, CI, Previews, receipts or source documents.
 
@@ -36,7 +36,7 @@ Every agent or workstream must append or update a checkpoint containing:
 
 | Platform | Canonical target | Current rule |
 |---|---|---|
-| GitHub | `aymanmahrous/swim-fluent-uae` | Code and durable-document source of truth; no direct `main` mutation |
+| GitHub | `aymanmahrous/swim-fluent-uae` | Code and durable-document source of truth; use an isolated branch and PR. Direct commits to `main` are prohibited except a documented emergency where the normal PR path is unavailable and delay creates immediate material risk; the emergency receipt must state why, exact scope, checks, deployment side effects and follow-up reconciliation. |
 | Vercel | `swim-fluent-uae-w532` / `prj_4wRrALwNzlU0msHb9pGOsExmNID0` | Canonical customer-app project; Preview first |
 | Supabase | `nmzxrjdxvmmzzmajrskm` | Canonical active data platform; no Production mutation without approval |
 | Replit | `Command Center Hub` / `744ff594-34c9-410f-92d4-5287d6efdc41` | Separate internal/experimental app; never a duplicate source of truth |
@@ -49,8 +49,8 @@ Every agent or workstream must append or update a checkpoint containing:
 | 0 | Governance, canonical systems and durable agent continuity | `COMPLETED_EVIDENCE_VERIFIED` | PR #199 squash merged at `766fd73f31bdaebf604a1be061f44dacd7722859`; CI #640 success; Vercel statuses success | Preserve protocol; update ledger at every durable checkpoint |
 | 1 | 30-day bilingual content plan and Week 1 release preparation | `IN_PROGRESS` | PR #202 squash merged at `413574ddf17c5c756aa6bb3923334edb0aabec2b`; CI #646 success; all 23 Batch IDs, visible Arabic copy and hashes verified from Drive | `RF30D-*` mapping, exact approved caption/channel/CTA, legal rights, account and human release evidence; no publishing |
 | 2 | Weekly text approval and media production | `BLOCKED_PROTECTED_APPROVAL` | Week 1 visual package approved; days 2–30 remain draft/review states | Approve weekly text before creating/adapting its media; human release approval remains separate |
-| 3 | Security, RBAC and Supabase authorization | `REVIEW_READY` | PR #219 Draft; release-gate checks CI #703, Fresh Supabase #31 and Booking Foundation #37 success; owner state `PR_219_TECHNICALLY_APPROVED` | Keep PR #219 Draft and unmerged; require separate Merge gate, then separate Production Migration gate and runtime role-matrix verification |
-| 4 | PWA installability | `REVIEW_READY_ANDROID_EVIDENCE_UNVERIFIED` | PR #213 Preview/CI green; iPhone PASS; private CacheStorage PASS; same-origin root rollback PASS via PR #217 and CI #694 | Preserve Draft; obtain conclusive Android standalone/offline evidence or explicit risk acceptance before readiness/merge |
+| 3 | Security, RBAC and Supabase authorization | `IN_PROGRESS` | PR #219 squash merged at `866327f82f24e1f300aa7cf134b727fd6e0ec9a1`; Production migration `20260730065949_restrict_os_rbac_sanitize_errors`; runtime result `RUNTIME_SUPER_ADMIN_AND_NONSTAFF_DENIAL_PASS`; receipt `docs/security/PR_219_PRODUCTION_MIGRATION_RECEIPT_2026-07-30.md` | PR #219 isolated scope is complete and rollback was not required. Broader authenticated `SECURITY DEFINER`, Auth leaked-password protection, extension and advisor work remain separate function-by-function reviews; no bulk revoke or broad closure. |
+| 4 | PWA installability | `REVIEW_READY` | PR #213 Draft at `7b479f60089f70c269b7122110a49bba4f20455a`; iPhone evidence PASS; private CacheStorage and same-origin rollback previously PASS; device decision `PWA_DEVICE_GATE_OWNER_ATTESTED_PASS_DOCUMENTATION_RISK_ACCEPTED` with evidence level `OWNER_ATTESTATION_ONLY_NO_SCREENSHOT_RECEIPT` | Device gate is conditionally passed by owner attestation only. No screenshot, screen recording, independent QA or automated device verification is claimed. Current-main rebase/compatibility, fresh GitHub CI, exact-head Preview and rollback revalidation remain pending; no merge or Production promotion. |
 | 5 | SEO, Local SEO, mobile conversion and external evidence | `IN_PROGRESS` | PR #99 evidence pack merged; Issues #58/#79 open | Search Console, GBP, mobile/CWV and verified owner facts; no external account write |
 | 6 | Privacy, Consent, GA4, UTM, attribution and conversions | `BLOCKED_PROTECTED_APPROVAL` | Decision pack PR #98 merged; Issue #59 open; Analytics remains off | Close protected decisions, then isolated Preview-first implementation |
 | 7 | Publishing readiness and Organic Pilot | `BLOCKED_PROTECTED_APPROVAL` | Contracts exist; Live readiness and receipts unproven | Verify accounts, credentials, idempotency, retry, receipts and obtain release approval |
@@ -73,7 +73,6 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: owner review for merge; protected mobile/offline evidence for PWA; external Replit service timeout.
 - Next safe action: open Draft PR, verify exact diff and CI, then continue content release-readiness and isolated Supabase authorization review without protected writes.
 - Context health: sufficient; canonical documents and current evidence identifiers are recorded.
-
 
 ## Checkpoint — 2026-07-29 merge-authorized foundation closure
 
@@ -132,7 +131,6 @@ Every agent or workstream must append or update a checkpoint containing:
 - Next safe action: preserve the closed booking boundary and continue remaining function-by-function RBAC review in isolated Preview-first changes.
 - Context health: strong; merge, deployment, migration, verification and rollback outcome are durably identified.
 
-
 ## Checkpoint — 2026-07-29 anonymous privileged-function regression guard
 
 - Agent/workstream: Main Project Director / Supabase Security.
@@ -146,7 +144,6 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: none for the anonymous regression guard. Leaked-password protection remains a protected Auth decision; authenticated privileged functions and remaining advisor notices require independent semantic review.
 - Next safe action: continue function-by-function review while preserving the closed booking boundary and the generic anonymous-execution invariant; never bulk-revoke guarded contracts.
 - Context health: strong; implementation, merge, complete CI matrix, production authorization state and remaining boundaries are durable.
-
 
 ## Checkpoint — 2026-07-29 authenticated privileged-function contract
 
@@ -176,7 +173,6 @@ Every agent or workstream must append or update a checkpoint containing:
 - Next safe action: restore or manually trigger a Preview for exact PR #213 head, verify browser and cache/rollback contracts, then collect both device receipts; keep Draft until all pass.
 - Context health: strong; stale candidates, final head, CI and remaining gates are explicit.
 
-
 ## Checkpoint — 2026-07-29 PWA exact-head Preview verification
 
 - Agent/workstream: Main Project Director / PWA and Vercel Preview.
@@ -191,7 +187,6 @@ Every agent or workstream must append or update a checkpoint containing:
 - Next safe action: execute Android and iPhone install/standalone checks plus real offline/private-cache/root-rollback checks; keep PR #213 Draft until all pass.
 - Context health: strong; exact PR head, CI, Preview ID, runtime outcome, browser receipts and remaining gates are durable.
 
-
 ## Checkpoint — 2026-07-29 iPhone PWA physical-device verification
 
 - Agent/workstream: Main Project Director / PWA Device QA.
@@ -200,41 +195,67 @@ Every agent or workstream must append or update a checkpoint containing:
 - Scope: iPhone Home Screen installation, standalone launch and Airplane Mode offline reopening.
 - Last confirmed result: all three iPhone gates passed; bilingual offline fallback rendered in standalone.
 - Evidence: 739×1600 JPEG SHA-256 receipts `b476a0d4a877c4688ad490bd0242034dfc6ee67e47d9e3b932825fe2872925fd`, `1ef9f44d87ae78c293970d237acf2dec034f2cabc18696e64e194caa8b3c98cf`, and `0205d6517c18bb82ff035845022a976b1bb2b8a57a2d17c0a76e9300e881de9f`; PR #213 comments contain the receipts.
-- Failure/recovery: none on iPhone. A friend’s Android later became available, but captured screenshots proved browser-only rendering and a generic browser offline failure; owner attestation is not equivalent to standalone/offline evidence.
+- Failure/recovery: none on iPhone. A friend’s Android later became available, but captured screenshots proved browser-only rendering and a generic browser offline failure; owner attestation was not treated as technical media evidence.
 - Protected actions not taken: no merge, Production promotion, paid device cloud, environment, Supabase/Auth, publishing, Analytics, Ads, billing or spend mutation.
-- Blocker class: conclusive Android installed-standalone and Relax Fix offline evidence; private CacheStorage and root rollback runtime evidence are now closed.
-- Next safe action: keep PR #213 Draft; obtain two conclusive Android screenshots or record explicit owner risk acceptance before readiness/merge.
-- Context health: strong; iPhone proof, exact hashes, Android blocker and remaining gates are durable.
-
+- Blocker class: later superseded by explicit owner risk acceptance; see the canonical synchronization checkpoint below.
+- Next safe action: defer to the newer owner-attestation decision and preserve Draft state pending technical current-main review.
+- Context health: historical evidence retained; newer canonical state is appended below.
 
 ## Checkpoint — 2026-07-30 PWA private-cache and same-origin rollback closure
 
 - Agent/workstream: Main Project Director / PWA Runtime Safety.
 - Task: Prove private routes never enter CacheStorage and prove the root kill path unregisters and deletes only owned caches on the same origin.
-- Status: `COMPLETED_EVIDENCE_VERIFIED` for both runtime gates; Phase 4 remains `REVIEW_READY_ANDROID_EVIDENCE_UNVERIFIED`.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for both runtime gates; historical state later superseded by the canonical synchronization checkpoint.
 - Scope: read-only Chrome CacheStorage inspection plus disposable Preview-only enabled-to-disabled observation.
 - Last confirmed result: `/admin`, `/staff` and `/os` left the v5 cache at 6 public entries; same-origin rollback changed root registrations 1→0 and owned caches 1→0 while foreign caches remained 0→0.
 - Evidence: PNG SHA-256 `03651c38e63e67494ff309d74d49039f88ab590899d01efb7e37502f19f30651` and `9d4572f360ff79d596fff0daf5a9faf1a3eab855f2164b430788445a7ec62ac1`; disposable PR #217 head `08bbc399820ce5c990a4d47b3aac6db22830dcfd`; CI #694 success; Vercel `dpl_Dcic9Rtv2x686z3FwWsrBy9VBVdd` READY Preview.
 - Failure/recovery: initial Draft PR #216 used different deployment origins and therefore could not prove root cleanup. It was closed superseded; PR #217 used one stable branch alias before and after disabling.
 - Protected actions not taken: no merge, `main` write, Production promotion, Supabase/Auth/environment mutation, publication, messaging, Analytics, Ads, billing or spend.
-- Blocker class: Android evidence quality only. Owner attestation exists, but the captured browser screenshots do not prove installed standalone or the Relax Fix offline fallback.
-- Next safe action: preserve PR #213 Draft; obtain conclusive Android standalone and airplane-mode reopen evidence or explicit owner risk acceptance, then review the final readiness decision. Never merge PR #217.
-- Context health: strong; exact heads, deployment, CI, cache counts, hashes, failure recovery and remaining decision are durable.
-
+- Blocker class: current-main rebase/compatibility, fresh CI and exact-head revalidation; device evidence is owner-attestation-only.
+- Next safe action: preserve PR #213 Draft; do not merge PR #217; revalidate rollback after current-main synchronization.
+- Context health: historical runtime evidence retained; current pending gates are stated below.
 
 ## Checkpoint — 2026-07-30 PR #219 release-gate readiness
 
 - Agent/workstream: Main Project Director / Supabase Security and OS RBAC.
-- Phase and task: Phase 3 — finalize merge readiness for the approved `REMOVE_CONTENT_MANAGER_KEEP_COACH_TEMPORARILY_SANITIZE_OPERATIONAL_ERRORS` change.
-- Status: `REVIEW_READY`; durable state `PR_219_RELEASE_GATE_CHECKS_PASS`.
+- Phase and task: Phase 3 — historical release readiness for the approved `REMOVE_CONTENT_MANAGER_KEEP_COACH_TEMPORARILY_SANITIZE_OPERATIONAL_ERRORS` change.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for the later Production outcome; this readiness record is historical.
 - Scope: release planning and durable documentation for PR #219 only.
-- Explicit exclusions: no merge, Production migration, Supabase Production mutation, Auth, RLS, data, keys, Production deployment, publishing, messaging, Analytics, Ads, billing or spend.
-- Last confirmed result: PR #219 is Draft, open, mergeable and unmerged; its branch is behind latest `main` by zero commits. The Production migration has not been executed.
-- Evidence: PR #219; release-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`; CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success; release/rollback plan `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
-- Runtime matrix after a separately approved Production migration: allow `super_admin`, `admin`, `reception`, and temporary `coach`; deny `content_manager`; sanitize coach background-job errors to `JOB_FAILED`; retain raw operational detail only for the other allowed privileged roles; keep anonymous execution denied.
-- Rollback: apply a new explicit rollback migration restoring prior function definitions and role allowlists, then run read-only grants, search-path, response-shape and per-role verification. Never rewrite migration history and never mutate application data as rollback.
-- Failure/recovery: initial implementation CI failures were limited to migration inventory, SQL verifier quoting and Phase A scenario isolation; each was corrected inside PR #219 and the required release-gate matrix passed.
-- Protected actions not taken: every Production and merge action remains untouched. PR #219 remains Draft and unmerged; the Production migration remains unapplied.
-- Blocker class: separate owner Merge authorization, followed by a separate owner Production Migration authorization.
-- Next safe action: stop before Merge and present final readiness evidence.
-- Context health: strong; implementation, tests, release order, rollback and protected boundaries are durable.
+- Last confirmed result: superseded by the Production closure checkpoint below.
+- Evidence: release-plan head `b7499c15bd7439a20b2fd865ca62492d962493b0`; CI #703 success; Fresh Supabase Migration Compatibility #31 success; Booking Phone Foundation #37 success; release/rollback plan `docs/security/PR_219_MERGE_AND_PRODUCTION_RELEASE_GATE_PLAN_2026-07-30.md`.
+- Failure/recovery: initial implementation CI failures were corrected before release.
+- Protected actions not taken at that historical checkpoint: merge and Production mutation were deferred and later separately authorized.
+- Blocker class: superseded by completed merge and Production migration.
+- Next safe action: use the Production closure below as current truth.
+- Context health: historical sequence preserved without treating it as current state.
+
+## Checkpoint — 2026-07-30 PR #219 Production closure
+
+- Agent/workstream: Main Project Director / Supabase Security and OS RBAC.
+- Phase and task: Phase 3 — close the separately authorized PR #219 merge and Production migration scope.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for PR #219 isolated scope; broader Phase 3 remains `IN_PROGRESS`.
+- Scope: squash merge, exact two-function migration, read-only grants/definition verification, limited runtime smoke and durable receipt.
+- Last confirmed result: `content_manager` is removed from both RPC allowlists; `coach` remains temporarily allowed and receives sanitized `JOB_FAILED` instead of raw background-job errors; anonymous execution remains denied; authenticated and service-role grants and fixed search paths remain.
+- Evidence: final reviewed head `e21c1ef98b634186a62b61acbaa5f64479de0be2`; squash merge `866327f82f24e1f300aa7cf134b727fd6e0ec9a1`; source migration `supabase/migrations/20260729221600_restrict_os_rbac_sanitize_errors.sql`; Production record `20260730065949_restrict_os_rbac_sanitize_errors`; runtime result `RUNTIME_SUPER_ADMIN_AND_NONSTAFF_DENIAL_PASS`; receipt `docs/security/PR_219_PRODUCTION_MIGRATION_RECEIPT_2026-07-30.md`; corrected receipt commit `dc2273b9a2685b79f5c26054e556066beab4f900`.
+- Failure/recovery: no Production failure; rollback was not required. Full live role-by-role smoke was not possible because only an active `super_admin` identity existed and no background job had a live error; absent roles/error behavior remains contract/static/CI verified, not independently live-identity verified.
+- Protected actions not taken beyond approved scope: no Auth, RLS, application-data, key or environment mutation; no publishing, messaging, Analytics, Ads, billing or spend.
+- Blocker class: none for PR #219 scope. Broader function/advisor/Auth work remains independent.
+- Next safe action: preserve the applied definitions; continue broader Security only under a separately authorized function-by-function stage.
+- Context health: strong; merge, migration, grants, runtime limits and rollback outcome are explicit.
+
+## Checkpoint — 2026-07-30 canonical truth synchronization and stale PR disposition
+
+- Agent/workstream: Main Project Director / Program Governance.
+- Phase and task: `CANONICAL_TRUTH_SYNCHRONIZATION_AND_STALE_PR_DISPOSITION`.
+- Status: `REVIEW_READY`; durable target `CANONICAL_TRUTH_SYNCHRONIZED_STALE_PRS_CONTROLLED_REVIEW_READY`.
+- Scope: documentation-only updates in Draft PR #220; synchronize Handoff/Ledger, close superseded PR #218, classify PR #36 and remove the temporary marker.
+- Last confirmed result: PR #218 closed without merge as `SUPERSEDED_BY_PR_219_PRODUCTION_VERIFIED`; PR #36 retained as a blocked historical reference with status `DO_NOT_REBASE_DO_NOT_MERGE_REBUILD_FROM_CURRENT_MAIN_ONLY`; PR #213 remains Draft and unmerged with device gate owner-attested only.
+- PWA evidence classification: `OWNER_WITNESSED_MANUAL_DEVICE_TEST_PASS` and `OWNER_ATTESTATION_ONLY_NO_SCREENSHOT_RECEIPT`. No screenshot, screen recording, independent QA or automated-device verification is claimed. Residual documentation risk was accepted by the owner because the Android device belonged to a third party and no media receipt was retained.
+- PWA pending gates: current-main rebase/compatibility, fresh GitHub CI, exact-head Preview and rollback revalidation. Earlier rollback evidence remains historical evidence, not a substitute for revalidation after rebase.
+- Governance rule: direct commits to `main` are prohibited except documented emergencies under the canonical platform rule above.
+- Evidence: Draft PR #220 and its final diff; PR #218 closure; PR #36 updated title/body; PR #213 head `7b479f60089f70c269b7122110a49bba4f20455a`; baseline document `docs/program/MASTER_BASELINE_AND_CRITICAL_RISK_DISCOVERY_2026-07-30.md`.
+- Failure/recovery: none requiring unsafe retry. No application, Supabase or Production action was attempted.
+- Protected actions not taken: no Merge, PWA code modification, rebase, Production promotion, Supabase/Auth/RLS/data/key/environment mutation, deletion outside the authorized temporary marker, publishing, messaging, Analytics, Ads, billing or spend.
+- Blocker class: manager decision on PR #220 merge; later separate technical stage for PR #213.
+- Next safe action: review PR #220 as documentation-only and decide Merge separately. Stop before PWA, Supabase or Production work.
+- Context health: strong; current canonical truth and stale-PR controls are explicit.

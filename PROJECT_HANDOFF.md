@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-30 (Asia/Dubai)
+Last verified: 2026-07-30 12:12 (Asia/Dubai)
 
 This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
@@ -411,6 +411,7 @@ Do not mix unrelated workstreams in one PR.
 ## 12. Mandatory prohibitions
 
 - No automatic merge.
+- No direct commit to `main` except a documented emergency where the normal PR path is unavailable and delay creates immediate material risk; record the reason, exact scope, checks, deployment side effects and follow-up reconciliation.
 - No Production migration without explicit approval and an approved plan.
 - No `supabase db push` or `supabase migration repair` against Production.
 - No manual Production migration-history editing.
@@ -642,7 +643,6 @@ Push the tested performance and handoff follow-up to the same Draft PR, re-check
 
 Review PR #143. Do not merge or promote the Preview to Production without explicit owner approval.
 
-
 ## 18. Owner execution delegation and verified platform snapshot — 2026-07-29
 
 Status: `DELEGATED_EXECUTION_ACTIVE_PROTECTED_GATES_PRESERVED`
@@ -724,7 +724,6 @@ Every phase handoff must record the agent/workstream, status, exact scope, last 
 10. Launch Meta Ads later, after Google/organic measurement and creative performance are proven.
 
 Safe parallel work is required when scopes are isolated. A blocked protected path must be logged and bypassed only by moving to another approved read-only, documentation, QA or Preview-first task; the protected gate itself must never be bypassed.
-
 
 ## 19. Delegated execution foundation and Week 1 synchronization merge receipt — 2026-07-29
 
@@ -846,7 +845,6 @@ Status: `PRODUCTION_RELEASE_COMPLETED_EVIDENCE_VERIFIED`
 
 Continue the remaining privileged-function/RBAC review one function at a time. Preserve the booking route and grants above as the Production baseline. Do not restore anonymous direct booking execution.
 
-
 ## 23. Anonymous privileged-function regression guard receipt — 2026-07-29
 
 Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
@@ -870,7 +868,6 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 ### Next safe action
 
 Continue the remaining authenticated privileged-function review one function or tightly related contract at a time. Preserve the generic anonymous-execution invariant and the closed booking boundary. Do not bulk-revoke grants or change protected Auth configuration without an isolated evidence-backed plan and approval.
-
 
 ## 24. Authenticated privileged-function CI contract receipt — 2026-07-29
 
@@ -897,7 +894,6 @@ Status: `MERGED_CI_GREEN_NO_PRODUCTION_MUTATION`
 - Repository `vercel.json` intentionally cancels `agent/*` Preview builds. Moving the exact reviewed tree to `preview/pwa-installability-v2` removed that policy conflict, but Git integration still did not emit a deployment. Connected Vercel reads work; local Vercel CLI/token and a full local checkout are unavailable, so exact-head Preview remains externally blocked.
 - Android/iPhone install evidence is still required. Keep #213 Draft and do not promote it to Production until Preview, browser and both-device gates are proven.
 
-
 ## 25. PWA exact-head Preview receipt — 2026-07-29
 
 Status: `PREVIEW_READY_DEVICE_AND_OFFLINE_RUNTIME_EVIDENCE_PENDING`
@@ -917,7 +913,6 @@ Status: `PREVIEW_READY_DEVICE_AND_OFFLINE_RUNTIME_EVIDENCE_PENDING`
 
 Before marking PR #213 ready or merging, collect Android install/standalone evidence, iPhone Add-to-Home-Screen/standalone evidence, a real network-offline navigation receipt, private-route CacheStorage inspection and observed root unregister/scoped-cache rollback. Do not merge based on CI/source inspection alone.
 
-
 ## 26. iPhone PWA physical-device receipt — 2026-07-29
 
 Status: `IPHONE_PASS_ANDROID_OWNER_ATTESTED_NOT_EVIDENCE_VERIFIED`
@@ -932,7 +927,6 @@ Status: `IPHONE_PASS_ANDROID_OWNER_ATTESTED_NOT_EVIDENCE_VERIFIED`
 - All three reviewed JPEG receipts are 739×1600.
 - A friend’s physical Android phone became available. Captured evidence showed the page rendered inside a browser and the generic browser `INTERNET_DISCONNECTED -2` screen; it did not prove installed standalone or PWA offline fallback. The owner later attested completion, recorded as `OWNER_ATTESTED_NOT_EVIDENCE_VERIFIED`.
 - PR #213 remains Draft and must not be merged. Private-route CacheStorage and observed root rollback are now verified; Android standalone/offline evidence remains unverified.
-
 
 ## 27. PWA private-cache and same-origin rollback receipt — 2026-07-30
 
@@ -959,7 +953,6 @@ Status: `RUNTIME_GATES_PASS_ANDROID_OWNER_ATTESTED_ONLY`
 
 Keep PR #213 Draft until the owner decides whether to accept the Android attestation risk or provide two conclusive Android screenshots: installed standalone without browser chrome, then the Relax Fix bilingual offline fallback after airplane-mode relaunch. PR #215 carries this durable documentation update and requires explicit approval before merge.
 
-
 ## 28. PR #219 release-gate readiness — 2026-07-30
 
 Status: `PR_219_RELEASE_GATE_CHECKS_PASS`
@@ -979,3 +972,68 @@ Status: `PR_219_RELEASE_GATE_CHECKS_PASS`
 
 1. Separate explicit Merge authorization for PR #219.
 2. After merge evidence is recorded, separate explicit Production Migration authorization.
+
+## 29. Canonical truth synchronization and stale PR disposition — 2026-07-30
+
+Status: `CANONICAL_TRUTH_SYNCHRONIZED_STALE_PRS_CONTROLLED_REVIEW_READY`
+
+This section is the current operational truth. Earlier sections remain preserved as historical receipts and must not be interpreted as current blockers where explicitly superseded below.
+
+### Current main baseline
+
+- Latest reviewed `main` before this Draft PR: `dc2273b9a2685b79f5c26054e556066beab4f900`.
+- Commit `dc2273...` corrected the PR #219 Production receipt and accurately records that documentation commits triggered normal Vercel Git integration without an application-code release.
+- Direct commits to `main` are prohibited except a documented emergency where the normal PR path is unavailable and delay creates immediate material risk. Any emergency direct commit must record the reason, exact scope, checks, deployment side effects and follow-up reconciliation.
+
+### PR #219 current truth
+
+- PR #219 was squash merged at `866327f82f24e1f300aa7cf134b727fd6e0ec9a1` after the isolated release-gate matrix passed.
+- Exact source migration: `supabase/migrations/20260729221600_restrict_os_rbac_sanitize_errors.sql`.
+- Canonical Supabase Production migration record: `20260730065949_restrict_os_rbac_sanitize_errors`.
+- `content_manager` is removed from `get_staff_command_center()` and `get_staff_operations_queue()`.
+- `super_admin`, `admin`, `reception` and temporary `coach` remain in the approved function allowlists.
+- Coach operational background-job errors are sanitized to `JOB_FAILED`; raw `last_error` is not returned to coach.
+- Anonymous execution remains denied; authenticated/service-role grants and fixed `search_path = public, pg_temp` remain verified.
+- Runtime smoke passed for the available active `super_admin` identity and random nonstaff denial: `RUNTIME_SUPER_ADMIN_AND_NONSTAFF_DENIAL_PASS`.
+- No rollback was required.
+- Full live role-by-role identity smoke was not possible because active `admin`, `reception`, `coach` and `content_manager` identities were absent and no background job had a live error. Their behavior is contract/static/CI verified, not independently live-identity verified.
+- Receipt: `docs/security/PR_219_PRODUCTION_MIGRATION_RECEIPT_2026-07-30.md`.
+- This completes only the isolated PR #219 scope. Broader Security remains open: authenticated `SECURITY DEFINER` review, leaked-password protection, extension/advisor findings and any remaining function-level semantics must continue separately. Do not bulk-revoke or mark Phase 3 fully complete.
+
+### PR #218 disposition
+
+- PR #218 contained no unique remaining actionable information after PR #219.
+- Its baseline and recommendation were carried into PR #219 and the Production receipt.
+- PR #218 was closed without merge as `SUPERSEDED_BY_PR_219_PRODUCTION_VERIFIED`.
+- Do not reopen or merge it.
+
+### PR #36 disposition
+
+- PR #36 is retained only as a historical International Phone requirements/reference artifact.
+- Canonical status: `DO_NOT_REBASE_DO_NOT_MERGE_REBUILD_FROM_CURRENT_MAIN_ONLY`.
+- It must not be rebased, force-updated, merged, deployed or used as a migration source.
+- Any still-approved International Phone requirement must be rebuilt in a new isolated branch from the then-current `main`, preserving current booking ingress hardening and migration history.
+
+### PR #213 PWA current truth
+
+- PR #213 remains open, Draft and unmerged.
+- Current head at synchronization: `7b479f60089f70c269b7122110a49bba4f20455a`.
+- Device gate status: `PWA_DEVICE_GATE_OWNER_ATTESTED_PASS_DOCUMENTATION_RISK_ACCEPTED`.
+- Manual result: `OWNER_WITNESSED_MANUAL_DEVICE_TEST_PASS`.
+- Evidence level: `OWNER_ATTESTATION_ONLY_NO_SCREENSHOT_RECEIPT`.
+- The owner witnessed Android and iPhone manual-device behavior and accepted the residual documentation risk because the Android device belonged to a third party and no media receipt was retained.
+- Do not claim Screenshot verified, Screen recording verified, Independent QA verified or Automated device verification.
+- Previous iPhone media receipts and previous private-cache/same-origin rollback receipts remain valid historical evidence for their exact reviewed heads.
+- Still pending before Merge consideration: current-main rebase/compatibility, fresh GitHub CI, exact-head Preview review and rollback revalidation after synchronization. Earlier rollback evidence does not replace the required post-rebase check.
+- No Merge or Production Promotion is authorized by the device attestation.
+
+### Draft PR #220 scope
+
+- PR #220 is documentation-only.
+- It synchronizes this Handoff and `docs/program/STRATEGIC_EXECUTION_LEDGER.md`, records stale-PR controls and preserves the Master Baseline documents.
+- The temporary marker `docs/program/.baseline-stage-ready` is removed in this branch.
+- No application code, PWA implementation, Supabase, Auth, RLS, data, key, environment, Production, publishing, messaging, Analytics, Ads, billing or spend change is included.
+
+### Next required decision
+
+Review the final PR #220 diff and checks. Decide Merge separately. Stop before PR #213 rebase/modification, Supabase work or any Production action.
