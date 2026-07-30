@@ -73,9 +73,6 @@ do $$
 declare
   r record;
   f record;
-  v_uid uuid;
-  v_db_role text;
-  v_sql text;
 begin
   for r in select * from (values
     ('anon', null::uuid, 'anon'),
@@ -90,9 +87,9 @@ begin
   ) as x(actor, uid, db_role)
   loop
     for f in select * from (values
-      ('booking', $$select public.update_booking_request_status('ffffffff-ffff-ffff-ffff-ffffffffffff','pending')$$),
-      ('lead', $$select public.update_staff_lead_workflow('ffffffff-ffff-ffff-ffff-ffffffffffff','new',false,false,null)$$),
-      ('conversation', $$select public.set_staff_conversation_mode('ffffffff-ffff-ffff-ffff-ffffffffffff','ai_active')$$)
+      ('booking', $call$select public.update_booking_request_status('ffffffff-ffff-ffff-ffff-ffffffffffff','pending')$call$),
+      ('lead', $call$select public.update_staff_lead_workflow('ffffffff-ffff-ffff-ffff-ffffffffffff','new',false,false,null)$call$),
+      ('conversation', $call$select public.set_staff_conversation_mode('ffffffff-ffff-ffff-ffff-ffffffffffff','ai_active')$call$)
     ) as y(function_name, call_sql)
     loop
       perform pg_temp.sec01b_execute(f.function_name, r.actor, r.db_role, r.uid, f.call_sql);
