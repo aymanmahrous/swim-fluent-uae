@@ -23,7 +23,7 @@ declare
     {"signature":"get_staff_operations_queue()","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','reception','coach'])","whenv_staff_role='coach'andj.last_errorisnotnullthen'job_failed'"]},
     {"signature":"get_staff_video_generation_job(uuid)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','content_manager'])"]},
     {"signature":"get_staff_video_generation_jobs()","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','content_manager'])"]},
-    {"signature":"set_staff_conversation_mode(uuid,text)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','reception','coach'])"]},
+    {"signature":"set_staff_conversation_mode(uuid,text)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','reception'])"]},
     {"signature":"transition_staff_content_item(uuid,text,timestamp with time zone)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','content_manager'])"]},
     {"signature":"update_booking_request_status(uuid,text)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','reception'])"]},
     {"signature":"update_staff_content_item(uuid,text,text,text,text,text[],text)","search_path":"search_path=public, pg_temp","guard_tokens":["public.is_active_staff(array['super_admin','admin','content_manager'])"]},
