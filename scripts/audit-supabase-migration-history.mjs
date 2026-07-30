@@ -15,7 +15,7 @@ const sec01bIdempotencyFilename = "20260730214500_sec_01b_idempotent_booking_lea
 
 const historicalControlledContracts = [
   [phaseAFilename, "20260711003100", "create or replace function public.submit_booking_request"],
-  [bookingIngressFilename, "20260729144612", "create or replace function public.submit_booking_request"],
+  [bookingIngressFilename, "20260729144612", "revoke all on function public.submit_booking_request"],
   [osRbacFilename, "20260729221600", "create or replace function public.get_staff_command_center"],
 ];
 
