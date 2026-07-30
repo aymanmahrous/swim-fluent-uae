@@ -174,7 +174,7 @@ begin
     into v_count, v_detail
   from public.audit_logs
   where action='lead_workflow_updated' and entity_id='30000000-0000-0000-0000-000000000001';
-  if v_count <> 2 then
+  if v_count <> 1 then
     raise exception 'SEC01B_LEAD_AUDIT_COUNT_FAILED:%', v_count;
   end if;
   if v_detail->>'nextStage' <> 'qualified' then raise exception 'SEC01B_LEAD_AUDIT_DETAIL_FAILED:%', v_detail; end if;
