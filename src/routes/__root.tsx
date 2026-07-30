@@ -22,6 +22,9 @@ import {
 } from "../platform/business-settings";
 import appCss from "../styles.css?url";
 
+const PWA_ENABLED = true;
+const PWA_CACHE_PREFIX = "relax-fix-pwa-";
+
 function localizedPublicLanguage(pathname: string): Lang {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
 }
@@ -94,10 +97,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Relax Fix UAE" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -232,6 +241,45 @@ function RootComponent() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const publicLang = localizedPublicLanguage(pathname);
   const isLocalizedPublicPage = localizedLanguageSwitchTarget(pathname) !== null;
+
+  useEffect(() => {
+    const configurePwa = async () => {
+      if (!("serviceWorker" in navigator)) return;
+
+      if (!PWA_ENABLED) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          registrations
+            .filter((registration) => registration.scope === `${window.location.origin}/`)
+            .map((registration) => registration.unregister()),
+        );
+
+        if ("caches" in window) {
+          const cacheKeys = await caches.keys();
+          await Promise.all(
+            cacheKeys
+              .filter((key) => key.startsWith(PWA_CACHE_PREFIX))
+              .map((key) => caches.delete(key)),
+          );
+        }
+        return;
+      }
+
+      await navigator.serviceWorker.register("/service-worker.js", {
+        scope: "/",
+        updateViaCache: "none",
+      });
+    };
+
+    const run = () => void configurePwa().catch(() => undefined);
+    if (document.readyState === "complete") {
+      run();
+      return;
+    }
+
+    window.addEventListener("load", run, { once: true });
+    return () => window.removeEventListener("load", run);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
