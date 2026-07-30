@@ -34,8 +34,8 @@ for (const value of [
   "groupMaxSize: 4",
   "groupChildPriceAED: 450",
   "siblingChildPriceAED: 400",
-  "aquaticSessionPriceAED: 150",
-  "landSessionPriceAED: 150",
+  "privateAquatic30MinutesAED: 150",
+  "privateAquatic60MinutesAED: 250",
   "Najda Street",
   "ICS Al Falah",
   "ICS Khalifa",
@@ -51,10 +51,10 @@ for (const value of [
 ]) {
   assert.ok(config.includes(value), `Missing central revenue fact: ${value}`);
 }
+assert.ok(!config.includes("landSessionPriceAED"), "Superseded land-session price must not remain public");
+assert.ok(!config.includes("aquaticSessionPriceAED"), "Superseded undifferentiated aquatic price must not remain public");
 
-const registryMatch = config.match(
-  /TRAINING_LOCATION_REGISTRY:[^=]+=[\s\S]*?\[([\s\S]*?)\]\s+as const;/,
-);
+const registryMatch = config.match(/TRAINING_LOCATION_REGISTRY:[^=]+=[\s\S]*?\[([\s\S]*?)\]\s+as const;/);
 assert.ok(registryMatch, "Training location registry could not be parsed");
 const registry = Function(
   "DISPLAY_NAME_OWNER_APPROVED",
@@ -63,24 +63,10 @@ const registry = Function(
 )("Najda Street", "ICS Al Danah - International Community School");
 const publicLocations = registry.filter((location) => location.isPublic);
 assert.equal(publicLocations.length, 4, "Exactly four locations must be public");
-assert.deepEqual(
-  publicLocations.map((location) => location.displayName),
-  ["Najda Street", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"],
-);
-assert.equal(
-  new Set(publicLocations.map((location) => location.shortUrl)).size,
-  publicLocations.length,
-  "A public Maps short URL cannot be reused by another public location",
-);
-assert.equal(
-  new Set(publicLocations.map((location) => location.resolvedUrl)).size,
-  publicLocations.length,
-  "A resolved Maps destination cannot be reused by another public location",
-);
-assert.ok(
-  publicLocations.every((location) => !location.displayName.includes("Al Danah")),
-  "Al Danah must not be a public display location",
-);
+assert.deepEqual(publicLocations.map((location) => location.displayName), ["Najda Street", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"]);
+assert.equal(new Set(publicLocations.map((location) => location.shortUrl)).size, publicLocations.length, "A public Maps short URL cannot be reused by another public location");
+assert.equal(new Set(publicLocations.map((location) => location.resolvedUrl)).size, publicLocations.length, "A resolved Maps destination cannot be reused by another public location");
+assert.ok(publicLocations.every((location) => !location.displayName.includes("Al Danah")), "Al Danah must not be a public display location");
 const hiddenDanah = registry.find((location) => location.id === "ics-al-danah");
 assert.equal(hiddenDanah?.isPublic, false);
 assert.equal(hiddenDanah?.bookingEnabled, false);
@@ -94,29 +80,39 @@ for (const value of [
   'id="pricing"',
   'id="locations"',
   'id="contact"',
+  "جلسة تدريب مائي خاصة — 30 دقيقة",
+  "جلسة تدريب مائي خاصة — 60 دقيقة",
+  "جلسة فردية مخصصة للتأهيل الحركي، تحسين اللياقة أو خسارة الوزن حسب الهدف.",
+  "Private aquatic training session — 30 minutes",
+  "Private aquatic training session — 60 minutes",
+  "A private, individual session tailored to mobility support, fitness improvement, or weight-loss goals.",
+  "PUBLIC_PRICING.privateAquatic30MinutesAED",
+  "PUBLIC_PRICING.privateAquatic60MinutesAED",
+  "break-words",
+  "whitespace-nowrap",
+  'dir="ltr"',
   "Sending a request does not mean the appointment is confirmed",
   "إرسال الطلب لا يعني أن الموعد أصبح مؤكدًا",
   "General information is not medical diagnosis or treatment",
 ]) {
-  assert.ok(revenueSections.includes(value), `Missing public conversion safety copy: ${value}`);
+  assert.ok(revenueSections.includes(value), `Missing public conversion or pricing contract: ${value}`);
 }
 
 for (const value of [
   "PUBLIC_PRICING",
   "TRAINING_LOCATIONS",
   "GENERAL_AVAILABILITY",
+  "privateAquatic30MinutesAED",
+  "privateAquatic60MinutesAED",
+  "جلسة تدريب مائي خاصة لمدة 30 دقيقة",
+  "private aquatic training session",
   "إرسال الطلب لا يعني أن الموعد أصبح مؤكدًا",
   "Submitting a request does not confirm an appointment",
 ]) {
   assert.ok(chatbotKnowledge.includes(value), `Missing chatbot knowledge contract: ${value}`);
 }
 
-for (const value of [
-  "detectChatbotIntent",
-  "CHATBOT_QUICK_REPLY_INTENTS",
-  "businessWhatsAppUrl(settings)",
-  "relaxfix:conversation-start",
-]) {
+for (const value of ["detectChatbotIntent", "CHATBOT_QUICK_REPLY_INTENTS", "businessWhatsAppUrl(settings)", "relaxfix:conversation-start"]) {
   assert.ok(salesAssistant.includes(value), `Missing chatbot UI contract: ${value}`);
 }
 
@@ -136,10 +132,7 @@ for (const value of [
 }
 
 assert.ok(store.includes("generalHoursForWeekday"), "Slot generation does not use central hours");
-assert.ok(
-  analytics.includes("window.dataLayer?.push(arguments)"),
-  "Verified gtag queue protocol fix is missing",
-);
+assert.ok(analytics.includes("window.dataLayer?.push(arguments)"), "Verified gtag queue protocol fix is missing");
 assert.ok(analytics.includes('"consent", "default"'), "Default denied Consent Mode is missing");
 
 for (const flag of [
@@ -185,4 +178,4 @@ for (const value of [
   assert.ok(envExample.includes(value), `Missing account/resource separation: ${value}`);
 }
 
-console.log("Revenue, location, consent and automation foundation verification passed.");
+console.log("Revenue, bilingual pricing, location, consent and automation foundation verification passed.");
