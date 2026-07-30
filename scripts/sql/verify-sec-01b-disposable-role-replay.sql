@@ -120,7 +120,6 @@ end
 $$;
 
 select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000006', true);
-set local role authenticated;
 
 do $$
 declare
