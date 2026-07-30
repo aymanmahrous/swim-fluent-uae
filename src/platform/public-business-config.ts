@@ -9,8 +9,8 @@ export const PUBLIC_PRICING = {
   groupMaxSize: 4,
   groupChildPriceAED: 450,
   siblingChildPriceAED: 400,
-  aquaticSessionPriceAED: 150,
-  landSessionPriceAED: 150,
+  privateAquatic30MinutesAED: 150,
+  privateAquatic60MinutesAED: 250,
 } as const;
 
 export const GENERAL_AVAILABILITY = {
