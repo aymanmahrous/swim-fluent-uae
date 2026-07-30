@@ -1,0 +1,154 @@
+\set ON_ERROR_STOP on
+
+begin read only;
+
+do $$
+declare
+  v_unclassified text;
+  v_count integer;
+  v_pgbouncer_get_auth_classification text;
+  v_unknown_pgbouncer_classification text;
+begin
+  with inventory as (
+    select
+      format('%I.%I(%s)', n.nspname, p.proname, pg_get_function_identity_arguments(p.oid)) as full_signature,
+      case
+        when n.nspname = 'pgbouncer'
+         and p.proname = 'get_auth'
+         and pg_get_function_identity_arguments(p.oid) = 'p_usename text'
+          then 'SERVICE_ONLY'
+        when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
+        when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
+        when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
+        when p.proname ~* '(worker|job|queue|claim|complete|fail|retry|pulse|publish|scheduler)' then 'WORKER_OPERATION'
+        when has_function_privilege('service_role', p.oid, 'EXECUTE') then 'SERVICE_ONLY'
+        else 'UNCLASSIFIED'
+      end as classification
+    from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where p.prosecdef
+      and n.nspname not in ('pg_catalog', 'information_schema')
+  )
+  select count(*),
+         string_agg(full_signature, E'\n' order by full_signature)
+           filter (where classification = 'UNCLASSIFIED')
+    into v_count, v_unclassified
+  from inventory;
+
+  if v_count = 0 then
+    raise exception 'SECURITY_DEFINER_INVENTORY_EMPTY';
+  end if;
+
+  if v_unclassified is not null then
+    raise exception 'SECURITY_DEFINER_UNCLASSIFIED:%', E'\n' || v_unclassified;
+  end if;
+
+  select case
+           when n.nspname = 'pgbouncer'
+            and p.proname = 'get_auth'
+            and pg_get_function_identity_arguments(p.oid) = 'p_usename text'
+             then 'SERVICE_ONLY'
+           else 'UNCLASSIFIED'
+         end
+    into v_pgbouncer_get_auth_classification
+  from pg_proc p
+  join pg_namespace n on n.oid = p.pronamespace
+  where p.oid = to_regprocedure('pgbouncer.get_auth(text)');
+
+  if v_pgbouncer_get_auth_classification is distinct from 'SERVICE_ONLY' then
+    raise exception 'PGBOUNCER_GET_AUTH_CLASSIFICATION_INVALID:%', v_pgbouncer_get_auth_classification;
+  end if;
+
+  select case
+           when schema_name = 'pgbouncer'
+            and function_name = 'get_auth'
+            and identity_arguments = 'p_usename text'
+             then 'SERVICE_ONLY'
+           else 'UNCLASSIFIED'
+         end
+    into v_unknown_pgbouncer_classification
+  from (values ('pgbouncer'::text, 'future_function'::text, 'value text'::text))
+       as candidate(schema_name, function_name, identity_arguments);
+
+  if v_unknown_pgbouncer_classification is distinct from 'UNCLASSIFIED' then
+    raise exception 'PGBOUNCER_UNKNOWN_SIGNATURE_AUTO_CLASSIFIED:%', v_unknown_pgbouncer_classification;
+  end if;
+end
+$$;
+
+with inventory as (
+  select
+    n.nspname as schema,
+    p.proname as function_name,
+    pg_get_function_identity_arguments(p.oid) as identity_arguments,
+    format('%I.%I(%s)', n.nspname, p.proname, pg_get_function_identity_arguments(p.oid)) as full_signature,
+    owner_role.rolname as owner,
+    case when p.prosecdef then 'DEFINER' else 'INVOKER' end as security_mode,
+    coalesce((
+      select string_agg(cfg, ', ' order by cfg)
+      from unnest(coalesce(p.proconfig, '{}'::text[])) cfg
+      where cfg like 'search_path=%'
+    ), '') as search_path,
+    case p.provolatile when 'i' then 'IMMUTABLE' when 's' then 'STABLE' else 'VOLATILE' end as volatility,
+    pg_get_function_arguments(p.oid) as argument_types,
+    pg_get_function_result(p.oid) as return_type,
+    coalesce(array_to_string(p.proacl, ','), '') as execute_acl,
+    exists (
+      select 1
+      from aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+      where a.grantee = 0
+        and a.privilege_type = 'EXECUTE'
+    ) as public_execute,
+    has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute,
+    has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
+    has_function_privilege('service_role', p.oid, 'EXECUTE') as service_role_execute,
+    md5(pg_get_functiondef(p.oid)) as function_source_hash,
+    n.nspname in ('public', 'storage', 'graphql_public') as exposed_schema,
+    pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*uuid([, ]|$)' as accepts_uuid,
+    pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*(json|jsonb)([, ]|$)' as accepts_json_or_jsonb,
+    case
+      when n.nspname = 'pgbouncer'
+       and p.proname = 'get_auth'
+       and pg_get_function_identity_arguments(p.oid) = 'p_usename text'
+        then 'SERVICE_ONLY'
+      when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
+      when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
+      when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
+      when p.proname ~* '(worker|job|queue|claim|complete|fail|retry|pulse|publish|scheduler)' then 'WORKER_OPERATION'
+      when has_function_privilege('service_role', p.oid, 'EXECUTE') then 'SERVICE_ONLY'
+      else 'UNCLASSIFIED'
+    end as classification
+  from pg_proc p
+  join pg_namespace n on n.oid = p.pronamespace
+  join pg_roles owner_role on owner_role.oid = p.proowner
+  where p.prosecdef
+    and n.nspname not in ('pg_catalog', 'information_schema')
+)
+select jsonb_pretty(jsonb_agg(to_jsonb(i) order by i.full_signature)) as security_definer_inventory
+from inventory i;
+
+with inventory as (
+  select
+    case
+      when n.nspname = 'pgbouncer'
+       and p.proname = 'get_auth'
+       and pg_get_function_identity_arguments(p.oid) = 'p_usename text'
+        then 'SERVICE_ONLY'
+      when has_function_privilege('authenticated', p.oid, 'EXECUTE') then 'AUTHENTICATED_RPC'
+      when p.proname = 'submit_booking_request_ingress' then 'BOOKING_INGRESS'
+      when pg_get_function_result(p.oid) = 'trigger' then 'INTERNAL_TRIGGER'
+      when p.proname ~* '(worker|job|queue|claim|complete|fail|retry|pulse|publish|scheduler)' then 'WORKER_OPERATION'
+      when has_function_privilege('service_role', p.oid, 'EXECUTE') then 'SERVICE_ONLY'
+      else 'UNCLASSIFIED'
+    end as classification
+  from pg_proc p
+  join pg_namespace n on n.oid = p.pronamespace
+  where p.prosecdef
+    and n.nspname not in ('pg_catalog', 'information_schema')
+)
+select classification, count(*) as function_count
+from inventory
+group by classification
+order by classification;
+
+commit;
