@@ -17,11 +17,15 @@ with functions as (
     pg_get_function_arguments(p.oid) as argument_types,
     pg_get_function_result(p.oid) as return_type,
     coalesce(array_to_string(p.proacl, ','), '') as execute_acl,
-    has_function_privilege('PUBLIC', p.oid, 'EXECUTE') as public_execute,
+    exists (
+      select 1
+      from aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+      where a.grantee = 0 and a.privilege_type = 'EXECUTE'
+    ) as public_execute,
     has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute,
     has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
     has_function_privilege('service_role', p.oid, 'EXECUTE') as service_role_execute,
-    encode(digest(pg_get_functiondef(p.oid), 'sha256'), 'hex') as function_source_hash,
+    md5(pg_get_functiondef(p.oid)) as function_source_hash,
     n.nspname in ('public', 'storage', 'graphql_public') as exposed_schema,
     pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*uuid([, ]|$)' as accepts_uuid,
     pg_get_function_arguments(p.oid) ~* '(^|, )[^,]*(json|jsonb)([, ]|$)' as accepts_json_or_jsonb,
