@@ -7,8 +7,8 @@ const requiredFragments = [
   '"conversation_start"',
   '"whatsapp_click"',
   '"call_click"',
-  'VITE_ENABLE_GA4 === "true"',
-  "VITE_GA4_MEASUREMENT_ID",
+  'VITE_ENABLE_PREVIEW_GA4 === "true"',
+  "VITE_PREVIEW_GA4_MEASUREMENT_ID",
   'analytics_storage: "denied"',
   'ad_storage: "denied"',
   'ad_user_data: "denied"',
@@ -17,7 +17,7 @@ const requiredFragments = [
   "allow_google_signals: false",
   "allow_ad_personalization_signals: false",
   "send_page_view: false",
-  "if (!consentGranted || !analyticsEnabled || !validMeasurementId(measurementId)) return false;",
+  "if (!consentGranted || !previewAnalyticsRuntimeReady()) return false;",
   "if (!analyticsReady() || !window.gtag) return false;",
   '"language"',
   '"source"',
@@ -56,8 +56,10 @@ for (const fragment of forbiddenPayloadKeys) {
   }
 }
 
-if (source.includes("GTM-")) {
-  throw new Error("public analytics foundation: GTM container must not be configured");
+for (const fragment of ["VITE_ENABLE_GA4", "VITE_GA4_MEASUREMENT_ID", "GTM-"]) {
+  if (source.includes(fragment)) {
+    throw new Error(`public analytics foundation: forbidden configuration ${JSON.stringify(fragment)}`);
+  }
 }
 
 console.log("Public analytics foundation verification passed.");
