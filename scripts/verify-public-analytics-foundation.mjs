@@ -19,6 +19,10 @@ const requiredFragments = [
   "send_page_view: false",
   "if (!consentGranted || !analyticsEnabled || !validMeasurementId(measurementId)) return false;",
   "if (!analyticsReady() || !window.gtag) return false;",
+  '"language"',
+  '"source"',
+  '"cta_id"',
+  "FORBIDDEN_VALUE_PATTERNS",
   "typeof value === \"string\" && value.length <= 80",
 ];
 
@@ -28,21 +32,32 @@ for (const fragment of requiredFragments) {
   }
 }
 
-const forbiddenFragments = [
-  "GTM-",
-  "gclid",
-  "fbclid",
+const forbiddenPayloadKeys = [
   "email",
   "phone_number",
   "full_name",
   "first_name",
   "last_name",
+  "booking_id",
+  "uuid",
+  "notes",
+  "raw_payload",
+  "full_url",
+  "whatsapp_message",
+  "gclid:",
+  "gbraid:",
+  "wbraid:",
+  "fbclid:",
 ];
 
-for (const fragment of forbiddenFragments) {
+for (const fragment of forbiddenPayloadKeys) {
   if (source.toLowerCase().includes(fragment.toLowerCase())) {
-    throw new Error(`public analytics foundation: forbidden fragment ${JSON.stringify(fragment)}`);
+    throw new Error(`public analytics foundation: forbidden payload key ${JSON.stringify(fragment)}`);
   }
+}
+
+if (source.includes("GTM-")) {
+  throw new Error("public analytics foundation: GTM container must not be configured");
 }
 
 console.log("Public analytics foundation verification passed.");
