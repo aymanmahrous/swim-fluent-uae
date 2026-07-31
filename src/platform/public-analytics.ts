@@ -30,6 +30,7 @@ const FORBIDDEN_VALUE_PATTERNS = [
 const PREVIEW_HOST_SUFFIX = ".vercel.app";
 const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";
 const previewMeasurementId = import.meta.env.VITE_PREVIEW_GA4_MEASUREMENT_ID?.trim();
+const deploymentEnvironment = import.meta.env.VITE_DEPLOYMENT_ENV;
 
 declare global {
   interface Window {
@@ -53,7 +54,7 @@ function isApprovedPreviewHost(hostname: string): boolean {
 
 function previewRuntimeAllowed(): boolean {
   if (typeof window === "undefined") return false;
-  return isApprovedPreviewHost(window.location.hostname);
+  return deploymentEnvironment === "preview" && isApprovedPreviewHost(window.location.hostname);
 }
 
 function ensureGtag(): boolean {
