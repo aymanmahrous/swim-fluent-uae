@@ -3,6 +3,7 @@ name: Preview-only GA4 Integration
 on:
   pull_request:
     paths:
+      - "vite.config.ts"
       - "src/platform/public-analytics.ts"
       - "scripts/verify-public-analytics-foundation.mjs"
       - "scripts/verify-preview-only-ga4-integration.mjs"
@@ -10,6 +11,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "vite.config.ts"
       - "src/platform/public-analytics.ts"
       - "scripts/verify-public-analytics-foundation.mjs"
       - "scripts/verify-preview-only-ga4-integration.mjs"
