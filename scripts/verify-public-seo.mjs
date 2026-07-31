@@ -82,88 +82,24 @@ requireText(publicHomeText, "width={1024}", "hero intrinsic dimensions");
 requireText(publicHomeText, "height={1024}", "hero intrinsic dimensions");
 requireText(publicHomeText, 'fetchPriority="high"', "first hero fetch priority");
 requireText(publicHomeText, 'loading="lazy"', "below-the-fold hero loading");
-requireText(
-  publicHomeText,
-  'htmlFor="booking-full-name"',
-  "booking full-name label association",
-);
-requireText(
-  publicHomeText,
-  'id="booking-full-name"',
-  "booking full-name accessible name",
-);
-requireText(
-  publicHomeText,
-  'htmlFor="booking-phone"',
-  "booking phone label association",
-);
-requireText(
-  publicHomeText,
-  'id="booking-phone"',
-  "booking phone accessible name",
-);
-requireText(
-  publicHomeText,
-  'className="relative scroll-mt-24 bg-muted/55 py-24"',
-  "booking sticky-header scroll offset",
-);
-requireText(
-  publicHomeText,
-  'htmlFor="booking-location"',
-  "booking location label association",
-);
-requireText(
-  publicHomeText,
-  'id="booking-location"',
-  "booking location accessible name",
-);
-requireText(
-  publicHomeText,
-  'htmlFor="booking-other-location"',
-  "booking other-location label association",
-);
-requireText(
-  publicHomeText,
-  'id="booking-other-location"',
-  "booking other-location accessible name",
-);
-requireText(
-  publicHomeText,
-  "<fieldset>",
-  "booking grouped controls semantics",
-);
-requireText(
-  publicHomeText,
-  "<legend className={labelClass}>",
-  "booking grouped controls accessible name",
-);
-requireText(
-  publicHomeText,
-  "aria-pressed={form.requestedDate === date}",
-  "booking date selection state",
-);
-requireText(
-  publicHomeText,
-  "aria-pressed={form.slot === slot}",
-  "booking time selection state",
-);
+requireText(publicHomeText, 'htmlFor="booking-full-name"', "booking full-name label association");
+requireText(publicHomeText, 'id="booking-full-name"', "booking full-name accessible name");
+requireText(publicHomeText, 'htmlFor="booking-phone"', "booking phone label association");
+requireText(publicHomeText, 'id="booking-phone"', "booking phone accessible name");
+requireText(publicHomeText, 'className="relative scroll-mt-24 bg-muted/55 py-24"', "booking sticky-header scroll offset");
+requireText(publicHomeText, 'htmlFor="booking-location"', "booking location label association");
+requireText(publicHomeText, 'id="booking-location"', "booking location accessible name");
+requireText(publicHomeText, 'htmlFor="booking-other-location"', "booking other-location label association");
+requireText(publicHomeText, 'id="booking-other-location"', "booking other-location accessible name");
+requireText(publicHomeText, "<fieldset>", "booking grouped controls semantics");
+requireText(publicHomeText, "<legend className={labelClass}>", "booking grouped controls accessible name");
+requireText(publicHomeText, "aria-pressed={form.requestedDate === date}", "booking date selection state");
+requireText(publicHomeText, "aria-pressed={form.slot === slot}", "booking time selection state");
 
 const styles = await text("src/styles.css");
-requireText(
-  styles,
-  "@fontsource-variable/cairo/files/cairo-arabic-wght-normal.woff2",
-  "self-hosted Arabic Cairo",
-);
-requireText(
-  styles,
-  "@fontsource-variable/cairo/files/cairo-latin-wght-normal.woff2",
-  "self-hosted Latin Cairo",
-);
-requireText(
-  styles,
-  "@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2",
-  "self-hosted Playfair Display",
-);
+requireText(styles, "@fontsource-variable/cairo/files/cairo-arabic-wght-normal.woff2", "self-hosted Arabic Cairo");
+requireText(styles, "@fontsource-variable/cairo/files/cairo-latin-wght-normal.woff2", "self-hosted Latin Cairo");
+requireText(styles, "@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2", "self-hosted Playfair Display");
 requireText(styles, "font-display: swap", "local font loading policy");
 forbidText(styles, "fonts.googleapis.com", "local-only font source");
 forbidText(styles, "fonts.gstatic.com", "local-only font source");
@@ -196,8 +132,8 @@ for (const needle of [
   "groupMaxSize: 4",
   "groupChildPriceAED: 450",
   "siblingChildPriceAED: 400",
-  "aquaticSessionPriceAED: 150",
-  "landSessionPriceAED: 150",
+  "privateAquatic30MinutesAED: 150",
+  "privateAquatic60MinutesAED: 250",
   'DISPLAY_NAME_OWNER_APPROVED = "Najda Street"',
   'displayName: "ICS Al Falah"',
   'displayName: "ICS Khalifa"',
