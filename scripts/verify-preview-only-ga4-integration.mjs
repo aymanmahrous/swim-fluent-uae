@@ -1,11 +1,14 @@
 import { readFileSync } from "node:fs";
 
 const source = readFileSync("src/platform/public-analytics.ts", "utf8");
+const viteSource = readFileSync("vite.config.ts", "utf8");
 
 const requiredFragments = [
   'const PREVIEW_HOST_SUFFIX = ".vercel.app";',
   'VITE_ENABLE_PREVIEW_GA4 === "true"',
   "VITE_PREVIEW_GA4_MEASUREMENT_ID",
+  "VITE_DEPLOYMENT_ENV",
+  'deploymentEnvironment === "preview"',
   "isApprovedPreviewHost(window.location.hostname)",
   "previewAnalyticsRuntimeReady()",
   "!consentGranted || !previewAnalyticsRuntimeReady()",
@@ -20,6 +23,15 @@ const requiredFragments = [
 for (const fragment of requiredFragments) {
   if (!source.includes(fragment)) {
     throw new Error(`preview-only GA4 integration: missing ${JSON.stringify(fragment)}`);
+  }
+}
+
+for (const fragment of [
+  'process.env.VERCEL_ENV ?? "development"',
+  '"import.meta.env.VITE_DEPLOYMENT_ENV": JSON.stringify(vercelEnvironment)',
+]) {
+  if (!viteSource.includes(fragment)) {
+    throw new Error(`preview-only GA4 integration: deployment isolation missing ${JSON.stringify(fragment)}`);
   }
 }
 
