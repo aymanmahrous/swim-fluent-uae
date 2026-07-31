@@ -1,11 +1,31 @@
-export type PublicAnalyticsEvent =
-  "booking_complete" | "conversation_start" | "whatsapp_click" | "call_click";
+import type { PublicCtaId } from "./public-cta-registry";
 
-type SafeEventParameters = {
+export type PublicAnalyticsEvent =
+  | "booking_complete"
+  | "conversation_start"
+  | "whatsapp_click"
+  | "call_click";
+
+export type PublicAnalyticsParameters = {
   language?: "ar" | "en";
   source?: "website" | "chatbot" | "booking-success";
-  cta_id?: string;
+  cta_id?: PublicCtaId;
 };
+
+const ALLOWED_PARAMETER_KEYS = new Set<keyof PublicAnalyticsParameters>([
+  "language",
+  "source",
+  "cta_id",
+]);
+const ALLOWED_LANGUAGES = new Set(["ar", "en"]);
+const ALLOWED_SOURCES = new Set(["website", "chatbot", "booking-success"]);
+
+const FORBIDDEN_VALUE_PATTERNS = [
+  /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i,
+  /(?:\+?\d[\d\s().-]{7,}\d)/,
+  /https?:\/\//i,
+  /(?:gclid|gbraid|wbraid|fbclid)=/i,
+];
 
 declare global {
   interface Window {
@@ -114,19 +134,49 @@ function initializeAnalytics(): boolean {
   return true;
 }
 
+function sanitizeParameters(parameters: PublicAnalyticsParameters): PublicAnalyticsParameters | null {
+  const entries = Object.entries(parameters);
+
+  if (entries.some(([key]) => !ALLOWED_PARAMETER_KEYS.has(key as keyof PublicAnalyticsParameters))) {
+    return null;
+  }
+
+  const safeParameters = Object.fromEntries(
+    entries.filter(([, value]) => typeof value === "string" && value.length <= 80),
+  ) as PublicAnalyticsParameters;
+
+  if (
+    safeParameters.language &&
+    !ALLOWED_LANGUAGES.has(safeParameters.language)
+  ) {
+    return null;
+  }
+
+  if (safeParameters.source && !ALLOWED_SOURCES.has(safeParameters.source)) {
+    return null;
+  }
+
+  if (
+    Object.values(safeParameters).some((value) =>
+      FORBIDDEN_VALUE_PATTERNS.some((pattern) => pattern.test(value ?? "")),
+    )
+  ) {
+    return null;
+  }
+
+  return safeParameters;
+}
+
 configureDefaultConsent();
 
 export function trackPublicEvent(
   eventName: PublicAnalyticsEvent,
-  parameters: SafeEventParameters = {},
+  parameters: PublicAnalyticsParameters = {},
 ): boolean {
   if (!analyticsReady() || !window.gtag) return false;
 
-  const safeParameters = Object.fromEntries(
-    Object.entries(parameters).filter(
-      ([, value]) => typeof value === "string" && value.length <= 80,
-    ),
-  );
+  const safeParameters = sanitizeParameters(parameters);
+  if (!safeParameters) return false;
 
   window.gtag("event", eventName, safeParameters);
   return true;
