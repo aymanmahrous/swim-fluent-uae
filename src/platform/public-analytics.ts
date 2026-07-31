@@ -27,6 +27,10 @@ const FORBIDDEN_VALUE_PATTERNS = [
   /(?:gclid|gbraid|wbraid|fbclid)=/i,
 ];
 
+const PREVIEW_HOST_SUFFIX = ".vercel.app";
+const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";
+const previewMeasurementId = import.meta.env.VITE_PREVIEW_GA4_MEASUREMENT_ID?.trim();
+
 declare global {
   interface Window {
     dataLayer?: unknown[];
@@ -34,14 +38,22 @@ declare global {
   }
 }
 
-const analyticsEnabled = import.meta.env.VITE_ENABLE_GA4 === "true";
-const measurementId = import.meta.env.VITE_GA4_MEASUREMENT_ID?.trim();
 let initialized = false;
 let consentConfigured = false;
 let consentGranted = false;
 
 function validMeasurementId(value: string | undefined): value is string {
   return Boolean(value && /^G-[A-Z0-9]+$/i.test(value));
+}
+
+function isApprovedPreviewHost(hostname: string): boolean {
+  const normalizedHostname = hostname.trim().toLowerCase();
+  return normalizedHostname.endsWith(PREVIEW_HOST_SUFFIX);
+}
+
+function previewRuntimeAllowed(): boolean {
+  if (typeof window === "undefined") return false;
+  return isApprovedPreviewHost(window.location.hostname);
 }
 
 function ensureGtag(): boolean {
@@ -105,28 +117,37 @@ export function analyticsReady(): boolean {
   return initialized && consentGranted;
 }
 
+export function previewAnalyticsRuntimeReady(): boolean {
+  return (
+    previewAnalyticsEnabled &&
+    validMeasurementId(previewMeasurementId) &&
+    previewRuntimeAllowed()
+  );
+}
+
 function initializeAnalytics(): boolean {
   if (initialized) return true;
-  if (!consentGranted || !analyticsEnabled || !validMeasurementId(measurementId)) return false;
+  if (!consentGranted || !previewAnalyticsRuntimeReady()) return false;
 
   if (!configureDefaultConsent() || !window.gtag || typeof document === "undefined") return false;
 
   window.gtag("js", new Date());
-  window.gtag("config", measurementId, {
+  window.gtag("config", previewMeasurementId, {
     send_page_view: false,
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
+    debug_mode: true,
   });
 
   const existingScript = document.querySelector<HTMLScriptElement>(
-    'script[data-relaxfix-analytics="gtag"]',
+    'script[data-relaxfix-analytics="gtag-preview"]',
   );
 
   if (!existingScript) {
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-    script.dataset.relaxfixAnalytics = "gtag";
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(previewMeasurementId)}`;
+    script.dataset.relaxfixAnalytics = "gtag-preview";
     document.head.appendChild(script);
   }
 
@@ -145,10 +166,7 @@ function sanitizeParameters(parameters: PublicAnalyticsParameters): PublicAnalyt
     entries.filter(([, value]) => typeof value === "string" && value.length <= 80),
   ) as PublicAnalyticsParameters;
 
-  if (
-    safeParameters.language &&
-    !ALLOWED_LANGUAGES.has(safeParameters.language)
-  ) {
+  if (safeParameters.language && !ALLOWED_LANGUAGES.has(safeParameters.language)) {
     return null;
   }
 
