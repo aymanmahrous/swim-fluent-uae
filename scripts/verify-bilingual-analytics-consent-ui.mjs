@@ -63,11 +63,11 @@ if (!rootSource.includes("<AnalyticsConsentBridge />") || !rootSource.includes("
   throw new Error("bilingual consent UI: root mounting contract is missing");
 }
 
-if (!analyticsSource.includes('const analyticsEnabled = import.meta.env.VITE_ENABLE_GA4 === "true";')) {
+if (!analyticsSource.includes('const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";')) {
   throw new Error("bilingual consent UI: analytics disabled-by-default gate is missing");
 }
 
-if (!analyticsSource.includes("if (!consentGranted || !analyticsEnabled || !validMeasurementId(measurementId)) return false;")) {
+if (!analyticsSource.includes("if (!consentGranted || !previewAnalyticsRuntimeReady()) return false;")) {
   throw new Error("bilingual consent UI: consent-before-initialization gate is missing");
 }
 
