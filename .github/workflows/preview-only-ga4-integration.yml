@@ -1,0 +1,35 @@
+name: Preview-only GA4 Integration
+
+on:
+  pull_request:
+    paths:
+      - "src/platform/public-analytics.ts"
+      - "scripts/verify-public-analytics-foundation.mjs"
+      - "scripts/verify-preview-only-ga4-integration.mjs"
+      - ".github/workflows/preview-only-ga4-integration.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/platform/public-analytics.ts"
+      - "scripts/verify-public-analytics-foundation.mjs"
+      - "scripts/verify-preview-only-ga4-integration.mjs"
+      - ".github/workflows/preview-only-ga4-integration.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-only-ga4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Verify preview-only GA4 integration remains disabled and isolated
+        run: node scripts/verify-preview-only-ga4-integration.mjs
