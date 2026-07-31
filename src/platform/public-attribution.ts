@@ -18,7 +18,15 @@ const CLICK_ID_KEYS = new Set(["gclid", "gbraid", "wbraid", "fbclid"]);
 const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
 const PHONE_PATTERN = /(?:\+?\d[\d\s().-]{7,}\d)/;
 const HTML_PATTERN = /<\/?[a-z][^>]*>|javascript:/i;
-const CONTROL_CHARS = /[\u0000-\u001F\u007F]/g;
+
+function stripControlCharacters(value: string): string {
+  return Array.from(value)
+    .filter((character) => {
+      const code = character.charCodeAt(0);
+      return code > 31 && code !== 127;
+    })
+    .join("");
+}
 
 function normalizeValue(
   value: string | null,
@@ -27,7 +35,7 @@ function normalizeValue(
 ): string | undefined {
   if (!value) return undefined;
 
-  const cleaned = value.replace(CONTROL_CHARS, "").trim();
+  const cleaned = stripControlCharacters(value).trim();
   if (!cleaned || EMAIL_PATTERN.test(cleaned) || PHONE_PATTERN.test(cleaned) || HTML_PATTERN.test(cleaned)) {
     return undefined;
   }
