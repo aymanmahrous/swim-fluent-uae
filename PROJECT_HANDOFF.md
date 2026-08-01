@@ -1,6 +1,6 @@
 # PROJECT HANDOFF
 
-Last verified: 2026-07-30 12:12 (Asia/Dubai)
+Last verified: 2026-08-01 22:39 UTC / 2026-08-02 02:39 (Asia/Dubai)
 
 This is the operational continuation source for Relax Fix UAE / Swim Fluent UAE. Read it with:
 
@@ -82,7 +82,7 @@ Post 3 retains approved copy and Visual Brief, but its assets are not created, s
 
 ### Issue #59 — Privacy, Consent, Analytics, and sensitive-data decisions
 
-Status: `DECISION_PACK_MERGED_PROTECTED_DECISIONS_AND_IMPLEMENTATION_PENDING`
+Status: `PHASE_A_IMPLEMENTATION_COMPLETE_GA4_PRODUCTION_ACTIVATION_PENDING_OWNER_APPROVAL`
 
 - File: `docs/privacy/PRIVACY_ANALYTICS_OWNER_DECISION_PACK.md`
 - PR #98 reviewed head: `395f5cb88b3a61624daa4fc22c514751a2348241`
@@ -94,6 +94,23 @@ Status: `DECISION_PACK_MERGED_PROTECTED_DECISIONS_AND_IMPLEMENTATION_PENDING`
 The merged pack preserves the existing Analytics Measurement Contract and records 23 owner/legal/provider decisions, including public identity, privacy contact, minors/guardians, sensitive booking fields, retention, Staff access, privacy requests, providers/backups, Consent UI, Privacy routes, CTA IDs, attribution, click IDs, Production-test policy, learner records, family reports, and vendors.
 
 No legal-compliance claim, Privacy route, Consent UI, browser storage, GA4/GTM, migration, Production booking/write, real sensitive record, messaging, publishing, Ads, billing, or spend is authorized.
+
+### Issue #251 — Phase A Privacy, Consent, and GA4 Safety Reconciliation
+
+Status: `COMPLETED_MERGED_GA4_PRODUCTION_REMAINS_OFF`
+
+- PR #252 merged at `402cae6de5f26179780cf36781c7158eb5e59e3e` on 2026-08-01 22:39 UTC.
+- Merge base: `5859fc0b113f9c553b287390ef7fd0df974be272`; branch: `copilot/phase-a-privacy-consent-ga4`.
+- Issue #251 closed as completed on 2026-08-01.
+- Privacy contact email updated to `swimfluentprivacy@gmail.com` in `src/components/privacy-page.tsx`.
+- Four verification scripts added to `scripts/` and registered as npm scripts:
+  - `verify:consent-tests` — bilingual consent banner, Accept/Reject, no-block, event dispatch, no-storage, root mount.
+  - `verify:no-pii-audit` — `ALLOWED_PARAMETER_KEYS`, `FORBIDDEN_VALUE_PATTERNS`, 80-char cap, no hardcoded Measurement ID, no GTM, approved email.
+  - `verify:event-tests` — four required events, deduplication, consent gate, reserved-CTA guard, `conversation_start` payload constraints.
+  - `verify:mobile-consent` — z-index ordering, bottom offset, responsive layout, `CustomEvent`-only dispatch.
+- Evidence artifact: `docs/analytics/PHASE_A_PRIVACY_CONSENT_GA4_IMPLEMENTATION_EVIDENCE_2026-08-01.md`.
+- Post-merge CI on SHA `402cae6de5f26179780cf36781c7158eb5e59e3e`: all four workflows (`CI`, `Bilingual Analytics Consent UI`, `Public Analytics Foundation`, `Public CTA Events`) passed.
+- GA4 Production activation remains OFF. No Production write. No database migration. No credentials changed.
 
 ### Issues #58 and #79 — SEO, Local SEO, and conversion readiness
 
@@ -385,7 +402,7 @@ Do not mix unrelated workstreams in one PR.
 - Search Console and GBP account evidence
 - business hours, live category state, address visibility, extra service-area facts, and canonical Facebook Page
 - mobile/field CWV and full Preview form-friction/accessibility evidence
-- Privacy/Consent owner/legal/provider decisions
+- GA4 Production activation requires explicit owner approval (Phase A implementation complete; Production ON is a separate protected gate)
 - PR #46 final correction/review/approval
 - publishing account/credential/receipt evidence
 - no approved real learner/child/health data controls
