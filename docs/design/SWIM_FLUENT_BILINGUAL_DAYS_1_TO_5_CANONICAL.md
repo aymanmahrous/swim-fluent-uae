@@ -9,6 +9,22 @@ Status: `CANONICAL_ASSET_SET — OWNER APPROVED FOR REUSE`
 - English design: https://www.canva.com/d/8umQ4jrUf9Z4pZZ
 - English view: https://www.canva.com/d/zEzCh3R-ANK0H45
 
+## Canva reusable asset IDs
+
+### Arabic
+- Day 1: `MAHRDGeN2kg`
+- Day 2: `MAHRDMdthnY`
+- Day 3: `MAHRDNRvmVM`
+- Day 4: `MAHRDPbNGc4`
+- Day 5: `MAHRDDrixSY`
+
+### English
+- Day 1: `MAHRDObPq3k`
+- Day 2: `MAHRDJ_mZEk`
+- Day 3: `MAHRDEwiKDs`
+- Day 4: `MAHRDJDENK0`
+- Day 5: `MAHRDDt6dbI`
+
 ## Mandatory reuse rules
 
 1. Use Coach Ayman's approved face only.
@@ -16,7 +32,7 @@ Status: `CANONICAL_ASSET_SET — OWNER APPROVED FOR REUSE`
 3. Every final design must show WhatsApp number `+971 55 137 8660`.
 4. Every final design must include a scannable QR targeting `https://wa.me/971551378660`.
 5. Do not recreate these designs from scratch while the Canva sources remain available.
-6. New agents must copy or adapt the canonical Canva designs rather than inventing a replacement identity.
+6. New agents must copy or adapt the canonical Canva assets rather than inventing a replacement identity.
 7. Publishing still requires final visual QA and owner authorization.
 
 ## Asset inventory
