@@ -1,3 +1,4 @@
+// Preview validation marker only; no runtime behavior change.
 import type { PublicCtaId } from "./public-cta-registry";
 
 export type PublicAnalyticsEvent =
