@@ -9,22 +9,95 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as OsRouteImport } from './routes/os'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AiRouteImport } from './routes/ai'
+import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EditorRouteImport } from './routes/editor'
+import { Route as EnRouteImport } from './routes/en'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as GoneRouteImport } from './routes/gone'
+import { Route as OsRouteImport } from './routes/os'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as StaffRouteImport } from './routes/staff'
+import { Route as VideoRouteImport } from './routes/video'
+import { Route as ApiBookingRequestRouteImport } from './routes/api.booking-request'
+import { Route as ApiBusinessSettingsRouteImport } from './routes/api.business-settings'
+import { Route as ApiOsAnalyticsRouteImport } from './routes/api.os-analytics'
+import { Route as ApiOsAutomationStatusRouteImport } from './routes/api.os-automation-status'
+import { Route as ApiOsCommandCenterRouteImport } from './routes/api.os-command-center'
+import { Route as ApiOsContentGenerateRouteImport } from './routes/api.os-content-generate'
+import { Route as ApiOsContentItemsRouteImport } from './routes/api.os-content-items'
+import { Route as ApiOsContentTransitionRouteImport } from './routes/api.os-content-transition'
+import { Route as ApiOsContentUpdateRouteImport } from './routes/api.os-content-update'
+import { Route as ApiOsCrmRouteImport } from './routes/api.os-crm'
+import { Route as ApiOsCrmUpdateRouteImport } from './routes/api.os-crm-update'
+import { Route as ApiOsInboxRouteImport } from './routes/api.os-inbox'
+import { Route as ApiOsIntegrationsRouteImport } from './routes/api.os-integrations'
+import { Route as ApiOsMediaRouteImport } from './routes/api.os-media'
+import { Route as ApiOsMediaCopyRouteImport } from './routes/api.os-media-copy'
+import { Route as ApiOsMediaGenerateImageRouteImport } from './routes/api.os-media-generate-image'
+import { Route as ApiOsMediaGenerateVideoRouteImport } from './routes/api.os-media-generate-video'
+import { Route as ApiOsMediaVideoJobsRouteImport } from './routes/api.os-media-video-jobs'
+import { Route as ApiOsOperationsRouteImport } from './routes/api.os-operations'
+import { Route as ApiPasswordRecoveryRouteImport } from './routes/api.password-recovery'
+import { Route as ApiPasswordResetRouteImport } from './routes/api.password-reset'
+import { Route as ApiStaffBookingsRouteImport } from './routes/api.staff-bookings'
+import { Route as ApiStaffPasswordRequestRouteImport } from './routes/api.staff-password-request'
+import { Route as ApiStaffPasswordResetRouteImport } from './routes/api.staff-password-reset'
+import { Route as ApiStaffSessionRouteImport } from './routes/api.staff-session'
+import { Route as ArAiRouteImport } from './routes/ar/ai'
+import { Route as ArCampaignsRouteImport } from './routes/ar/campaigns'
+import { Route as ArContactRouteImport } from './routes/ar/contact'
+import { Route as ArEditorRouteImport } from './routes/ar/editor'
+import { Route as ArPortfolioRouteImport } from './routes/ar/portfolio'
+import { Route as ArVideoRouteImport } from './routes/ar/video'
+import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AuthSplatRouteImport } from './routes/auth/$'
+import { Route as EnAiRouteImport } from './routes/en/ai'
+import { Route as EnCampaignsRouteImport } from './routes/en/campaigns'
+import { Route as EnContactRouteImport } from './routes/en/contact'
+import { Route as EnEditorRouteImport } from './routes/en/editor'
+import { Route as EnPortfolioRouteImport } from './routes/en/portfolio'
+import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
+import { Route as EnVideoRouteImport } from './routes/en/video'
+import { Route as LocationsLocationIdRouteImport } from './routes/locations.$locationId'
 import { Route as OsIndexRouteImport } from './routes/os.index'
-import { Route as OsPlannerRouteImport } from './routes/os.planner'
-import { Route as OsMediaRouteImport } from './routes/os.media'
-import { Route as OsIntegrationsRouteImport } from './routes/os.integrations'
-import { Route as OsInboxRouteImport } from './routes/os.inbox'
-import { Route as OsCrmRouteImport } from './routes/os.crm'
-import { Route as OsContentRouteImport } from './routes/os.content'
-import { Route as OsAutomationsRouteImport } from './routes/os.automations'
 import { Route as OsAnalyticsRouteImport } from './routes/os.analytics'
+import { Route as OsAutomationsRouteImport } from './routes/os.automations'
+import { Route as OsContentRouteImport } from './routes/os.content'
+import { Route as OsCrmRouteImport } from './routes/os.crm'
+import { Route as OsInboxRouteImport } from './routes/os.inbox'
+import { Route as OsIntegrationsRouteImport } from './routes/os.integrations'
+import { Route as OsMediaRouteImport } from './routes/os.media'
+import { Route as OsPlannerRouteImport } from './routes/os.planner'
+import { Route as ServicesIndexRouteImport } from './routes/services/index'
+import { Route as ServicesSplatRouteImport } from './routes/services/$'
+import { Route as StaffResetRouteImport } from './routes/staff/reset'
+import { Route as ToolsIndexRouteImport } from './routes/tools/index'
+import { Route as ToolsSplatRouteImport } from './routes/tools/$'
+import { Route as ApiCronContentAutomationRouteImport } from './routes/api.cron.content-automation'
+import { Route as ApiInternalAiMediaE2eRouteImport } from './routes/api.internal.ai-media-e2e'
+import { Route as ApiInternalContentMediaWorkerRouteImport } from './routes/api.internal.content-media-worker'
+import { Route as ApiInternalPublishWorkerRouteImport } from './routes/api.internal.publish-worker'
+import { Route as ArAuthIndexRouteImport } from './routes/ar/auth/index'
+import { Route as ArAuthSplatRouteImport } from './routes/ar/auth/$'
+import { Route as ArToolsIndexRouteImport } from './routes/ar/tools/index'
+import { Route as ArToolsSplatRouteImport } from './routes/ar/tools/$'
+import { Route as EnAuthIndexRouteImport } from './routes/en/auth/index'
+import { Route as EnAuthSplatRouteImport } from './routes/en/auth/$'
+import { Route as EnServicesIndexRouteImport } from './routes/en/services/index'
+import { Route as EnServicesSplatRouteImport } from './routes/en/services/$'
+import { Route as EnToolsIndexRouteImport } from './routes/en/tools/index'
+import { Route as EnToolsSplatRouteImport } from './routes/en/tools/$'
 
-const OsRoute = OsRouteImport.update({
-  id: '/os',
-  path: '/os',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -32,9 +105,279 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AiRoute = AiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsRoute = CampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorRoute = EditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnRoute = EnRouteImport.update({
+  id: '/en',
+  path: '/en',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GoneRoute = GoneRouteImport.update({
+  id: '/gone',
+  path: '/gone',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsRoute = OsRouteImport.update({
+  id: '/os',
+  path: '/os',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideoRoute = VideoRouteImport.update({
+  id: '/video',
+  path: '/video',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBookingRequestRoute = ApiBookingRequestRouteImport.update({
+  id: '/api/booking-request',
+  path: '/api/booking-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBusinessSettingsRoute = ApiBusinessSettingsRouteImport.update({
+  id: '/api/business-settings',
+  path: '/api/business-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsAnalyticsRoute = ApiOsAnalyticsRouteImport.update({
+  id: '/api/os-analytics',
+  path: '/api/os-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsAutomationStatusRoute = ApiOsAutomationStatusRouteImport.update({
+  id: '/api/os-automation-status',
+  path: '/api/os-automation-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsCommandCenterRoute = ApiOsCommandCenterRouteImport.update({
+  id: '/api/os-command-center',
+  path: '/api/os-command-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsContentGenerateRoute = ApiOsContentGenerateRouteImport.update({
+  id: '/api/os-content-generate',
+  path: '/api/os-content-generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsContentItemsRoute = ApiOsContentItemsRouteImport.update({
+  id: '/api/os-content-items',
+  path: '/api/os-content-items',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsContentTransitionRoute = ApiOsContentTransitionRouteImport.update({
+  id: '/api/os-content-transition',
+  path: '/api/os-content-transition',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsContentUpdateRoute = ApiOsContentUpdateRouteImport.update({
+  id: '/api/os-content-update',
+  path: '/api/os-content-update',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsCrmRoute = ApiOsCrmRouteImport.update({
+  id: '/api/os-crm',
+  path: '/api/os-crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsCrmUpdateRoute = ApiOsCrmUpdateRouteImport.update({
+  id: '/api/os-crm-update',
+  path: '/api/os-crm-update',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsInboxRoute = ApiOsInboxRouteImport.update({
+  id: '/api/os-inbox',
+  path: '/api/os-inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsIntegrationsRoute = ApiOsIntegrationsRouteImport.update({
+  id: '/api/os-integrations',
+  path: '/api/os-integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsMediaRoute = ApiOsMediaRouteImport.update({
+  id: '/api/os-media',
+  path: '/api/os-media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsMediaCopyRoute = ApiOsMediaCopyRouteImport.update({
+  id: '/api/os-media-copy',
+  path: '/api/os-media-copy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsMediaGenerateImageRoute = ApiOsMediaGenerateImageRouteImport.update({
+  id: '/api/os-media-generate-image',
+  path: '/api/os-media-generate-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsMediaGenerateVideoRoute = ApiOsMediaGenerateVideoRouteImport.update({
+  id: '/api/os-media-generate-video',
+  path: '/api/os-media-generate-video',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsMediaVideoJobsRoute = ApiOsMediaVideoJobsRouteImport.update({
+  id: '/api/os-media-video-jobs',
+  path: '/api/os-media-video-jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOsOperationsRoute = ApiOsOperationsRouteImport.update({
+  id: '/api/os-operations',
+  path: '/api/os-operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPasswordRecoveryRoute = ApiPasswordRecoveryRouteImport.update({
+  id: '/api/password-recovery',
+  path: '/api/password-recovery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPasswordResetRoute = ApiPasswordResetRouteImport.update({
+  id: '/api/password-reset',
+  path: '/api/password-reset',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStaffBookingsRoute = ApiStaffBookingsRouteImport.update({
+  id: '/api/staff-bookings',
+  path: '/api/staff-bookings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStaffPasswordRequestRoute = ApiStaffPasswordRequestRouteImport.update({
+  id: '/api/staff-password-request',
+  path: '/api/staff-password-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStaffPasswordResetRoute = ApiStaffPasswordResetRouteImport.update({
+  id: '/api/staff-password-reset',
+  path: '/api/staff-password-reset',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStaffSessionRoute = ApiStaffSessionRouteImport.update({
+  id: '/api/staff-session',
+  path: '/api/staff-session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArAiRoute = ArAiRouteImport.update({
+  id: '/ar/ai',
+  path: '/ar/ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArCampaignsRoute = ArCampaignsRouteImport.update({
+  id: '/ar/campaigns',
+  path: '/ar/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArContactRoute = ArContactRouteImport.update({
+  id: '/ar/contact',
+  path: '/ar/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArEditorRoute = ArEditorRouteImport.update({
+  id: '/ar/editor',
+  path: '/ar/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArPortfolioRoute = ArPortfolioRouteImport.update({
+  id: '/ar/portfolio',
+  path: '/ar/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArVideoRoute = ArVideoRouteImport.update({
+  id: '/ar/video',
+  path: '/ar/video',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSplatRoute = AuthSplatRouteImport.update({
+  id: '/auth/$',
+  path: '/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnAiRoute = EnAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnCampaignsRoute = EnCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnContactRoute = EnContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnEditorRoute = EnEditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnPortfolioRoute = EnPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnPrivacyRoute = EnPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnVideoRoute = EnVideoRouteImport.update({
+  id: '/video',
+  path: '/video',
+  getParentRoute: () => EnRoute,
+} as any)
+const LocationsLocationIdRoute = LocationsLocationIdRouteImport.update({
+  id: '/locations/$locationId',
+  path: '/locations/$locationId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OsIndexRoute = OsIndexRouteImport.update({
@@ -42,34 +385,9 @@ const OsIndexRoute = OsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OsRoute,
 } as any)
-const OsPlannerRoute = OsPlannerRouteImport.update({
-  id: '/planner',
-  path: '/planner',
-  getParentRoute: () => OsRoute,
-} as any)
-const OsMediaRoute = OsMediaRouteImport.update({
-  id: '/media',
-  path: '/media',
-  getParentRoute: () => OsRoute,
-} as any)
-const OsIntegrationsRoute = OsIntegrationsRouteImport.update({
-  id: '/integrations',
-  path: '/integrations',
-  getParentRoute: () => OsRoute,
-} as any)
-const OsInboxRoute = OsInboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => OsRoute,
-} as any)
-const OsCrmRoute = OsCrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => OsRoute,
-} as any)
-const OsContentRoute = OsContentRouteImport.update({
-  id: '/content',
-  path: '/content',
+const OsAnalyticsRoute = OsAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => OsRoute,
 } as any)
 const OsAutomationsRoute = OsAutomationsRouteImport.update({
@@ -77,16 +395,192 @@ const OsAutomationsRoute = OsAutomationsRouteImport.update({
   path: '/automations',
   getParentRoute: () => OsRoute,
 } as any)
-const OsAnalyticsRoute = OsAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
+const OsContentRoute = OsContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => OsRoute,
+} as any)
+const OsCrmRoute = OsCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsInboxRoute = OsInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsIntegrationsRoute = OsIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsMediaRoute = OsMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => OsRoute,
+} as any)
+const OsPlannerRoute = OsPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => OsRoute,
+} as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesSplatRoute = ServicesSplatRouteImport.update({
+  id: '/services/$',
+  path: '/services/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffResetRoute = StaffResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => StaffRoute,
+} as any)
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSplatRoute = ToolsSplatRouteImport.update({
+  id: '/tools/$',
+  path: '/tools/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronContentAutomationRoute =
+  ApiCronContentAutomationRouteImport.update({
+    id: '/api/cron/content-automation',
+    path: '/api/cron/content-automation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiInternalAiMediaE2eRoute = ApiInternalAiMediaE2eRouteImport.update({
+  id: '/api/internal/ai-media-e2e',
+  path: '/api/internal/ai-media-e2e',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInternalContentMediaWorkerRoute =
+  ApiInternalContentMediaWorkerRouteImport.update({
+    id: '/api/internal/content-media-worker',
+    path: '/api/internal/content-media-worker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiInternalPublishWorkerRoute =
+  ApiInternalPublishWorkerRouteImport.update({
+    id: '/api/internal/publish-worker',
+    path: '/api/internal/publish-worker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ArAuthIndexRoute = ArAuthIndexRouteImport.update({
+  id: '/ar/auth/',
+  path: '/ar/auth/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArAuthSplatRoute = ArAuthSplatRouteImport.update({
+  id: '/ar/auth/$',
+  path: '/ar/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArToolsIndexRoute = ArToolsIndexRouteImport.update({
+  id: '/ar/tools/',
+  path: '/ar/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArToolsSplatRoute = ArToolsSplatRouteImport.update({
+  id: '/ar/tools/$',
+  path: '/ar/tools/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnAuthIndexRoute = EnAuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnAuthSplatRoute = EnAuthSplatRouteImport.update({
+  id: '/auth/$',
+  path: '/auth/$',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnServicesIndexRoute = EnServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnServicesSplatRoute = EnServicesSplatRouteImport.update({
+  id: '/services/$',
+  path: '/services/$',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnToolsIndexRoute = EnToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnToolsSplatRoute = EnToolsSplatRouteImport.update({
+  id: '/tools/$',
+  path: '/tools/$',
+  getParentRoute: () => EnRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai': typeof AiRoute
+  '/campaigns': typeof CampaignsRoute
+  '/contact': typeof ContactRoute
+  '/editor': typeof EditorRoute
+  '/en': typeof EnRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gone': typeof GoneRoute
   '/os': typeof OsRouteWithChildren
+  '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/staff': typeof StaffRouteWithChildren
+  '/video': typeof VideoRoute
+  '/api/booking-request': typeof ApiBookingRequestRoute
+  '/api/business-settings': typeof ApiBusinessSettingsRoute
+  '/api/os-analytics': typeof ApiOsAnalyticsRoute
+  '/api/os-automation-status': typeof ApiOsAutomationStatusRoute
+  '/api/os-command-center': typeof ApiOsCommandCenterRoute
+  '/api/os-content-generate': typeof ApiOsContentGenerateRoute
+  '/api/os-content-items': typeof ApiOsContentItemsRoute
+  '/api/os-content-transition': typeof ApiOsContentTransitionRoute
+  '/api/os-content-update': typeof ApiOsContentUpdateRoute
+  '/api/os-crm': typeof ApiOsCrmRoute
+  '/api/os-crm-update': typeof ApiOsCrmUpdateRoute
+  '/api/os-inbox': typeof ApiOsInboxRoute
+  '/api/os-integrations': typeof ApiOsIntegrationsRoute
+  '/api/os-media': typeof ApiOsMediaRoute
+  '/api/os-media-copy': typeof ApiOsMediaCopyRoute
+  '/api/os-media-generate-image': typeof ApiOsMediaGenerateImageRoute
+  '/api/os-media-generate-video': typeof ApiOsMediaGenerateVideoRoute
+  '/api/os-media-video-jobs': typeof ApiOsMediaVideoJobsRoute
+  '/api/os-operations': typeof ApiOsOperationsRoute
+  '/api/password-recovery': typeof ApiPasswordRecoveryRoute
+  '/api/password-reset': typeof ApiPasswordResetRoute
+  '/api/staff-bookings': typeof ApiStaffBookingsRoute
+  '/api/staff-password-request': typeof ApiStaffPasswordRequestRoute
+  '/api/staff-password-reset': typeof ApiStaffPasswordResetRoute
+  '/api/staff-session': typeof ApiStaffSessionRoute
+  '/ar/ai': typeof ArAiRoute
+  '/ar/campaigns': typeof ArCampaignsRoute
+  '/ar/contact': typeof ArContactRoute
+  '/ar/editor': typeof ArEditorRoute
+  '/ar/portfolio': typeof ArPortfolioRoute
+  '/ar/video': typeof ArVideoRoute
+  '/auth/$': typeof AuthSplatRoute
+  '/en/ai': typeof EnAiRoute
+  '/en/campaigns': typeof EnCampaignsRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/editor': typeof EnEditorRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/video': typeof EnVideoRoute
+  '/locations/$locationId': typeof LocationsLocationIdRoute
   '/os/analytics': typeof OsAnalyticsRoute
   '/os/automations': typeof OsAutomationsRoute
   '/os/content': typeof OsContentRoute
@@ -95,11 +589,84 @@ export interface FileRoutesByFullPath {
   '/os/integrations': typeof OsIntegrationsRoute
   '/os/media': typeof OsMediaRoute
   '/os/planner': typeof OsPlannerRoute
+  '/services/$': typeof ServicesSplatRoute
+  '/staff/reset': typeof StaffResetRoute
+  '/tools/$': typeof ToolsSplatRoute
+  '/auth/': typeof AuthIndexRoute
   '/os/': typeof OsIndexRoute
+  '/services/': typeof ServicesIndexRoute
+  '/tools/': typeof ToolsIndexRoute
+  '/api/cron/content-automation': typeof ApiCronContentAutomationRoute
+  '/api/internal/ai-media-e2e': typeof ApiInternalAiMediaE2eRoute
+  '/api/internal/content-media-worker': typeof ApiInternalContentMediaWorkerRoute
+  '/api/internal/publish-worker': typeof ApiInternalPublishWorkerRoute
+  '/ar/auth/$': typeof ArAuthSplatRoute
+  '/ar/tools/$': typeof ArToolsSplatRoute
+  '/en/auth/$': typeof EnAuthSplatRoute
+  '/en/services/$': typeof EnServicesSplatRoute
+  '/en/tools/$': typeof EnToolsSplatRoute
+  '/ar/auth/': typeof ArAuthIndexRoute
+  '/ar/tools/': typeof ArToolsIndexRoute
+  '/en/auth/': typeof EnAuthIndexRoute
+  '/en/services/': typeof EnServicesIndexRoute
+  '/en/tools/': typeof EnToolsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai': typeof AiRoute
+  '/campaigns': typeof CampaignsRoute
+  '/contact': typeof ContactRoute
+  '/editor': typeof EditorRoute
+  '/en': typeof EnRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gone': typeof GoneRoute
+  '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/staff': typeof StaffRouteWithChildren
+  '/video': typeof VideoRoute
+  '/api/booking-request': typeof ApiBookingRequestRoute
+  '/api/business-settings': typeof ApiBusinessSettingsRoute
+  '/api/os-analytics': typeof ApiOsAnalyticsRoute
+  '/api/os-automation-status': typeof ApiOsAutomationStatusRoute
+  '/api/os-command-center': typeof ApiOsCommandCenterRoute
+  '/api/os-content-generate': typeof ApiOsContentGenerateRoute
+  '/api/os-content-items': typeof ApiOsContentItemsRoute
+  '/api/os-content-transition': typeof ApiOsContentTransitionRoute
+  '/api/os-content-update': typeof ApiOsContentUpdateRoute
+  '/api/os-crm': typeof ApiOsCrmRoute
+  '/api/os-crm-update': typeof ApiOsCrmUpdateRoute
+  '/api/os-inbox': typeof ApiOsInboxRoute
+  '/api/os-integrations': typeof ApiOsIntegrationsRoute
+  '/api/os-media': typeof ApiOsMediaRoute
+  '/api/os-media-copy': typeof ApiOsMediaCopyRoute
+  '/api/os-media-generate-image': typeof ApiOsMediaGenerateImageRoute
+  '/api/os-media-generate-video': typeof ApiOsMediaGenerateVideoRoute
+  '/api/os-media-video-jobs': typeof ApiOsMediaVideoJobsRoute
+  '/api/os-operations': typeof ApiOsOperationsRoute
+  '/api/password-recovery': typeof ApiPasswordRecoveryRoute
+  '/api/password-reset': typeof ApiPasswordResetRoute
+  '/api/staff-bookings': typeof ApiStaffBookingsRoute
+  '/api/staff-password-request': typeof ApiStaffPasswordRequestRoute
+  '/api/staff-password-reset': typeof ApiStaffPasswordResetRoute
+  '/api/staff-session': typeof ApiStaffSessionRoute
+  '/ar/ai': typeof ArAiRoute
+  '/ar/campaigns': typeof ArCampaignsRoute
+  '/ar/contact': typeof ArContactRoute
+  '/ar/editor': typeof ArEditorRoute
+  '/ar/portfolio': typeof ArPortfolioRoute
+  '/ar/video': typeof ArVideoRoute
+  '/auth/$': typeof AuthSplatRoute
+  '/en/ai': typeof EnAiRoute
+  '/en/campaigns': typeof EnCampaignsRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/editor': typeof EnEditorRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/video': typeof EnVideoRoute
+  '/locations/$locationId': typeof LocationsLocationIdRoute
   '/os/analytics': typeof OsAnalyticsRoute
   '/os/automations': typeof OsAutomationsRoute
   '/os/content': typeof OsContentRoute
@@ -108,13 +675,86 @@ export interface FileRoutesByTo {
   '/os/integrations': typeof OsIntegrationsRoute
   '/os/media': typeof OsMediaRoute
   '/os/planner': typeof OsPlannerRoute
+  '/services/$': typeof ServicesSplatRoute
+  '/staff/reset': typeof StaffResetRoute
+  '/tools/$': typeof ToolsSplatRoute
+  '/auth': typeof AuthIndexRoute
   '/os': typeof OsIndexRoute
+  '/services': typeof ServicesIndexRoute
+  '/tools': typeof ToolsIndexRoute
+  '/api/cron/content-automation': typeof ApiCronContentAutomationRoute
+  '/api/internal/ai-media-e2e': typeof ApiInternalAiMediaE2eRoute
+  '/api/internal/content-media-worker': typeof ApiInternalContentMediaWorkerRoute
+  '/api/internal/publish-worker': typeof ApiInternalPublishWorkerRoute
+  '/ar/auth/$': typeof ArAuthSplatRoute
+  '/ar/tools/$': typeof ArToolsSplatRoute
+  '/en/auth/$': typeof EnAuthSplatRoute
+  '/en/services/$': typeof EnServicesSplatRoute
+  '/en/tools/$': typeof EnToolsSplatRoute
+  '/ar/auth': typeof ArAuthIndexRoute
+  '/ar/tools': typeof ArToolsIndexRoute
+  '/en/auth': typeof EnAuthIndexRoute
+  '/en/services': typeof EnServicesIndexRoute
+  '/en/tools': typeof EnToolsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ai': typeof AiRoute
+  '/campaigns': typeof CampaignsRoute
+  '/contact': typeof ContactRoute
+  '/editor': typeof EditorRoute
+  '/en': typeof EnRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gone': typeof GoneRoute
   '/os': typeof OsRouteWithChildren
+  '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/staff': typeof StaffRouteWithChildren
+  '/video': typeof VideoRoute
+  '/api/booking-request': typeof ApiBookingRequestRoute
+  '/api/business-settings': typeof ApiBusinessSettingsRoute
+  '/api/os-analytics': typeof ApiOsAnalyticsRoute
+  '/api/os-automation-status': typeof ApiOsAutomationStatusRoute
+  '/api/os-command-center': typeof ApiOsCommandCenterRoute
+  '/api/os-content-generate': typeof ApiOsContentGenerateRoute
+  '/api/os-content-items': typeof ApiOsContentItemsRoute
+  '/api/os-content-transition': typeof ApiOsContentTransitionRoute
+  '/api/os-content-update': typeof ApiOsContentUpdateRoute
+  '/api/os-crm': typeof ApiOsCrmRoute
+  '/api/os-crm-update': typeof ApiOsCrmUpdateRoute
+  '/api/os-inbox': typeof ApiOsInboxRoute
+  '/api/os-integrations': typeof ApiOsIntegrationsRoute
+  '/api/os-media': typeof ApiOsMediaRoute
+  '/api/os-media-copy': typeof ApiOsMediaCopyRoute
+  '/api/os-media-generate-image': typeof ApiOsMediaGenerateImageRoute
+  '/api/os-media-generate-video': typeof ApiOsMediaGenerateVideoRoute
+  '/api/os-media-video-jobs': typeof ApiOsMediaVideoJobsRoute
+  '/api/os-operations': typeof ApiOsOperationsRoute
+  '/api/password-recovery': typeof ApiPasswordRecoveryRoute
+  '/api/password-reset': typeof ApiPasswordResetRoute
+  '/api/staff-bookings': typeof ApiStaffBookingsRoute
+  '/api/staff-password-request': typeof ApiStaffPasswordRequestRoute
+  '/api/staff-password-reset': typeof ApiStaffPasswordResetRoute
+  '/api/staff-session': typeof ApiStaffSessionRoute
+  '/ar/ai': typeof ArAiRoute
+  '/ar/campaigns': typeof ArCampaignsRoute
+  '/ar/contact': typeof ArContactRoute
+  '/ar/editor': typeof ArEditorRoute
+  '/ar/portfolio': typeof ArPortfolioRoute
+  '/ar/video': typeof ArVideoRoute
+  '/auth/$': typeof AuthSplatRoute
+  '/en/ai': typeof EnAiRoute
+  '/en/campaigns': typeof EnCampaignsRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/editor': typeof EnEditorRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/video': typeof EnVideoRoute
+  '/locations/$locationId': typeof LocationsLocationIdRoute
   '/os/analytics': typeof OsAnalyticsRoute
   '/os/automations': typeof OsAutomationsRoute
   '/os/content': typeof OsContentRoute
@@ -123,14 +763,87 @@ export interface FileRoutesById {
   '/os/integrations': typeof OsIntegrationsRoute
   '/os/media': typeof OsMediaRoute
   '/os/planner': typeof OsPlannerRoute
+  '/services/$': typeof ServicesSplatRoute
+  '/staff/reset': typeof StaffResetRoute
+  '/tools/$': typeof ToolsSplatRoute
+  '/auth/': typeof AuthIndexRoute
   '/os/': typeof OsIndexRoute
+  '/services/': typeof ServicesIndexRoute
+  '/tools/': typeof ToolsIndexRoute
+  '/api/cron/content-automation': typeof ApiCronContentAutomationRoute
+  '/api/internal/ai-media-e2e': typeof ApiInternalAiMediaE2eRoute
+  '/api/internal/content-media-worker': typeof ApiInternalContentMediaWorkerRoute
+  '/api/internal/publish-worker': typeof ApiInternalPublishWorkerRoute
+  '/ar/auth/$': typeof ArAuthSplatRoute
+  '/ar/tools/$': typeof ArToolsSplatRoute
+  '/en/auth/$': typeof EnAuthSplatRoute
+  '/en/services/$': typeof EnServicesSplatRoute
+  '/en/tools/$': typeof EnToolsSplatRoute
+  '/ar/auth/': typeof ArAuthIndexRoute
+  '/ar/tools/': typeof ArToolsIndexRoute
+  '/en/auth/': typeof EnAuthIndexRoute
+  '/en/services/': typeof EnServicesIndexRoute
+  '/en/tools/': typeof EnToolsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
+    | '/ai'
+    | '/campaigns'
+    | '/contact'
+    | '/editor'
+    | '/en'
+    | '/forgot-password'
+    | '/gone'
     | '/os'
+    | '/portfolio'
+    | '/privacy'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/staff'
+    | '/video'
+    | '/api/booking-request'
+    | '/api/business-settings'
+    | '/api/os-analytics'
+    | '/api/os-automation-status'
+    | '/api/os-command-center'
+    | '/api/os-content-generate'
+    | '/api/os-content-items'
+    | '/api/os-content-transition'
+    | '/api/os-content-update'
+    | '/api/os-crm'
+    | '/api/os-crm-update'
+    | '/api/os-inbox'
+    | '/api/os-integrations'
+    | '/api/os-media'
+    | '/api/os-media-copy'
+    | '/api/os-media-generate-image'
+    | '/api/os-media-generate-video'
+    | '/api/os-media-video-jobs'
+    | '/api/os-operations'
+    | '/api/password-recovery'
+    | '/api/password-reset'
+    | '/api/staff-bookings'
+    | '/api/staff-password-request'
+    | '/api/staff-password-reset'
+    | '/api/staff-session'
+    | '/ar/ai'
+    | '/ar/campaigns'
+    | '/ar/contact'
+    | '/ar/editor'
+    | '/ar/portfolio'
+    | '/ar/video'
+    | '/auth/$'
+    | '/en/ai'
+    | '/en/campaigns'
+    | '/en/contact'
+    | '/en/editor'
+    | '/en/portfolio'
+    | '/en/privacy'
+    | '/en/video'
+    | '/locations/$locationId'
     | '/os/analytics'
     | '/os/automations'
     | '/os/content'
@@ -139,11 +852,84 @@ export interface FileRouteTypes {
     | '/os/integrations'
     | '/os/media'
     | '/os/planner'
+    | '/services/$'
+    | '/staff/reset'
+    | '/tools/$'
+    | '/auth/'
     | '/os/'
+    | '/services/'
+    | '/tools/'
+    | '/api/cron/content-automation'
+    | '/api/internal/ai-media-e2e'
+    | '/api/internal/content-media-worker'
+    | '/api/internal/publish-worker'
+    | '/ar/auth/$'
+    | '/ar/tools/$'
+    | '/en/auth/$'
+    | '/en/services/$'
+    | '/en/tools/$'
+    | '/ar/auth/'
+    | '/ar/tools/'
+    | '/en/auth/'
+    | '/en/services/'
+    | '/en/tools/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
+    | '/ai'
+    | '/campaigns'
+    | '/contact'
+    | '/editor'
+    | '/en'
+    | '/forgot-password'
+    | '/gone'
+    | '/portfolio'
+    | '/privacy'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/staff'
+    | '/video'
+    | '/api/booking-request'
+    | '/api/business-settings'
+    | '/api/os-analytics'
+    | '/api/os-automation-status'
+    | '/api/os-command-center'
+    | '/api/os-content-generate'
+    | '/api/os-content-items'
+    | '/api/os-content-transition'
+    | '/api/os-content-update'
+    | '/api/os-crm'
+    | '/api/os-crm-update'
+    | '/api/os-inbox'
+    | '/api/os-integrations'
+    | '/api/os-media'
+    | '/api/os-media-copy'
+    | '/api/os-media-generate-image'
+    | '/api/os-media-generate-video'
+    | '/api/os-media-video-jobs'
+    | '/api/os-operations'
+    | '/api/password-recovery'
+    | '/api/password-reset'
+    | '/api/staff-bookings'
+    | '/api/staff-password-request'
+    | '/api/staff-password-reset'
+    | '/api/staff-session'
+    | '/ar/ai'
+    | '/ar/campaigns'
+    | '/ar/contact'
+    | '/ar/editor'
+    | '/ar/portfolio'
+    | '/ar/video'
+    | '/auth/$'
+    | '/en/ai'
+    | '/en/campaigns'
+    | '/en/contact'
+    | '/en/editor'
+    | '/en/portfolio'
+    | '/en/privacy'
+    | '/en/video'
+    | '/locations/$locationId'
     | '/os/analytics'
     | '/os/automations'
     | '/os/content'
@@ -152,12 +938,85 @@ export interface FileRouteTypes {
     | '/os/integrations'
     | '/os/media'
     | '/os/planner'
+    | '/services/$'
+    | '/staff/reset'
+    | '/tools/$'
+    | '/auth'
     | '/os'
+    | '/services'
+    | '/tools'
+    | '/api/cron/content-automation'
+    | '/api/internal/ai-media-e2e'
+    | '/api/internal/content-media-worker'
+    | '/api/internal/publish-worker'
+    | '/ar/auth/$'
+    | '/ar/tools/$'
+    | '/en/auth/$'
+    | '/en/services/$'
+    | '/en/tools/$'
+    | '/ar/auth'
+    | '/ar/tools'
+    | '/en/auth'
+    | '/en/services'
+    | '/en/tools'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/ai'
+    | '/campaigns'
+    | '/contact'
+    | '/editor'
+    | '/en'
+    | '/forgot-password'
+    | '/gone'
     | '/os'
+    | '/portfolio'
+    | '/privacy'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/staff'
+    | '/video'
+    | '/api/booking-request'
+    | '/api/business-settings'
+    | '/api/os-analytics'
+    | '/api/os-automation-status'
+    | '/api/os-command-center'
+    | '/api/os-content-generate'
+    | '/api/os-content-items'
+    | '/api/os-content-transition'
+    | '/api/os-content-update'
+    | '/api/os-crm'
+    | '/api/os-crm-update'
+    | '/api/os-inbox'
+    | '/api/os-integrations'
+    | '/api/os-media'
+    | '/api/os-media-copy'
+    | '/api/os-media-generate-image'
+    | '/api/os-media-generate-video'
+    | '/api/os-media-video-jobs'
+    | '/api/os-operations'
+    | '/api/password-recovery'
+    | '/api/password-reset'
+    | '/api/staff-bookings'
+    | '/api/staff-password-request'
+    | '/api/staff-password-reset'
+    | '/api/staff-session'
+    | '/ar/ai'
+    | '/ar/campaigns'
+    | '/ar/contact'
+    | '/ar/editor'
+    | '/ar/portfolio'
+    | '/ar/video'
+    | '/auth/$'
+    | '/en/ai'
+    | '/en/campaigns'
+    | '/en/contact'
+    | '/en/editor'
+    | '/en/portfolio'
+    | '/en/privacy'
+    | '/en/video'
+    | '/locations/$locationId'
     | '/os/analytics'
     | '/os/automations'
     | '/os/content'
@@ -166,22 +1025,101 @@ export interface FileRouteTypes {
     | '/os/integrations'
     | '/os/media'
     | '/os/planner'
+    | '/services/$'
+    | '/staff/reset'
+    | '/tools/$'
+    | '/auth/'
     | '/os/'
+    | '/services/'
+    | '/tools/'
+    | '/api/cron/content-automation'
+    | '/api/internal/ai-media-e2e'
+    | '/api/internal/content-media-worker'
+    | '/api/internal/publish-worker'
+    | '/ar/auth/$'
+    | '/ar/tools/$'
+    | '/en/auth/$'
+    | '/en/services/$'
+    | '/en/tools/$'
+    | '/ar/auth/'
+    | '/ar/tools/'
+    | '/en/auth/'
+    | '/en/services/'
+    | '/en/tools/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AiRoute: typeof AiRoute
+  CampaignsRoute: typeof CampaignsRoute
+  ContactRoute: typeof ContactRoute
+  EditorRoute: typeof EditorRoute
+  EnRoute: typeof EnRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GoneRoute: typeof GoneRoute
   OsRoute: typeof OsRouteWithChildren
+  PortfolioRoute: typeof PortfolioRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StaffRoute: typeof StaffRouteWithChildren
+  VideoRoute: typeof VideoRoute
+  ApiBookingRequestRoute: typeof ApiBookingRequestRoute
+  ApiBusinessSettingsRoute: typeof ApiBusinessSettingsRoute
+  ApiOsAnalyticsRoute: typeof ApiOsAnalyticsRoute
+  ApiOsAutomationStatusRoute: typeof ApiOsAutomationStatusRoute
+  ApiOsCommandCenterRoute: typeof ApiOsCommandCenterRoute
+  ApiOsContentGenerateRoute: typeof ApiOsContentGenerateRoute
+  ApiOsContentItemsRoute: typeof ApiOsContentItemsRoute
+  ApiOsContentTransitionRoute: typeof ApiOsContentTransitionRoute
+  ApiOsContentUpdateRoute: typeof ApiOsContentUpdateRoute
+  ApiOsCrmRoute: typeof ApiOsCrmRoute
+  ApiOsCrmUpdateRoute: typeof ApiOsCrmUpdateRoute
+  ApiOsInboxRoute: typeof ApiOsInboxRoute
+  ApiOsIntegrationsRoute: typeof ApiOsIntegrationsRoute
+  ApiOsMediaRoute: typeof ApiOsMediaRoute
+  ApiOsMediaCopyRoute: typeof ApiOsMediaCopyRoute
+  ApiOsMediaGenerateImageRoute: typeof ApiOsMediaGenerateImageRoute
+  ApiOsMediaGenerateVideoRoute: typeof ApiOsMediaGenerateVideoRoute
+  ApiOsMediaVideoJobsRoute: typeof ApiOsMediaVideoJobsRoute
+  ApiOsOperationsRoute: typeof ApiOsOperationsRoute
+  ApiPasswordRecoveryRoute: typeof ApiPasswordRecoveryRoute
+  ApiPasswordResetRoute: typeof ApiPasswordResetRoute
+  ApiStaffBookingsRoute: typeof ApiStaffBookingsRoute
+  ApiStaffPasswordRequestRoute: typeof ApiStaffPasswordRequestRoute
+  ApiStaffPasswordResetRoute: typeof ApiStaffPasswordResetRoute
+  ApiStaffSessionRoute: typeof ApiStaffSessionRoute
+  ArAiRoute: typeof ArAiRoute
+  ArCampaignsRoute: typeof ArCampaignsRoute
+  ArContactRoute: typeof ArContactRoute
+  ArEditorRoute: typeof ArEditorRoute
+  ArPortfolioRoute: typeof ArPortfolioRoute
+  ArVideoRoute: typeof ArVideoRoute
+  AuthSplatRoute: typeof AuthSplatRoute
+  LocationsLocationIdRoute: typeof LocationsLocationIdRoute
+  ServicesSplatRoute: typeof ServicesSplatRoute
+  ToolsSplatRoute: typeof ToolsSplatRoute
+  AuthIndexRoute: typeof AuthIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
+  ApiCronContentAutomationRoute: typeof ApiCronContentAutomationRoute
+  ApiInternalAiMediaE2eRoute: typeof ApiInternalAiMediaE2eRoute
+  ApiInternalContentMediaWorkerRoute: typeof ApiInternalContentMediaWorkerRoute
+  ApiInternalPublishWorkerRoute: typeof ApiInternalPublishWorkerRoute
+  ArAuthSplatRoute: typeof ArAuthSplatRoute
+  ArToolsSplatRoute: typeof ArToolsSplatRoute
+  ArAuthIndexRoute: typeof ArAuthIndexRoute
+  ArToolsIndexRoute: typeof ArToolsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/os': {
-      id: '/os'
-      path: '/os'
-      fullPath: '/os'
-      preLoaderRoute: typeof OsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -191,11 +1129,389 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/ai': {
+      id: '/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns': {
+      id: '/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof CampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editor': {
+      id: '/editor'
+      path: '/editor'
+      fullPath: '/editor'
+      preLoaderRoute: typeof EditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en': {
+      id: '/en'
+      path: '/en'
+      fullPath: '/en'
+      preLoaderRoute: typeof EnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gone': {
+      id: '/gone'
+      path: '/gone'
+      fullPath: '/gone'
+      preLoaderRoute: typeof GoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/os': {
+      id: '/os'
+      path: '/os'
+      fullPath: '/os'
+      preLoaderRoute: typeof OsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/video': {
+      id: '/video'
+      path: '/video'
+      fullPath: '/video'
+      preLoaderRoute: typeof VideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/booking-request': {
+      id: '/api/booking-request'
+      path: '/api/booking-request'
+      fullPath: '/api/booking-request'
+      preLoaderRoute: typeof ApiBookingRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/business-settings': {
+      id: '/api/business-settings'
+      path: '/api/business-settings'
+      fullPath: '/api/business-settings'
+      preLoaderRoute: typeof ApiBusinessSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-analytics': {
+      id: '/api/os-analytics'
+      path: '/api/os-analytics'
+      fullPath: '/api/os-analytics'
+      preLoaderRoute: typeof ApiOsAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-automation-status': {
+      id: '/api/os-automation-status'
+      path: '/api/os-automation-status'
+      fullPath: '/api/os-automation-status'
+      preLoaderRoute: typeof ApiOsAutomationStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-command-center': {
+      id: '/api/os-command-center'
+      path: '/api/os-command-center'
+      fullPath: '/api/os-command-center'
+      preLoaderRoute: typeof ApiOsCommandCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-content-generate': {
+      id: '/api/os-content-generate'
+      path: '/api/os-content-generate'
+      fullPath: '/api/os-content-generate'
+      preLoaderRoute: typeof ApiOsContentGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-content-items': {
+      id: '/api/os-content-items'
+      path: '/api/os-content-items'
+      fullPath: '/api/os-content-items'
+      preLoaderRoute: typeof ApiOsContentItemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-content-transition': {
+      id: '/api/os-content-transition'
+      path: '/api/os-content-transition'
+      fullPath: '/api/os-content-transition'
+      preLoaderRoute: typeof ApiOsContentTransitionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-content-update': {
+      id: '/api/os-content-update'
+      path: '/api/os-content-update'
+      fullPath: '/api/os-content-update'
+      preLoaderRoute: typeof ApiOsContentUpdateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-crm': {
+      id: '/api/os-crm'
+      path: '/api/os-crm'
+      fullPath: '/api/os-crm'
+      preLoaderRoute: typeof ApiOsCrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-crm-update': {
+      id: '/api/os-crm-update'
+      path: '/api/os-crm-update'
+      fullPath: '/api/os-crm-update'
+      preLoaderRoute: typeof ApiOsCrmUpdateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-inbox': {
+      id: '/api/os-inbox'
+      path: '/api/os-inbox'
+      fullPath: '/api/os-inbox'
+      preLoaderRoute: typeof ApiOsInboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-integrations': {
+      id: '/api/os-integrations'
+      path: '/api/os-integrations'
+      fullPath: '/api/os-integrations'
+      preLoaderRoute: typeof ApiOsIntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-media': {
+      id: '/api/os-media'
+      path: '/api/os-media'
+      fullPath: '/api/os-media'
+      preLoaderRoute: typeof ApiOsMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-media-copy': {
+      id: '/api/os-media-copy'
+      path: '/api/os-media-copy'
+      fullPath: '/api/os-media-copy'
+      preLoaderRoute: typeof ApiOsMediaCopyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-media-generate-image': {
+      id: '/api/os-media-generate-image'
+      path: '/api/os-media-generate-image'
+      fullPath: '/api/os-media-generate-image'
+      preLoaderRoute: typeof ApiOsMediaGenerateImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-media-generate-video': {
+      id: '/api/os-media-generate-video'
+      path: '/api/os-media-generate-video'
+      fullPath: '/api/os-media-generate-video'
+      preLoaderRoute: typeof ApiOsMediaGenerateVideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-media-video-jobs': {
+      id: '/api/os-media-video-jobs'
+      path: '/api/os-media-video-jobs'
+      fullPath: '/api/os-media-video-jobs'
+      preLoaderRoute: typeof ApiOsMediaVideoJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/os-operations': {
+      id: '/api/os-operations'
+      path: '/api/os-operations'
+      fullPath: '/api/os-operations'
+      preLoaderRoute: typeof ApiOsOperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/password-recovery': {
+      id: '/api/password-recovery'
+      path: '/api/password-recovery'
+      fullPath: '/api/password-recovery'
+      preLoaderRoute: typeof ApiPasswordRecoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/password-reset': {
+      id: '/api/password-reset'
+      path: '/api/password-reset'
+      fullPath: '/api/password-reset'
+      preLoaderRoute: typeof ApiPasswordResetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/staff-bookings': {
+      id: '/api/staff-bookings'
+      path: '/api/staff-bookings'
+      fullPath: '/api/staff-bookings'
+      preLoaderRoute: typeof ApiStaffBookingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/staff-password-request': {
+      id: '/api/staff-password-request'
+      path: '/api/staff-password-request'
+      fullPath: '/api/staff-password-request'
+      preLoaderRoute: typeof ApiStaffPasswordRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/staff-password-reset': {
+      id: '/api/staff-password-reset'
+      path: '/api/staff-password-reset'
+      fullPath: '/api/staff-password-reset'
+      preLoaderRoute: typeof ApiStaffPasswordResetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/staff-session': {
+      id: '/api/staff-session'
+      path: '/api/staff-session'
+      fullPath: '/api/staff-session'
+      preLoaderRoute: typeof ApiStaffSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/ai': {
+      id: '/ar/ai'
+      path: '/ar/ai'
+      fullPath: '/ar/ai'
+      preLoaderRoute: typeof ArAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/campaigns': {
+      id: '/ar/campaigns'
+      path: '/ar/campaigns'
+      fullPath: '/ar/campaigns'
+      preLoaderRoute: typeof ArCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/contact': {
+      id: '/ar/contact'
+      path: '/ar/contact'
+      fullPath: '/ar/contact'
+      preLoaderRoute: typeof ArContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/editor': {
+      id: '/ar/editor'
+      path: '/ar/editor'
+      fullPath: '/ar/editor'
+      preLoaderRoute: typeof ArEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/portfolio': {
+      id: '/ar/portfolio'
+      path: '/ar/portfolio'
+      fullPath: '/ar/portfolio'
+      preLoaderRoute: typeof ArPortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/video': {
+      id: '/ar/video'
+      path: '/ar/video'
+      fullPath: '/ar/video'
+      preLoaderRoute: typeof ArVideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/$': {
+      id: '/auth/$'
+      path: '/auth/$'
+      fullPath: '/auth/$'
+      preLoaderRoute: typeof AuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/ai': {
+      id: '/en/ai'
+      path: '/ai'
+      fullPath: '/en/ai'
+      preLoaderRoute: typeof EnAiRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/campaigns': {
+      id: '/en/campaigns'
+      path: '/campaigns'
+      fullPath: '/en/campaigns'
+      preLoaderRoute: typeof EnCampaignsRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/contact': {
+      id: '/en/contact'
+      path: '/contact'
+      fullPath: '/en/contact'
+      preLoaderRoute: typeof EnContactRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/editor': {
+      id: '/en/editor'
+      path: '/editor'
+      fullPath: '/en/editor'
+      preLoaderRoute: typeof EnEditorRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/portfolio': {
+      id: '/en/portfolio'
+      path: '/portfolio'
+      fullPath: '/en/portfolio'
+      preLoaderRoute: typeof EnPortfolioRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/privacy': {
+      id: '/en/privacy'
+      path: '/privacy'
+      fullPath: '/en/privacy'
+      preLoaderRoute: typeof EnPrivacyRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/video': {
+      id: '/en/video'
+      path: '/video'
+      fullPath: '/en/video'
+      preLoaderRoute: typeof EnVideoRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/locations/$locationId': {
+      id: '/locations/$locationId'
+      path: '/locations/$locationId'
+      fullPath: '/locations/$locationId'
+      preLoaderRoute: typeof LocationsLocationIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/os/': {
@@ -205,46 +1521,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OsIndexRouteImport
       parentRoute: typeof OsRoute
     }
-    '/os/planner': {
-      id: '/os/planner'
-      path: '/planner'
-      fullPath: '/os/planner'
-      preLoaderRoute: typeof OsPlannerRouteImport
-      parentRoute: typeof OsRoute
-    }
-    '/os/media': {
-      id: '/os/media'
-      path: '/media'
-      fullPath: '/os/media'
-      preLoaderRoute: typeof OsMediaRouteImport
-      parentRoute: typeof OsRoute
-    }
-    '/os/integrations': {
-      id: '/os/integrations'
-      path: '/integrations'
-      fullPath: '/os/integrations'
-      preLoaderRoute: typeof OsIntegrationsRouteImport
-      parentRoute: typeof OsRoute
-    }
-    '/os/inbox': {
-      id: '/os/inbox'
-      path: '/inbox'
-      fullPath: '/os/inbox'
-      preLoaderRoute: typeof OsInboxRouteImport
-      parentRoute: typeof OsRoute
-    }
-    '/os/crm': {
-      id: '/os/crm'
-      path: '/crm'
-      fullPath: '/os/crm'
-      preLoaderRoute: typeof OsCrmRouteImport
-      parentRoute: typeof OsRoute
-    }
-    '/os/content': {
-      id: '/os/content'
-      path: '/content'
-      fullPath: '/os/content'
-      preLoaderRoute: typeof OsContentRouteImport
+    '/os/analytics': {
+      id: '/os/analytics'
+      path: '/analytics'
+      fullPath: '/os/analytics'
+      preLoaderRoute: typeof OsAnalyticsRouteImport
       parentRoute: typeof OsRoute
     }
     '/os/automations': {
@@ -254,15 +1535,217 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OsAutomationsRouteImport
       parentRoute: typeof OsRoute
     }
-    '/os/analytics': {
-      id: '/os/analytics'
-      path: '/analytics'
-      fullPath: '/os/analytics'
-      preLoaderRoute: typeof OsAnalyticsRouteImport
+    '/os/content': {
+      id: '/os/content'
+      path: '/content'
+      fullPath: '/os/content'
+      preLoaderRoute: typeof OsContentRouteImport
       parentRoute: typeof OsRoute
+    }
+    '/os/crm': {
+      id: '/os/crm'
+      path: '/crm'
+      fullPath: '/os/crm'
+      preLoaderRoute: typeof OsCrmRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/inbox': {
+      id: '/os/inbox'
+      path: '/inbox'
+      fullPath: '/os/inbox'
+      preLoaderRoute: typeof OsInboxRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/integrations': {
+      id: '/os/integrations'
+      path: '/integrations'
+      fullPath: '/os/integrations'
+      preLoaderRoute: typeof OsIntegrationsRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/media': {
+      id: '/os/media'
+      path: '/media'
+      fullPath: '/os/media'
+      preLoaderRoute: typeof OsMediaRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/os/planner': {
+      id: '/os/planner'
+      path: '/planner'
+      fullPath: '/os/planner'
+      preLoaderRoute: typeof OsPlannerRouteImport
+      parentRoute: typeof OsRoute
+    }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/$': {
+      id: '/services/$'
+      path: '/services/$'
+      fullPath: '/services/$'
+      preLoaderRoute: typeof ServicesSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff/reset': {
+      id: '/staff/reset'
+      path: '/reset'
+      fullPath: '/staff/reset'
+      preLoaderRoute: typeof StaffResetRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/tools/': {
+      id: '/tools/'
+      path: '/tools'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/$': {
+      id: '/tools/$'
+      path: '/tools/$'
+      fullPath: '/tools/$'
+      preLoaderRoute: typeof ToolsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/content-automation': {
+      id: '/api/cron/content-automation'
+      path: '/api/cron/content-automation'
+      fullPath: '/api/cron/content-automation'
+      preLoaderRoute: typeof ApiCronContentAutomationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/internal/ai-media-e2e': {
+      id: '/api/internal/ai-media-e2e'
+      path: '/api/internal/ai-media-e2e'
+      fullPath: '/api/internal/ai-media-e2e'
+      preLoaderRoute: typeof ApiInternalAiMediaE2eRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/internal/content-media-worker': {
+      id: '/api/internal/content-media-worker'
+      path: '/api/internal/content-media-worker'
+      fullPath: '/api/internal/content-media-worker'
+      preLoaderRoute: typeof ApiInternalContentMediaWorkerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/internal/publish-worker': {
+      id: '/api/internal/publish-worker'
+      path: '/api/internal/publish-worker'
+      fullPath: '/api/internal/publish-worker'
+      preLoaderRoute: typeof ApiInternalPublishWorkerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/auth/': {
+      id: '/ar/auth/'
+      path: '/ar/auth'
+      fullPath: '/ar/auth/'
+      preLoaderRoute: typeof ArAuthIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/auth/$': {
+      id: '/ar/auth/$'
+      path: '/ar/auth/$'
+      fullPath: '/ar/auth/$'
+      preLoaderRoute: typeof ArAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/tools/': {
+      id: '/ar/tools/'
+      path: '/ar/tools'
+      fullPath: '/ar/tools/'
+      preLoaderRoute: typeof ArToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar/tools/$': {
+      id: '/ar/tools/$'
+      path: '/ar/tools/$'
+      fullPath: '/ar/tools/$'
+      preLoaderRoute: typeof ArToolsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/auth/': {
+      id: '/en/auth/'
+      path: '/auth'
+      fullPath: '/en/auth/'
+      preLoaderRoute: typeof EnAuthIndexRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/auth/$': {
+      id: '/en/auth/$'
+      path: '/auth/$'
+      fullPath: '/en/auth/$'
+      preLoaderRoute: typeof EnAuthSplatRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/services/': {
+      id: '/en/services/'
+      path: '/services'
+      fullPath: '/en/services/'
+      preLoaderRoute: typeof EnServicesIndexRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/services/$': {
+      id: '/en/services/$'
+      path: '/services/$'
+      fullPath: '/en/services/$'
+      preLoaderRoute: typeof EnServicesSplatRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/tools/': {
+      id: '/en/tools/'
+      path: '/tools'
+      fullPath: '/en/tools/'
+      preLoaderRoute: typeof EnToolsIndexRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/tools/$': {
+      id: '/en/tools/$'
+      path: '/tools/$'
+      fullPath: '/en/tools/$'
+      preLoaderRoute: typeof EnToolsSplatRouteImport
+      parentRoute: typeof EnRoute
     }
   }
 }
+
+interface EnRouteChildren {
+  EnAiRoute: typeof EnAiRoute
+  EnCampaignsRoute: typeof EnCampaignsRoute
+  EnContactRoute: typeof EnContactRoute
+  EnEditorRoute: typeof EnEditorRoute
+  EnPortfolioRoute: typeof EnPortfolioRoute
+  EnPrivacyRoute: typeof EnPrivacyRoute
+  EnVideoRoute: typeof EnVideoRoute
+  EnAuthSplatRoute: typeof EnAuthSplatRoute
+  EnServicesSplatRoute: typeof EnServicesSplatRoute
+  EnToolsSplatRoute: typeof EnToolsSplatRoute
+  EnAuthIndexRoute: typeof EnAuthIndexRoute
+  EnServicesIndexRoute: typeof EnServicesIndexRoute
+  EnToolsIndexRoute: typeof EnToolsIndexRoute
+}
+
+const EnRouteChildren: EnRouteChildren = {
+  EnAiRoute: EnAiRoute,
+  EnCampaignsRoute: EnCampaignsRoute,
+  EnContactRoute: EnContactRoute,
+  EnEditorRoute: EnEditorRoute,
+  EnPortfolioRoute: EnPortfolioRoute,
+  EnPrivacyRoute: EnPrivacyRoute,
+  EnVideoRoute: EnVideoRoute,
+  EnAuthSplatRoute: EnAuthSplatRoute,
+  EnServicesSplatRoute: EnServicesSplatRoute,
+  EnToolsSplatRoute: EnToolsSplatRoute,
+  EnAuthIndexRoute: EnAuthIndexRoute,
+  EnServicesIndexRoute: EnServicesIndexRoute,
+  EnToolsIndexRoute: EnToolsIndexRoute,
+}
+
+const EnRouteWithChildren = EnRoute._addFileChildren(EnRouteChildren)
 
 interface OsRouteChildren {
   OsAnalyticsRoute: typeof OsAnalyticsRoute
@@ -290,10 +1773,79 @@ const OsRouteChildren: OsRouteChildren = {
 
 const OsRouteWithChildren = OsRoute._addFileChildren(OsRouteChildren)
 
+interface StaffRouteChildren {
+  StaffResetRoute: typeof StaffResetRoute
+}
+
+const StaffRouteChildren: StaffRouteChildren = {
+  StaffResetRoute: StaffResetRoute,
+}
+
+const StaffRouteWithChildren = StaffRoute._addFileChildren(StaffRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AiRoute: AiRoute,
+  CampaignsRoute: CampaignsRoute,
+  ContactRoute: ContactRoute,
+  EditorRoute: EditorRoute,
+  EnRoute: EnRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  GoneRoute: GoneRoute,
   OsRoute: OsRouteWithChildren,
+  PortfolioRoute: PortfolioRoute,
+  PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StaffRoute: StaffRouteWithChildren,
+  VideoRoute: VideoRoute,
+  ApiBookingRequestRoute: ApiBookingRequestRoute,
+  ApiBusinessSettingsRoute: ApiBusinessSettingsRoute,
+  ApiOsAnalyticsRoute: ApiOsAnalyticsRoute,
+  ApiOsAutomationStatusRoute: ApiOsAutomationStatusRoute,
+  ApiOsCommandCenterRoute: ApiOsCommandCenterRoute,
+  ApiOsContentGenerateRoute: ApiOsContentGenerateRoute,
+  ApiOsContentItemsRoute: ApiOsContentItemsRoute,
+  ApiOsContentTransitionRoute: ApiOsContentTransitionRoute,
+  ApiOsContentUpdateRoute: ApiOsContentUpdateRoute,
+  ApiOsCrmRoute: ApiOsCrmRoute,
+  ApiOsCrmUpdateRoute: ApiOsCrmUpdateRoute,
+  ApiOsInboxRoute: ApiOsInboxRoute,
+  ApiOsIntegrationsRoute: ApiOsIntegrationsRoute,
+  ApiOsMediaRoute: ApiOsMediaRoute,
+  ApiOsMediaCopyRoute: ApiOsMediaCopyRoute,
+  ApiOsMediaGenerateImageRoute: ApiOsMediaGenerateImageRoute,
+  ApiOsMediaGenerateVideoRoute: ApiOsMediaGenerateVideoRoute,
+  ApiOsMediaVideoJobsRoute: ApiOsMediaVideoJobsRoute,
+  ApiOsOperationsRoute: ApiOsOperationsRoute,
+  ApiPasswordRecoveryRoute: ApiPasswordRecoveryRoute,
+  ApiPasswordResetRoute: ApiPasswordResetRoute,
+  ApiStaffBookingsRoute: ApiStaffBookingsRoute,
+  ApiStaffPasswordRequestRoute: ApiStaffPasswordRequestRoute,
+  ApiStaffPasswordResetRoute: ApiStaffPasswordResetRoute,
+  ApiStaffSessionRoute: ApiStaffSessionRoute,
+  ArAiRoute: ArAiRoute,
+  ArCampaignsRoute: ArCampaignsRoute,
+  ArContactRoute: ArContactRoute,
+  ArEditorRoute: ArEditorRoute,
+  ArPortfolioRoute: ArPortfolioRoute,
+  ArVideoRoute: ArVideoRoute,
+  AuthSplatRoute: AuthSplatRoute,
+  LocationsLocationIdRoute: LocationsLocationIdRoute,
+  ServicesSplatRoute: ServicesSplatRoute,
+  ToolsSplatRoute: ToolsSplatRoute,
+  AuthIndexRoute: AuthIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
+  ApiCronContentAutomationRoute: ApiCronContentAutomationRoute,
+  ApiInternalAiMediaE2eRoute: ApiInternalAiMediaE2eRoute,
+  ApiInternalContentMediaWorkerRoute: ApiInternalContentMediaWorkerRoute,
+  ApiInternalPublishWorkerRoute: ApiInternalPublishWorkerRoute,
+  ArAuthSplatRoute: ArAuthSplatRoute,
+  ArToolsSplatRoute: ArToolsSplatRoute,
+  ArAuthIndexRoute: ArAuthIndexRoute,
+  ArToolsIndexRoute: ArToolsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
