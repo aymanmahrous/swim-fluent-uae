@@ -49,7 +49,7 @@ export function ConsentBanner() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 start-4 z-[70] inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-xs font-black shadow-xl transition hover:border-primary"
+        className="fixed bottom-24 start-4 z-[70] inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-xs font-black shadow-xl transition hover:border-primary md:bottom-4"
         aria-label={text.settings}
       >
         <Settings2 className="h-4 w-4" />
@@ -60,7 +60,7 @@ export function ConsentBanner() {
 
   return (
     <section
-      className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-w-3xl rounded-3xl border border-border bg-background/95 p-4 shadow-2xl backdrop-blur-xl sm:p-5"
+      className="fixed inset-x-3 bottom-24 z-[70] mx-auto max-w-3xl rounded-3xl border border-border bg-background/95 p-4 shadow-2xl backdrop-blur-xl sm:p-5 md:bottom-3"
       aria-label={text.title}
       role="region"
     >
