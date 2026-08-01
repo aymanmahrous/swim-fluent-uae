@@ -3,7 +3,7 @@ import { Mail, ShieldCheck } from "lucide-react";
 
 type PrivacyLanguage = "ar" | "en";
 
-const PRIVACY_EMAIL = "relaxfix2026@gmail.com";
+const PRIVACY_EMAIL = "swimfluentprivacy@gmail.com";
 
 const copy = {
   ar: {

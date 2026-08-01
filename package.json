@@ -27,6 +27,10 @@
     "verify:supabase-server-key": "node scripts/verify-supabase-server-key-compatibility.mjs",
     "verify:password-recovery": "node scripts/verify-password-recovery.mjs",
     "verify:pwa-installability": "node scripts/verify-pwa-installability.mjs",
+    "verify:consent-tests": "node scripts/verify-consent-tests.mjs",
+    "verify:no-pii-audit": "node scripts/verify-no-pii-audit.mjs",
+    "verify:event-tests": "node scripts/verify-event-tests.mjs",
+    "verify:mobile-consent": "node scripts/verify-mobile-consent.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
