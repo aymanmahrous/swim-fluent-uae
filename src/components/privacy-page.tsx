@@ -3,6 +3,8 @@ import { Mail, ShieldCheck } from "lucide-react";
 
 type PrivacyLanguage = "ar" | "en";
 
+const PRIVACY_EMAIL = "relaxfix2026@gmail.com";
+
 const copy = {
   ar: {
     title: "معلومات الخصوصية",
@@ -41,6 +43,8 @@ const copy = {
 export function PrivacyPage({ language }: { language: PrivacyLanguage }) {
   const text = copy[language];
   const home = language === "ar" ? "/" : "/en";
+  const privacyMailto = `mailto:${PRIVACY_EMAIL}?subject=Privacy%20request%20-%20Relax%20Fix%20UAE`;
+
   return (
     <main className="min-h-screen bg-muted/40 px-5 py-12 sm:px-8 sm:py-20">
       <article className="mx-auto max-w-4xl rounded-[2rem] border border-border bg-card p-6 shadow-elegant sm:p-10">
@@ -61,8 +65,8 @@ export function PrivacyPage({ language }: { language: PrivacyLanguage }) {
         <section className="mt-5 rounded-2xl bg-deep p-5 text-white">
           <h2 className="text-lg font-black">{language === "ar" ? "التواصل" : "Contact"}</h2>
           <p className="mt-2 leading-7 text-white/75">{text.contact}</p>
-          <a href="mailto:swimmingayman@gmail.com?subject=Privacy%20request%20-%20Relax%20Fix%20UAE" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-black text-deep">
-            <Mail className="h-4 w-4" aria-hidden="true" /> {text.email}: swimmingayman@gmail.com
+          <a href={privacyMailto} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-black text-deep">
+            <Mail className="h-4 w-4" aria-hidden="true" /> {text.email}: {PRIVACY_EMAIL}
           </a>
         </section>
         <p className="mt-6 rounded-xl bg-muted p-4 text-sm leading-6 text-muted-foreground">{text.notice}</p>
