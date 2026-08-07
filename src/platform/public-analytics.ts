@@ -10,12 +10,20 @@ export type PublicAnalyticsParameters = {
   language?: "ar" | "en";
   source?: "website" | "chatbot" | "booking-success";
   cta_id?: PublicCtaId;
+  lead_source?: string;
+  lead_medium?: string;
+  lead_campaign?: string;
+  has_campaign_attribution?: boolean;
 };
 
 const ALLOWED_PARAMETER_KEYS = new Set<keyof PublicAnalyticsParameters>([
   "language",
   "source",
   "cta_id",
+  "lead_source",
+  "lead_medium",
+  "lead_campaign",
+  "has_campaign_attribution",
 ]);
 const ALLOWED_LANGUAGES = new Set(["ar", "en"]);
 const ALLOWED_SOURCES = new Set(["website", "chatbot", "booking-success"]);
@@ -213,7 +221,9 @@ function sanitizeParameters(parameters: PublicAnalyticsParameters): PublicAnalyt
   }
 
   const safeParameters = Object.fromEntries(
-    entries.filter(([, value]) => typeof value === "string" && value.length <= 80),
+    entries.filter(([, value]) =>
+      (typeof value === "string" && value.length <= 150) || typeof value === "boolean",
+    ),
   ) as PublicAnalyticsParameters;
 
   if (safeParameters.language && !ALLOWED_LANGUAGES.has(safeParameters.language)) {
@@ -226,7 +236,7 @@ function sanitizeParameters(parameters: PublicAnalyticsParameters): PublicAnalyt
 
   if (
     Object.values(safeParameters).some((value) =>
-      FORBIDDEN_VALUE_PATTERNS.some((pattern) => pattern.test(value ?? "")),
+      typeof value === "string" && FORBIDDEN_VALUE_PATTERNS.some((pattern) => pattern.test(value)),
     )
   ) {
     return null;
