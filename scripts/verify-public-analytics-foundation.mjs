@@ -27,8 +27,13 @@ const requiredFragments = [
   '"language"',
   '"source"',
   '"cta_id"',
+  '"lead_source"',
+  '"lead_medium"',
+  '"lead_campaign"',
+  '"has_campaign_attribution"',
   "FORBIDDEN_VALUE_PATTERNS",
-  "typeof value === \"string\" && value.length <= 80",
+  'typeof value === "string" && value.length <= 150',
+  'typeof value === "boolean"',
 ];
 
 for (const fragment of requiredFragments) {
