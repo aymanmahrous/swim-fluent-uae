@@ -1,6 +1,9 @@
 import fs from "node:fs";
 
 const source = fs.readFileSync("src/platform/public-attribution.ts", "utf8");
+const consentBridge = fs.readFileSync("src/components/analytics-consent-bridge.tsx", "utf8");
+const analytics = fs.readFileSync("src/platform/public-analytics.ts", "utf8");
+const ctaEvents = fs.readFileSync("src/platform/public-cta-events.ts", "utf8");
 
 const required = [
   "utm_source",
@@ -25,16 +28,21 @@ const required = [
   "term: 150",
   "toLowerCase()",
   "URLSearchParams",
+  "ATTRIBUTION_WINDOW_MS = 30 * 24 * 60 * 60 * 1000",
+  "firstTouch",
+  "latestTouch",
+  "capturePublicAttributionAfterConsent",
+  "getLatestPublicAttribution",
+  "localStorage",
 ];
 
 for (const token of required) {
   if (!source.includes(token)) {
-    throw new Error(`Public attribution foundation is missing required contract token: ${token}`);
+    throw new Error(`Public attribution implementation is missing required contract token: ${token}`);
   }
 }
 
 const forbidden = [
-  "localStorage",
   "sessionStorage",
   "document.cookie",
   "indexedDB",
@@ -44,10 +52,24 @@ const forbidden = [
 
 for (const token of forbidden) {
   if (source.includes(token)) {
-    throw new Error(`Public attribution foundation must remain non-persistent and write-free: ${token}`);
+    throw new Error(`Public attribution must not use disallowed persistence or external writes: ${token}`);
+  }
+}
+
+if (!consentBridge.includes("capturePublicAttributionAfterConsent(window.location.search)")) {
+  throw new Error("UTM attribution must only be captured after affirmative analytics consent.");
+}
+
+if (!consentBridge.includes("clearPublicAttribution()")) {
+  throw new Error("Rejecting analytics consent must clear stored attribution.");
+}
+
+for (const token of ["lead_source", "lead_medium", "lead_campaign", "has_campaign_attribution"]) {
+  if (!analytics.includes(token) || !ctaEvents.includes(token)) {
+    throw new Error(`Analytics conversion attribution wiring is missing: ${token}`);
   }
 }
 
 console.log(
-  "Public attribution foundation verified: normalized UTM allow-list, click-ID removal, PII rejection, control-character stripping, bounded lengths, and no persistence or external writes.",
+  "Public attribution verified: consent-gated 30-day first/latest-touch UTM persistence, click-ID removal, PII rejection, bounded values, and conversion-event attribution wiring.",
 );
