@@ -30,6 +30,8 @@ const FORBIDDEN_VALUE_PATTERNS = [
 const PREVIEW_HOST_SUFFIX = ".vercel.app";
 const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";
 const previewMeasurementId = import.meta.env.VITE_PREVIEW_GA4_MEASUREMENT_ID?.trim();
+const productionAnalyticsEnabled = import.meta.env.VITE_ENABLE_GA4 === "true";
+const productionMeasurementId = import.meta.env.VITE_GA4_MEASUREMENT_ID?.trim();
 const deploymentEnvironment = import.meta.env.VITE_DEPLOYMENT_ENV;
 
 declare global {
@@ -55,6 +57,42 @@ function isApprovedPreviewHost(hostname: string): boolean {
 function previewRuntimeAllowed(): boolean {
   if (typeof window === "undefined") return false;
   return deploymentEnvironment === "preview" && isApprovedPreviewHost(window.location.hostname);
+}
+
+function productionRuntimeAllowed(): boolean {
+  return deploymentEnvironment === "production";
+}
+
+function activeAnalyticsConfiguration(): {
+  measurementId: string;
+  debugMode: boolean;
+  scriptMarker: "gtag-preview" | "gtag-production";
+} | null {
+  if (
+    productionAnalyticsEnabled &&
+    validMeasurementId(productionMeasurementId) &&
+    productionRuntimeAllowed()
+  ) {
+    return {
+      measurementId: productionMeasurementId,
+      debugMode: false,
+      scriptMarker: "gtag-production",
+    };
+  }
+
+  if (
+    previewAnalyticsEnabled &&
+    validMeasurementId(previewMeasurementId) &&
+    previewRuntimeAllowed()
+  ) {
+    return {
+      measurementId: previewMeasurementId,
+      debugMode: true,
+      scriptMarker: "gtag-preview",
+    };
+  }
+
+  return null;
 }
 
 function ensureGtag(): boolean {
@@ -126,29 +164,40 @@ export function previewAnalyticsRuntimeReady(): boolean {
   );
 }
 
+export function productionAnalyticsRuntimeReady(): boolean {
+  return (
+    productionAnalyticsEnabled &&
+    validMeasurementId(productionMeasurementId) &&
+    productionRuntimeAllowed()
+  );
+}
+
 function initializeAnalytics(): boolean {
   if (initialized) return true;
-  if (!consentGranted || !previewAnalyticsRuntimeReady()) return false;
+  if (!consentGranted) return false;
+
+  const configuration = activeAnalyticsConfiguration();
+  if (!configuration) return false;
 
   if (!configureDefaultConsent() || !window.gtag || typeof document === "undefined") return false;
 
   window.gtag("js", new Date());
-  window.gtag("config", previewMeasurementId, {
+  window.gtag("config", configuration.measurementId, {
     send_page_view: false,
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
-    debug_mode: true,
+    debug_mode: configuration.debugMode,
   });
 
   const existingScript = document.querySelector<HTMLScriptElement>(
-    'script[data-relaxfix-analytics="gtag-preview"]',
+    `script[data-relaxfix-analytics="${configuration.scriptMarker}"]`,
   );
 
   if (!existingScript) {
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(previewMeasurementId)}`;
-    script.dataset.relaxfixAnalytics = "gtag-preview";
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(configuration.measurementId)}`;
+    script.dataset.relaxfixAnalytics = configuration.scriptMarker;
     document.head.appendChild(script);
   }
 
