@@ -18,6 +18,7 @@ import {
   type ChatbotCta,
 } from "../platform/chatbot-knowledge";
 import { TRAINING_LOCATIONS } from "../platform/public-business-config";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 
 type Goal = "learn" | "confidence" | "performance";
 type Learner = "child" | "adult";
@@ -282,12 +283,7 @@ export function SalesAssistant() {
         ? "مرحبًا، أريد المساعدة في اختيار البرنامج المناسب."
         : "Hello, I would like help choosing the right program.";
 
-    track("sales_assistant_whatsapp_clicked", {
-      language: lang,
-      learner: state.learner ?? "unknown",
-      goal: state.goal ?? "unknown",
-      location: state.location ?? "unknown",
-    });
+    emitPublicCtaClick("floating_whatsapp", lang);
     window.open(businessWhatsAppUrl(settings, summary), "_blank", "noopener,noreferrer");
   }
 
@@ -303,11 +299,7 @@ export function SalesAssistant() {
   }
 
   function trackWhatsAppHandoff() {
-    track("sales_assistant_whatsapp_clicked", {
-      language: answer?.language ?? lang,
-      intent: answer?.intent ?? "unknown",
-      source: "knowledge-answer",
-    });
+    emitPublicCtaClick("floating_whatsapp", answer?.language ?? lang);
   }
 
   return (

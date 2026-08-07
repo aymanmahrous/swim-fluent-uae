@@ -3,6 +3,14 @@ import { readFileSync } from "node:fs";
 const analyticsSource = readFileSync("src/platform/public-analytics.ts", "utf8");
 const eventSource = readFileSync("src/platform/public-cta-events.ts", "utf8");
 const registrySource = readFileSync("src/platform/public-cta-registry.ts", "utf8");
+const whatsappSurfaceContracts = [
+  ["src/routes/__root.tsx", 'emitPublicCtaClick("footer_whatsapp", lang)'],
+  ["src/components/mobile-conversion-bar.tsx", 'emitPublicCtaClick("floating_whatsapp", lang)'],
+  ["src/components/revenue-sections.tsx", 'emitPublicCtaClick("booking_section_whatsapp", lang)'],
+  ["src/components/public-home.tsx", 'emitPublicCtaClick("booking_section_whatsapp", lang)'],
+  ["src/components/sales-assistant.tsx", 'emitPublicCtaClick("floating_whatsapp"'],
+  ["src/routes/locations.$locationId.tsx", 'emitPublicCtaClick("booking_section_whatsapp", "ar")'],
+];
 
 const requiredEventFragments = [
   "emitPublicCtaClick",
@@ -90,17 +98,37 @@ if (!registrySource.includes('status: "reserved"')) {
   throw new Error("public CTA events: reserved CTA protection is missing from registry");
 }
 
+if (!registrySource.includes('floating_whatsapp: { channel: "whatsapp", status: "present" }')) {
+  throw new Error("public CTA events: the rendered floating WhatsApp CTA must be enabled");
+}
+
+for (const [path, expectedCall] of whatsappSurfaceContracts) {
+  const surfaceSource = readFileSync(path, "utf8");
+  if (!surfaceSource.includes(expectedCall)) {
+    throw new Error(
+      `public CTA events: visible WhatsApp surface is not wired through emitPublicCtaClick: ${path}`,
+    );
+  }
+}
+
 const conversationStart = eventSource.indexOf('trackPublicEvent("conversation_start"');
 if (conversationStart === -1) {
   throw new Error("public CTA events: conversation_start contract is missing");
 }
-const conversationEnd = eventSource.indexOf("if (emitted) startedConversations.add", conversationStart);
+const conversationEnd = eventSource.indexOf(
+  "if (emitted) startedConversations.add",
+  conversationStart,
+);
 const conversationBlock = eventSource.slice(conversationStart, conversationEnd);
 if (conversationBlock.includes("cta_id") || conversationBlock.includes("whatsapp")) {
   throw new Error("public CTA events: conversation_start must not carry a CTA or WhatsApp payload");
 }
 if (!conversationBlock.includes("...currentCampaignParameters()")) {
-  throw new Error("public CTA events: conversation_start must carry only approved campaign attribution enrichment");
+  throw new Error(
+    "public CTA events: conversation_start must carry only approved campaign attribution enrichment",
+  );
 }
 
-console.log("Public CTA event contracts, attribution enrichment, and deduplication verification passed.");
+console.log(
+  "Public CTA event contracts, attribution enrichment, and deduplication verification passed.",
+);

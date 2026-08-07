@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { TRAINING_LOCATIONS, operationalWhatsAppUrl } from "../platform/public-business-config";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 import { SITE_URL } from "../platform/public-seo";
 
 const copy = {
@@ -83,7 +84,11 @@ function LocalLocationPage() {
       <h1 className="text-3xl font-bold tracking-tight">{copy.ar.heading(location.displayName)}</h1>
       <p className="mt-5 text-lg leading-8">{copy.ar.body(location.displayName)}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <a className="rounded-lg border px-5 py-3 font-semibold" href={whatsapp}>
+        <a
+          className="rounded-lg border px-5 py-3 font-semibold"
+          href={whatsapp}
+          onClick={() => emitPublicCtaClick("booking_section_whatsapp", "ar")}
+        >
           {copy.ar.cta}
         </a>
         <a

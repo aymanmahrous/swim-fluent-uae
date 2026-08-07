@@ -9,18 +9,13 @@ import {
   operationalWhatsAppUrl,
   type TrainingLocationStatus,
 } from "../platform/public-business-config";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 
 const statusCopy: Record<TrainingLocationStatus, { ar: string; en: string; className: string }> = {
   available: { ar: "متاح", en: "Available", className: "bg-emerald-500/10 text-emerald-700" },
   "limited-availability": { ar: "توفر محدود", en: "Limited availability", className: "bg-amber-500/10 text-amber-800" },
   "temporarily-unavailable": { ar: "غير متاح مؤقتًا", en: "Temporarily unavailable", className: "bg-slate-500/10 text-slate-700" },
 };
-
-function trackWhatsApp(ctaId: string) {
-  window.dispatchEvent(new CustomEvent("relaxfix:analytics-event", {
-    detail: { eventName: "whatsapp_click", ctaId, source: "website" },
-  }));
-}
 
 export function RevenueSections() {
   const { lang } = useLang();
@@ -126,7 +121,7 @@ export function RevenueSections() {
                 <div className="mt-6 grid gap-2">
                   <a href={location.shortUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black hover:bg-muted">{copy.maps} <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>
                   <a href="#book" className="inline-flex items-center justify-center rounded-xl bg-deep px-4 py-3 text-sm font-black text-white">{copy.assessment}</a>
-                  <a href={operationalWhatsAppUrl(message)} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp(`location_${location.id}`)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-800"><MessageCircle className="h-4 w-4" aria-hidden="true" /> {copy.whatsapp}</a>
+                  <a href={operationalWhatsAppUrl(message)} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-800"><MessageCircle className="h-4 w-4" aria-hidden="true" /> {copy.whatsapp}</a>
                 </div>
               </article>
             );
@@ -146,7 +141,7 @@ export function RevenueSections() {
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{copy.nonMedical}</p>
           </div>
           <div className="grid gap-3">
-            <a href={operationalWhatsAppUrl()} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("contact_section")} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 font-black"><MessageCircle className="h-6 w-6 text-emerald-600" aria-hidden="true" /><span>{copy.whatsapp}: <span dir="ltr">{WHATSAPP_DISPLAY}</span></span></a>
+            <a href={operationalWhatsAppUrl()} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 font-black"><MessageCircle className="h-6 w-6 text-emerald-600" aria-hidden="true" /><span>{copy.whatsapp}: <span dir="ltr">{WHATSAPP_DISPLAY}</span></span></a>
             <a href={`mailto:${OPERATIONAL_EMAIL}`} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 font-black"><Mail className="h-6 w-6 text-primary" aria-hidden="true" /><span>{copy.email}: {OPERATIONAL_EMAIL}</span></a>
           </div>
         </div>

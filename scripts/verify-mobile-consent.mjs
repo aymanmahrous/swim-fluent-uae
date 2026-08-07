@@ -61,9 +61,9 @@ if (!rootSource.includes("<AnalyticsConsentBridge />")) {
   throw new Error("mobile-consent: AnalyticsConsentBridge must be mounted in the root layout");
 }
 
-// 8. Verify mobile bar tracking dispatches analytics event (not hardcoded PII)
-if (!mobileBarSource.includes('eventName: "whatsapp_click"')) {
-  throw new Error('mobile-consent: mobile conversion bar must dispatch "whatsapp_click" event');
+// 8. Verify mobile bar uses the consent-gated public CTA pipeline (not hardcoded PII)
+if (!mobileBarSource.includes('emitPublicCtaClick("floating_whatsapp", lang)')) {
+  throw new Error("mobile-consent: mobile conversion bar must use the public CTA event pipeline");
 }
 if (
   mobileBarSource.includes("phone_number") ||
@@ -73,12 +73,11 @@ if (
   throw new Error("mobile-consent: mobile conversion bar must not include PII in analytics events");
 }
 
-// 9. Verify mobile bar does not hardcode analytics IDs (uses event dispatch pattern)
+// 9. Verify mobile bar does not bypass the public analytics boundary
 if (mobileBarSource.includes("window.gtag") || mobileBarSource.includes("ga(")) {
   throw new Error(
-    "mobile-consent: mobile conversion bar must not call gtag or ga() directly; use the event dispatch pattern"
+    "mobile-consent: mobile conversion bar must not call gtag or ga() directly; use emitPublicCtaClick"
   );
 }
 
 console.log("Mobile consent verification passed.");
-

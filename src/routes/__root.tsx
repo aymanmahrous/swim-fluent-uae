@@ -20,6 +20,7 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 import appCss from "../styles.css?url";
 
 const PWA_ENABLED = true;
@@ -199,7 +200,7 @@ function Nav() {
 }
 
 function Footer() {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const canContact = Boolean(settings.whatsappNumber && settings.publicPhone);
@@ -226,6 +227,7 @@ function Footer() {
             href={businessWhatsAppUrl(settings)}
             target="_blank"
             rel="noreferrer"
+            onClick={() => emitPublicCtaClick("footer_whatsapp", lang)}
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-5 py-3 font-black transition hover:bg-white/15"
           >
             <MessageCircle className="h-5 w-5 text-aqua" /> {settings.publicPhone}
