@@ -1,78 +1,107 @@
-aW1wb3J0IHsgY3JlYXRlRmlsZVJvdXRlLCBub3RGb3VuZCB9IGZyb20gIkB0YW5zdGFjay9y
-ZWFjdC1yb3V0ZXIiOwppbXBvcnQgeyBUUkFJTklOR19MT0NBVElPTlMsIG9wZXJhdGlvbmFs
-V2hhdHNBcHBVcmwgfSBmcm9tICIuLi9wbGF0Zm9ybS9wdWJsaWMtYnVzaW5lc3MtY29uZmln
-IjsKaW1wb3J0IHsgZW1pdFB1YmxpY0N0YUNsaWNrIH0gZnJvbSAiLi4vcGxhdGZvcm0vcHVi
-bGljLWN0YS1ldmVudHMiOwppbXBvcnQgeyBTSVRFX1VSTCB9IGZyb20gIi4uL3BsYXRmb3Jt
-L3B1YmxpYy1zZW8iOwoKY29uc3QgY29weSA9IHsKICBhcjogewogICAgcGFnZVRpdGxlOiAo
-bmFtZTogc3RyaW5nKSA9PiBg2KrYudmE2YrZhSDYp9mE2LPYqNin2K3YqSDZhNmE2KPYt9mB
-2KfZhCDZgdmKICR7bmFtZX3YjCDYo9io2YjYuNio2YogfCDZg9mI2KrYtCDYo9mK2YXZhmAs
-CiAgICBkZXNjcmlwdGlvbjogKG5hbWU6IHN0cmluZykgPT4KICAgICAgYNiq2LnZhNmK2YUg
-2KfZhNiz2KjYp9it2Kkg2YjYp9mE2KvZgtipINin2YTZhdin2KbZitipINmE2YTYo9i32YHY
-p9mEINio2KfZhNmC2LHYqCDZhdmGICR7bmFtZX0g2YHZiiDYo9io2YjYuNio2Yog2YXYuSDZ
-g9mI2KrYtCDYo9mK2YXZhtiMINi22YXZhiDZhdis2YXZiNi52KfYqiDYtdi62YrYsdipINmI
-2YXZiNin2LnZitivINit2LPYqCDYp9mE2KrZgtmK2YrZhSDZiNin2YTYqtmI2YHYsS5gLAog
-ICAgaGVhZGluZzogKG5hbWU6IHN0cmluZykgPT4gYNiq2LnZhNmK2YUg2KfZhNiz2KjYp9it
-2Kkg2YTZhNij2LfZgdin2YQg2KjYp9mE2YLYsdioINmF2YYgJHtuYW1lfWAsCiAgICBib2R5
-OiAobmFtZTogc3RyaW5nKSA9PgogICAgICBg2KrYr9ix2YrYqCDYs9io2KfYrdipINmI2KvZ
-gtipINmF2KfYptmK2Kkg2YTZhNij2LfZgdin2YQg2YHZiiDZhdmI2YLYuSAke25hbWV9INiv
-2KfYrtmEINij2KjZiNi42KjZiy4g2YrYqNiv2KMg2KfZhNio2LHZhtin2YXYrCDYqNi32YTY
-qCDYqtmC2YrZitmFINij2YjZhNmK2Iwg2KvZhSDZitiq2YUg2KrYo9mD2YrYryDYp9mE2YXZ
-iNi52K8g2KfZhNmF2YbYp9iz2Kgg2K3Ys9ioINmF2LPYqtmI2Ykg2KfZhNi32YHZhCDZiNin
-2YTYqtmI2YHYsS5gLAogICAgY3RhOiAi2KfYt9mE2Kgg2KrZgtmK2YrZhdmL2Kcg2LnYqNixI
-9mI2KfYqtiz2KfYqCIsCiAgICBtYXA6ICLYudix2LYg2KfZhNmF2YjZgti5INi52YTZiSDYp
-9mE2K7YsdmK2LfYqSIsCiAgfSwKfSBhcyBjb25zdDsKCmV4cG9ydCBjb25zdCBSb3V0ZSA9
-IGNyZWF0ZUZpbGVSb3V0ZSgiL2xvY2F0aW9ucy8kbG9jYXRpb25JZCIpKHsKICBsb2FkZXI6
-ICh7IHBhcmFtcyB9KSA9PiB7CiAgICBjb25zdCBsb2NhdGlvbiA9IFRSQUlOSU5HX0xPQ0FU
-SU9OUy5maW5kKAogICAgICAoaXRlbSkgPT4gaXRlbS5pZCA9PT0gcGFyYW1zLmxvY2F0aW9u
-SWQgJiYgaXRlbS5sb2NhbFNlb0VuYWJsZWQsCiAgICApOwogICAgaWYgKCFsb2NhdGlvbikg
-dGhyb3cgbm90Rm91bmQoKTsKICAgIHJldHVybiB7IGxvY2F0aW9uIH07CiAgfSwKICBoZWFk
-OiAoeyBsb2FkZXJEYXRhIH0pID0+IHsKICAgIGNvbnN0IGxvY2F0aW9uID0gbG9hZGVyRGF0
-YT8ubG9jYXRpb247CiAgICBpZiAoIWxvY2F0aW9uKSByZXR1cm4ge307CiAgICBjb25zdCB1
-cmwgPSBgJHtTSVRFX1VSTH0vbG9jYXRpb25zLyR7bG9jYXRpb24uaWR9YDsKICAgIGNvbnN0
-IHRpdGxlID0gY29weS5hci5wYWdlVGl0bGUobG9jYXRpb24uZGlzcGxheU5hbWUpOwogICAg
-Y29uc3QgZGVzY3JpcHRpb24gPSBjb3B5LmFyLmRlc2NyaXB0aW9uKGxvY2F0aW9uLmRpc3Bs
-YXlOYW1lKTsKICAgIGNvbnN0IGpzb25MZCA9IEpTT04uc3RyaW5naWZ5KHsKICAgICAgIkBj
-b250ZXh0IjogImh0dHBzOi8vc2NoZW1hLm9yZyIsCiAgICAgICJAdHlwZSI6ICJTZXJ2aWNl
-IiwKICAgICAgbmFtZTogdGl0bGUsCiAgICAgIGRlc2NyaXB0aW9uLAogICAgICBzZXJ2aWNl
-VHlwZTogIktpZHMgc3dpbW1pbmcgbGVzc29ucyBhbmQgd2F0ZXIgY29uZmlkZW5jZSBjb2Fj
-aGluZyIsCiAgICAgIGFyZWFTZXJ2ZWQ6IHsKICAgICAgICAiQHR5cGUiOiAiUGxhY2UiLAog
-ICAgICAgIG5hbWU6IGxvY2F0aW9uLmRpc3BsYXlOYW1lLAogICAgICAgIGFkZHJlc3M6IHsK
-ICAgICAgICAgICJAdHlwZSI6ICJQb3N0YWxBZGRyZXNzIiwKICAgICAgICAgIGFkZHJlc3NM
-b2NhbGl0eTogIkFidSBEaGFiaSIsCiAgICAgICAgICBhZGRyZXNzQ291bnRyeTogIkFFIiwK
-ICAgICAgICB9LAogICAgICAgIGhhc01hcDogbG9jYXRpb24uc2hvcnRVcmwsCiAgICAgIH0s
-CiAgICAgIHByb3ZpZGVyOiB7CiAgICAgICAgIkB0eXBlIjogIk9yZ2FuaXphdGlvbiIsCiAg
-ICAgICAgbmFtZTogIlJlbGF4IEZpeCBVQUUiLAogICAgICAgIHVybDogU0lURV9VUkwsCiAg
-ICAgIH0sCiAgICAgIHVybCwKICAgICAgaW5MYW5ndWFnZTogImFyLUFFIiwKICAgIH0pLnJl
-cGxhY2UoLzwvZywgIlxcdTAwM2MiKTsKCiAgICByZXR1cm4gewogICAgICBtZXRhOiBbCiAg
-ICAgICAgeyB0aXRsZSB9LAogICAgICAgIHsgbmFtZTogImRlc2NyaXB0aW9uIiwgY29udGVu
-dDogZGVzY3JpcHRpb24gfSwKICAgICAgICB7IG5hbWU6ICJyb2JvdHMiLCBjb250ZW50OiAi
-aW5kZXgsZm9sbG93LG1heC1pbWFnZS1wcmV2aWV3OmxhcmdlIiB9LAogICAgICAgIHsgcHJv
-cGVydHk6ICJvZzp0aXRsZSIsIGNvbnRlbnQ6IHRpdGxlIH0sCiAgICAgICAgeyBwcm9wZXJ0
-eTogIm9nOmRlc2NyaXB0aW9uIiwgY29udGVudDogZGVzY3JpcHRpb24gfSwKICAgICAgICB7
-IHByb3BlcnR5OiAib2c6dHlwZSIsIGNvbnRlbnQ6ICJ3ZWJzaXRlIiB9LAogICAgICAgIHsg
-cHJvcGVydHk6ICJvZzp1cmwiLCBjb250ZW50OiB1cmwgfSwKICAgICAgXSwKICAgICAgbGlu
-a3M6IFt7IHJlbDogImNhbm9uaWNhbCIsIGhyZWY6IHVybCB9XSwKICAgICAgc2NyaXB0czog
-W3sgdHlwZTogImFwcGxpY2F0aW9uL2xkK2pzb24iLCBjaGlsZHJlbjoganNvbkxkIH1dLAog
-ICAgfTsKICB9LAogIGNvbXBvbmVudDogTG9jYWxMb2NhdGlvblBhZ2UsCn0pOwoKZnVuY3Rp
-b24gTG9jYWxMb2NhdGlvblBhZ2UoKSB7CiAgY29uc3QgeyBsb2NhdGlvbiB9ID0gUm91dGUu
-dXNlTG9hZGVyRGF0YSgpOwogIGNvbnN0IHdoYXRzYXBwID0gb3BlcmF0aW9uYWxXaGF0c0Fw
-cFVybCgKICAgIGDYo9ix2LrYqCDZgdmKINi32YTYqCDYqtmC2YrZitmFINij2YjZhNmKINmE
-2KrYudmE2YrZhSDYp9mE2LPYqNin2K3YqSDZhNmE2KPYt9mB2KfZhCDZgdmKICR7bG9jYXRp
-b24uZGlzcGxheU5hbWV9IC0g2KPYqNmI2LjYqNmKLmAsCiAgKTsKCiAgcmV0dXJuICgKICAg
-IDxtYWluIGRpcj0icnRsIiBsYW5nPSJhci1BRSIgY2xhc3NOYW1lPSJteC1hdXRvIG1heC13
-LTN4bCBweC01IHB5LTEyIj4KICAgICAgPHAgY2xhc3NOYW1lPSJtYi0zIHRleHQtc20gZm9u
-dC1tZWRpdW0iPlJlbGF4IEZpeCBVQUUgwrcgQ29hY2ggQXltYW48L3A+CiAgICAgIDxoMSBj
-bGFzc05hbWU9InRleHQtM3hsIGZvbnQtYm9sZCB0cmFja2luZy10aWdodCI+e2NvcHkuYXIu
-aGVhZGluZyhsb2NhdGlvbi5kaXNwbGF5TmFtZSl9PC9oMT4KICAgICAgPHAgY2xhc3NOYW1l
-PSJtdC01IHRleHQtbGcgbGVhZGluZy04Ij57Y29weS5hci5ib2R5KGxvY2F0aW9uLmRpc3Bs
-YXlOYW1lKX08L3A+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJtdC04IGZsZXggZmxleC13cmFw
-IGdhcC0zIj4KICAgICAgICA8YQogICAgICAgICAgY2xhc3NOYW1lPSJyb3VuZGVkLWxnIGJv
-cmRlciBweC01IHB5LTMgZm9udC1zZW1pYm9sZCIKICAgICAgICAgIGhyZWY9e3doYXRzYXBw
-fQogICAgICAgICAgdGFyZ2V0PSJfYmxhbmsiCiAgICAgICAgICByZWw9Im5vcmVmZXJyZXIi
-CiAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBlbWl0UHVibGljQ3RhQ2xpY2soImJvb2tpbmdf
-c2VjdGlvbl93aGF0c2FwcCIsICJhciIpfQogICAgICAgID4KICAgICAgICAgIHtjb3B5LmFy
-LmN0YX0KICAgICAgICA8L2E+CiAgICAgICAgPGEKICAgICAgICAgIGNsYXNzTmFtZT0icm91
-bmRlZC1sZyBib3JkZXIgcHgtNSBweS0zIGZvbnQtc2VtaWJvbGQiCiAgICAgICAgICBocmVm
-PXtsb2NhdGlvbi5zaG9ydFVybH0KICAgICAgICAgIHRhcmdldD0iX2JsYW5rIgogICAgICAg
-ICAgcmVsPSJub3JlZmVycmVyIgogICAgICAgID4KICAgICAgICAgIHtjb3B5LmFyLm1hcH0K
-ICAgICAgICA8L2E+CiAgICAgIDwvZGl2PgogICAgPC9tYWluPgogICk7Cn0K
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { TRAINING_LOCATIONS, operationalWhatsAppUrl } from "../platform/public-business-config";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
+import { SITE_URL } from "../platform/public-seo";
+
+const copy = {
+  ar: {
+    pageTitle: (name: string) => `تعليم السباحة للأطفال في ${name}، أبوظبي | كوتش أيمن`,
+    description: (name: string) =>
+      `تعليم السباحة والثقة المائية للأطفال بالقرب من ${name} في أبوظبي مع كوتش أيمن، ضمن مجموعات صغيرة ومواعيد حسب التقييم والتوفر.`,
+    heading: (name: string) => `تعليم السباحة للأطفال بالقرب من ${name}`,
+    body: (name: string) =>
+      `تدريب سباحة وثقة مائية للأطفال في موقع ${name} داخل أبوظبي. يبدأ البرنامج بطلب تقييم أولي، ثم يتم تأكيد الموعد المناسب حسب مستوى الطفل والتوفر.`,
+    cta: "اطلب تقييمًا عبر واتساب",
+    map: "عرض الموقع على الخريطة",
+  },
+} as const;
+
+export const Route = createFileRoute("/locations/$locationId")({
+  loader: ({ params }) => {
+    const location = TRAINING_LOCATIONS.find(
+      (item) => item.id === params.locationId && item.localSeoEnabled,
+    );
+    if (!location) throw notFound();
+    return { location };
+  },
+  head: ({ loaderData }) => {
+    const location = loaderData?.location;
+    if (!location) return {};
+    const url = `${SITE_URL}/locations/${location.id}`;
+    const title = copy.ar.pageTitle(location.displayName);
+    const description = copy.ar.description(location.displayName);
+    const jsonLd = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: title,
+      description,
+      serviceType: "Kids swimming lessons and water confidence coaching",
+      areaServed: {
+        "@type": "Place",
+        name: location.displayName,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Abu Dhabi",
+          addressCountry: "AE",
+        },
+        hasMap: location.shortUrl,
+      },
+      provider: {
+        "@type": "Organization",
+        name: "Relax Fix UAE",
+        url: SITE_URL,
+      },
+      url,
+      inLanguage: "ar-AE",
+    }).replace(/</g, "\\u003c");
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { name: "robots", content: "index,follow,max-image-preview:large" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{ type: "application/ld+json", children: jsonLd }],
+    };
+  },
+  component: LocalLocationPage,
+});
+
+function LocalLocationPage() {
+  const { location } = Route.useLoaderData();
+  const whatsapp = operationalWhatsAppUrl(
+    `أرغب في طلب تقييم أولي لتعليم السباحة للأطفال في ${location.displayName} - أبوظبي.`,
+  );
+
+  return (
+    <main dir="rtl" lang="ar-AE" className="mx-auto max-w-3xl px-5 py-12">
+      <p className="mb-3 text-sm font-medium">Relax Fix UAE · Coach Ayman</p>
+      <h1 className="text-3xl font-bold tracking-tight">{copy.ar.heading(location.displayName)}</h1>
+      <p className="mt-5 text-lg leading-8">{copy.ar.body(location.displayName)}</p>
+      <div className="mt-8 flex flex-wrap gap-3">
+        <a
+          className="rounded-lg border px-5 py-3 font-semibold"
+          href={whatsapp}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => emitPublicCtaClick("booking_section_whatsapp", "ar")}
+        >
+          {copy.ar.cta}
+        </a>
+        <a
+          className="rounded-lg border px-5 py-3 font-semibold"
+          href={location.shortUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {copy.ar.map}
+        </a>
+      </div>
+    </main>
+  );
+}
