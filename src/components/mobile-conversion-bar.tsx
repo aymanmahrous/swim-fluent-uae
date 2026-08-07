@@ -1,19 +1,7 @@
 import { CalendarCheck2, MessageCircle } from "lucide-react";
 import { useLang } from "../lib/i18n";
 import { operationalWhatsAppUrl } from "../platform/public-business-config";
-
-function trackWhatsApp() {
-  window.dispatchEvent(
-    new CustomEvent("relaxfix:analytics-event", {
-      detail: {
-        eventName: "whatsapp_click",
-        ctaId: "mobile_conversion_bar",
-        source: "website",
-        path: window.location.pathname,
-      },
-    }),
-  );
-}
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 
 export function MobileConversionBar() {
   const { lang } = useLang();
@@ -38,7 +26,7 @@ export function MobileConversionBar() {
             href={operationalWhatsAppUrl(message)}
             target="_blank"
             rel="noreferrer"
-            onClick={trackWhatsApp}
+            onClick={() => emitPublicCtaClick("floating_whatsapp", lang)}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-3 py-3 text-center text-sm font-black text-white transition hover:bg-emerald-800"
           >
             <MessageCircle className="h-5 w-5" aria-hidden="true" />

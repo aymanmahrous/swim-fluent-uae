@@ -23,3 +23,5 @@ jobs:
           node-version: 22
       - name: Verify public CTA event contracts and deduplication
         run: node scripts/verify-public-cta-events.mjs
+      - name: Verify consent-gated WhatsApp GA4 runtime
+        run: node scripts/verify-whatsapp-ga4-runtime.mjs

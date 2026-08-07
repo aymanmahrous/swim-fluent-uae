@@ -34,6 +34,7 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
+import { emitPublicCtaClick } from "../platform/public-cta-events";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -744,7 +745,7 @@ function SuccessState({
   booking: Booking;
   settings: typeof fallbackBusinessSettings;
 }) {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   return (
     <div id="success" className="p-8 text-center sm:p-14">
       <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-primary/10 text-primary">
@@ -757,6 +758,7 @@ function SuccessState({
         href={businessWhatsAppUrl(settings, buildWhatsAppMessage(booking))}
         target="_blank"
         rel="noreferrer"
+        onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)}
         className="mt-7 inline-flex items-center gap-2 rounded-2xl bg-deep px-7 py-4 font-black text-white transition hover:-translate-y-1"
       >
         <MessageCircle className="h-5 w-5" /> {tr("contactWA")}

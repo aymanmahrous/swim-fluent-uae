@@ -4,7 +4,7 @@ export const PUBLIC_CTA_REGISTRY = {
   programs_book: { channel: "booking", status: "reserved" },
   booking_section_submit: { channel: "booking", status: "present" },
   header_whatsapp: { channel: "whatsapp", status: "reserved" },
-  floating_whatsapp: { channel: "whatsapp", status: "reserved" },
+  floating_whatsapp: { channel: "whatsapp", status: "present" },
   booking_section_whatsapp: { channel: "whatsapp", status: "conditional" },
   footer_whatsapp: { channel: "whatsapp", status: "conditional" },
   header_call: { channel: "call", status: "reserved" },
