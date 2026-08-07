@@ -87,6 +87,8 @@ function LocalLocationPage() {
         <a
           className="rounded-lg border px-5 py-3 font-semibold"
           href={whatsapp}
+          target="_blank"
+          rel="noreferrer"
           onClick={() => emitPublicCtaClick("booking_section_whatsapp", "ar")}
         >
           {copy.ar.cta}
