@@ -1,4 +1,5 @@
 import { trackPublicEvent } from "./public-analytics";
+import { getLatestPublicAttribution, hasPublicAttribution } from "./public-attribution";
 import {
   canEmitPublicCta,
   publicCtaChannel,
@@ -29,6 +30,16 @@ function validInternalDeduplicationKey(value: string): boolean {
   return value.length > 0 && value.length <= 160;
 }
 
+function currentCampaignParameters() {
+  const attribution = getLatestPublicAttribution();
+  return {
+    lead_source: attribution.source,
+    lead_medium: attribution.medium,
+    lead_campaign: attribution.campaign,
+    has_campaign_attribution: hasPublicAttribution(attribution),
+  };
+}
+
 export function emitPublicCtaClick(
   ctaId: PublicCtaId,
   language: Language,
@@ -54,6 +65,7 @@ export function emitPublicCtaClick(
     language,
     source: "website",
     cta_id: ctaId,
+    ...currentCampaignParameters(),
   });
 
   if (emitted) recentClickEvents.set(deduplicationKey, now);
@@ -71,6 +83,7 @@ export function emitBookingComplete(input: BookingCompleteInput): boolean {
     language: input.language,
     source: "booking-success",
     cta_id: input.ctaId,
+    ...currentCampaignParameters(),
   });
 
   if (emitted) completedBookingResults.add(input.resultKey);
@@ -84,6 +97,7 @@ export function emitConversationStart(input: ConversationStartInput): boolean {
   const emitted = trackPublicEvent("conversation_start", {
     language: input.language,
     source: "chatbot",
+    ...currentCampaignParameters(),
   });
 
   if (emitted) startedConversations.add(input.conversationKey);

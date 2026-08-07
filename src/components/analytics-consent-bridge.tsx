@@ -3,6 +3,10 @@ import {
   denyAnalyticsConsent,
   grantAnalyticsConsent,
 } from "../platform/public-analytics";
+import {
+  capturePublicAttributionAfterConsent,
+  clearPublicAttribution,
+} from "../platform/public-attribution";
 
 export const ANALYTICS_CONSENT_EVENT = "relaxfix:analytics-consent";
 
@@ -28,10 +32,12 @@ export function AnalyticsConsentBridge() {
       const decision = (event as CustomEvent<AnalyticsConsentDecision>).detail;
 
       if (decision === "accepted") {
+        capturePublicAttributionAfterConsent(window.location.search);
         grantAnalyticsConsent();
         return;
       }
 
+      clearPublicAttribution();
       denyAnalyticsConsent();
     };
 
