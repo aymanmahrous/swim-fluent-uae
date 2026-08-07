@@ -63,12 +63,23 @@ if (!rootSource.includes("<AnalyticsConsentBridge />") || !rootSource.includes("
   throw new Error("bilingual consent UI: root mounting contract is missing");
 }
 
-if (!analyticsSource.includes('const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";')) {
-  throw new Error("bilingual consent UI: analytics disabled-by-default gate is missing");
+for (const fragment of [
+  'const previewAnalyticsEnabled = import.meta.env.VITE_ENABLE_PREVIEW_GA4 === "true";',
+  'const productionAnalyticsEnabled = import.meta.env.VITE_ENABLE_GA4 === "true";',
+]) {
+  if (!analyticsSource.includes(fragment)) {
+    throw new Error(`bilingual consent UI: disabled-by-default gate is missing ${JSON.stringify(fragment)}`);
+  }
 }
 
-if (!analyticsSource.includes("if (!consentGranted || !previewAnalyticsRuntimeReady()) return false;")) {
-  throw new Error("bilingual consent UI: consent-before-initialization gate is missing");
+for (const fragment of [
+  "if (!consentGranted) return false;",
+  "const configuration = activeAnalyticsConfiguration();",
+  "if (!configuration) return false;",
+]) {
+  if (!analyticsSource.includes(fragment)) {
+    throw new Error(`bilingual consent UI: consent-before-initialization gate is missing ${JSON.stringify(fragment)}`);
+  }
 }
 
 console.log("Bilingual analytics consent UI verification passed.");
