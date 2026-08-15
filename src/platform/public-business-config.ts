@@ -7,10 +7,11 @@ export const N8N_TECHNICAL_ACCOUNT = "swimmingayman@gmail.com";
 
 export const PUBLIC_PRICING = {
   groupMaxSize: 4,
-  groupChildPriceAED: 450,
-  siblingChildPriceAED: 400,
-  privateAquatic30MinutesAED: 150,
-  privateAquatic60MinutesAED: 250,
+  groupMonthlyPriceAED: 450,
+  groupSessionsPerWeek: 2,
+  siblingMonthlyPriceAED: 400,
+  privateSessionPriceAED: 150,
+  privateSessionDurationMinutes: "45–60",
 } as const;
 
 export const GENERAL_AVAILABILITY = {

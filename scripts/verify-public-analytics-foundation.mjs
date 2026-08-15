@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 const source = readFileSync("src/platform/public-analytics.ts", "utf8");
 
 const requiredFragments = [
+  '"page_view"',
   '"booking_complete"',
   '"conversation_start"',
   '"whatsapp_click"',
@@ -23,6 +24,9 @@ const requiredFragments = [
   "allow_google_signals: false",
   "allow_ad_personalization_signals: false",
   "send_page_view: false",
+  "trackPublicPageView",
+  "lastPageViewNavigationKey",
+  'trackPublicEvent("page_view"',
   "if (!analyticsReady() || !window.gtag) return false;",
   '"language"',
   '"source"',

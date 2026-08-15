@@ -1,6 +1,7 @@
 import type { PublicCtaId } from "./public-cta-registry";
 
 export type PublicAnalyticsEvent =
+  | "page_view"
   | "booking_complete"
   | "conversation_start"
   | "whatsapp_click"
@@ -52,6 +53,7 @@ declare global {
 let initialized = false;
 let consentConfigured = false;
 let consentGranted = false;
+let lastPageViewNavigationKey: string | null = null;
 
 function validMeasurementId(value: string | undefined): value is string {
   return Boolean(value && /^G-[A-Z0-9]+$/i.test(value));
@@ -258,4 +260,19 @@ export function trackPublicEvent(
 
   window.gtag("event", eventName, safeParameters);
   return true;
+}
+
+export function trackPublicPageView(
+  navigationKey: string,
+  language: "ar" | "en",
+): boolean {
+  if (!navigationKey || navigationKey === lastPageViewNavigationKey) return false;
+
+  const emitted = trackPublicEvent("page_view", {
+    language,
+    source: "website",
+  });
+
+  if (emitted) lastPageViewNavigationKey = navigationKey;
+  return emitted;
 }

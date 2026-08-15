@@ -119,7 +119,7 @@ for (const origin of ["fonts.googleapis.com", "fonts.gstatic.com", "premium.css"
 }
 
 const revenueSections = await text("src/components/revenue-sections.tsx");
-requireText(revenueSections, "text-deep", "Locations contrast");
+requireText(revenueSections, "text-primary", "Locations contrast");
 requireText(revenueSections, "bg-emerald-700", "WhatsApp contrast");
 
 const mobileConversionBar = await text("src/components/mobile-conversion-bar.tsx");
@@ -130,10 +130,11 @@ for (const needle of [
   'OPERATIONAL_EMAIL = "relaxfix2026@gmail.com"',
   'WHATSAPP_NUMBER = "971551378660"',
   "groupMaxSize: 4",
-  "groupChildPriceAED: 450",
-  "siblingChildPriceAED: 400",
-  "privateAquatic30MinutesAED: 150",
-  "privateAquatic60MinutesAED: 250",
+  "groupMonthlyPriceAED: 450",
+  "groupSessionsPerWeek: 2",
+  "siblingMonthlyPriceAED: 400",
+  "privateSessionPriceAED: 150",
+  'privateSessionDurationMinutes: "45–60"',
   'DISPLAY_NAME_OWNER_APPROVED = "Najda Street"',
   'displayName: "ICS Al Falah"',
   'displayName: "ICS Khalifa"',

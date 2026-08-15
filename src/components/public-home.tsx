@@ -8,12 +8,15 @@ import {
   CheckCircle2,
   ChevronRight,
   Dumbbell,
+  HandHeart,
   HeartHandshake,
+  MapPin,
   MessageCircle,
   ShieldCheck,
   Sparkles,
   Star,
   Target,
+  Users,
   UserRound,
   Waves,
 } from "lucide-react";
@@ -34,7 +37,10 @@ import {
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
-import { emitPublicCtaClick } from "../platform/public-cta-events";
+import {
+  emitBookingComplete,
+  emitPublicCtaClick,
+} from "../platform/public-cta-events";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -82,6 +88,75 @@ const emptyForm: BookingForm = {
   website: "",
 };
 
+const conversionCopy = {
+  ar: {
+    heroProof: "خاص 1 على 1 · مجموعة صغيرة بحد أقصى 4 سباحين",
+    concernsEyebrow: "ابدأ من مستواك الحالي",
+    concernsTitle: "مهما كانت نقطة البداية، نختار الخطوة المناسبة",
+    concerns: [
+      ["خوف من الماء", "تدرج هادئ لبناء الراحة والسيطرة داخل الماء."],
+      ["مبتدئ تمامًا", "تأسيس واضح للتنفس والطفو والحركة."],
+      ["تدريب سابق دون تقدم كافٍ", "فهم نقطة التعطل والعمل على التقنية خطوة بخطوة."],
+      ["ثقة أو تقنية أفضل", "تدريب منظم يناسب المستوى والهدف الحالي."],
+    ],
+    offersEyebrow: "خياران واضحان",
+    offersTitle: "اختر طريقة التدريب المناسبة",
+    groupTitle: "مجموعة صغيرة — 4 سباحين فقط",
+    groupPrice: "450 درهم / شهريًا",
+    groupSchedule: "حصتان أسبوعيًا",
+    groupPoints: ["اهتمام أوضح داخل مجموعة صغيرة", "تدريب منتظم", "تطور تدريجي حسب المستوى"],
+    sibling: "الأخ أو الأخت الإضافية: 400 درهم شهريًا بدلًا من 450 درهمًا",
+    privateTitle: "حصة سباحة خاصة",
+    privatePrice: "150 درهم / للحصة",
+    privateDuration: "45–60 دقيقة",
+    privatePoints: ["اهتمام فردي", "تدريب حسب نقطة البداية", "اختيار الموقع والموعد حسب التوفر"],
+    chooseTitle: "غير متأكد أي برنامج يناسبك؟",
+    chooseBody: "استخدم المساعد الحالي لاختيار الخطوة المناسبة حسب العمر والمستوى والثقة والهدف والمنطقة.",
+    chooseCta: "ساعدني في اختيار البرنامج",
+    nearestCta: "اعثر على أقرب مسبح",
+    needsEyebrow: "برامج مائية فردية لاحتياجات مختلفة",
+    needsTitle: "الحركة واللياقة والثقة داخل الماء",
+    needsBody: "يمكن مناقشة تدريب مائي متكيف مع قدرات واحتياجات السباح، أو نشاط مائي يركز على الحركة واللياقة والثقة. لا يقدم الموقع تشخيصًا أو علاجًا طبيًا.",
+    needsCta: "تحدث معنا عن احتياجات السباح",
+    coachLabel: "تدريب مباشر مع كوتش أيمن",
+    coachTrust: "نقطة البداية والهدف ومستوى الثقة داخل الماء هي أساس اختيار أسلوب التدريب.",
+    contactReason: "نطلب الاسم ورقم الهاتف فقط ليراجع الفريق الطلب ويتواصل لتأكيد الملاءمة والموعد. لا يتم إرسال هذه البيانات إلى أدوات القياس.",
+  },
+  en: {
+    heroProof: "Private 1-on-1 · Small Group, maximum 4 swimmers",
+    concernsEyebrow: "Start from your current level",
+    concernsTitle: "Whatever the starting point, we choose the right next step",
+    concerns: [
+      ["Afraid of water", "A calm progression to build comfort and control in the water."],
+      ["Complete beginner", "Clear foundations for breathing, floating, and movement."],
+      ["Previous lessons, limited progress", "Identify the sticking point and build technique step by step."],
+      ["Better confidence or technique", "Structured coaching matched to the current level and goal."],
+    ],
+    offersEyebrow: "Two clear options",
+    offersTitle: "Choose the coaching format that fits",
+    groupTitle: "Small Group — Only 4 Swimmers",
+    groupPrice: "AED 450 / Month",
+    groupSchedule: "2 Sessions per Week",
+    groupPoints: ["Closer attention in a small group", "Consistent practice", "Progressive development by level"],
+    sibling: "Additional sibling: AED 400/month instead of AED 450",
+    privateTitle: "Private Swimming Lesson",
+    privatePrice: "AED 150 / Session",
+    privateDuration: "45–60 Minutes",
+    privatePoints: ["Individual attention", "Coaching from the swimmer's starting point", "Location and timing subject to availability"],
+    chooseTitle: "Not sure which program is right?",
+    chooseBody: "Use the existing assistant to choose the next step based on age, level, confidence, goal, and area.",
+    chooseCta: "Help me choose the right program",
+    nearestCta: "Find the nearest pool",
+    needsEyebrow: "Individual aquatic programs for different needs",
+    needsTitle: "Movement, fitness, and confidence in water",
+    needsBody: "You can discuss aquatic training adapted to the swimmer's abilities and needs, or water activity focused on movement, fitness, and confidence. The website does not provide medical diagnosis or treatment.",
+    needsCta: "Talk to us about the swimmer's needs",
+    coachLabel: "Direct coaching with Coach Ayman",
+    coachTrust: "The swimmer's starting point, goal, and confidence in water guide the coaching approach.",
+    contactReason: "We ask for a name and phone number so the team can review the request and confirm suitability and timing. These details are not sent to analytics.",
+  },
+} as const;
+
 function upcomingDubaiDates(): string[] {
   const dates: string[] = [];
   for (let offset = 0; offset < 8; offset += 1) {
@@ -93,6 +168,7 @@ function upcomingDubaiDates(): string[] {
 
 function Home() {
   const { tr, lang, dir } = useLang();
+  const copy = conversionCopy[lang];
   const settingsQuery = useBusinessSettings();
   const settings = settingsQuery.data ?? fallbackBusinessSettings;
   const [form, setForm] = useState<BookingForm>(emptyForm);
@@ -135,6 +211,12 @@ function Home() {
   function goNext() {
     if (!canContinue) return;
     setStep((current) => Math.min(5, current + 1));
+  }
+
+  function openAssistant(mode: "answers" | "guided", intent?: "locations") {
+    window.dispatchEvent(
+      new CustomEvent("relaxfix:open-sales-assistant", { detail: { mode, intent } }),
+    );
   }
 
   async function submit(e: React.FormEvent) {
@@ -185,6 +267,16 @@ function Home() {
       if (!result.success) {
         toast.error(result.message);
         return;
+      }
+
+      if (!result.duplicate) {
+        emitBookingComplete({
+          ctaId: "booking_section_submit",
+          language: lang,
+          backendConfirmed: true,
+          duplicateResponse: false,
+          resultKey: result.bookingRequestId,
+        });
       }
 
       setSubmitted(booking);
@@ -253,7 +345,7 @@ function Home() {
                 {tr("viewPrograms")}
               </a>
             </div>
-            <p className="mt-5 text-sm font-semibold text-gold">{offer}</p>
+            <p className="mt-5 text-sm font-semibold text-gold">{copy.heroProof}</p>
           </div>
 
           <div className="hidden lg:block">
@@ -271,6 +363,22 @@ function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionEyebrow>{copy.concernsEyebrow}</SectionEyebrow>
+          <h2 className="mt-4 text-3xl font-black sm:text-5xl">{copy.concernsTitle}</h2>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {copy.concerns.map(([title, body]) => (
+            <article key={title} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+              <CheckCircle2 className="h-6 w-6 text-primary" aria-hidden="true" />
+              <h3 className="mt-4 font-black">{title}</h3>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">{body}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -319,14 +427,74 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-6 py-24 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
+      <section id="pricing" className="scroll-mt-24 bg-deep py-20 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <SectionEyebrow light>{copy.offersEyebrow}</SectionEyebrow>
+            <h2 className="mt-4 text-3xl font-black sm:text-5xl">{copy.offersTitle}</h2>
+          </div>
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            <article className="rounded-[2rem] border border-aqua/35 bg-white/10 p-6 shadow-elegant sm:p-8">
+              <div className="flex items-center gap-3 text-aqua">
+                <Users className="h-7 w-7" aria-hidden="true" />
+                <h3 className="text-xl font-black text-white sm:text-2xl">{copy.groupTitle}</h3>
+              </div>
+              <div className="mt-6 text-3xl font-black text-gold" dir="ltr">{copy.groupPrice}</div>
+              <div className="mt-2 font-bold text-white/85">{copy.groupSchedule}</div>
+              <ul className="mt-6 grid gap-3 text-sm text-white/75">
+                {copy.groupPoints.map((point) => <li key={point} className="flex gap-3"><Check className="mt-0.5 h-5 w-5 shrink-0 text-aqua" aria-hidden="true" />{point}</li>)}
+              </ul>
+              <p className="mt-6 rounded-2xl border border-gold/30 bg-gold/10 p-4 text-sm font-black text-gold">{copy.sibling}</p>
+            </article>
+
+            <article className="rounded-[2rem] border border-white/15 bg-white/10 p-6 sm:p-8">
+              <div className="flex items-center gap-3 text-aqua">
+                <UserRound className="h-7 w-7" aria-hidden="true" />
+                <h3 className="text-xl font-black text-white sm:text-2xl">{copy.privateTitle}</h3>
+              </div>
+              <div className="mt-6 text-3xl font-black text-gold" dir="ltr">{copy.privatePrice}</div>
+              <div className="mt-2 font-bold text-white/85" dir="ltr">{copy.privateDuration}</div>
+              <ul className="mt-6 grid gap-3 text-sm text-white/75">
+                {copy.privatePoints.map((point) => <li key={point} className="flex gap-3"><Check className="mt-0.5 h-5 w-5 shrink-0 text-aqua" aria-hidden="true" />{point}</li>)}
+              </ul>
+            </article>
+          </div>
+
+          <div className="mt-8 grid gap-4 rounded-[2rem] border border-white/15 bg-white/10 p-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <h3 className="text-xl font-black">{copy.chooseTitle}</h3>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-white/70">{copy.chooseBody}</p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[28rem]">
+              <button type="button" onClick={() => openAssistant("guided")} className="min-h-12 rounded-xl gradient-gold px-4 py-3 text-sm font-black text-deep">{copy.chooseCta}</button>
+              <button type="button" onClick={() => openAssistant("answers", "locations")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-black"><MapPin className="h-4 w-4" aria-hidden="true" />{copy.nearestCta}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:py-24">
+        <div className="rounded-[2rem] border border-primary/20 bg-primary/5 p-6 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+            <div className="grid h-16 w-16 place-items-center rounded-2xl bg-deep text-aqua"><HandHeart className="h-8 w-8" aria-hidden="true" /></div>
+            <div>
+              <SectionEyebrow>{copy.needsEyebrow}</SectionEyebrow>
+              <h2 className="mt-3 text-2xl font-black sm:text-4xl">{copy.needsTitle}</h2>
+              <p className="mt-4 max-w-3xl leading-8 text-muted-foreground">{copy.needsBody}</p>
+            </div>
+            <button type="button" onClick={() => openAssistant("guided")} className="min-h-12 rounded-xl bg-deep px-5 py-3 text-sm font-black text-white">{copy.needsCta}</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="coach-ayman" className="mx-auto grid max-w-7xl scroll-mt-24 gap-10 px-6 py-20 lg:grid-cols-[.8fr_1.2fr] lg:items-center lg:py-24">
         <div className="relative min-h-[420px] overflow-hidden rounded-[2.25rem] bg-deep shadow-elegant">
           <picture className="absolute inset-0 block h-full w-full">
             <source srcSet={heroAvif} type="image/avif" />
             <source srcSet={heroWebp} type="image/webp" />
             <img
               src={heroImg}
-              alt="Coach Ayman swimming coaching"
+              alt="Aquatic coaching environment in Abu Dhabi"
               className="absolute inset-0 h-full w-full object-cover opacity-75"
               width={1024}
               height={1024}
@@ -336,7 +504,7 @@ function Home() {
           </picture>
           <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/40 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-7 text-white">
-            <div className="text-sm font-bold uppercase tracking-[0.2em] text-aqua">Relax Fix UAE</div>
+            <div className="text-sm font-bold uppercase tracking-[0.2em] text-aqua">{copy.coachLabel}</div>
             <div className="mt-2 text-3xl font-black">{tr("coachTitle")}</div>
           </div>
         </div>
@@ -344,6 +512,7 @@ function Home() {
           <SectionEyebrow>{tr("coachTitle")}</SectionEyebrow>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("slogan")}</h2>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">{tr("coachBody")}</p>
+          <p className="mt-4 font-bold leading-7 text-foreground">{copy.coachTrust}</p>
           <blockquote className="mt-8 rounded-2xl border-s-4 border-gold bg-muted/60 p-6 text-lg font-bold leading-8">
             “{tr("coachQuote")}”
           </blockquote>
@@ -501,7 +670,7 @@ type StepProps = {
 };
 
 function AboutStep({ form, setForm }: StepProps) {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   return (
     <div className="grid gap-6 sm:grid-cols-2 animate-float-in">
       <div>
@@ -517,6 +686,9 @@ function AboutStep({ form, setForm }: StepProps) {
           onChange={(e) => setForm((value) => ({ ...value, name: e.target.value }))}
         />
       </div>
+      <p className="rounded-2xl bg-muted/60 p-4 text-xs leading-6 text-muted-foreground sm:col-span-2">
+        {conversionCopy[lang].contactReason}
+      </p>
       <div>
         <label htmlFor="booking-phone" className={labelClass}>
           {tr("phone")} *
@@ -625,11 +797,10 @@ function GoalStep({ form, setForm }: StepProps) {
         value={form.trainingType}
         options={[
           ["Private", tr("private")],
-          ["Semi-Private", tr("semi")],
           ["Group", tr("group")],
         ]}
         onChange={(trainingType) => setForm((value) => ({ ...value, trainingType }))}
-        columns={3}
+        columns={2}
       />
     </div>
   );

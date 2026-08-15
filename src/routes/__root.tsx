@@ -148,14 +148,14 @@ function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Link to={publicHome} className="group flex min-w-0 items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl gradient-aqua shadow-glow transition group-hover:scale-105">
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
+        <Link to={publicHome} className="group flex min-w-0 shrink items-center gap-2 sm:gap-3">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl gradient-aqua shadow-glow transition group-hover:scale-105 sm:h-10 sm:w-10 sm:rounded-2xl">
             <Waves className="h-5 w-5 text-white" />
           </div>
           <div className="min-w-0 leading-tight">
-            <div className="truncate text-sm font-black sm:text-base">{settings.businessName}</div>
-            <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
+            <div className="whitespace-nowrap text-[11px] font-black sm:text-base">{settings.businessName}</div>
+            <div className="hidden truncate text-[10px] text-muted-foreground min-[380px]:block sm:text-xs">
               {settings.coachName}
             </div>
           </div>
@@ -170,9 +170,11 @@ function Nav() {
           </a>
           <a
             href={isPublicHome ? "#book" : `${publicHome}#book`}
-            className="inline-flex items-center gap-2 rounded-xl bg-deep px-3 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 sm:px-4 sm:text-sm"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-deep px-2.5 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 sm:gap-2 sm:px-4 sm:text-sm"
           >
-            <Waves className="h-4 w-4" /> {tr("book")}
+            <Waves className="h-4 w-4" />
+            <span className="sm:hidden">{lang === "ar" ? "احجز" : "Book"}</span>
+            <span className="hidden sm:inline">{tr("book")}</span>
           </a>
           {languageSwitchHref ? (
             <a

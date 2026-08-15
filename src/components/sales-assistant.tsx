@@ -36,6 +36,10 @@ type AssistantAnswer = {
   language: ChatbotLanguage;
 };
 
+const CONVERSION_QUICK_REPLY_INTENTS = CHATBOT_QUICK_REPLY_INTENTS.filter(
+  (intent) => intent === "pricing" || intent === "booking" || intent === "locations",
+);
+
 function track(name: string, metadata: Record<string, string> = {}) {
   window.dispatchEvent(
     new CustomEvent("relaxfix:analytics-event", {
@@ -66,6 +70,7 @@ export function SalesAssistant() {
         answersMode: "إجابات سريعة",
         guidedMode: "ساعدني في الاختيار",
         quickReplies: "اختر سؤالًا شائعًا",
+        privateOrGroup: "خاص أم مجموعة صغيرة؟",
         askLabel: "أو اكتب سؤالك بالعربية أو الإنجليزية",
         askPlaceholder: "مثال: ما أسعار تدريب الأطفال؟",
         askSubmit: "إرسال السؤال",
@@ -105,6 +110,7 @@ export function SalesAssistant() {
         answersMode: "Quick answers",
         guidedMode: "Help me choose",
         quickReplies: "Choose a common question",
+        privateOrGroup: "Private or Small Group?",
         askLabel: "Or ask in Arabic or English",
         askPlaceholder: "Example: What are the kids coaching prices?",
         askSubmit: "Send question",
@@ -201,6 +207,21 @@ export function SalesAssistant() {
       opener?.focus();
     };
   }, [lang, open]);
+
+  useEffect(() => {
+    function handleExternalOpen(event: Event) {
+      const detail = (event as CustomEvent<{ mode?: AssistantMode; intent?: ChatbotIntent }>).detail;
+      setOpen(true);
+      setMode(detail?.mode ?? "answers");
+      setMessage("");
+      setAnswer(detail?.intent ? { intent: detail.intent, language: lang } : null);
+      track("sales_assistant_opened", { language: lang, source: "page-cta" });
+      window.dispatchEvent(new CustomEvent("relaxfix:conversation-start"));
+    }
+
+    window.addEventListener("relaxfix:open-sales-assistant", handleExternalOpen);
+    return () => window.removeEventListener("relaxfix:open-sales-assistant", handleExternalOpen);
+  }, [lang]);
 
   function openAssistant() {
     setOpen(true);
@@ -382,8 +403,8 @@ export function SalesAssistant() {
             </div>
 
             {mode === "answers" ? (
-              <div className="mt-6 space-y-5">
-                <div>
+              <div className="mt-6 flex flex-col gap-5">
+                <div className="order-2">
                   <h3 id="chatbot-quick-replies" className="text-sm font-black">
                     {copy.quickReplies}
                   </h3>
@@ -391,7 +412,7 @@ export function SalesAssistant() {
                     className="mt-3 grid gap-2 sm:grid-cols-3"
                     aria-labelledby="chatbot-quick-replies"
                   >
-                    {CHATBOT_QUICK_REPLY_INTENTS.map((intent) => {
+                    {CONVERSION_QUICK_REPLY_INTENTS.map((intent) => {
                       const entry = chatbotKnowledgeFor(intent);
                       return (
                         <button
@@ -409,10 +430,17 @@ export function SalesAssistant() {
                         </button>
                       );
                     })}
+                    <button
+                      type="button"
+                      onClick={() => selectMode("guided")}
+                      className="rounded-xl border border-border px-3 py-3 text-sm font-bold transition hover:border-primary hover:bg-primary/5"
+                    >
+                      {copy.privateOrGroup}
+                    </button>
                   </div>
                 </div>
 
-                <form onSubmit={submitQuestion}>
+                <form onSubmit={submitQuestion} className="order-1">
                   <label htmlFor="sales-assistant-question" className="text-sm font-black">
                     {copy.askLabel}
                   </label>
@@ -442,7 +470,7 @@ export function SalesAssistant() {
                     role="status"
                     aria-live="polite"
                     dir={answer.language === "ar" ? "rtl" : "ltr"}
-                    className="rounded-2xl border border-primary/25 bg-primary/5 p-4"
+                    className="order-3 rounded-2xl border border-primary/25 bg-primary/5 p-4"
                   >
                     <div className="font-black">
                       {knowledge
@@ -504,7 +532,7 @@ export function SalesAssistant() {
                   </div>
                 )}
 
-                <p className="rounded-xl bg-muted/60 px-4 py-3 text-xs leading-6 text-muted-foreground">
+                <p className="order-4 rounded-xl bg-muted/60 px-4 py-3 text-xs leading-6 text-muted-foreground">
                   {copy.safety}
                 </p>
               </div>

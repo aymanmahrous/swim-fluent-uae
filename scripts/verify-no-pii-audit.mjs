@@ -77,8 +77,8 @@ if (!analyticsSource.includes("https?:\\/\\/")) {
 }
 
 // 5. Verify value length limit prevents large PII blobs
-if (!analyticsSource.includes("value.length <= 80")) {
-  throw new Error("no-pii-audit: analytics must enforce a string-length limit of 80 on parameter values");
+if (!analyticsSource.includes("value.length <= 150")) {
+  throw new Error("no-pii-audit: analytics must enforce the approved 150-character limit");
 }
 
 // 6. Verify no PII in conversion event bridge

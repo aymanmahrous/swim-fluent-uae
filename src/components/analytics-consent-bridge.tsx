@@ -1,7 +1,10 @@
-import { useEffect } from "react";
+import { useLocation } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useLang } from "../lib/i18n";
 import {
   denyAnalyticsConsent,
   grantAnalyticsConsent,
+  trackPublicPageView,
 } from "../platform/public-analytics";
 import {
   capturePublicAttributionAfterConsent,
@@ -25,6 +28,10 @@ export function publishAnalyticsConsentDecision(
 }
 
 export function AnalyticsConsentBridge() {
+  const { lang } = useLang();
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const [consentAccepted, setConsentAccepted] = useState(false);
+
   useEffect(() => {
     denyAnalyticsConsent();
 
@@ -34,9 +41,11 @@ export function AnalyticsConsentBridge() {
       if (decision === "accepted") {
         capturePublicAttributionAfterConsent(window.location.search);
         grantAnalyticsConsent();
+        setConsentAccepted(true);
         return;
       }
 
+      setConsentAccepted(false);
       clearPublicAttribution();
       denyAnalyticsConsent();
     };
@@ -44,6 +53,11 @@ export function AnalyticsConsentBridge() {
     window.addEventListener(ANALYTICS_CONSENT_EVENT, handleDecision);
     return () => window.removeEventListener(ANALYTICS_CONSENT_EVENT, handleDecision);
   }, []);
+
+  useEffect(() => {
+    if (!consentAccepted) return;
+    trackPublicPageView(pathname, lang);
+  }, [consentAccepted, lang, pathname]);
 
   return null;
 }

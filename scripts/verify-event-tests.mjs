@@ -3,12 +3,40 @@ import { readFileSync } from "node:fs";
 const analyticsSource = readFileSync("src/platform/public-analytics.ts", "utf8");
 const eventSource = readFileSync("src/platform/public-cta-events.ts", "utf8");
 const registrySource = readFileSync("src/platform/public-cta-registry.ts", "utf8");
+const consentBridgeSource = readFileSync("src/components/analytics-consent-bridge.tsx", "utf8");
+const bookingSource = readFileSync("src/components/public-home.tsx", "utf8");
 
 // 1. Verify the four required events are declared in the type union
 const requiredEvents = ["booking_complete", "conversation_start", "whatsapp_click", "call_click"];
 for (const eventName of requiredEvents) {
   if (!analyticsSource.includes(`"${eventName}"`)) {
     throw new Error(`event-tests: required event "${eventName}" is not declared in PublicAnalyticsEvent`);
+  }
+}
+
+// 1A. Verify manual SPA page_view remains consent-gated and deduplicated.
+for (const fragment of [
+  '"page_view"',
+  "trackPublicPageView",
+  "lastPageViewNavigationKey",
+  "navigationKey === lastPageViewNavigationKey",
+  'trackPublicEvent("page_view"',
+  "if (emitted) lastPageViewNavigationKey = navigationKey;",
+  "send_page_view: false",
+]) {
+  if (!analyticsSource.includes(fragment)) {
+    throw new Error(`event-tests: manual page_view contract is missing ${JSON.stringify(fragment)}`);
+  }
+}
+for (const fragment of [
+  "consentAccepted",
+  "if (!consentAccepted) return;",
+  "trackPublicPageView(pathname, lang)",
+]) {
+  if (!consentBridgeSource.includes(fragment)) {
+    throw new Error(
+      `event-tests: consent-gated SPA page_view wiring is missing ${JSON.stringify(fragment)}`,
+    );
   }
 }
 
@@ -29,6 +57,18 @@ if (!eventSource.includes('trackPublicEvent("booking_complete"')) {
 }
 if (!eventSource.includes('source: "booking-success"')) {
   throw new Error('event-tests: booking_complete must use source: "booking-success"');
+}
+for (const fragment of [
+  "if (!result.duplicate)",
+  "emitBookingComplete({",
+  'ctaId: "booking_section_submit"',
+  "backendConfirmed: true",
+  "duplicateResponse: false",
+  "resultKey: result.bookingRequestId",
+]) {
+  if (!bookingSource.includes(fragment)) {
+    throw new Error(`event-tests: confirmed booking wiring is missing ${JSON.stringify(fragment)}`);
+  }
 }
 
 // 4. Verify conversation_start fires from chatbot with correct source
