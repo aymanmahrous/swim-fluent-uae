@@ -19,6 +19,7 @@ import {
 } from "../platform/chatbot-knowledge";
 import { TRAINING_LOCATIONS } from "../platform/public-business-config";
 import { emitPublicCtaClick } from "../platform/public-cta-events";
+import { WEB_AI_CONCIERGE_ENABLED } from "./web-ai-concierge";
 
 type Goal = "learn" | "confidence" | "performance";
 type Learner = "child" | "adult";
@@ -301,6 +302,12 @@ export function SalesAssistant() {
   function trackWhatsAppHandoff() {
     emitPublicCtaClick("floating_whatsapp", answer?.language ?? lang);
   }
+
+  // The real AI concierge (web-ai-concierge.tsx) reuses the same live business
+  // logic and supersedes this static, no-data FAQ widget wherever it is enabled,
+  // so the two floating launchers never show at once. This code stays intact
+  // and unused-but-reachable for whichever environment leaves the AI concierge off.
+  if (WEB_AI_CONCIERGE_ENABLED) return null;
 
   return (
     <>

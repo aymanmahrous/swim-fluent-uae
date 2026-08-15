@@ -1,16 +1,18 @@
 import { MessageCircle, Send, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLang } from "../lib/i18n";
 import {
   businessWhatsAppUrl,
   fallbackBusinessSettings,
   useBusinessSettings,
 } from "../platform/business-settings";
+import { getLatestPublicAttribution } from "../platform/public-attribution";
 import { emitPublicCtaClick } from "../platform/public-cta-events";
 
 type ChatTurn = {
   role: "customer" | "ai" | "system";
   text: string;
+  bookingConfirmed?: boolean;
 };
 
 type QuickAction = {
@@ -56,7 +58,24 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
 ];
 
-const WEB_AI_CONCIERGE_ENABLED = import.meta.env.VITE_ENABLE_WEB_AI_CONCIERGE === "true";
+export const WEB_AI_CONCIERGE_ENABLED = import.meta.env.VITE_ENABLE_WEB_AI_CONCIERGE === "true";
+
+function TypingIndicator() {
+  return (
+    <div
+      className="flex w-fit items-center gap-1 rounded-2xl border border-border bg-muted px-4 py-3"
+      aria-label="typing"
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground"
+          style={{ animationDelay: `${i * 120}ms` }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function WebAiConcierge() {
   const { lang, dir } = useLang();
@@ -69,7 +88,12 @@ export function WebAiConcierge() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const copy = isArabic
     ? {
@@ -82,8 +106,10 @@ export function WebAiConcierge() {
         quickActions: "أسئلة سريعة",
         fallback:
           "تعذر الوصول للمساعد الآن. يمكنك التواصل مباشرة عبر واتساب وسنرد عليك بأسرع وقت.",
+        retry: "إعادة المحاولة",
         whatsapp: "متابعة عبر واتساب",
         privacy: "لا نطلب معلومات غير ضرورية، وبياناتك تُستخدم فقط لمتابعة طلبك.",
+        bookingConfirmed: "تم تأكيد الحجز",
       }
     : {
         open: "Open the AI booking assistant",
@@ -95,11 +121,77 @@ export function WebAiConcierge() {
         quickActions: "Quick questions",
         fallback:
           "The assistant is temporarily unavailable. You can reach us directly on WhatsApp and we'll reply as soon as possible.",
+        retry: "Retry",
         whatsapp: "Continue on WhatsApp",
         privacy: "We only ask what's needed to help with your request.",
+        bookingConfirmed: "Booking confirmed",
       };
 
-  if (!WEB_AI_CONCIERGE_ENABLED) return null;
+  useEffect(() => {
+    if (!open || historyLoaded) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const response = await fetch("/api/web-ai-concierge", { credentials: "same-origin" });
+        const data: {
+          success: boolean;
+          messages: { direction: string; body: string }[];
+        } = await response.json();
+        if (cancelled) return;
+
+        if (data.success && data.messages.length > 0) {
+          setTurns(
+            data.messages.map((m) => ({
+              role: m.direction === "inbound" ? "customer" : "ai",
+              text: m.body,
+            })),
+          );
+        } else {
+          setTurns([{ role: "ai", text: copy.intro }]);
+        }
+      } catch {
+        if (!cancelled) setTurns([{ role: "ai", text: copy.intro }]);
+      } finally {
+        if (!cancelled) setHistoryLoaded(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, historyLoaded]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    inputRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   function scrollToEnd() {
     requestAnimationFrame(() => {
@@ -112,6 +204,7 @@ export function WebAiConcierge() {
     if (!trimmed || sending) return;
 
     setFailed(false);
+    setLastFailedMessage(null);
     setInput("");
     setTurns((prev) => [...prev, { role: "customer", text: trimmed }]);
     setSending(true);
@@ -121,20 +214,29 @@ export function WebAiConcierge() {
       const response = await fetch("/api/web-ai-concierge", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({ message: trimmed, attribution: getLatestPublicAttribution() }),
         credentials: "same-origin",
       });
 
       if (!response.ok) throw new Error(`status_${response.status}`);
-      const data: { success: boolean; code: string; reply: string | null } = await response.json();
+      const data: {
+        success: boolean;
+        code: string;
+        reply: string | null;
+        bookingId: string | null;
+      } = await response.json();
 
       if (!data.success) throw new Error(data.code);
 
       if (data.reply) {
-        setTurns((prev) => [...prev, { role: "ai", text: data.reply as string }]);
+        setTurns((prev) => [
+          ...prev,
+          { role: "ai", text: data.reply as string, bookingConfirmed: Boolean(data.bookingId) },
+        ]);
       }
     } catch {
       setFailed(true);
+      setLastFailedMessage(trimmed);
       setTurns((prev) => [...prev, { role: "system", text: copy.fallback }]);
     } finally {
       setSending(false);
@@ -142,12 +244,20 @@ export function WebAiConcierge() {
     }
   }
 
+  function retryLastMessage() {
+    if (!lastFailedMessage) return;
+    setTurns((prev) => prev.slice(0, -1)); // drop the fallback system bubble before retrying
+    void sendMessage(lastFailedMessage);
+  }
+
   function openWidget() {
     emitPublicCtaClick("floating_whatsapp", lang);
     setOpen(true);
-    if (turns.length === 0) {
-      setTurns([{ role: "ai", text: copy.intro }]);
-    }
+  }
+
+  function closeWidget() {
+    setOpen(false);
+    openerRef.current?.focus();
   }
 
   function openWhatsApp() {
@@ -157,15 +267,18 @@ export function WebAiConcierge() {
     window.open(businessWhatsAppUrl(settings, summary), "_blank", "noopener,noreferrer");
   }
 
+  if (!WEB_AI_CONCIERGE_ENABLED) return null;
+
   return (
     <>
       <button
+        ref={openerRef}
         type="button"
         onClick={openWidget}
         aria-label={copy.open}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="fixed bottom-24 start-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6"
+        className="fixed bottom-24 end-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6"
       >
         <MessageCircle className="h-6 w-6" />
       </button>
@@ -175,10 +288,11 @@ export function WebAiConcierge() {
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 sm:items-center"
           dir={dir}
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setOpen(false);
+            if (event.target === event.currentTarget) closeWidget();
           }}
         >
           <section
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="web-ai-concierge-title"
@@ -193,7 +307,7 @@ export function WebAiConcierge() {
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeWidget}
                 aria-label={copy.close}
                 className="rounded-full border border-border p-2"
               >
@@ -202,28 +316,33 @@ export function WebAiConcierge() {
             </div>
 
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
+              {!historyLoaded && <TypingIndicator />}
               {turns.map((turn, index) => (
-                <div
-                  key={index}
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-6 ${
-                    turn.role === "customer"
-                      ? "ms-auto bg-deep text-white"
-                      : turn.role === "system"
-                        ? "border border-destructive/30 bg-destructive/5 text-destructive"
-                        : "border border-border bg-muted"
-                  }`}
-                >
-                  {turn.text}
+                <div key={index} className={turn.role === "customer" ? "ms-auto max-w-[85%]" : "max-w-[85%]"}>
+                  {turn.bookingConfirmed && (
+                    <div className="mb-1 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-black text-emerald-800">
+                      ✓ {copy.bookingConfirmed}
+                    </div>
+                  )}
+                  <div
+                    className={`rounded-2xl px-4 py-2.5 text-sm leading-6 ${
+                      turn.role === "customer"
+                        ? "bg-deep text-white"
+                        : turn.role === "system"
+                          ? "border border-destructive/30 bg-destructive/5 text-destructive"
+                          : turn.bookingConfirmed
+                            ? "border border-emerald-300 bg-emerald-50 text-emerald-900"
+                            : "border border-border bg-muted"
+                    }`}
+                  >
+                    {turn.text}
+                  </div>
                 </div>
               ))}
-              {sending && (
-                <div className="max-w-[60%] rounded-2xl border border-border bg-muted px-4 py-2.5 text-sm text-muted-foreground">
-                  …
-                </div>
-              )}
+              {sending && <TypingIndicator />}
             </div>
 
-            {turns.length <= 1 && (
+            {historyLoaded && turns.length <= 1 && (
               <div className="border-t border-border p-3">
                 <p className="mb-2 text-xs font-black text-muted-foreground">{copy.quickActions}</p>
                 <div className="grid grid-cols-2 gap-2">
@@ -242,11 +361,20 @@ export function WebAiConcierge() {
             )}
 
             {failed && (
-              <div className="border-t border-border p-3">
+              <div className="flex gap-2 border-t border-border p-3">
+                {lastFailedMessage && (
+                  <button
+                    type="button"
+                    onClick={retryLastMessage}
+                    className="flex-1 rounded-xl border border-border px-4 py-3 text-center text-sm font-black"
+                  >
+                    {copy.retry}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={openWhatsApp}
-                  className="w-full rounded-xl bg-deep px-4 py-3 text-center text-sm font-black text-white"
+                  className="flex-1 rounded-xl bg-deep px-4 py-3 text-center text-sm font-black text-white"
                 >
                   {copy.whatsapp}
                 </button>
@@ -261,6 +389,7 @@ export function WebAiConcierge() {
               className="flex gap-2 border-t border-border p-3"
             >
               <input
+                ref={inputRef}
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1000}

@@ -6,12 +6,25 @@ import {
   abuseControlFingerprint,
   rateLimitedResponse,
 } from "../platform/abuse-control.server";
-import { runWebConciergeTurn } from "../platform/web-concierge.server";
+import { getWebConciergeHistory, runWebConciergeTurn } from "../platform/web-concierge.server";
 
 const sessionCookieName = "rf_web_concierge_session";
 
+const AttributionSchema = z
+  .object({
+    source: z.string().max(100).optional(),
+    medium: z.string().max(100).optional(),
+    campaign: z.string().max(150).optional(),
+    content: z.string().max(150).optional(),
+    term: z.string().max(150).optional(),
+  })
+  .partial()
+  .nullable()
+  .optional();
+
 const TurnRequestSchema = z.object({
   message: z.string().trim().min(1).max(1000),
+  attribution: AttributionSchema,
 });
 
 function parseCookies(request: Request): Record<string, string> {
@@ -32,6 +45,35 @@ function sessionCookieHeader(sessionId: string): string {
 export const Route = createFileRoute("/api/web-ai-concierge")({
   server: {
     handlers: {
+      GET: async ({ request }) => {
+        const cookies = parseCookies(request);
+        const sessionId = cookies[sessionCookieName];
+        if (!sessionId) {
+          return Response.json(
+            { success: true, messages: [], conversationMode: null },
+            { status: 200, headers: { "Cache-Control": "no-store" } },
+          );
+        }
+
+        try {
+          const history = await getWebConciergeHistory(sessionId);
+          return Response.json(
+            {
+              success: history.ok,
+              messages: history.messages,
+              conversationMode: history.conversationMode,
+            },
+            { status: 200, headers: { "Cache-Control": "no-store" } },
+          );
+        } catch (error) {
+          console.error("web_ai_concierge_history_failed", error);
+          return Response.json(
+            { success: false, messages: [], conversationMode: null },
+            { status: 503, headers: { "Cache-Control": "no-store" } },
+          );
+        }
+      },
+
       POST: async ({ request }) => {
         if (
           !abuseControlAllowed(request, {
@@ -57,7 +99,11 @@ export const Route = createFileRoute("/api/web-ai-concierge")({
         }
 
         try {
-          const result = await runWebConciergeTurn(sessionId, parsed.data.message);
+          const result = await runWebConciergeTurn(
+            sessionId,
+            parsed.data.message,
+            parsed.data.attribution ?? null,
+          );
 
           const headers = new Headers({ "Cache-Control": "no-store" });
           if (isNewSession) {
@@ -76,6 +122,7 @@ export const Route = createFileRoute("/api/web-ai-concierge")({
               success: true,
               code: result.code,
               reply: result.code === "REPLY" ? result.draftReply : null,
+              bookingId: result.code === "REPLY" ? result.bookingId : null,
               language: result.language,
             },
             { status: 200, headers },
