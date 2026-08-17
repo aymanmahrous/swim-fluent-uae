@@ -1,3 +1,4 @@
+// Preview validation marker only; no runtime behavior change. Build retry after Vercel ignored-step exception.
 import type { PublicCtaId } from "./public-cta-registry";
 
 export type PublicAnalyticsEvent =
