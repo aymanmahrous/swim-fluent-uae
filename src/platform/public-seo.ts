@@ -38,8 +38,29 @@ const pageCopy = {
 
 type PublicLanguage = keyof typeof pageCopy;
 
+function locationEntity(location: (typeof TRAINING_LOCATIONS)[number]) {
+  const url = `${SITE_URL}/locations/${location.id}`;
+  return {
+    "@type": "Place",
+    "@id": `${url}#location`,
+    name: location.displayName,
+    alternateName: location.googleMapsObservedName,
+    url,
+    hasMap: location.shortUrl,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Abu Dhabi",
+      addressRegion: "Abu Dhabi",
+      addressCountry: "AE",
+    },
+  };
+}
+
 function structuredData(lang: PublicLanguage) {
   const copy = pageCopy[lang];
+  const publicLocations = TRAINING_LOCATIONS.filter((location) => location.localSeoEnabled);
+  const locationNodes = publicLocations.map(locationEntity);
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -60,17 +81,7 @@ function structuredData(lang: PublicLanguage) {
             name: "United Arab Emirates",
           },
         },
-        location: TRAINING_LOCATIONS.map((location) => ({
-          "@type": "Place",
-          name: location.displayName,
-          alternateName: location.googleMapsObservedName,
-          hasMap: location.shortUrl,
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Abu Dhabi",
-            addressCountry: "AE",
-          },
-        })),
+        location: locationNodes.map((location) => ({ "@id": location["@id"] })),
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer service",
@@ -94,6 +105,7 @@ function structuredData(lang: PublicLanguage) {
           ],
         },
       },
+      ...locationNodes,
       {
         "@type": "Person",
         "@id": COACH_ID,
@@ -109,14 +121,9 @@ function structuredData(lang: PublicLanguage) {
         name: copy.serviceName,
         serviceType: "Kids swimming lessons and water confidence coaching",
         provider: { "@id": ORGANIZATION_ID },
-        areaServed: {
-          "@type": "City",
-          name: "Abu Dhabi",
-          containedInPlace: {
-            "@type": "Country",
-            name: "United Arab Emirates",
-          },
-        },
+        areaServed: publicLocations.map((location) => ({
+          "@id": `${SITE_URL}/locations/${location.id}#location`,
+        })),
         availableChannel: {
           "@type": "ServiceChannel",
           serviceUrl: copy.url,
