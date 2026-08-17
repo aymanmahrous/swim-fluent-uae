@@ -167,6 +167,18 @@ function LocalLocationPage() {
         </a>
       </div>
 
+      <section className="mt-12 rounded-2xl border border-primary/15 bg-primary/5 p-5">
+        <h2 className="text-lg font-black">اعرف أكثر عن التدريب في أبوظبي</h2>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link to="/swimming-lessons-abu-dhabi" className="rounded-xl bg-deep px-4 py-3 text-sm font-black text-white">
+            Swimming Lessons Abu Dhabi
+          </Link>
+          <Link to="/coach-ayman" className="rounded-xl border border-border bg-card px-4 py-3 text-sm font-black">
+            كوتش أيمن · Coach Ayman
+          </Link>
+        </div>
+      </section>
+
       <section className="mt-12 border-t border-border pt-8">
         <h2 className="text-xl font-black">{copy.ar.otherLocations}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
