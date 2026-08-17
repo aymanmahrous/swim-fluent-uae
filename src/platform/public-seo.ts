@@ -89,20 +89,6 @@ function structuredData(lang: PublicLanguage) {
           email: OPERATIONAL_EMAIL,
           availableLanguage: ["Arabic", "English"],
           areaServed: "AE-AZ",
-          hoursAvailable: [
-            {
-              "@type": "OpeningHoursSpecification",
-              dayOfWeek: ["Saturday", "Sunday"],
-              opens: "10:00",
-              closes: "22:00",
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              opens: "16:00",
-              closes: "21:00",
-            },
-          ],
         },
       },
       ...locationNodes,
@@ -110,6 +96,7 @@ function structuredData(lang: PublicLanguage) {
         "@type": "Person",
         "@id": COACH_ID,
         name: "Coach Ayman",
+        url: `${SITE_URL}/coach-ayman`,
         jobTitle: "Swimming and Water Confidence Coach",
         worksFor: { "@id": ORGANIZATION_ID },
         knowsAbout: ["Swimming coaching", "Water confidence", "Swimming technique"],
