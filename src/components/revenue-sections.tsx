@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Clock3, ExternalLink, Mail, MapPin, MessageCircle, Users } from "lucide-react";
 import { useLang } from "../lib/i18n";
 import {
@@ -34,6 +35,7 @@ export function RevenueSections() {
         privateAquaticBody: "جلسة فردية مخصصة للتأهيل الحركي، تحسين اللياقة أو خسارة الوزن حسب الهدف.",
         locations: "مواقع التدريب",
         locationsIntro: "اختر موقع التدريب الأقرب إليك، ثم أرسل طلب تقييم أولي. سنراجع مستوى المتدرب وتوفر الموقع والموعد قبل تأكيد الحجز.",
+        locationDetails: "تفاصيل موقع التدريب",
         maps: "فتح في Google Maps",
         assessment: "اطلب تقييمًا أوليًا",
         whatsapp: "واتساب",
@@ -57,6 +59,7 @@ export function RevenueSections() {
         privateAquaticBody: "A private, individual session tailored to mobility support, fitness improvement, or weight-loss goals.",
         locations: "Training Locations",
         locationsIntro: "Choose the most convenient training location and submit an initial assessment request. We will review the learner’s level, location availability and appointment time before confirming the booking.",
+        locationDetails: "Training location details",
         maps: "Open in Google Maps",
         assessment: "Request an initial assessment",
         whatsapp: "WhatsApp",
@@ -119,6 +122,13 @@ export function RevenueSections() {
                   <p>{isArabic ? GENERAL_AVAILABILITY.weekdays.ar : GENERAL_AVAILABILITY.weekdays.en}</p>
                 </div>
                 <div className="mt-6 grid gap-2">
+                  <Link
+                    to="/locations/$locationId"
+                    params={{ locationId: location.id }}
+                    className="inline-flex items-center justify-center rounded-xl border border-primary/25 bg-primary/5 px-4 py-3 text-sm font-black text-primary transition hover:border-primary hover:bg-primary/10"
+                  >
+                    {copy.locationDetails}
+                  </Link>
                   <a href={location.shortUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black hover:bg-muted">{copy.maps} <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>
                   <a href="#book" className="inline-flex items-center justify-center rounded-xl bg-deep px-4 py-3 text-sm font-black text-white">{copy.assessment}</a>
                   <a href={operationalWhatsAppUrl(message)} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-800"><MessageCircle className="h-4 w-4" aria-hidden="true" /> {copy.whatsapp}</a>
