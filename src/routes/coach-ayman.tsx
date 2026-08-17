@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useLang } from "../lib/i18n";
 import { TRAINING_LOCATIONS, operationalWhatsAppUrl } from "../platform/public-business-config";
 import { emitPublicCtaClick } from "../platform/public-cta-events";
 import { SITE_URL } from "../platform/public-seo";
 
 const PAGE_URL = `${SITE_URL}/coach-ayman`;
-const COACH_IMAGE_URL = `${SITE_URL}/coach-ayman.webp`;
-const TITLE = "Coach Ayman | Swimming Coach in Abu Dhabi | Relax Fix UAE";
+const TITLE = "كوتش أيمن | Coach Ayman | مدرب سباحة في أبوظبي | Relax Fix UAE";
 const DESCRIPTION =
-  "Meet Coach Ayman, swimming coach in Abu Dhabi with more than 15 years of swimming-coaching experience. Private and small-group lessons across four Relax Fix UAE locations.";
+  "كوتش أيمن مدرب سباحة في أبوظبي بخبرة أكثر من 15 عامًا، مع حصص خاصة ومجموعات صغيرة في مواقع Relax Fix UAE المعتمدة.";
 
 export const Route = createFileRoute("/coach-ayman")({
   head: () => {
@@ -19,7 +19,6 @@ export const Route = createFileRoute("/coach-ayman")({
           "@id": `${SITE_URL}/#coach-ayman`,
           name: "Coach Ayman",
           url: PAGE_URL,
-          image: COACH_IMAGE_URL,
           description: DESCRIPTION,
           jobTitle: "Swimming Coach",
           worksFor: { "@id": `${SITE_URL}/#organization` },
@@ -33,15 +32,8 @@ export const Route = createFileRoute("/coach-ayman")({
           name: TITLE,
           description: DESCRIPTION,
           mainEntity: { "@id": `${SITE_URL}/#coach-ayman` },
-          primaryImageOfPage: {
-            "@type": "ImageObject",
-            url: COACH_IMAGE_URL,
-            width: 600,
-            height: 750,
-            caption: "Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi",
-          },
           isPartOf: { "@id": `${SITE_URL}/#website` },
-          inLanguage: ["en-AE", "ar-AE"],
+          inLanguage: ["ar-AE", "en-AE"],
         },
         {
           "@type": "BreadcrumbList",
@@ -66,11 +58,6 @@ export const Route = createFileRoute("/coach-ayman")({
         { property: "og:type", content: "profile" },
         { property: "og:url", content: PAGE_URL },
         { property: "og:site_name", content: "Relax Fix UAE" },
-        { property: "og:image", content: COACH_IMAGE_URL },
-        { property: "og:image:alt", content: "Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi" },
-        { property: "og:image:type", content: "image/webp" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: COACH_IMAGE_URL },
       ],
       links: [{ rel: "canonical", href: PAGE_URL }],
       scripts: [{ type: "application/ld+json", children: jsonLd }],
@@ -79,80 +66,120 @@ export const Route = createFileRoute("/coach-ayman")({
   component: CoachAymanPage,
 });
 
+const copy = {
+  ar: {
+    breadcrumb: "كوتش أيمن",
+    eyebrow: "مدرب سباحة · أبوظبي",
+    title: "كوتش أيمن — تدريب السباحة في أبوظبي",
+    intro: "كوتش أيمن لديه خبرة أكثر من 15 عامًا في تدريب السباحة. التدريب يبدأ من فهم مستوى المتدرب وهدفه، ثم التدرج بخطوات واضحة وهادئة لبناء التحكم والثقة داخل الماء.",
+    ask: "اسأل عن التدريب",
+    lessons: "تعليم السباحة في أبوظبي",
+    glance: "معلومات سريعة",
+    experience: "الخبرة",
+    experienceValue: "أكثر من 15 عامًا",
+    languages: "اللغات",
+    languagesValue: "العربية والإنجليزية",
+    formats: "نوع الحصص",
+    formatsValue: "خاصة ومجموعات صغيرة",
+    capacity: "سعة المجموعة",
+    capacityValue: "بحد أقصى 4 متدربين",
+    area: "المنطقة",
+    areaValue: "أبوظبي، الإمارات",
+    approach: "أسلوب التدريب",
+    card1Title: "نقطة بداية واضحة",
+    card1Body: "نحدد المستوى الحالي والهدف قبل اختيار مسار التدريب المناسب.",
+    card2Title: "تدرج هادئ",
+    card2Body: "تُبنى الثقة في الماء تدريجيًا بدون استعجال المتدرب قبل أن يكون مستعدًا.",
+    card3Title: "تدريب مركز",
+    card3Body: "الحصص الخاصة والمجموعات الصغيرة تساعد على توجيه أوضح ومتابعة أفضل.",
+    locations: "مواقع تدريب كوتش أيمن",
+    locationHint: "أبوظبي · تفاصيل الموقع ورابط Google Maps",
+    whatsapp: "مرحبًا، أريد معرفة المزيد عن التدريب مع كوتش أيمن.",
+  },
+  en: {
+    breadcrumb: "Coach Ayman",
+    eyebrow: "Swimming Coach · Abu Dhabi",
+    title: "Coach Ayman — Swimming Coaching in Abu Dhabi",
+    intro: "Coach Ayman has more than 15 years of swimming-coaching experience. Coaching starts by understanding the learner’s current level and goal, then progressing through clear, calm steps that build control and confidence in the water.",
+    ask: "Ask about coaching",
+    lessons: "Swimming lessons in Abu Dhabi",
+    glance: "At a glance",
+    experience: "Experience",
+    experienceValue: "15+ years",
+    languages: "Languages",
+    languagesValue: "Arabic & English",
+    formats: "Lesson formats",
+    formatsValue: "Private & small group",
+    capacity: "Group capacity",
+    capacityValue: "Up to 4 learners",
+    area: "Area",
+    areaValue: "Abu Dhabi, UAE",
+    approach: "Coaching approach",
+    card1Title: "Clear starting point",
+    card1Body: "We understand the learner’s current level and goal before choosing the right coaching path.",
+    card2Title: "Calm progression",
+    card2Body: "Water confidence is built progressively without rushing the learner before they are ready.",
+    card3Title: "Focused coaching",
+    card3Body: "Private lessons and small groups allow clearer guidance and closer attention.",
+    locations: "Coach Ayman training locations",
+    locationHint: "Abu Dhabi · View location details and Google Maps link",
+    whatsapp: "Hello, I would like to know more about swimming coaching with Coach Ayman.",
+  },
+} as const;
+
 function CoachAymanPage() {
-  const whatsapp = operationalWhatsAppUrl(
-    "Hello, I would like to know more about swimming coaching with Coach Ayman.",
-  );
+  const { lang } = useLang();
+  const c = copy[lang];
+  const whatsapp = operationalWhatsAppUrl(c.whatsapp);
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-12 sm:px-6">
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
-        <Link to="/" className="font-semibold text-primary hover:underline">Relax Fix UAE</Link>
+    <main className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
+      <nav aria-label="Breadcrumb" className="mb-7 text-sm text-muted-foreground">
+        <Link to={lang === "ar" ? "/" : "/en"} className="font-semibold text-primary hover:underline">Relax Fix UAE</Link>
         <span aria-hidden="true"> · </span>
-        <span>Coach Ayman</span>
+        <span>{c.breadcrumb}</span>
       </nav>
 
-      <section className="grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-start">
-        <div>
-          <p className="text-sm font-black text-primary">Swimming Coach · Abu Dhabi</p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Coach Ayman — Swimming Coaching in Abu Dhabi</h1>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Coach Ayman has more than 15 years of swimming-coaching experience. His coaching approach focuses on clarity, discipline and calm progression, helping learners understand the water, improve body control and build lasting confidence step by step.
-          </p>
-          <p lang="ar" dir="rtl" className="mt-5 rounded-2xl border border-border bg-muted/40 p-5 text-lg leading-8">
-            كوتش أيمن لديه خبرة أكثر من 15 عامًا في تدريب السباحة في أبوظبي. أسلوب التدريب يعتمد على الوضوح والانضباط والهدوء، مع بناء الثقة في الماء خطوة بخطوة حسب نقطة بداية كل متدرب.
-          </p>
+      <section className="grid gap-7 lg:grid-cols-[1.35fr_.65fr] lg:items-stretch">
+        <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+          <p className="text-sm font-black text-primary">{c.eyebrow}</p>
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{c.title}</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">{c.intro}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", "en")} className="rounded-xl bg-deep px-5 py-3 font-black text-white">Ask about coaching</a>
-            <Link to="/swimming-lessons-abu-dhabi" className="rounded-xl border border-border px-5 py-3 font-black hover:bg-muted">Swimming lessons in Abu Dhabi</Link>
+            <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)} className="rounded-xl bg-deep px-5 py-3 font-black text-white transition hover:-translate-y-0.5">{c.ask}</a>
+            <Link to="/swimming-lessons-abu-dhabi" className="rounded-xl border border-border px-5 py-3 font-black transition hover:border-primary hover:bg-primary/5">{c.lessons}</Link>
           </div>
         </div>
 
-        <div className="space-y-5">
-          <figure className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-            <img
-              src="/coach-ayman.webp"
-              alt="Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi"
-              width={600}
-              height={750}
-              className="aspect-[4/5] w-full object-cover"
-              loading="eager"
-              decoding="async"
-            />
-            <figcaption className="px-5 py-4 text-sm font-bold text-muted-foreground">
-              Coach Ayman · Relax Fix UAE · Abu Dhabi
-            </figcaption>
-          </figure>
-
-          <aside className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-            <h2 className="text-xl font-black">At a glance</h2>
-            <dl className="mt-5 space-y-4 text-sm">
-              <div><dt className="font-bold text-muted-foreground">Experience</dt><dd className="mt-1 font-black">15+ years</dd></div>
-              <div><dt className="font-bold text-muted-foreground">Languages</dt><dd className="mt-1 font-black">Arabic & English</dd></div>
-              <div><dt className="font-bold text-muted-foreground">Lesson formats</dt><dd className="mt-1 font-black">Private & small group</dd></div>
-              <div><dt className="font-bold text-muted-foreground">Group capacity</dt><dd className="mt-1 font-black">Up to 4 learners</dd></div>
-              <div><dt className="font-bold text-muted-foreground">Area</dt><dd className="mt-1 font-black">Abu Dhabi, UAE</dd></div>
-            </dl>
-          </aside>
-        </div>
+        <aside className="rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-card to-aqua/10 p-6 shadow-sm sm:p-7">
+          <div className="grid h-16 w-16 place-items-center rounded-2xl bg-deep text-2xl font-black text-white shadow-glow">CA</div>
+          <h2 className="mt-5 text-xl font-black">{c.glance}</h2>
+          <dl className="mt-5 space-y-4 text-sm">
+            <div><dt className="font-bold text-muted-foreground">{c.experience}</dt><dd className="mt-1 font-black">{c.experienceValue}</dd></div>
+            <div><dt className="font-bold text-muted-foreground">{c.languages}</dt><dd className="mt-1 font-black">{c.languagesValue}</dd></div>
+            <div><dt className="font-bold text-muted-foreground">{c.formats}</dt><dd className="mt-1 font-black">{c.formatsValue}</dd></div>
+            <div><dt className="font-bold text-muted-foreground">{c.capacity}</dt><dd className="mt-1 font-black">{c.capacityValue}</dd></div>
+            <div><dt className="font-bold text-muted-foreground">{c.area}</dt><dd className="mt-1 font-black">{c.areaValue}</dd></div>
+          </dl>
+        </aside>
       </section>
 
-      <section className="mt-16">
-        <h2 className="text-3xl font-black">Coaching approach</h2>
+      <section className="mt-14">
+        <h2 className="text-3xl font-black">{c.approach}</h2>
         <div className="mt-6 grid gap-5 md:grid-cols-3">
-          <article className="rounded-2xl border border-border p-6"><h3 className="font-black">Clear starting point</h3><p className="mt-3 leading-7 text-muted-foreground">The learning path starts by understanding the learner’s current level and goal before confirming the right lesson path.</p></article>
-          <article className="rounded-2xl border border-border p-6"><h3 className="font-black">Calm progression</h3><p className="mt-3 leading-7 text-muted-foreground">Water confidence is built progressively rather than by rushing the learner through movements before they are ready.</p></article>
-          <article className="rounded-2xl border border-border p-6"><h3 className="font-black">Focused coaching</h3><p className="mt-3 leading-7 text-muted-foreground">Private lessons and small groups allow clearer guidance, with group capacity limited to four learners.</p></article>
+          <article className="rounded-2xl border border-border bg-card p-6"><h3 className="font-black">{c.card1Title}</h3><p className="mt-3 leading-7 text-muted-foreground">{c.card1Body}</p></article>
+          <article className="rounded-2xl border border-border bg-card p-6"><h3 className="font-black">{c.card2Title}</h3><p className="mt-3 leading-7 text-muted-foreground">{c.card2Body}</p></article>
+          <article className="rounded-2xl border border-border bg-card p-6"><h3 className="font-black">{c.card3Title}</h3><p className="mt-3 leading-7 text-muted-foreground">{c.card3Body}</p></article>
         </div>
       </section>
 
-      <section className="mt-16">
-        <h2 className="text-3xl font-black">Coach Ayman training locations</h2>
+      <section className="mt-14">
+        <h2 className="text-3xl font-black">{c.locations}</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {TRAINING_LOCATIONS.map((location) => (
             <Link key={location.id} to="/locations/$locationId" params={{ locationId: location.id }} className="rounded-2xl border border-border bg-card p-5 transition hover:border-primary hover:bg-primary/5">
               <h3 className="font-black">{location.displayName}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">Abu Dhabi · View training-location details and Google Maps link</p>
+              <p className="mt-2 text-sm text-muted-foreground">{c.locationHint}</p>
             </Link>
           ))}
         </div>
