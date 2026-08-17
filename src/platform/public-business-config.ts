@@ -99,7 +99,7 @@ export const TRAINING_LOCATION_REGISTRY: readonly TrainingLocation[] = [
   },
   {
     id: "ics-mushrif",
-    displayName: "ICS Mushrif",
+    displayName: "ICS Al Mushrif",
     googleMapsObservedName: "International Community Schools - ICS Mushrif",
     shortUrl: "https://maps.app.goo.gl/Rgu2vKH7JDigAQQx6?g_st=ac",
     resolvedUrl:
