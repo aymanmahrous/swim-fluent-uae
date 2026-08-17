@@ -10,6 +10,7 @@ const COACH_ID = `${SITE_URL}/#coach-ayman`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 const SERVICE_ID = `${SITE_URL}/#swimming-water-confidence`;
 const SOCIAL_IMAGE_URL = new URL(heroImg, `${SITE_URL}/`).toString();
+const COACH_IMAGE_URL = `${SITE_URL}/coach-ayman.webp`;
 
 const pageCopy = {
   ar: {
@@ -97,6 +98,7 @@ function structuredData(lang: PublicLanguage) {
         "@id": COACH_ID,
         name: "Coach Ayman",
         url: `${SITE_URL}/coach-ayman`,
+        image: COACH_IMAGE_URL,
         jobTitle: "Swimming and Water Confidence Coach",
         worksFor: { "@id": ORGANIZATION_ID },
         knowsAbout: ["Swimming coaching", "Water confidence", "Swimming technique"],
