@@ -83,7 +83,7 @@ function SwimmingLessonsAbuDhabiPage() {
         <p className="text-sm font-bold text-primary">Coach Ayman · Abu Dhabi · Arabic & English</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Swimming Lessons in Abu Dhabi for Kids, Beginners & Water Confidence</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Relax Fix UAE provides swimming coaching in Abu Dhabi with Coach Ayman, who has more than 15 years of swimming-coaching experience. Coaching is available as private lessons or small groups of up to 4 learners, with a clear starting-point assessment and availability check before a booking is confirmed.
+          Relax Fix UAE provides swimming coaching in Abu Dhabi with Coach Ayman. Coaching is available as private lessons or small groups of up to 4 learners, with a clear starting-point assessment and availability check before a booking is confirmed.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", "en")} className="rounded-xl bg-deep px-5 py-3 font-black text-white">Ask about swimming lessons</a>

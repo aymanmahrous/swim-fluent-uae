@@ -137,7 +137,7 @@ for (const needle of [
   'DISPLAY_NAME_OWNER_APPROVED = "ICS Al Najda"',
   'displayName: "ICS Al Falah"',
   'displayName: "ICS Khalifa"',
-  'displayName: "ICS Mushrif"',
+  'displayName: "ICS Al Mushrif"',
   "isPublic: false",
   'start: "10:00"',
   'end: "22:00"',

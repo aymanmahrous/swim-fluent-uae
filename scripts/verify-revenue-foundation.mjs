@@ -39,7 +39,7 @@ for (const value of [
   "ICS Al Najda",
   "ICS Al Falah",
   "ICS Khalifa",
-  "ICS Mushrif",
+  "ICS Al Mushrif",
   "Rgu2vKH7JDigAQQx6",
   "isPublic: false",
   "bookingEnabled: false",
@@ -63,7 +63,7 @@ const registry = Function(
 )("ICS Al Najda", "ICS Al Danah - International Community School");
 const publicLocations = registry.filter((location) => location.isPublic);
 assert.equal(publicLocations.length, 4, "Exactly four locations must be public");
-assert.deepEqual(publicLocations.map((location) => location.displayName), ["ICS Al Najda", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"]);
+assert.deepEqual(publicLocations.map((location) => location.displayName), ["ICS Al Najda", "ICS Al Falah", "ICS Khalifa", "ICS Al Mushrif"]);
 assert.equal(new Set(publicLocations.map((location) => location.shortUrl)).size, publicLocations.length, "A public Maps short URL cannot be reused by another public location");
 assert.equal(new Set(publicLocations.map((location) => location.resolvedUrl)).size, publicLocations.length, "A resolved Maps destination cannot be reused by another public location");
 assert.ok(publicLocations.every((location) => !location.displayName.includes("Al Danah")), "Al Danah must not be a public display location");

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as CoachAymanRouteImport } from './routes/coach-ayman'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EditorRouteImport } from './routes/editor'
 import { Route as EnRouteImport } from './routes/en'
@@ -24,6 +25,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StaffRouteImport } from './routes/staff'
+import { Route as SwimmingLessonsAbuDhabiRouteImport } from './routes/swimming-lessons-abu-dhabi'
 import { Route as VideoRouteImport } from './routes/video'
 import { Route as ApiBookingRequestRouteImport } from './routes/api.booking-request'
 import { Route as ApiBusinessSettingsRouteImport } from './routes/api.business-settings'
@@ -115,6 +117,11 @@ const CampaignsRoute = CampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoachAymanRoute = CoachAymanRouteImport.update({
+  id: '/coach-ayman',
+  path: '/coach-ayman',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -168,6 +175,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const StaffRoute = StaffRouteImport.update({
   id: '/staff',
   path: '/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SwimmingLessonsAbuDhabiRoute = SwimmingLessonsAbuDhabiRouteImport.update({
+  id: '/swimming-lessons-abu-dhabi',
+  path: '/swimming-lessons-abu-dhabi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideoRoute = VideoRouteImport.update({
@@ -529,6 +541,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/ai': typeof AiRoute
   '/campaigns': typeof CampaignsRoute
+  '/coach-ayman': typeof CoachAymanRoute
   '/contact': typeof ContactRoute
   '/editor': typeof EditorRoute
   '/en': typeof EnRouteWithChildren
@@ -540,6 +553,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff': typeof StaffRouteWithChildren
+  '/swimming-lessons-abu-dhabi': typeof SwimmingLessonsAbuDhabiRoute
   '/video': typeof VideoRoute
   '/api/booking-request': typeof ApiBookingRequestRoute
   '/api/business-settings': typeof ApiBusinessSettingsRoute
@@ -616,6 +630,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/ai': typeof AiRoute
   '/campaigns': typeof CampaignsRoute
+  '/coach-ayman': typeof CoachAymanRoute
   '/contact': typeof ContactRoute
   '/editor': typeof EditorRoute
   '/en': typeof EnRouteWithChildren
@@ -626,6 +641,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff': typeof StaffRouteWithChildren
+  '/swimming-lessons-abu-dhabi': typeof SwimmingLessonsAbuDhabiRoute
   '/video': typeof VideoRoute
   '/api/booking-request': typeof ApiBookingRequestRoute
   '/api/business-settings': typeof ApiBusinessSettingsRoute
@@ -703,6 +719,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/ai': typeof AiRoute
   '/campaigns': typeof CampaignsRoute
+  '/coach-ayman': typeof CoachAymanRoute
   '/contact': typeof ContactRoute
   '/editor': typeof EditorRoute
   '/en': typeof EnRouteWithChildren
@@ -714,6 +731,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff': typeof StaffRouteWithChildren
+  '/swimming-lessons-abu-dhabi': typeof SwimmingLessonsAbuDhabiRoute
   '/video': typeof VideoRoute
   '/api/booking-request': typeof ApiBookingRequestRoute
   '/api/business-settings': typeof ApiBusinessSettingsRoute
@@ -792,6 +810,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/campaigns'
+    | '/coach-ayman'
     | '/contact'
     | '/editor'
     | '/en'
@@ -803,6 +822,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/staff'
+    | '/swimming-lessons-abu-dhabi'
     | '/video'
     | '/api/booking-request'
     | '/api/business-settings'
@@ -879,6 +899,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/campaigns'
+    | '/coach-ayman'
     | '/contact'
     | '/editor'
     | '/en'
@@ -889,6 +910,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/staff'
+    | '/swimming-lessons-abu-dhabi'
     | '/video'
     | '/api/booking-request'
     | '/api/business-settings'
@@ -965,6 +987,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/campaigns'
+    | '/coach-ayman'
     | '/contact'
     | '/editor'
     | '/en'
@@ -976,6 +999,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/staff'
+    | '/swimming-lessons-abu-dhabi'
     | '/video'
     | '/api/booking-request'
     | '/api/business-settings'
@@ -1053,6 +1077,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AiRoute: typeof AiRoute
   CampaignsRoute: typeof CampaignsRoute
+  CoachAymanRoute: typeof CoachAymanRoute
   ContactRoute: typeof ContactRoute
   EditorRoute: typeof EditorRoute
   EnRoute: typeof EnRouteWithChildren
@@ -1064,6 +1089,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffRoute: typeof StaffRouteWithChildren
+  SwimmingLessonsAbuDhabiRoute: typeof SwimmingLessonsAbuDhabiRoute
   VideoRoute: typeof VideoRoute
   ApiBookingRequestRoute: typeof ApiBookingRequestRoute
   ApiBusinessSettingsRoute: typeof ApiBusinessSettingsRoute
@@ -1143,6 +1169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coach-ayman': {
+      id: '/coach-ayman'
+      path: '/coach-ayman'
+      fullPath: '/coach-ayman'
+      preLoaderRoute: typeof CoachAymanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -1218,6 +1251,13 @@ declare module '@tanstack/react-router' {
       path: '/staff'
       fullPath: '/staff'
       preLoaderRoute: typeof StaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/swimming-lessons-abu-dhabi': {
+      id: '/swimming-lessons-abu-dhabi'
+      path: '/swimming-lessons-abu-dhabi'
+      fullPath: '/swimming-lessons-abu-dhabi'
+      preLoaderRoute: typeof SwimmingLessonsAbuDhabiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/video': {
@@ -1788,6 +1828,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AiRoute: AiRoute,
   CampaignsRoute: CampaignsRoute,
+  CoachAymanRoute: CoachAymanRoute,
   ContactRoute: ContactRoute,
   EditorRoute: EditorRoute,
   EnRoute: EnRouteWithChildren,
@@ -1799,6 +1840,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffRoute: StaffRouteWithChildren,
+  SwimmingLessonsAbuDhabiRoute: SwimmingLessonsAbuDhabiRoute,
   VideoRoute: VideoRoute,
   ApiBookingRequestRoute: ApiBookingRequestRoute,
   ApiBusinessSettingsRoute: ApiBusinessSettingsRoute,

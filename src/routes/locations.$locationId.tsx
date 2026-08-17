@@ -144,7 +144,7 @@ function LocalLocationPage() {
       <section className="mt-7 rounded-2xl border border-border bg-muted/30 p-5" aria-label={copy.ar.locationLabel}>
         <h2 className="text-lg font-black">{location.displayName}</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">أبوظبي، الإمارات العربية المتحدة</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">كوتش أيمن · خبرة أكثر من 15 عامًا · حصص خاصة ومجموعات صغيرة حتى 4 متدربين</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">كوتش أيمن · حصص خاصة ومجموعات صغيرة حتى 4 متدربين</p>
       </section>
 
       <div className="mt-8 flex flex-wrap gap-3">
