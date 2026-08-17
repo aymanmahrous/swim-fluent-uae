@@ -222,6 +222,7 @@ export function getProviderStatuses(): ProviderStatus[] {
   const metaWebhookConfigured = all("META_APP_ID", "META_APP_SECRET", "META_VERIFY_TOKEN");
   const metaPublishingPlatforms = configuredMetaPublishingPlatforms();
   const metaPublishingConfigured = metaPublishingPlatforms.length > 0;
+  const bufferConfigured = all("BUFFER_API_KEY");
   const whatsappConfigured = all("WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN");
   const tiktokConfigured = all("TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET");
   const workerConfigured = all("SUPABASE_SECRET_KEY", "INTERNAL_WORKER_TOKEN");
@@ -264,6 +265,17 @@ export function getProviderStatuses(): ProviderStatus[] {
         : metaWebhookConfigured
           ? "Meta app/webhook configuration is detected, but publishing requires META_GRAPH_VERSION, META_PAGE_ACCESS_TOKEN, and the relevant META_PAGE_ID and/or INSTAGRAM_BUSINESS_ACCOUNT_ID."
           : "Meta publishing is not configured. Publishing requires META_GRAPH_VERSION, META_PAGE_ACCESS_TOKEN, and the relevant Page or Instagram business account ID.",
+    },
+    {
+      id: "buffer",
+      label: "Buffer (Facebook + Instagram)",
+      category: "publishing",
+      configured: bufferConfigured,
+      executable: false,
+      provider: "buffer",
+      detail: bufferConfigured
+        ? "A server-side BUFFER_API_KEY is present, but this app has no registered Buffer adapter yet. Buffer scheduling currently runs only through the isolated n8n bridge (Relax Fix - Buffer Publisher), not through this server."
+        : "Buffer scheduling currently runs only through the isolated n8n bridge (Relax Fix - Buffer Publisher), not through this server. Live per-post scheduled/sent/error/needs_attention status is not yet surfaced here; that requires a server-side BUFFER_API_KEY and a registered read adapter.",
     },
     {
       id: "whatsapp",
