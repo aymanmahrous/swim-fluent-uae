@@ -4,6 +4,7 @@ import { emitPublicCtaClick } from "../platform/public-cta-events";
 import { SITE_URL } from "../platform/public-seo";
 
 const PAGE_URL = `${SITE_URL}/coach-ayman`;
+const COACH_IMAGE_URL = `${SITE_URL}/coach-ayman.webp`;
 const TITLE = "Coach Ayman | Swimming Coach in Abu Dhabi | Relax Fix UAE";
 const DESCRIPTION =
   "Meet Coach Ayman, swimming coach in Abu Dhabi with more than 15 years of swimming-coaching experience. Private and small-group lessons across four Relax Fix UAE locations.";
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/coach-ayman")({
           "@id": `${SITE_URL}/#coach-ayman`,
           name: "Coach Ayman",
           url: PAGE_URL,
+          image: COACH_IMAGE_URL,
           description: DESCRIPTION,
           jobTitle: "Swimming Coach",
           worksFor: { "@id": `${SITE_URL}/#organization` },
@@ -31,8 +33,15 @@ export const Route = createFileRoute("/coach-ayman")({
           name: TITLE,
           description: DESCRIPTION,
           mainEntity: { "@id": `${SITE_URL}/#coach-ayman` },
+          primaryImageOfPage: {
+            "@type": "ImageObject",
+            url: COACH_IMAGE_URL,
+            width: 600,
+            height: 750,
+            caption: "Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi",
+          },
           isPartOf: { "@id": `${SITE_URL}/#website` },
-          inLanguage: "en-AE",
+          inLanguage: ["en-AE", "ar-AE"],
         },
         {
           "@type": "BreadcrumbList",
@@ -57,6 +66,11 @@ export const Route = createFileRoute("/coach-ayman")({
         { property: "og:type", content: "profile" },
         { property: "og:url", content: PAGE_URL },
         { property: "og:site_name", content: "Relax Fix UAE" },
+        { property: "og:image", content: COACH_IMAGE_URL },
+        { property: "og:image:alt", content: "Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi" },
+        { property: "og:image:type", content: "image/webp" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: COACH_IMAGE_URL },
       ],
       links: [{ rel: "canonical", href: PAGE_URL }],
       scripts: [{ type: "application/ld+json", children: jsonLd }],
@@ -94,16 +108,33 @@ function CoachAymanPage() {
           </div>
         </div>
 
-        <aside className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-xl font-black">At a glance</h2>
-          <dl className="mt-5 space-y-4 text-sm">
-            <div><dt className="font-bold text-muted-foreground">Experience</dt><dd className="mt-1 font-black">15+ years</dd></div>
-            <div><dt className="font-bold text-muted-foreground">Languages</dt><dd className="mt-1 font-black">Arabic & English</dd></div>
-            <div><dt className="font-bold text-muted-foreground">Lesson formats</dt><dd className="mt-1 font-black">Private & small group</dd></div>
-            <div><dt className="font-bold text-muted-foreground">Group capacity</dt><dd className="mt-1 font-black">Up to 4 learners</dd></div>
-            <div><dt className="font-bold text-muted-foreground">Area</dt><dd className="mt-1 font-black">Abu Dhabi, UAE</dd></div>
-          </dl>
-        </aside>
+        <div className="space-y-5">
+          <figure className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+            <img
+              src="/coach-ayman.webp"
+              alt="Coach Ayman, swimming coach at Relax Fix UAE in Abu Dhabi"
+              width={600}
+              height={750}
+              className="aspect-[4/5] w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+            <figcaption className="px-5 py-4 text-sm font-bold text-muted-foreground">
+              Coach Ayman · Relax Fix UAE · Abu Dhabi
+            </figcaption>
+          </figure>
+
+          <aside className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-xl font-black">At a glance</h2>
+            <dl className="mt-5 space-y-4 text-sm">
+              <div><dt className="font-bold text-muted-foreground">Experience</dt><dd className="mt-1 font-black">15+ years</dd></div>
+              <div><dt className="font-bold text-muted-foreground">Languages</dt><dd className="mt-1 font-black">Arabic & English</dd></div>
+              <div><dt className="font-bold text-muted-foreground">Lesson formats</dt><dd className="mt-1 font-black">Private & small group</dd></div>
+              <div><dt className="font-bold text-muted-foreground">Group capacity</dt><dd className="mt-1 font-black">Up to 4 learners</dd></div>
+              <div><dt className="font-bold text-muted-foreground">Area</dt><dd className="mt-1 font-black">Abu Dhabi, UAE</dd></div>
+            </dl>
+          </aside>
+        </div>
       </section>
 
       <section className="mt-16">
