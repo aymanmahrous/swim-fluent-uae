@@ -148,10 +148,10 @@ function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Link to={publicHome} className="group flex min-w-0 items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl gradient-aqua shadow-glow transition group-hover:scale-105">
-            <Waves className="h-5 w-5 text-white" />
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
+        <Link to={publicHome} className="group flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl gradient-aqua shadow-glow transition group-hover:scale-105 sm:h-10 sm:w-10">
+            <Waves className="h-4 w-4 text-white sm:h-5 sm:w-5" />
           </div>
           <div className="min-w-0 leading-tight">
             <div className="truncate text-sm font-black sm:text-base">{settings.businessName}</div>
@@ -161,7 +161,7 @@ function Nav() {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-1.5 sm:gap-2">
+        <nav className="flex shrink-0 items-center gap-1 sm:gap-2">
           <a
             href={isPublicHome ? "#programs" : `${publicHome}#programs`}
             className="hidden rounded-xl px-3 py-2 text-sm font-bold transition hover:bg-muted md:inline-flex"
@@ -170,14 +170,15 @@ function Nav() {
           </a>
           <a
             href={isPublicHome ? "#book" : `${publicHome}#book`}
-            className="inline-flex items-center gap-2 rounded-xl bg-deep px-3 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 sm:px-4 sm:text-sm"
+            aria-label={tr("book")}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-deep px-2.5 py-2 text-xs font-black text-white transition hover:-translate-y-0.5 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
           >
-            <Waves className="h-4 w-4" /> {tr("book")}
+            <Waves className="h-4 w-4" /> <span className="hidden sm:inline">{tr("book")}</span>
           </a>
           {languageSwitchHref ? (
             <a
               href={languageSwitchHref}
-              className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+              className="flex items-center gap-1.5 rounded-xl border border-border px-2.5 py-2 transition hover:border-primary hover:bg-primary/5 sm:px-3 sm:py-2.5"
               aria-label={lang === "ar" ? "View English version" : "عرض النسخة العربية"}
             >
               <Languages className="h-4 w-4" />
@@ -186,7 +187,7 @@ function Nav() {
           ) : (
             <button
               onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-              className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2.5 transition hover:border-primary hover:bg-primary/5"
+              className="flex items-center gap-1.5 rounded-xl border border-border px-2.5 py-2 transition hover:border-primary hover:bg-primary/5 sm:px-3 sm:py-2.5"
               aria-label="Switch language"
             >
               <Languages className="h-4 w-4" />

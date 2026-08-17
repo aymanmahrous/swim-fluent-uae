@@ -49,7 +49,7 @@ export function ConsentBanner() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 start-4 z-[70] inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-xs font-black shadow-xl transition hover:border-primary md:bottom-4"
+        className="fixed bottom-[calc(5.75rem+env(safe-area-inset-bottom))] start-3 z-[70] inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-xs font-black shadow-xl transition hover:border-primary md:bottom-4 md:start-4"
         aria-label={text.settings}
       >
         <Settings2 className="h-4 w-4" />
@@ -60,12 +60,12 @@ export function ConsentBanner() {
 
   return (
     <section
-      className="fixed inset-x-3 bottom-24 z-[70] mx-auto max-w-3xl rounded-3xl border border-border bg-background/95 p-4 shadow-2xl backdrop-blur-xl sm:p-5 md:bottom-3"
+      className="fixed inset-x-3 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-[70] mx-auto max-w-2xl rounded-2xl border border-border bg-background/97 p-3 shadow-2xl backdrop-blur-xl sm:p-4 md:bottom-3"
       aria-label={text.title}
       role="region"
     >
       <div className="flex items-start gap-3">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+        <div className="hidden h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary sm:grid">
           <BarChart3 className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -82,25 +82,25 @@ export function ConsentBanner() {
               </button>
             )}
           </div>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">{text.description}</p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <p className="mt-1 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">{text.description}</p>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
             <button
               type="button"
               onClick={() => choose("accepted")}
-              className="rounded-xl bg-deep px-4 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5"
+              className="min-h-11 rounded-xl bg-deep px-3 py-2 text-xs font-black text-white transition hover:-translate-y-0.5 sm:px-4 sm:text-sm"
             >
               {text.accept}
             </button>
             <button
               type="button"
               onClick={() => choose("rejected")}
-              className="rounded-xl border border-border px-4 py-2.5 text-sm font-black transition hover:border-primary hover:bg-primary/5"
+              className="min-h-11 rounded-xl border border-border px-3 py-2 text-xs font-black transition hover:border-primary hover:bg-primary/5 sm:px-4 sm:text-sm"
             >
               {text.reject}
             </button>
             <a
               href={privacyHref}
-              className="inline-flex items-center justify-center px-3 py-2.5 text-sm font-bold text-primary underline-offset-4 hover:underline"
+              className="col-span-2 inline-flex min-h-11 items-center justify-center px-3 py-2 text-xs font-bold text-primary underline-offset-4 hover:underline sm:text-sm"
             >
               {text.privacy}
             </a>
