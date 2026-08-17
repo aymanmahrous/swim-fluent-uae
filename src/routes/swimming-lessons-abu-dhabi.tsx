@@ -41,7 +41,7 @@ export const Route = createFileRoute("/swimming-lessons-abu-dhabi")({
           about: { "@id": `${PAGE_URL}#service` },
           breadcrumb: { "@id": `${PAGE_URL}#breadcrumb` },
           isPartOf: { "@id": `${SITE_URL}/#website` },
-          inLanguage: "en-AE",
+          inLanguage: ["en-AE", "ar-AE"],
         },
       ],
     }).replace(/</g, "\\u003c");
@@ -116,6 +116,36 @@ function SwimmingLessonsAbuDhabiPage() {
               <p className="mt-2 text-sm text-muted-foreground">Swimming coaching in Abu Dhabi · View location details and map</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="mt-16 border-t border-border pt-14" aria-labelledby="search-answers-heading">
+        <p className="text-sm font-black text-primary">Quick answers for Abu Dhabi swimmers and parents</p>
+        <h2 id="search-answers-heading" className="mt-3 text-3xl font-black">Common swimming lesson searches</h2>
+        <div className="mt-7 grid gap-4 md:grid-cols-2">
+          <article className="rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-black">Where can I find swimming lessons near me in Abu Dhabi?</h3>
+            <p className="mt-3 leading-7 text-muted-foreground">Relax Fix UAE lists training at ICS Al Najda, ICS Al Falah, ICS Khalifa and ICS Al Mushrif. Tell us your area and we can help identify the nearest listed location before checking availability.</p>
+          </article>
+          <article className="rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-black">Are there swimming lessons for complete beginners?</h3>
+            <p className="mt-3 leading-7 text-muted-foreground">Yes. Coaching can begin from zero with breathing, floating, movement fundamentals and water-confidence work matched to the learner’s starting point.</p>
+          </article>
+          <article className="rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-black">Do you offer kids swimming lessons in Abu Dhabi?</h3>
+            <p className="mt-3 leading-7 text-muted-foreground">Yes. Relax Fix UAE provides kids swimming coaching in Abu Dhabi with Coach Ayman, including private lessons and small groups with a maximum of 4 learners.</p>
+          </article>
+          <article className="rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-black">Private swimming lessons or group lessons?</h3>
+            <p className="mt-3 leading-7 text-muted-foreground">Both formats are available. Private coaching is one-to-one, while group coaching is kept to a maximum of 4 learners. The right path depends on the learner’s goal, starting point and availability.</p>
+          </article>
+        </div>
+
+        <div lang="ar" dir="rtl" className="mt-8 rounded-3xl border border-border bg-muted/50 p-7">
+          <h2 className="text-2xl font-black">تعليم السباحة في أبوظبي</h2>
+          <p className="mt-4 leading-8 text-muted-foreground">
+            إذا كنت تبحث عن تعليم سباحة للأطفال، مدرب سباحة في أبوظبي، دروس سباحة للمبتدئين أو مسبح قريب للتدريب، تقدم Relax Fix UAE التدريب مع كوتش أيمن في أربعة مواقع: ICS Al Najda وICS Al Falah وICS Khalifa وICS Al Mushrif، مع تدريب خاص أو مجموعات صغيرة بحد أقصى 4 متدربين.
+          </p>
         </div>
       </section>
 
