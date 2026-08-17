@@ -1152,4 +1152,58 @@ Every claim must be classified using the applicable evidence level:
 
 A migration committed or merged in Git is never equivalent to a migration applied to Supabase Production. Repository, CI, Preview, Vercel Production, and Supabase Production states must be reported separately.
 
+## 30. Buffer social publishing migration and Owner Shield record — 2026-08-17 Asia/Dubai
+
+Reason: the owner directed a move of social publishing execution away from direct Meta Graph API scheduling (blocked by unresolved Meta permission/App Review gates) to Buffer, operated through an isolated n8n bridge. This section is the durable evidence record for that migration and for the governance consolidation performed alongside it. No `MASTER_PROJECT_HANDOFF.md`, `docs/project/PROTECTED_BASELINE.md`, or `docs/project/DECISION_LOG.md` exist in this repository and none were created; this Handoff, `PROJECT_STRATEGY_HANDOFF.md`, and `docs/program/STRATEGIC_EXECUTION_LEDGER.md` remain the single system of record.
+
+### Delivered
+
+- Buffer is the active publishing layer for the current 10-day batch (2026-08-17 through 2026-08-26), covering both connected channels:
+  - Facebook: `6a827bfcccaf649a67be0980`
+  - Instagram: `6a827e1eccaf649a67be1142`
+- 10 Facebook posts and 10 Instagram posts scheduled, one per date, all at 08:00 UTC (matching the pre-existing approved Instagram `content_items` schedule; no time was invented).
+- Captions were adapted from the owner-approved Google Drive content pack (`RELAX_FIX_UAE_Swimming_Content_Pack_AR_EN.docx`) and the approved 30-day visual mapping sheet; no business facts, prices, testimonials, or claims were invented.
+- Instagram media: a dedicated **public** Supabase Storage bucket `buffer-media` was created (bucket-level `public: true`, restricted to `image/png`/`jpeg`/`webp`, 10 MB limit) holding **copies only** of the 10 approved marketing images. Original Google Drive files were never modified and remain private, owner-only. The existing private `relax-fix-media` bucket (used by the Meta publishing signer) was not touched.
+- Old Instagram scheduler collision removed: the 3 `Schedule Trigger` / `Schedule Trigger1` / `Schedule Trigger2` nodes in n8n workflow `Relax Fix - Content Scheduler` (`xNwYPSXQiUyzDSyZ`) were disabled to stop that workflow from claiming/publishing the same 10 target-date Instagram `content_items`. This is a single reversible toggle per node; nothing was deleted; the Manual-Trigger Facebook branch and all other workflows (Messenger, booking, etc.) were untouched. Do not re-enable while Buffer owns these target dates unless explicitly reconciled.
+- n8n workflow `Relax Fix - Buffer Publisher` (`SJqob7oxGahU7fD6`) is the new isolated bridge: an MCP Client node against Buffer's official MCP endpoint (`https://mcp.buffer.com/mcp`, Bearer auth, credential already stored in n8n) plus a reusable Google Drive → Supabase Storage media-upload pipeline.
+
+### Verification evidence
+
+- Buffer queue re-checked immediately before and after writing: final `list_posts` query across both channels returned exactly 20 scheduled posts (10 Facebook + 10 Instagram), one per date, zero duplicates.
+- Each of the 10 uploaded images was verified as a public HTTPS URL (`200`, `content-type: image/png`, no auth required, non-expiring bucket-level public access — not a signed/expiring URL).
+- Facebook post IDs and Instagram post IDs (with attached image URLs) are recorded in the chat transcript of this working session; not duplicated here to keep this record short. Ask the current agent's session or re-query Buffer's `list_posts` for the live list.
+- First real-world publish acceptance (Buffer actually delivering a post to Facebook/Instagram at its scheduled time) is **still pending** — evidence level here is `NOT_LIVE` / scheduling-accepted only, not `PRODUCTION` delivery-verified.
+
+### Safety state
+
+- `META_APP_REVIEW_TOUCHED`: NO — Meta App Review is explicitly **deferred** and is **not** the current project blocker; direct Meta Graph API publishing is not part of the current execution path.
+- `SUPABASE_DB_SCHEMA_CHANGED`: NO (only a Storage bucket was created; no `public` schema table/column/migration changed).
+- `N8N_PRODUCTION_WORKFLOWS_CHANGED`: only the 3-trigger disable described above; no other n8n workflow (Messenger, booking, Command Center, RADAR, etc.) was touched.
+- `APPLICATION_CODE_CHANGED`: NO — this and the prior Buffer-migration work were infrastructure/n8n/Supabase-Storage/content actions only; no repository application code was modified until this governance-consolidation commit (documentation only).
+- `PRODUCTION_CHANGED` (Vercel/app): NO.
+- Protected existing work explicitly not touched: Messenger production channel, booking/capacity protections, GA4/UTM implementation, SEO implementation, Operations/Handover work, existing Command Center functions, existing RADAR work already passed, existing Cancel/Retry functionality, existing Notification Center/Home functionality, and existing PWA/Web Push work (none of it was rebuilt or modified).
+
+### Owner Shield (recorded principle)
+
+The owner is non-technical. This formalizes, under the existing Owner Decision Queue discipline (§13) and mandatory prohibitions (§12), an explicit operating rule for every agent:
+
+- Do not ask the owner to perform a technical diagnostic, account check, or manual configuration step that the agent itself can perform (example: the agent solved the Instagram media-hosting gap itself via a Supabase Storage bucket + n8n pipeline instead of asking the owner to manually mark 10 Google Drive files public).
+- When owner input is unavoidable, prefer exactly one URL, one click, or one approval — never a multi-step technical procedure.
+- Minimize credit/time usage; do not repeat investigations already completed and recorded here or in the ledger.
+- No destructive actions; no paid spend without explicit owner approval (unchanged from §12).
+
+### Mandatory Finish Protocol
+
+- Exact status: Buffer holds 20 scheduled posts (10 Facebook + 10 Instagram) for 2026-08-17–2026-08-26 at 08:00 UTC; zero duplicates; first live-publish acceptance still pending.
+- Files/workflows changed: n8n `Relax Fix - Content Scheduler` (`xNwYPSXQiUyzDSyZ`, 3 trigger nodes disabled); n8n `Relax Fix - Buffer Publisher` (`SJqob7oxGahU7fD6`, created); Supabase Storage bucket `buffer-media` (created); this repository's `PROJECT_HANDOFF.md`, `PROJECT_STRATEGY_HANDOFF.md`, and `docs/program/STRATEGIC_EXECUTION_LEDGER.md` (documentation only).
+- Branch/commit: documentation changes only, applied directly to the working tree in this session; see the commit that introduces this section for the exact SHA.
+- Production impact: none (no Vercel/app Production change; no Supabase schema change; no Meta/App Review action).
+- Unresolved blocker: first real-world Buffer publish acceptance has not yet occurred; that is the single next gate.
+- Single next action: monitor/confirm the first scheduled post (2026-08-17 08:00 UTC) actually publishes successfully on both channels, then record the result here as `PRODUCTION`-level evidence.
+- Protected items not touched: see the Safety state list above.
+
+### Updated blockers and execution order
+
+This supersedes the "publishing account/credential/receipt evidence" line in §10 for the current batch: Buffer publishing/scheduling evidence now exists (`SCHEDULING_ACCEPTED`, not yet `PRODUCTION_DELIVERED`). Meta App Review remains listed only as a deferred, non-blocking track. The owner-approved next execution order recorded on 2026-08-17 is captured in `PROJECT_STRATEGY_HANDOFF.md` §19; §11 above remains historical context for the earlier content/SEO/Analytics phase and is not deleted.
+
 This protocol is binding for all future agents and supplements the existing Handoff maintenance and phase-persistence rules without changing any earlier owner decision, protected gate, or approved execution order.

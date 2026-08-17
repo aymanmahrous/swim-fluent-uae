@@ -1,6 +1,6 @@
 # STRATEGIC EXECUTION LEDGER
 
-Last verified: 2026-07-30 12:10 (Asia/Dubai)
+Last verified: 2026-08-17 (Asia/Dubai)
 
 This ledger is the mandatory durable phase-state record for Relax Fix UAE / Swim Fluent UAE. Read it with `PROJECT_HANDOFF.md` and `PROJECT_STRATEGY_HANDOFF.md`. It records current execution state; it does not replace evidence in PRs, CI, Previews, receipts or source documents.
 
@@ -259,3 +259,17 @@ Every agent or workstream must append or update a checkpoint containing:
 - Blocker class: manager decision on PR #220 merge; later separate technical stage for PR #213.
 - Next safe action: review PR #220 as documentation-only and decide Merge separately. Stop before PWA, Supabase or Production work.
 - Context health: strong; current canonical truth and stale-PR controls are explicit.
+
+## Checkpoint — 2026-08-17 Buffer social publishing migration and governance consolidation
+
+- Agent/workstream: session agent / Social Publishing and Program Governance.
+- Phase and task: owner-directed move of social publishing execution from the blocked direct Meta Graph API path to Buffer, executed through an isolated n8n MCP bridge; then consolidation of the resulting state into the existing governance system on owner instruction.
+- Status: `COMPLETED_EVIDENCE_VERIFIED` for Buffer scheduling acceptance (20/20 posts); `IN_PROGRESS` overall pending first real-world Buffer publish delivery.
+- Scope: n8n (`Relax Fix - Content Scheduler` trigger-disable; new `Relax Fix - Buffer Publisher` workflow), Supabase Storage (`buffer-media` public bucket, copies only), and this documentation consolidation. No application code, Supabase schema, or Production deployment changed.
+- Last confirmed result: Buffer's `list_posts` query across both channels (Facebook `6a827bfcccaf649a67be0980`, Instagram `6a827e1eccaf649a67be1142`) returned exactly 20 scheduled posts for 2026-08-17 through 2026-08-26 at 08:00 UTC, zero duplicates; all 10 Instagram posts carry a verified public HTTPS image (`buffer-media` bucket, `200`, `image/png`, non-expiring).
+- Evidence: n8n workflow ids `xNwYPSXQiUyzDSyZ` (3 trigger nodes disabled) and `SJqob7oxGahU7fD6` (created); Supabase Storage bucket `buffer-media` (created, `public: true`, image-only mime allowlist); full Buffer post-ID list held in this session's transcript; full narrative recorded in `PROJECT_HANDOFF.md` §30 and `PROJECT_STRATEGY_HANDOFF.md` §19.
+- Failure/recovery: initial Buffer `create_post` calls failed on missing `schedulingType` and a wrong `channelData.facebook.type` guess; resolved by calling Buffer's own `introspect_schema` tool for the exact `metadata.facebook.type` / `metadata.instagram.type` schema instead of continuing to guess. Initial Google Drive image URLs were private and Buffer has no binary-upload tool; resolved by hosting copies in a new dedicated public Supabase Storage bucket rather than asking the owner to manually change Drive sharing settings.
+- Protected actions not taken: no Meta App Review action, no Meta token regeneration, no Supabase schema/table change, no Messenger/booking modification, no spend, no fabricated business facts/media, no merge or Production deployment.
+- Blocker class: `BLOCKED_EXTERNAL` — first real-world Buffer publish delivery has not yet occurred; this is an external timing dependency (the 2026-08-17 08:00 UTC post), not an agent-side blocker.
+- Next safe action: confirm the first scheduled post actually publishes on both channels, then update this ledger and `PROJECT_HANDOFF.md` §30 to `PRODUCTION`-level evidence.
+- Context health: strong; Buffer state, disabled-trigger state, and governance file locations are explicit and cross-referenced.

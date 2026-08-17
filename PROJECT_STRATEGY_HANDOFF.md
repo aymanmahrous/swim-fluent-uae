@@ -468,4 +468,29 @@ After issuing `NEW_CHAT_RECOMMENDED`, the agent must not:
 - execute a deployment;
 - create a new PR.
 
+## 19. Durable strategy update — Buffer publishing layer and revised execution order — 2026-08-17
+
+Owner approval: the owner directed abandoning further investigation of the direct Meta Graph API publishing path (blocked on unresolved App Review/permission gates) and moving social publishing execution to Buffer, operated through an isolated n8n MCP bridge. This is recorded as a durable approved strategy change under §18's charter, not an ad-hoc workaround.
+
+- **Publishing layer:** Buffer (Facebook channel `6a827bfcccaf649a67be0980`, Instagram channel `6a827e1eccaf649a67be1142`) is now the canonical social-publishing execution layer for the current content batch. Direct Meta Graph API publishing from this repository's `meta-publishing.server.ts` adapter remains in place as dormant/unconfigured-for-this-batch code; it was not deleted or modified.
+- **Meta App Review status:** `DEFERRED` — explicitly not the current project blocker. Do not reopen Meta App Review work without a new owner decision.
+- **Old Instagram scheduler:** the 3 polling `Schedule Trigger` nodes in n8n `Relax Fix - Content Scheduler` (`xNwYPSXQiUyzDSyZ`) are disabled to prevent duplicate publishing against Buffer's target dates. This is reversible and must stay disabled while Buffer owns those dates.
+- **New infrastructure of record:** n8n workflow `Relax Fix - Buffer Publisher` (`SJqob7oxGahU7fD6`) and Supabase Storage public bucket `buffer-media` (approved-image copies only; source Google Drive assets and the private `relax-fix-media` bucket are untouched). Full evidence is recorded in `PROJECT_HANDOFF.md` §30.
+
+### Current owner-approved next execution order (supersedes §18's binding order for near-term sequencing; §18's canonical-system rules remain in force)
+
+1. First Buffer real-world publish acceptance (evidence that a scheduled post actually delivers).
+2. Project governance locked (this consolidation).
+3. Buffer visibility/alerts surfaced in the Command Center.
+4. Recover/reuse existing PWA + Web Push work — explicitly not a rebuild from zero.
+5. RADAR acceptance/integration only — no rebuild of already-passed RADAR work.
+6. 30-Day Growth Engine.
+7. Attribution / growth intelligence.
+8. Messenger/Instagram DM improvements (later).
+9. Final Website Conversion Pass — preview first.
+10. Final Acceptance.
+11. Customer Acquisition / paid ads — only with explicit owner approval, unchanged from §11 of this file.
+
+This order does not authorize skipping any protected gate in §13 (Production safety restrictions) or §9 (Owner Decision Queue governance). It reorders sequencing only; it does not remove any completed-evidence requirement.
+
 The agent must stop after delivering the complete Handoff and wait for the owner to open a new conversation and paste it.
