@@ -124,17 +124,16 @@ function Home() {
               form.location &&
               (!isOther || form.otherLocation.trim().length >= 2) &&
               form.swamBefore &&
-              form.afraid,
+              form.afraid &&
+              form.trainingType,
           )
         : step === 3
-          ? Boolean(form.trainingType)
-          : step === 4
-            ? Boolean(form.requestedDate && form.slot)
-            : form.agree;
+          ? Boolean(form.requestedDate && form.slot)
+          : form.agree;
 
   function goNext() {
     if (!canContinue) return;
-    setStep((current) => Math.min(5, current + 1));
+    setStep((current) => Math.min(4, current + 1));
   }
 
   async function submit(e: React.FormEvent) {
@@ -143,7 +142,7 @@ function Home() {
       toast.error(tr("settingsUnavailable"));
       return;
     }
-    if (!canContinue || isSubmitting || step !== 5) return;
+    if (!canContinue || isSubmitting || step !== 4) return;
 
     const booking: Booking = {
       id: crypto.randomUUID(),
@@ -239,12 +238,15 @@ function Home() {
             <p className="mt-6 max-w-2xl text-base leading-8 text-white/80 sm:text-xl">
               {tr("heroBody")}
             </p>
+            <p className="mt-4 text-sm font-bold text-white/90 sm:text-base">
+              {tr("heroTrustLine")}
+            </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#book"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl gradient-gold px-7 py-4 font-black text-deep shadow-gold transition hover:-translate-y-1"
               >
-                {tr("book")} <ChevronRight className="h-5 w-5 rtl:rotate-180" />
+                {tr("heroBookCta")} <ChevronRight className="h-5 w-5 rtl:rotate-180" />
               </a>
               <a
                 href="#programs"
@@ -326,7 +328,7 @@ function Home() {
             <source srcSet={heroWebp} type="image/webp" />
             <img
               src={heroImg}
-              alt="Coach Ayman swimming coaching"
+              alt="Abu Dhabi swimming pool training environment"
               className="absolute inset-0 h-full w-full object-cover opacity-75"
               width={1024}
               height={1024}
@@ -344,6 +346,9 @@ function Home() {
           <SectionEyebrow>{tr("coachTitle")}</SectionEyebrow>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("slogan")}</h2>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">{tr("coachBody")}</p>
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-black text-primary">
+            <Award className="h-4 w-4" /> {tr("coachExperience")}
+          </div>
           <blockquote className="mt-8 rounded-2xl border-s-4 border-gold bg-muted/60 p-6 text-lg font-bold leading-8">
             “{tr("coachQuote")}”
           </blockquote>
@@ -386,10 +391,9 @@ function Home() {
 
                   {step === 1 && <AboutStep form={form} setForm={setForm} />}
                   {step === 2 && (
-                    <ProfileStep form={form} setForm={setForm} locations={settings.locations} />
+                    <ProfileGoalStep form={form} setForm={setForm} locations={settings.locations} />
                   )}
-                  {step === 3 && <GoalStep form={form} setForm={setForm} />}
-                  {step === 4 && (
+                  {step === 3 && (
                     <TimeStep
                       form={form}
                       setForm={setForm}
@@ -398,7 +402,7 @@ function Home() {
                       lang={lang}
                     />
                   )}
-                  {step === 5 && <ConfirmStep form={form} setForm={setForm} />}
+                  {step === 4 && <ConfirmStep form={form} setForm={setForm} />}
 
                   <div className="mt-10 flex items-center justify-between gap-3 border-t border-border pt-6">
                     <button
@@ -409,7 +413,7 @@ function Home() {
                     >
                       <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {tr("back")}
                     </button>
-                    {step < 5 ? (
+                    {step < 4 ? (
                       <button
                         type="button"
                         onClick={goNext}
@@ -433,6 +437,31 @@ function Home() {
               </form>
             )}
           </div>
+        </div>
+      </section>
+
+      <section id="faq" className="mx-auto max-w-4xl px-6 py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionEyebrow>{tr("faqTitle")}</SectionEyebrow>
+          <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("faqTitle")}</h2>
+        </div>
+        <div className="mt-10 space-y-3">
+          {(["1", "2", "3", "4", "5", "6", "7"] as const).map((index) => (
+            <details
+              key={index}
+              className="group rounded-2xl border border-border bg-card p-5 open:shadow-sm"
+            >
+              <summary className="cursor-pointer list-none font-black marker:hidden">
+                <span className="flex items-center justify-between gap-3">
+                  {tr(`faqQ${index}` as TranslationKey)}
+                  <ChevronRight className="h-4 w-4 shrink-0 transition group-open:rotate-90 rtl:rotate-180 rtl:group-open:-rotate-90" />
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                {tr(`faqA${index}` as TranslationKey)}
+              </p>
+            </details>
+          ))}
         </div>
       </section>
     </div>
@@ -459,10 +488,10 @@ function SectionEyebrow({ children, light = false }: { children: string; light?:
 
 function WizardProgress({ step }: { step: number }) {
   const { tr } = useLang();
-  const labels: TranslationKey[] = ["stepAbout", "stepProfile", "stepGoal", "stepTime", "stepConfirm"];
+  const labels: TranslationKey[] = ["stepAbout", "stepProfileGoal", "stepTime", "stepConfirm"];
   return (
     <div className="border-b border-border bg-muted/45 px-4 py-5 sm:px-8">
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {labels.map((label, index) => {
           const number = index + 1;
           const active = step === number;
@@ -537,7 +566,7 @@ function AboutStep({ form, setForm }: StepProps) {
   );
 }
 
-function ProfileStep({ form, setForm, locations }: StepProps & { locations: string[] }) {
+function ProfileGoalStep({ form, setForm, locations }: StepProps & { locations: string[] }) {
   const { tr } = useLang();
   const isOther = form.location === "Other";
   return (
@@ -611,14 +640,6 @@ function ProfileStep({ form, setForm, locations }: StepProps & { locations: stri
           onChange={(afraid) => setForm((value) => ({ ...value, afraid }))}
         />
       </div>
-    </div>
-  );
-}
-
-function GoalStep({ form, setForm }: StepProps) {
-  const { tr } = useLang();
-  return (
-    <div className="animate-float-in">
       <ChoiceGroup
         label={tr("trainingType")}
         name="training"

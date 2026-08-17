@@ -311,7 +311,7 @@ export function SalesAssistant() {
         aria-label={copy.open}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="fixed bottom-24 end-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-deep text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6"
+        className="fixed bottom-24 end-4 z-40 hidden h-14 w-14 place-items-center rounded-full bg-deep text-white shadow-elegant transition hover:-translate-y-1 md:bottom-6 md:grid"
       >
         <MessageCircle className="h-6 w-6" />
       </button>

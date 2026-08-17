@@ -48,7 +48,7 @@ export type TrainingLocation = {
   status: TrainingLocationStatus;
 };
 
-export const DISPLAY_NAME_OWNER_APPROVED = "Najda Street";
+export const DISPLAY_NAME_OWNER_APPROVED = "ICS Al Najda";
 export const GOOGLE_MAPS_NAME = "ICS Al Danah - International Community School";
 
 export const TRAINING_LOCATION_REGISTRY: readonly TrainingLocation[] = [

@@ -36,7 +36,7 @@ for (const value of [
   "siblingChildPriceAED: 400",
   "privateAquatic30MinutesAED: 150",
   "privateAquatic60MinutesAED: 250",
-  "Najda Street",
+  "ICS Al Najda",
   "ICS Al Falah",
   "ICS Khalifa",
   "ICS Mushrif",
@@ -60,10 +60,10 @@ const registry = Function(
   "DISPLAY_NAME_OWNER_APPROVED",
   "GOOGLE_MAPS_NAME",
   `return [${registryMatch[1]}]`,
-)("Najda Street", "ICS Al Danah - International Community School");
+)("ICS Al Najda", "ICS Al Danah - International Community School");
 const publicLocations = registry.filter((location) => location.isPublic);
 assert.equal(publicLocations.length, 4, "Exactly four locations must be public");
-assert.deepEqual(publicLocations.map((location) => location.displayName), ["Najda Street", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"]);
+assert.deepEqual(publicLocations.map((location) => location.displayName), ["ICS Al Najda", "ICS Al Falah", "ICS Khalifa", "ICS Mushrif"]);
 assert.equal(new Set(publicLocations.map((location) => location.shortUrl)).size, publicLocations.length, "A public Maps short URL cannot be reused by another public location");
 assert.equal(new Set(publicLocations.map((location) => location.resolvedUrl)).size, publicLocations.length, "A resolved Maps destination cannot be reused by another public location");
 assert.ok(publicLocations.every((location) => !location.displayName.includes("Al Danah")), "Al Danah must not be a public display location");
@@ -72,7 +72,7 @@ assert.equal(hiddenDanah?.isPublic, false);
 assert.equal(hiddenDanah?.bookingEnabled, false);
 assert.equal(hiddenDanah?.localSeoEnabled, false);
 const najda = registry.find((location) => location.id === "najda-street");
-assert.equal(najda?.displayName, "Najda Street");
+assert.equal(najda?.displayName, "ICS Al Najda");
 assert.equal(najda?.googleMapsObservedName, "ICS Al Danah - International Community School");
 assert.equal(najda?.placeId, null, "Do not invent an unverified Google Place ID");
 

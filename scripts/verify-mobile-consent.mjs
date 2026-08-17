@@ -29,25 +29,33 @@ if (bannerZ <= mobileBarZ) {
   );
 }
 
-// 3. Verify banner has bottom offset to avoid overlapping mobile bar
-// The mobile bar is fixed at bottom-0, so banner needs bottom-24 or similar on mobile
-if (!bannerSource.includes("bottom-24")) {
+// 3. Verify banner has a safe-area-aware bottom offset to avoid overlapping mobile bar
+// The mobile bar is fixed at bottom-0, so the banner needs a bottom offset of at least
+// bottom-24 (6rem) worth of clearance on mobile, accounting for the device safe area.
+if (!bannerSource.includes("bottom-[calc(5.75rem+env(safe-area-inset-bottom))]") && !bannerSource.includes("bottom-24")) {
   throw new Error(
-    "mobile-consent: consent banner must use bottom-24 on mobile to avoid overlapping the mobile conversion bar"
+    "mobile-consent: consent banner must use a safe-area-aware bottom offset on mobile to avoid overlapping the mobile conversion bar"
   );
 }
 
-// 4. Verify consent banner uses responsive layout for mobile
-if (!bannerSource.includes("sm:flex-row") && !bannerSource.includes("flex-col")) {
+// 4. Verify consent banner uses responsive stacking for mobile (grid or flex column, row on larger screens)
+if (
+  !bannerSource.includes("sm:flex-row") &&
+  !bannerSource.includes("flex-col") &&
+  !bannerSource.includes("grid-cols-2")
+) {
   throw new Error(
-    "mobile-consent: consent banner must use a column layout on mobile (flex-col) and row on larger screens"
+    "mobile-consent: consent banner must stack controls on mobile and switch to a row layout on larger screens"
   );
 }
 
 // 5. Verify the settings/reopen button is accessible on mobile
-if (!bannerSource.includes("fixed bottom-24 start-4")) {
+if (
+  !bannerSource.includes("fixed bottom-[calc(5.75rem+env(safe-area-inset-bottom))] start-3") &&
+  !bannerSource.includes("fixed bottom-24 start-4")
+) {
   throw new Error(
-    "mobile-consent: the collapsed consent settings button must be positioned at bottom-24 start-4 for mobile accessibility"
+    "mobile-consent: the collapsed consent settings button must use a safe-area-aware mobile position"
   );
 }
 

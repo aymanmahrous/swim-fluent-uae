@@ -134,7 +134,7 @@ for (const needle of [
   "siblingChildPriceAED: 400",
   "privateAquatic30MinutesAED: 150",
   "privateAquatic60MinutesAED: 250",
-  'DISPLAY_NAME_OWNER_APPROVED = "Najda Street"',
+  'DISPLAY_NAME_OWNER_APPROVED = "ICS Al Najda"',
   'displayName: "ICS Al Falah"',
   'displayName: "ICS Khalifa"',
   'displayName: "ICS Mushrif"',
