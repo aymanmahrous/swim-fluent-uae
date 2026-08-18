@@ -27,7 +27,9 @@ const PWA_ENABLED = true;
 const PWA_CACHE_PREFIX = "relax-fix-pwa-";
 
 function localizedPublicLanguage(pathname: string): Lang {
-  return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar";
+  if (pathname === "/en" || pathname.startsWith("/en/")) return "en";
+  if (pathname === "/swimming-lessons-abu-dhabi") return "en";
+  return "ar";
 }
 
 function localizedPublicHome(language: Lang): "/" | "/en" {
