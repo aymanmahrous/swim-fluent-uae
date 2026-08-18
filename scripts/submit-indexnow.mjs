@@ -1,3 +1,4 @@
+// Manual, production-scoped IndexNow notifier. Requires INDEXNOW_KEY.
 const key = process.env.INDEXNOW_KEY?.trim();
 
 if (!key) {
