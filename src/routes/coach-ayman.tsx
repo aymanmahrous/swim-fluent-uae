@@ -8,7 +8,7 @@ const PAGE_URL = `${SITE_URL}/coach-ayman`;
 const COACH_IMAGE_URL = `${SITE_URL}/coach-ayman.webp`;
 const TITLE = "كوتش أيمن | Coach Ayman | ASCA Swimming Coach Abu Dhabi | Relax Fix UAE";
 const DESCRIPTION =
-  "Coach Ayman is an ASCA Level 1 & 2 swimming coach in Abu Dhabi with 15+ years of swimming experience and documented FINA World Cup event involvement in Qatar.";
+  "Coach Ayman is an ASCA Level 1 & 2 swimming coach in Abu Dhabi with 15+ years of swimming experience.";
 
 export const Route = createFileRoute("/coach-ayman")({
   head: () => {
@@ -68,12 +68,11 @@ const copy = {
     breadcrumb: "كوتش أيمن",
     eyebrow: "ASCA Level 1 & 2 · أبوظبي",
     title: "خبرة تبني الثقة — خطوة هادئة وصحيحة كل مرة.",
-    intro: "كوتش أيمن يجمع بين أكثر من 15 عامًا من خبرة السباحة، وشهادات ASCA الموثقة منذ 2013، وخبرة موثقة مرتبطة بفعاليات كأس العالم للسباحة FINA في قطر. سواء كان الهدف التغلب على الخوف، التعلم من الصفر، أو تطوير التقنية، يبدأ التدريب من مستواك الحقيقي وليس من خطة واحدة للجميع.",
+    intro: "كوتش أيمن يجمع بين أكثر من 15 عامًا من خبرة السباحة وشهادات ASCA الموثقة منذ 2013. سواء كان الهدف التغلب على الخوف، التعلم من الصفر، أو تطوير التقنية، يبدأ التدريب من مستواك الحقيقي وليس من خطة واحدة للجميع.",
     talk: "تحدث مع كوتش أيمن",
     lessons: "شاهد برامج السباحة",
     years: "سنوات خبرة في السباحة",
     asca: "Level 1 و Level 2",
-    fina: "خبرة موثقة في فعاليات دولية",
     photoCaption: "كوتش أيمن · Relax Fix UAE · أبوظبي",
     photoSub: "تدريب خاص ومجموعات صغيرة حتى 4 متدربين.",
     proofEyebrow: "دليل وليس مجرد وعود",
@@ -81,8 +80,6 @@ const copy = {
     proofBody: "نعرض فقط المؤهلات والخبرات المدعومة بمستندات محفوظة في الأرشيف المهني لكوتش أيمن.",
     asca1: "أساسيات التدريب — شهادة موثقة.",
     asca2: "Stroke School — شهادة موثقة.",
-    fina2014: "خبرة موثقة مرتبطة ببطولة FINA/Mastbank Swimming World Cup في قطر.",
-    fina2016: "مستندات أرشيفية مرتبطة ببطولة FINA Airweave Swimming World Cup في قطر.",
     glance: "في لمحة",
     experience: "الخبرة",
     experienceValue: "أكثر من 15 عامًا في السباحة",
@@ -116,12 +113,11 @@ const copy = {
     breadcrumb: "Coach Ayman",
     eyebrow: "ASCA Level 1 & 2 · Abu Dhabi",
     title: "Experience that builds confidence — one calm, correct step at a time.",
-    intro: "Coach Ayman brings 15+ years of swimming experience, verified ASCA coaching credentials dating to 2013, and documented involvement linked to FINA Swimming World Cup events in Qatar. Whether the goal is overcoming fear, learning from zero, or improving technique, coaching starts from your real level — not a one-size-fits-all plan.",
+    intro: "Coach Ayman brings 15+ years of swimming experience and verified ASCA coaching credentials dating to 2013. Whether the goal is overcoming fear, learning from zero, or improving technique, coaching starts from your real level — not a one-size-fits-all plan.",
     talk: "Talk to Coach Ayman",
     lessons: "View swimming programs",
     years: "Years of swimming experience",
     asca: "Level 1 & Level 2",
-    fina: "Documented international event experience",
     photoCaption: "Coach Ayman · Relax Fix UAE · Abu Dhabi",
     photoSub: "Private coaching and small groups of up to four learners.",
     proofEyebrow: "Proof, not promises",
@@ -129,8 +125,6 @@ const copy = {
     proofBody: "We present only credentials and experience supported by records in Coach Ayman's professional archive.",
     asca1: "Foundations of Coaching — verified certificate.",
     asca2: "Stroke School — verified certificate.",
-    fina2014: "Documented experience linked to the FINA/Mastbank Swimming World Cup in Qatar.",
-    fina2016: "Archived documentation linked to the FINA Airweave Swimming World Cup in Qatar.",
     glance: "At a glance",
     experience: "Experience",
     experienceValue: "15+ years in swimming",
@@ -185,10 +179,9 @@ function CoachAymanPage() {
               <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", lang)} className="rounded-xl bg-deep px-6 py-3.5 font-black text-white">{c.talk}</a>
               <Link to="/swimming-lessons-abu-dhabi" className="rounded-xl border border-border px-6 py-3.5 font-black hover:bg-muted">{c.lessons}</Link>
             </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
               <Metric value="15+" label={c.years} />
               <Metric value="ASCA" label={c.asca} />
-              <Metric value="FINA" label={c.fina} />
             </div>
           </div>
 
@@ -209,11 +202,9 @@ function CoachAymanPage() {
           <h2 className="mt-3 text-3xl font-black sm:text-4xl">{c.proofTitle}</h2>
           <p className="mt-4 leading-7 text-muted-foreground">{c.proofBody}</p>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Proof year="2013" title="ASCA Level 1" body={c.asca1} />
           <Proof year="2014" title="ASCA Level 2" body={c.asca2} />
-          <Proof year="2014" title="FINA World Cup" body={c.fina2014} />
-          <Proof year="2016" title="FINA Airweave" body={c.fina2016} />
         </div>
       </section>
 
