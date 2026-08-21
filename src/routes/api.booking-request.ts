@@ -7,6 +7,9 @@ import {
 } from "../platform/abuse-control.server";
 import { supabaseSecretRpc } from "../platform/supabase-secret.server";
 
+// Booking records created via this endpoint are retained for
+// BOOKING_RECORD_RETENTION_MONTHS (see ../platform/data-retention-policy.ts).
+// No automated deletion job exists yet; retention is documented policy only.
 const BookingIngressSchema = z.object({
   p_full_name: z.string().trim().min(2).max(120),
   p_phone: z.string().trim().min(7).max(32),
