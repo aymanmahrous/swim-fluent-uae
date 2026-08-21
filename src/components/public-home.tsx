@@ -310,7 +310,7 @@ function Home() {
               key={title}
               className="group relative overflow-hidden rounded-[1.75rem] border border-border bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-elegant"
             >
-              <div className="absolute end-4 top-3 text-7xl font-black text-primary/5">0{index + 1}</div>
+              <div aria-hidden="true" className="absolute end-4 top-3 text-7xl font-black text-primary/15">0{index + 1}</div>
               <div className="relative grid h-14 w-14 place-items-center rounded-2xl bg-deep text-aqua transition group-hover:scale-105">
                 <Icon className="h-7 w-7" />
               </div>
@@ -346,7 +346,7 @@ function Home() {
           <SectionEyebrow>{tr("coachTitle")}</SectionEyebrow>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{tr("slogan")}</h2>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">{tr("coachBody")}</p>
-          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-black text-primary">
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-black text-deep">
             <Award className="h-4 w-4" /> {tr("coachExperience")}
           </div>
           <blockquote className="mt-8 rounded-2xl border-s-4 border-gold bg-muted/60 p-6 text-lg font-bold leading-8">
@@ -480,7 +480,7 @@ function Metric({ icon: Icon, label, value }: { icon: typeof Star; label: string
 
 function SectionEyebrow({ children, light = false }: { children: string; light?: boolean }) {
   return (
-    <div className={`text-xs font-black uppercase tracking-[0.2em] ${light ? "text-aqua" : "text-primary"}`}>
+    <div className={`text-xs font-black uppercase tracking-[0.2em] ${light ? "text-aqua" : "text-deep"}`}>
       {children}
     </div>
   );
@@ -772,7 +772,7 @@ function SuccessState({
       <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-primary/10 text-primary">
         <CheckCircle2 className="h-10 w-10" />
       </div>
-      <div className="mt-5 text-xs font-black uppercase tracking-[0.2em] text-primary">{tr("requestSaved")}</div>
+      <div className="mt-5 text-xs font-black uppercase tracking-[0.2em] text-deep">{tr("requestSaved")}</div>
       <h3 className="mx-auto mt-3 max-w-2xl text-2xl font-black sm:text-4xl">{tr("success")}</h3>
       <p className="mt-4 text-muted-foreground">{tr("whatsappOptional")}</p>
       <a
