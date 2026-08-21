@@ -8,6 +8,9 @@ import {
 
 export type ConsentChoice = AnalyticsConsentDecision;
 
+// DRAFT COPY — PENDING LEGAL APPROVAL, do not treat as final.
+// This banner copy has not been reviewed or approved as final legal wording
+// (see docs/privacy/PRIVACY_ANALYTICS_OWNER_DECISION_PACK.md, D12).
 const copy = {
   ar: {
     title: "قياس استخدام الموقع",

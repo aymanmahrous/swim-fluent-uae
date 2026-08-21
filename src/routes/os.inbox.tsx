@@ -7,6 +7,9 @@ import { z } from "zod";
 
 export const Route = createFileRoute("/os/inbox")({ component: InboxPage });
 
+// Conversation/message records are retained for
+// COMMUNICATIONS_RECORD_RETENTION_MONTHS (see ../platform/data-retention-policy.ts).
+// No automated deletion job exists yet; retention is documented policy only.
 const ConversationSchema = z.object({
   id: z.string().uuid(),
   leadId: z.string().uuid(),
