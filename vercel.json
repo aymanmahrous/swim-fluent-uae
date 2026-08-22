@@ -18,6 +18,16 @@
       "source": "/en/pricing",
       "destination": "/en#programs",
       "permanent": true
+    },
+    {
+      "source": "/najda-street",
+      "destination": "/locations/najda-street",
+      "permanent": true
+    },
+    {
+      "source": "/m",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "headers": [
