@@ -13,6 +13,7 @@ const copy = {
       `تدريب سباحة وثقة مائية في موقع ${name} داخل أبوظبي مع كوتش أيمن. تتوفر حصص خاصة أو مجموعات صغيرة بحد أقصى 4 متدربين، ويبدأ المسار بطلب تقييم أولي ثم مراجعة الموعد المناسب حسب التوفر.`,
     cta: "اطلب تقييمًا عبر واتساب",
     map: "عرض الموقع على الخريطة",
+    pricing: "الأسعار",
     home: "العودة إلى Relax Fix UAE",
     otherLocations: "مواقع تدريب أخرى في أبوظبي",
     locationLabel: "موقع التدريب",
@@ -164,6 +165,9 @@ function LocalLocationPage() {
           rel="noreferrer"
         >
           {copy.ar.map}
+        </a>
+        <a className="rounded-lg border px-5 py-3 font-semibold" href="/#pricing">
+          {copy.ar.pricing}
         </a>
       </div>
 

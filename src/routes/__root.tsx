@@ -171,6 +171,12 @@ function Nav() {
             {tr("viewPrograms")}
           </a>
           <a
+            href={isPublicHome ? "#pricing" : `${publicHome}#pricing`}
+            className="hidden rounded-xl px-3 py-2 text-sm font-bold transition hover:bg-muted md:inline-flex"
+          >
+            {tr("viewPricing")}
+          </a>
+          <a
             href={isPublicHome ? "#book" : `${publicHome}#book`}
             aria-label={tr("book")}
             className="inline-flex items-center gap-1.5 rounded-xl bg-deep px-2.5 py-2 text-xs font-black text-white transition hover:-translate-y-0.5 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"

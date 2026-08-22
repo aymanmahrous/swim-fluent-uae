@@ -104,6 +104,7 @@ function CoachAymanPage() {
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", "en")} className="rounded-xl bg-deep px-5 py-3 font-black text-white">Ask about coaching</a>
+            <a href="/en#pricing" className="rounded-xl border border-border px-5 py-3 font-black hover:bg-muted">View pricing</a>
             <Link to="/swimming-lessons-abu-dhabi" className="rounded-xl border border-border px-5 py-3 font-black hover:bg-muted">Swimming lessons in Abu Dhabi</Link>
           </div>
         </div>

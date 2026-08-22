@@ -74,6 +74,7 @@ export const t = {
   heroBookCta: { ar: "ابدأ حجز حصتك", en: "Start your lesson booking" },
   coachExperience: { ar: "خبرة أكثر من 15 عامًا", en: "15+ years of experience" },
   viewPrograms: { ar: "استكشف البرامج", en: "Explore Programs" },
+  viewPricing: { ar: "الأسعار", en: "Pricing" },
   assessment: { ar: "تقييم أولي", en: "Initial Assessment" },
   assessmentValue: { ar: "مناقشة أولية لمعرفة نقطة البداية", en: "Initial conversation to understand your starting point" },
   session: { ar: "مدة الحصة", en: "Session Duration" },
