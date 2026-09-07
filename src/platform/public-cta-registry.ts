@@ -1,6 +1,7 @@
 export const PUBLIC_CTA_REGISTRY = {
   header_book: { channel: "booking", status: "present" },
   hero_book: { channel: "booking", status: "present" },
+  hero_whatsapp: { channel: "whatsapp", status: "present" },
   programs_book: { channel: "booking", status: "reserved" },
   booking_section_submit: { channel: "booking", status: "present" },
   header_whatsapp: { channel: "whatsapp", status: "reserved" },

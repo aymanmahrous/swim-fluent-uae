@@ -9,12 +9,13 @@ import {
   ChevronRight,
   Dumbbell,
   HeartHandshake,
+  MapPin,
   MessageCircle,
-  ShieldCheck,
   Sparkles,
   Star,
   Target,
   UserRound,
+  Users,
   Waves,
 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -35,6 +36,7 @@ import {
   useBusinessSettings,
 } from "../platform/business-settings";
 import { emitPublicCtaClick } from "../platform/public-cta-events";
+import { operationalWhatsAppUrl } from "../platform/public-business-config";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -113,6 +115,10 @@ function Home() {
   const isOther = form.location === "Other";
   const offer =
     (lang === "ar" ? settings.openingOfferTextAr : settings.openingOfferTextEn) ?? tr("offer");
+  const heroWhatsAppMessage =
+    lang === "ar"
+      ? "مرحبًا، أريد حجز تقييم مجاني لطفلي."
+      : "Hello, I would like to book a free assessment for my child.";
 
   const canContinue =
     step === 1
@@ -238,21 +244,22 @@ function Home() {
             <p className="mt-6 max-w-2xl text-base leading-8 text-white/80 sm:text-xl">
               {tr("heroBody")}
             </p>
-            <p className="mt-4 text-sm font-bold text-white/90 sm:text-base">
-              {tr("heroTrustLine")}
-            </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a
-                href="#book"
+                href={operationalWhatsAppUrl(heroWhatsAppMessage)}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => emitPublicCtaClick("hero_whatsapp", lang)}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl gradient-gold px-7 py-4 font-black text-deep shadow-gold transition hover:-translate-y-1"
               >
+                <MessageCircle className="h-5 w-5" />
                 {tr("heroBookCta")} <ChevronRight className="h-5 w-5 rtl:rotate-180" />
               </a>
               <a
-                href="#programs"
+                href="#locations"
                 className="inline-flex items-center justify-center rounded-2xl border border-white/25 bg-white/10 px-7 py-4 font-bold backdrop-blur transition hover:bg-white/15"
               >
-                {tr("viewPrograms")}
+                {tr("heroLocationsCta")}
               </a>
             </div>
             <p className="mt-5 text-sm font-semibold text-gold">{offer}</p>
@@ -277,11 +284,14 @@ function Home() {
       </section>
 
       <section className="relative -mt-12 z-10 mx-auto max-w-7xl px-6">
-        <div className="grid gap-4 rounded-[2rem] border border-border/70 bg-card/95 p-5 shadow-elegant backdrop-blur md:grid-cols-3 md:p-7">
+        <div className="rounded-[2rem] border border-border/70 bg-card/95 p-5 shadow-elegant backdrop-blur md:p-7">
+          <h2 className="mb-5 text-center text-2xl font-black sm:text-3xl">{tr("why")}</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Award, title: "feat1", body: "feat1d" },
-            { icon: ShieldCheck, title: "feat2", body: "feat2d" },
-            { icon: Target, title: "feat3", body: "feat3d" },
+            { icon: Users, title: "feat1", body: "feat1d" },
+            { icon: Award, title: "feat2", body: "feat2d" },
+            { icon: MapPin, title: "feat3", body: "feat3d" },
+            { icon: Target, title: "feat4", body: "feat4d" },
           ].map(({ icon: Icon, title, body }) => (
             <div key={title} className="flex gap-4 rounded-2xl p-3">
               <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl gradient-aqua shadow-glow">
@@ -295,6 +305,7 @@ function Home() {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </section>
 

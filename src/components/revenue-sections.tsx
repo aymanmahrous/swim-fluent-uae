@@ -33,6 +33,11 @@ export function RevenueSections() {
         privateAquatic30: "جلسة تدريب مائي خاصة — 30 دقيقة",
         privateAquatic60: "جلسة تدريب مائي خاصة — 60 دقيقة",
         privateAquaticBody: "جلسة فردية مخصصة للتأهيل الحركي، تحسين اللياقة أو خسارة الوزن حسب الهدف.",
+        mostPopular: "الأكثر طلباً",
+        bookingNote: "إرسال الطلب لا يعني تأكيد الحجز - نراجع المستوى والتوفر ونؤكد خلال ساعتين",
+        siblingDiscount: "خصم الإخوة — وفر 50 درهم لكل طفل إضافي",
+        locationFacility: "مسابح بدرجة حرارة متحكم بها + منقذ معتمد + توفر محدود",
+        locationsTrust: "داخل مدارس ICS الدولية - بيئة آمنة ومغلقة للأطفال",
         locations: "مواقع التدريب",
         locationsIntro: "اختر موقع التدريب الأقرب إليك، ثم أرسل طلب تقييم أولي. سنراجع مستوى المتدرب وتوفر الموقع والموعد قبل تأكيد الحجز.",
         locationDetails: "تفاصيل موقع التدريب",
@@ -57,6 +62,11 @@ export function RevenueSections() {
         privateAquatic30: "Private aquatic training session — 30 minutes",
         privateAquatic60: "Private aquatic training session — 60 minutes",
         privateAquaticBody: "A private, individual session tailored to mobility support, fitness improvement, or weight-loss goals.",
+        mostPopular: "Most Popular",
+        bookingNote: "Submitting a request does not confirm your booking — we review level and availability and confirm within 2 hours.",
+        siblingDiscount: "Sibling discount — save AED 50 per additional child",
+        locationFacility: "Temperature-controlled pools + certified lifeguard + limited availability",
+        locationsTrust: "Inside ICS International Schools — a safe, enclosed environment for children",
         locations: "Training Locations",
         locationsIntro: "Choose the most convenient training location and submit an initial assessment request. We will review the learner’s level, location availability and appointment time before confirming the booking.",
         locationDetails: "Training location details",
@@ -87,12 +97,26 @@ export function RevenueSections() {
                 <h3 className="text-xl font-black">{copy.pricing}</h3>
               </div>
               <dl className="mt-5 grid gap-3">
-                <Price label={`${copy.group} (≤ ${PUBLIC_PRICING.groupMaxSize})`} value={PUBLIC_PRICING.groupChildPriceAED} suffix={copy.child} />
-                <Price label={copy.sibling} value={PUBLIC_PRICING.siblingChildPriceAED} />
+                <Price
+                  label={`${copy.group} (≤ ${PUBLIC_PRICING.groupMaxSize})`}
+                  value={PUBLIC_PRICING.groupChildPriceAED}
+                  suffix={copy.child}
+                  badge={copy.mostPopular}
+                />
+                <Price
+                  label={copy.sibling}
+                  value={PUBLIC_PRICING.siblingChildPriceAED}
+                  suffix={copy.child}
+                  highlight
+                  note={copy.siblingDiscount}
+                />
                 <Price label={copy.privateAquatic30} value={PUBLIC_PRICING.privateAquatic30MinutesAED} />
                 <Price label={copy.privateAquatic60} value={PUBLIC_PRICING.privateAquatic60MinutesAED} />
               </dl>
               <p className="mt-4 text-sm leading-6 text-white/70">{copy.privateAquaticBody}</p>
+              <p className="mt-4 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm leading-6 text-white/80">
+                {copy.bookingNote}
+              </p>
             </div>
           </div>
         </div>
@@ -103,6 +127,7 @@ export function RevenueSections() {
           <p className="text-xs font-black uppercase tracking-[0.2em] text-deep">{copy.locations}</p>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{copy.locations}</h2>
           <p className="mt-5 text-base leading-8 text-muted-foreground">{copy.locationsIntro}</p>
+          <p className="mt-3 text-sm font-bold leading-7 text-deep">{copy.locationsTrust}</p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {TRAINING_LOCATIONS.map((location) => {
@@ -120,6 +145,7 @@ export function RevenueSections() {
                 <div className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
                   <p>{isArabic ? GENERAL_AVAILABILITY.weekend.ar : GENERAL_AVAILABILITY.weekend.en}</p>
                   <p>{isArabic ? GENERAL_AVAILABILITY.weekdays.ar : GENERAL_AVAILABILITY.weekdays.en}</p>
+                  <p className="font-semibold text-deep">{copy.locationFacility}</p>
                 </div>
                 <div className="mt-6 grid gap-2">
                   <Link
@@ -160,11 +186,40 @@ export function RevenueSections() {
   );
 }
 
-function Price({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
+function Price({
+  label,
+  value,
+  suffix,
+  badge,
+  highlight,
+  note,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  badge?: string;
+  highlight?: boolean;
+  note?: string;
+}) {
   return (
-    <div className="grid min-w-0 gap-1 rounded-2xl border border-white/10 bg-deep/35 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4">
-      <dt className="min-w-0 break-words text-sm font-bold leading-6 text-white/75">{label}</dt>
-      <dd className="whitespace-nowrap font-black" dir="ltr">AED {value}{suffix ? ` ${suffix}` : ""}</dd>
+    <div
+      className={`grid min-w-0 gap-1 rounded-2xl border px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4 ${
+        highlight ? "border-gold/40 bg-gold/10" : "border-white/10 bg-deep/35"
+      }`}
+    >
+      <dt className="min-w-0 break-words text-sm font-bold leading-6 text-white/75">
+        {badge ? (
+          <span className="mb-1 inline-flex rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-deep">
+            {badge}
+          </span>
+        ) : null}
+        <span className={badge ? "block" : undefined}>{label}</span>
+        {note ? <span className="mt-1 block text-xs font-semibold text-gold">{note}</span> : null}
+      </dt>
+      <dd className="whitespace-nowrap font-black" dir="ltr">
+        AED {value}
+        {suffix ? ` ${suffix}` : ""}
+      </dd>
     </div>
   );
 }

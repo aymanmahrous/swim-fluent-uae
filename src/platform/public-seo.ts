@@ -14,7 +14,7 @@ const COACH_IMAGE_URL = `${SITE_URL}/coach-ayman.webp`;
 
 const pageCopy = {
   ar: {
-    title: "تعليم السباحة للأطفال في أبوظبي | كوتش أيمن | Relax Fix UAE",
+    title: "مدرب سباحة أبوظبي | كوتش أيمن | دروس سباحة خاصة للأطفال - النجدة وخليفة",
     description:
       "تعليم السباحة والثقة المائية للأطفال في أبوظبي مع كوتش أيمن، ضمن مجموعات صغيرة بحد أقصى 4 أطفال وفي مواقع تدريب موثقة داخل أبوظبي.",
     imageAlt: "تعليم السباحة للأطفال في أبوظبي مع كوتش أيمن",
@@ -25,7 +25,7 @@ const pageCopy = {
     serviceName: "تعليم السباحة والثقة المائية للأطفال في أبوظبي",
   },
   en: {
-    title: "Kids Swimming Lessons Abu Dhabi | Coach Ayman | Relax Fix UAE",
+    title: "Private Swimming Coach Abu Dhabi | Coach Ayman | Kids Swimming Lessons",
     description:
       "Kids swimming lessons and water-confidence coaching in Abu Dhabi with Coach Ayman, in small groups of up to four across verified Abu Dhabi training locations.",
     imageAlt: "Kids swimming lessons in Abu Dhabi with Coach Ayman",
