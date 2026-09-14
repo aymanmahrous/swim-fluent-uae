@@ -40,6 +40,8 @@ export function RevenueSections() {
         locationsTrust: "داخل مدارس ICS الدولية - بيئة آمنة ومغلقة للأطفال",
         locations: "مواقع التدريب",
         locationsIntro: "اختر موقع التدريب الأقرب إليك، ثم أرسل طلب تقييم أولي. سنراجع مستوى المتدرب وتوفر الموقع والموعد قبل تأكيد الحجز.",
+        swimmingLessonsLink: "دروس السباحة في أبوظبي",
+        coachLink: "كوتش أيمن",
         locationDetails: "تفاصيل موقع التدريب",
         maps: "فتح في Google Maps",
         assessment: "اطلب تقييمًا أوليًا",
@@ -69,6 +71,8 @@ export function RevenueSections() {
         locationsTrust: "Inside ICS International Schools — a safe, enclosed environment for children",
         locations: "Training Locations",
         locationsIntro: "Choose the most convenient training location and submit an initial assessment request. We will review the learner’s level, location availability and appointment time before confirming the booking.",
+        swimmingLessonsLink: "Swimming lessons in Abu Dhabi",
+        coachLink: "Coach Ayman",
         locationDetails: "Training location details",
         maps: "Open in Google Maps",
         assessment: "Request an initial assessment",
@@ -127,6 +131,14 @@ export function RevenueSections() {
           <p className="text-xs font-black uppercase tracking-[0.2em] text-deep">{copy.locations}</p>
           <h2 className="mt-4 text-3xl font-black sm:text-5xl">{copy.locations}</h2>
           <p className="mt-5 text-base leading-8 text-muted-foreground">{copy.locationsIntro}</p>
+          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-black">
+            <Link to="/swimming-lessons-abu-dhabi" className="text-primary hover:underline">
+              {copy.swimmingLessonsLink}
+            </Link>
+            <Link to="/coach-ayman" className="text-primary hover:underline">
+              {copy.coachLink}
+            </Link>
+          </p>
           <p className="mt-3 text-sm font-bold leading-7 text-deep">{copy.locationsTrust}</p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
