@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_FILE
+@/tmp/routetree-content-only.txt
