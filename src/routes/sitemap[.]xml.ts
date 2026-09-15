@@ -20,6 +20,32 @@ const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.relaxfixuae.com/" />
   </url>
   <url>
+    <loc>https://www.relaxfixuae.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-AE" href="https://www.relaxfixuae.com/contact" />
+    <xhtml:link rel="alternate" hreflang="en-AE" href="https://www.relaxfixuae.com/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.relaxfixuae.com/contact" />
+  </url>
+  <url>
+    <loc>https://www.relaxfixuae.com/en/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-AE" href="https://www.relaxfixuae.com/contact" />
+    <xhtml:link rel="alternate" hreflang="en-AE" href="https://www.relaxfixuae.com/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.relaxfixuae.com/contact" />
+  </url>
+  <url>
+    <loc>https://www.relaxfixuae.com/swimming-lessons-abu-dhabi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.relaxfixuae.com/coach-ayman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.relaxfixuae.com/locations/najda-street</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
