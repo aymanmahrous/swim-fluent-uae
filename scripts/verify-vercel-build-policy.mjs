@@ -120,16 +120,22 @@ for (const routePath of serviceDecisionRoutes) {
   }
 }
 
-const contactRedirectRoutes = [
-  "src/routes/contact.ts",
-  "src/routes/en/contact.ts",
+const contactPublicRoutes = [
+  "src/routes/contact.tsx",
+  "src/routes/en/contact.tsx",
   "src/routes/ar/contact.ts",
 ];
 
-for (const routePath of contactRedirectRoutes) {
+for (const routePath of contactPublicRoutes) {
   const routeSource = await readFile(routePath, "utf8");
-  if (!routeSource.includes("#contact") || !routeSource.includes("Response.redirect")) {
-    throw new Error(`LEGACY_CONTACT_REDIRECT_MISSING:${routePath}`);
+  if (routePath.endsWith("/ar/contact.ts")) {
+    if (!routeSource.includes('Response.redirect(new URL("/contact"')) {
+      throw new Error(`LEGACY_CONTACT_AR_ALIAS_MISSING:${routePath}`);
+    }
+    continue;
+  }
+  if (!routeSource.includes("publicContactHead") || !routeSource.includes("PublicContactPage")) {
+    throw new Error(`PUBLIC_CONTACT_PAGE_MISSING:${routePath}`);
   }
 }
 

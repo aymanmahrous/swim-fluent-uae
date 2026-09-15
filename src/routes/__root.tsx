@@ -41,6 +41,8 @@ function localizedLanguageSwitchTarget(pathname: string): string | null {
   if (pathname === "/en") return "/";
   if (pathname === "/privacy") return "/en/privacy";
   if (pathname === "/en/privacy") return "/privacy";
+  if (pathname === "/contact") return "/en/contact";
+  if (pathname === "/en/contact") return "/contact";
   return null;
 }
 
