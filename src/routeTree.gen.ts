@@ -1,5 +1,1 @@
-/* eslint-disable */
-
-// @ts-nocheck
-
-// TEST_PUSH_FILES_SMALL
+@file:/tmp/swim-fluent-uae/src/routeTree.gen.ts
