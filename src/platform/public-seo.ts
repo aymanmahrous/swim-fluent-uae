@@ -153,6 +153,103 @@ function structuredData(lang: PublicLanguage) {
   };
 }
 
+const contactCopy = {
+  ar: {
+    title: "تواصل معنا | Relax Fix UAE — أكاديمية سباحة في أبوظبي",
+    description:
+      "تواصل مع Relax Fix UAE / كوتش أيمن لطلب تقييم سباحة أو حجز دروس للأطفال في أبوظبي. واتساب وبريد تشغيلي فقط — خدمة تدريب سباحة في أبوظبي.",
+    url: `${SITE_URL}/contact`,
+    locale: "ar_AE",
+    alternateLocale: "en_AE",
+    language: "ar-AE",
+    breadcrumbHome: "Relax Fix UAE",
+    breadcrumbContact: "تواصل معنا",
+    pageName: "تواصل مع Relax Fix UAE",
+  },
+  en: {
+    title: "Contact | Relax Fix UAE — Swimming Academy Abu Dhabi",
+    description:
+      "Contact Relax Fix UAE / Coach Ayman to request a swimming assessment or kids swimming lessons in Abu Dhabi. WhatsApp and operational email only — Abu Dhabi service, not a design studio.",
+    url: `${SITE_URL}/en/contact`,
+    locale: "en_AE",
+    alternateLocale: "ar_AE",
+    language: "en-AE",
+    breadcrumbHome: "Relax Fix UAE",
+    breadcrumbContact: "Contact",
+    pageName: "Contact Relax Fix UAE",
+  },
+} as const;
+
+function contactStructuredData(lang: PublicLanguage) {
+  const copy = contactCopy[lang];
+  const homeUrl = lang === "en" ? `${SITE_URL}/en` : `${SITE_URL}/`;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ContactPage",
+        "@id": `${copy.url}#contactpage`,
+        url: copy.url,
+        name: copy.pageName,
+        description: copy.description,
+        isPartOf: { "@id": WEBSITE_ID },
+        about: { "@id": ORGANIZATION_ID },
+        mainEntity: { "@id": ORGANIZATION_ID },
+        inLanguage: copy.language,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${copy.url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: copy.breadcrumbHome, item: homeUrl },
+          { "@type": "ListItem", position: 2, name: copy.breadcrumbContact, item: copy.url },
+        ],
+      },
+    ],
+  };
+}
+
+export function publicContactHead(lang: PublicLanguage) {
+  const copy = contactCopy[lang];
+  const jsonLd = JSON.stringify(contactStructuredData(lang)).replace(/</g, "\\u003c");
+
+  return {
+    meta: [
+      { title: copy.title },
+      { name: "description", content: copy.description },
+      {
+        name: "robots",
+        content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+      },
+      { name: "geo.region", content: "AE-AZ" },
+      { name: "geo.placename", content: "Abu Dhabi" },
+      { property: "og:title", content: copy.title },
+      { property: "og:description", content: copy.description },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: copy.url },
+      { property: "og:site_name", content: "Relax Fix UAE" },
+      { property: "og:locale", content: copy.locale },
+      { property: "og:locale:alternate", content: copy.alternateLocale },
+      { property: "og:image", content: SOCIAL_IMAGE_URL },
+      { property: "og:image:alt", content: pageCopy[lang].imageAlt },
+      { property: "og:image:type", content: "image/jpeg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: copy.title },
+      { name: "twitter:description", content: copy.description },
+      { name: "twitter:image", content: SOCIAL_IMAGE_URL },
+      { name: "twitter:image:alt", content: pageCopy[lang].imageAlt },
+    ],
+    links: [
+      { rel: "canonical", href: copy.url },
+      { rel: "alternate", hrefLang: "ar-AE", href: contactCopy.ar.url },
+      { rel: "alternate", hrefLang: "en-AE", href: contactCopy.en.url },
+      { rel: "alternate", hrefLang: "x-default", href: contactCopy.ar.url },
+    ],
+    scripts: [{ type: "application/ld+json", children: jsonLd }],
+  };
+}
+
 export function publicHomeHead(lang: PublicLanguage) {
   const copy = pageCopy[lang];
   const jsonLd = JSON.stringify(structuredData(lang)).replace(/</g, "\\u003c");
