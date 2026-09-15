@@ -5,18 +5,16 @@ const root = process.cwd();
 const expectedUrls = [
   "https://www.relaxfixuae.com/",
   "https://www.relaxfixuae.com/en",
+  "https://www.relaxfixuae.com/contact",
+  "https://www.relaxfixuae.com/en/contact",
+  "https://www.relaxfixuae.com/swimming-lessons-abu-dhabi",
+  "https://www.relaxfixuae.com/coach-ayman",
   "https://www.relaxfixuae.com/locations/najda-street",
   "https://www.relaxfixuae.com/locations/ics-al-falah",
   "https://www.relaxfixuae.com/locations/ics-khalifa",
   "https://www.relaxfixuae.com/locations/ics-mushrif",
 ];
-const prohibitedPathPrefixes = [
-  "/contact",
-  "/admin",
-  "/staff",
-  "/os",
-  "/api",
-];
+const prohibitedPathPrefixes = ["/admin", "/staff", "/os", "/api"];
 
 const [staticSitemap, routeSource, robots] = await Promise.all([
   readFile(join(root, "public/sitemap.xml"), "utf8"),
