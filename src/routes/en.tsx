@@ -14,7 +14,7 @@ const SalesAssistant = lazy(() =>
 const PublicHomeComponent = PublicHomeDefinition.options.component as ComponentType;
 
 export const Route = createFileRoute("/en")({
-  head: () => publicHomeHead("en"),
+  head: ({ match }) => (match.pathname === "/en" ? publicHomeHead("en") : {}),
   component: EnglishPublicHome,
 });
 
