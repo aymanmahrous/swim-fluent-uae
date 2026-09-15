@@ -57,6 +57,13 @@ for (const needle of [
   '"@type": "Review"',
   "streetAddress",
   "facebook.com/share/",
+  "pixelandreel",
+  "Business Bay",
+  "971500000000",
+  "971 50 000 0000",
+  "استوديو تصميم",
+  "Free quote",
+  "info@pixelandreel",
 ]) {
   forbidText(seo, needle, "truthful and non-duplicated structured head data");
 }
@@ -137,7 +144,7 @@ for (const needle of [
   'DISPLAY_NAME_OWNER_APPROVED = "ICS Al Najda"',
   'displayName: "ICS Al Falah"',
   'displayName: "ICS Khalifa"',
-  'displayName: "ICS Mushrif"',
+  'displayName: "ICS Al Mushrif"',
   "isPublic: false",
   'start: "10:00"',
   'end: "22:00"',
@@ -168,6 +175,32 @@ for (const needle of [
   requireText(i18n, needle, "localized language state");
 }
 
+requireText(seo, "publicContactHead(lang: PublicLanguage)", "public contact SEO head");
+requireText(seo, '"@type": "ContactPage"', "contact page structured data");
+requireText(seo, "أكاديمية سباحة في أبوظبي", "Arabic contact title");
+requireText(seo, "Swimming Academy Abu Dhabi", "English contact title");
+
+const contactRoute = await text("src/routes/contact.tsx");
+requireText(contactRoute, 'publicContactHead("ar")', "Arabic contact route head");
+requireText(contactRoute, '<PublicContactPage language="ar" />', "Arabic contact route component");
+
+const englishContactRoute = await text("src/routes/en/contact.tsx");
+requireText(englishContactRoute, 'publicContactHead("en")', "English contact route head");
+requireText(englishContactRoute, '<PublicContactPage language="en" />', "English contact route component");
+
+const contactPage = await text("src/components/public-contact-page.tsx");
+for (const needle of [
+  "pixelandreel",
+  "Business Bay",
+  "971500000000",
+  "971 50 000 0000",
+  "استوديو تصميم",
+  "Free quote",
+  "info@pixelandreel",
+]) {
+  forbidText(contactPage, needle, "public contact page");
+}
+
 const rootRoute = await text("src/routes/__root.tsx");
 for (const needle of [
   "useLocation",
@@ -179,6 +212,8 @@ for (const needle of [
   'if (pathname === "/en") return "/"',
   'if (pathname === "/privacy") return "/en/privacy"',
   'if (pathname === "/en/privacy") return "/privacy"',
+  'if (pathname === "/contact") return "/en/contact"',
+  'if (pathname === "/en/contact") return "/contact"',
   "const publicHome = localizedPublicHome(lang)",
   "const languageSwitchTarget = localizedLanguageSwitchTarget(pathname)",
   "const languageSwitchHref = languageSwitchTarget",

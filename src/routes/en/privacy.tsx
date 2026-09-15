@@ -11,6 +11,7 @@ export const Route = createFileRoute("/en/privacy")({
       },
       { name: "robots", content: "noindex,nofollow,noarchive" },
     ],
+    links: [{ rel: "canonical", href: "https://www.relaxfixuae.com/en/privacy" }],
   }),
   component: () => <PrivacyPage language="en" />,
 });
