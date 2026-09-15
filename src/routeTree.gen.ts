@@ -1,1 +1,1 @@
-LOAD_FROM_FILE:/tmp/rt-for-upload.ts
+TEST_UPLOAD_IN_PROGRESS
