@@ -1,1 +1,1 @@
-PLACEHOLDER_60K_TEST
+@/tmp/mcp-args-only-content.txt
