@@ -1,1 +1,1 @@
-@/tmp/mcp-args-only-content.txt
+file:///tmp/mcp-args-only-content.txt
