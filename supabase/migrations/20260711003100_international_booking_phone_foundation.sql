@@ -55,6 +55,41 @@ revoke all on function public.normalize_international_phone(text)
 from public, anon, authenticated;
 grant execute on function public.normalize_international_phone(text) to service_role;
 
+create or replace function public.normalize_uae_phone(p_phone text)
+returns text
+language plpgsql
+immutable
+set search_path = public, pg_temp
+as $$
+declare
+  v_input text := btrim(coalesce(p_phone, ''));
+  v_digits text;
+begin
+  if v_input = '' or char_length(v_input) > 64 then
+    return null;
+  end if;
+  if v_input !~ '^[+0-9() .-]+$' then
+    return null;
+  end if;
+  v_digits := regexp_replace(v_input, '[^0-9]', '', 'g');
+  if left(v_digits, 5) = '00971' then
+    v_digits := substring(v_digits from 6);
+  elsif left(v_digits, 3) = '971' then
+    v_digits := substring(v_digits from 4);
+  elsif left(v_digits, 1) = '0' then
+    v_digits := substring(v_digits from 2);
+  end if;
+  if v_digits !~ '^5[0-9]{8}$' then
+    return null;
+  end if;
+  return '971' || v_digits;
+end;
+$$;
+
+revoke all on function public.normalize_uae_phone(text)
+from public, anon, authenticated;
+grant execute on function public.normalize_uae_phone(text) to service_role;
+
 alter table public.booking_ingress_attempts
   drop constraint if exists booking_ingress_attempts_normalized_phone_check;
 
