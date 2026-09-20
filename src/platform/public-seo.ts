@@ -1,6 +1,11 @@
 import heroAvif from "../assets/hero-pool.avif";
 import heroImg from "../assets/hero-pool.jpg";
-import { OPERATIONAL_EMAIL, TRAINING_LOCATIONS, WHATSAPP_DISPLAY } from "./public-business-config";
+import {
+  GENERAL_AVAILABILITY,
+  OPERATIONAL_EMAIL,
+  TRAINING_LOCATIONS,
+  WHATSAPP_DISPLAY,
+} from "./public-business-config";
 
 export const SITE_URL = "https://www.relaxfixuae.com";
 export const INSTAGRAM_URL = "https://www.instagram.com/relaxfixuae/";
@@ -38,6 +43,27 @@ const pageCopy = {
 } as const;
 
 type PublicLanguage = keyof typeof pageCopy;
+
+const openingHoursSpecification = [
+  {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [
+      "https://schema.org/Monday",
+      "https://schema.org/Tuesday",
+      "https://schema.org/Wednesday",
+      "https://schema.org/Thursday",
+      "https://schema.org/Friday",
+    ],
+    opens: GENERAL_AVAILABILITY.weekdays.start,
+    closes: GENERAL_AVAILABILITY.weekdays.end,
+  },
+  {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["https://schema.org/Saturday", "https://schema.org/Sunday"],
+    opens: GENERAL_AVAILABILITY.weekend.start,
+    closes: GENERAL_AVAILABILITY.weekend.end,
+  },
+] as const;
 
 function locationEntity(location: (typeof TRAINING_LOCATIONS)[number]) {
   const url = `${SITE_URL}/locations/${location.id}`;
@@ -82,6 +108,7 @@ function structuredData(lang: PublicLanguage) {
             name: "United Arab Emirates",
           },
         },
+        openingHoursSpecification,
         location: locationNodes.map((location) => ({ "@id": location["@id"] })),
         contactPoint: {
           "@type": "ContactPoint",

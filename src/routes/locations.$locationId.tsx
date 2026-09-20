@@ -1,5 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { TRAINING_LOCATIONS, operationalWhatsAppUrl } from "../platform/public-business-config";
+import {
+  GENERAL_AVAILABILITY,
+  TRAINING_LOCATIONS,
+  operationalWhatsAppUrl,
+} from "../platform/public-business-config";
 import { emitPublicCtaClick } from "../platform/public-cta-events";
 import { SITE_URL } from "../platform/public-seo";
 
@@ -57,6 +61,26 @@ export const Route = createFileRoute("/locations/$locationId")({
             addressRegion: "Abu Dhabi",
             addressCountry: "AE",
           },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "https://schema.org/Monday",
+                "https://schema.org/Tuesday",
+                "https://schema.org/Wednesday",
+                "https://schema.org/Thursday",
+                "https://schema.org/Friday",
+              ],
+              opens: GENERAL_AVAILABILITY.weekdays.start,
+              closes: GENERAL_AVAILABILITY.weekdays.end,
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["https://schema.org/Saturday", "https://schema.org/Sunday"],
+              opens: GENERAL_AVAILABILITY.weekend.start,
+              closes: GENERAL_AVAILABILITY.weekend.end,
+            },
+          ],
         },
         {
           "@type": "Service",
