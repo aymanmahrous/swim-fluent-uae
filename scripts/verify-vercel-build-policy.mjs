@@ -44,6 +44,8 @@ if (cronText.includes("*/5 * * * *") || cronText.includes("* * * * *")) {
 const expectedRedirects = new Map([
   ["/pricing", "/#programs"],
   ["/en/pricing", "/en#programs"],
+  ["/najda-street", "/locations/najda-street"],
+  ["/m", "/"],
 ]);
 
 if (config.redirects?.length !== expectedRedirects.size) {
