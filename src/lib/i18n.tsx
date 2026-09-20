@@ -72,10 +72,10 @@ export const t = {
   heroEyebrow: { ar: "تدريب شخصي • ثقة مائية • أبوظبي", en: "Personal Coaching • Water Confidence • Abu Dhabi" },
   heroTitle: { ar: "أبوظبي تتعلم السباحة بثقة - مع كوتش أيمن", en: "Abu Dhabi Learns to Swim with Confidence - Coach Ayman" },
   heroBody: {
-    ar: "لسنا نادي كبير بـ 15 طفل. نحن تدريب خاص في مجموعات صغيرة لا تتجاوز 4 أطفال فقط داخل مدارس ICS الدولية - بإشراف منقذين محترفين ومدرب معتمد ASCA. تقييم أولي مجاني.",
-    en: "Not a crowded club. Private coaching in small groups of max 4 kids inside ICS International Schools - certified ASCA coach & lifeguards. Free initial assessment.",
+    ar: "لسنا ناديًا كبيرًا يضم 15 طفلًا. نحن نقدم تدريبًا خاصًا في مجموعات صغيرة لا تتجاوز 4 أطفال داخل مدارس ICS الدولية، بإشراف منقذين محترفين ومدرب معتمد ASCA. اطلب تقييمًا أوليًا.",
+    en: "Not a crowded club. Private coaching in small groups of up to 4 children inside ICS International Schools, with a certified ASCA coach and lifeguards. Request an initial assessment.",
   },
-  heroBookCta: { ar: "احجز تقييم مجاني - واتساب", en: "Book Free Assessment - WhatsApp" },
+  heroBookCta: { ar: "اطلب تقييمًا أوليًا - واتساب", en: "Request an Initial Assessment - WhatsApp" },
   heroLocationsCta: { ar: "شاهد مواقع التدريب", en: "View Training Locations" },
   coachExperience: { ar: "خبرة أكثر من 15 عامًا", en: "15+ years of experience" },
   viewPrograms: { ar: "استكشف البرامج", en: "Explore Programs" },
