@@ -97,10 +97,10 @@ function CoachAymanPage() {
           <p className="text-sm font-black text-primary">Swimming Coach · Abu Dhabi</p>
           <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Coach Ayman — Swimming Coaching in Abu Dhabi</h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Coach Ayman has more than 15 years of swimming-coaching experience. His coaching approach focuses on clarity, discipline and calm progression, helping learners understand the water, improve body control and build lasting confidence step by step.
+            Coach Ayman provides swimming coaching in Abu Dhabi. His coaching approach focuses on clarity, discipline and calm progression, helping learners understand the water, improve body control and build lasting confidence step by step.
           </p>
           <p lang="ar" dir="rtl" className="mt-5 rounded-2xl border border-border bg-muted/40 p-5 text-lg leading-8">
-            كوتش أيمن لديه خبرة أكثر من 15 عامًا في تدريب السباحة في أبوظبي. أسلوب التدريب يعتمد على الوضوح والانضباط والهدوء، مع بناء الثقة في الماء خطوة بخطوة حسب نقطة بداية كل متدرب.
+            كوتش أيمن يقدم تدريب السباحة في أبوظبي. أسلوب التدريب يعتمد على الوضوح والانضباط والهدوء، مع بناء الثقة في الماء خطوة بخطوة حسب نقطة بداية كل متدرب.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href={whatsapp} target="_blank" rel="noreferrer" onClick={() => emitPublicCtaClick("booking_section_whatsapp", "en")} className="rounded-xl bg-deep px-5 py-3 font-black text-white">Ask about coaching</a>
@@ -128,7 +128,7 @@ function CoachAymanPage() {
           <aside className="rounded-3xl border border-border bg-card p-6 shadow-sm">
             <h2 className="text-xl font-black">At a glance</h2>
             <dl className="mt-5 space-y-4 text-sm">
-              <div><dt className="font-bold text-muted-foreground">Experience</dt><dd className="mt-1 font-black">15+ years</dd></div>
+              <div><dt className="font-bold text-muted-foreground">Experience</dt><dd className="mt-1 font-black">Swimming coaching in Abu Dhabi</dd></div>
               <div><dt className="font-bold text-muted-foreground">Languages</dt><dd className="mt-1 font-black">Arabic & English</dd></div>
               <div><dt className="font-bold text-muted-foreground">Lesson formats</dt><dd className="mt-1 font-black">Private & small group</dd></div>
               <div><dt className="font-bold text-muted-foreground">Group capacity</dt><dd className="mt-1 font-black">Up to 4 learners</dd></div>
