@@ -115,10 +115,6 @@ function Home() {
   const isOther = form.location === "Other";
   const offer =
     (lang === "ar" ? settings.openingOfferTextAr : settings.openingOfferTextEn) ?? tr("offer");
-  const heroWhatsAppMessage =
-    lang === "ar"
-      ? "مرحبًا، أريد طلب تقييم أولي لطفلي."
-      : "Hello, I would like to request an initial assessment for my child.";
 
   const canContinue =
     step === 1
@@ -246,14 +242,11 @@ function Home() {
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a
-                href={operationalWhatsAppUrl(heroWhatsAppMessage)}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => emitPublicCtaClick("hero_whatsapp", lang)}
+                href="#book"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl gradient-gold px-7 py-4 font-black text-deep shadow-gold transition hover:-translate-y-1"
               >
-                <MessageCircle className="h-5 w-5" />
-                {tr("heroBookCta")} <ChevronRight className="h-5 w-5 rtl:rotate-180" />
+                <CalendarDays className="h-5 w-5" />
+                {tr("offer")} <ChevronRight className="h-5 w-5 rtl:rotate-180" />
               </a>
               <a
                 href="#locations"
@@ -298,7 +291,7 @@ function Home() {
                 <Icon className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="font-black">{tr(title as TranslationKey)}</h2>
+                <h3 className="font-black">{tr(title as TranslationKey)}</h3>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
                   {tr(body as TranslationKey)}
                 </p>
