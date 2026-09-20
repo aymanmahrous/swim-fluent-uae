@@ -8,7 +8,7 @@ const expectedCommands = {
   dev: "vite dev",
   build: "vite build",
   start: "node .output/server/index.mjs",
-  test: "node --experimental-strip-types --test tests/staff-rbac.test.ts",
+  test: "node --experimental-strip-types --test tests/*.test.mjs tests/*.test.ts",
 };
 const unsafeCommandPattern = /\b(?:migrat(?:e|ion)|seed|cron|worker|publish|deploy|supabase|vercel|psql|curl|wget)\b/i;
 for (const [name, expected] of Object.entries(expectedCommands)) {
