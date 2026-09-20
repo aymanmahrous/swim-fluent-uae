@@ -41,7 +41,7 @@ for (const [sourceName, source] of publicSources) {
 for (const approved of [
   'offer: { ar: "طلب تقييم أولي", en: "Request an initial assessment" }',
   'assessmentValue: { ar: "مناقشة أولية لمعرفة نقطة البداية", en: "Initial conversation to understand your starting point" }',
-  'feat1: { ar: "تدريب شخصي", en: "Personal Coaching" }',
+  'feat1: { ar: "مجموعات صغيرة حقيقية", en: "Truly Small Groups" }',
 ]) {
   assert.ok(i18n.includes(approved), `Approved public replacement is missing: ${approved}`);
 }

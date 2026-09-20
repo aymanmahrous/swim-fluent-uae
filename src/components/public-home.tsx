@@ -117,8 +117,8 @@ function Home() {
     (lang === "ar" ? settings.openingOfferTextAr : settings.openingOfferTextEn) ?? tr("offer");
   const heroWhatsAppMessage =
     lang === "ar"
-      ? "مرحبًا، أريد حجز تقييم مجاني لطفلي."
-      : "Hello, I would like to book a free assessment for my child.";
+      ? "مرحبًا، أريد طلب تقييم أولي لطفلي."
+      : "Hello, I would like to request an initial assessment for my child.";
 
   const canContinue =
     step === 1
