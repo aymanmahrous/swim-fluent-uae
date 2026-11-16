@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 
 const config = JSON.parse(await readFile("vercel.json", "utf8"));
 const command = config.ignoreCommand;
-const canonicalProjectId = "prj_4wRrALwNzlU0msHb9pGOsExmNID0";
+const canonicalProjectId = "prj_HrvwRKrf0NueBmwjX18ARNRef9Fy";
 const allowedTopLevelKeys = new Set([
   "$schema",
   "ignoreCommand",
